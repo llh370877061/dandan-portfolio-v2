@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>丹丹的作品集</title>
+<style>
+  :root {
+    --warm: #FF6B6B;
+    --ocean: #4ECDC4;
+    --sun: #FFE66D;
+    --sky: #6C5CE7;
+    --bg: #FFF9F0;
+    --card-bg: #FFFFFF;
+    --text: #2D3436;
+    --text-light: #636E72;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 60px 24px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+  }
+
+  .hero h1 {
+    font-size: 2.2em;
+    font-weight: 800;
+    margin-bottom: 8px;
+    position: relative;
+    letter-spacing: 2px;
+  }
+
+  .hero p {
+    font-size: 1.05em;
+    opacity: 0.9;
+    position: relative;
+    margin-top: 8px;
+  }
+
+  .hero .stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 28px;
+    position: relative;
+  }
+
+  .hero .stat { text-align: center; }
+
+  .hero .stat-num {
+    font-size: 2em;
+    font-weight: 800;
+    display: block;
+    line-height: 1;
+  }
+
+  .hero .stat-label {
+    font-size: 0.85em;
+    opacity: 0.85;
+    margin-top: 4px;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 20px 60px;
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.3em;
+    font-weight: 700;
+    margin: 36px 0 16px;
+  }
+
+  .section-title .icon { font-size: 1.4em; }
+
+  .section-title .line {
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, #ddd 0%, transparent 100%);
+    border-radius: 1px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 20px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.1);
+  }
+
+  .card .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75em;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .tag-game { background: #FFE0E0; color: #C0392B; }
+  .tag-course { background: #E0F0FF; color: #2980B9; }
+  .tag-plan { background: #E8F8F5; color: #1ABC9C; }
+  .tag-tool { background: #F4ECF7; color: #8E44AD; }
+  .tag-guide { background: #FEF9E7; color: #F39C12; }
+
+  .card h3 {
+    font-size: 1.05em;
+    font-weight: 700;
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  .card .desc {
+    font-size: 0.88em;
+    color: var(--text-light);
+    line-height: 1.5;
+  }
+
+  .card .arrow {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    font-size: 1.2em;
+    opacity: 0.3;
+    transition: all 0.3s;
+  }
+
+  .card:hover .arrow {
+    opacity: 0.7;
+    transform: translateX(3px);
+  }
+
+  .footer {
+    text-align: center;
+    padding: 40px 20px 30px;
+    color: var(--text-light);
+    font-size: 0.85em;
+  }
+
+  .footer .heart { color: var(--warm); }
+
+  @media (max-width: 640px) {
+    .hero { padding: 44px 20px 38px; }
+    .hero h1 { font-size: 1.7em; }
+    .hero .stats { gap: 20px; }
+    .hero .stat-num { font-size: 1.6em; }
+    .grid { grid-template-columns: 1fr; gap: 12px; }
+    .container { padding: 20px 16px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>丹丹的作品集</h1>
+  <p>用 AI 为孩子们创造的每一个精彩瞬间</p>
+  <div class="stats">
+    <div class="stat">
+      <span class="stat-num">15+</span>
+      <span class="stat-label">互动游戏</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">100+</span>
+      <span class="stat-label">活动方案</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">6</span>
+      <span class="stat-label">AI课程</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- 互动游戏 -->
+  <div class="section-title">
+    <span class="icon">🎮</span> 互动游戏
+    <span class="line"></span>
+  </div>
+  <div class="grid">
+    <a class="card" href="products/fps-game/index.html">
+      <span class="tag tag-game">射击</span>
+      <h3>三角洲行动</h3>
+      <p class="desc">FPS第一人称射击游戏，含展示页和完整游戏</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="products/backrooms-escape/index.html">
+      <span class="tag tag-game">解谜</span>
+      <h3>后室逃脱</h3>
+      <p class="desc">密室逃脱冒险游戏，含儿童版和成人版</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="products/room-escape/index.html">
+      <span class="tag tag-game">解谜</span>
+      <h3>密室逃脱</h3>
+      <p class="desc">网页版密室逃脱游戏</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="products/room-escape-standalone.html">
+      <span class="tag tag-game">解谜</span>
+      <h3>密室逃脱（独立版）</h3>
+      <p class="desc">单文件密室逃脱游戏</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="products/abandoned-facility/index.html">
+      <span class="tag tag-game">冒险</span>
+      <h3>废弃设施冒险</h3>
+      <p class="desc">废弃设施探险冒险游戏</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="products/dark-room/index.html">
+      <span class="tag tag-game">解谜</span>
+      <h3>暗室逃脱</h3>
+      <p class="desc">黑暗主题逃脱游戏</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="products/forest-game/index.html">
+      <span class="tag tag-game">冒险</span>
+      <h3>森林冒险</h3>
+      <p class="desc">森林主题冒险游戏</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="products/cat-game/cat-view.html">
+      <span class="tag tag-game">休闲</span>
+      <h3>猫眼看世界</h3>
+      <p class="desc">猫咪第一人称视角游戏</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="products/fishing-game/index.html">
+      <span class="tag tag-game">休闲</span>
+      <h3>钓鱼游戏</h3>
+      <p class="desc">网页版钓鱼小游戏</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="products/monster-arena.html">
+      <span class="tag tag-game">格斗</span>
+      <h3>怪兽擂台</h3>
+      <p class="desc">怪兽格斗对战游戏</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="products/fighter-jet/index.html">
+      <span class="tag tag-game">模拟</span>
+      <h3>战斗机飞行</h3>
+      <p class="desc">战斗机飞行模拟器</p>
+      <span class="arrow">→</span>
+    </a>
+  </div>
+
+  <!-- 教育课程 -->
+  <div class="section-title">
+    <span class="icon">📚</span> 教育课程
+    <span class="line"></span>
+  </div>
+  <div class="grid">
+    <a class="card" href="products/ai-course/index.html">
+      <span class="tag tag-course">AI</span>
+      <h3>AI科普课程网站</h3>
+      <p class="desc">6模块AI通识课程，从兴趣入门到PBL创造</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="products/education-site/index.html">
+      <span class="tag tag-course">教育</span>
+      <h3>教育网站</h3>
+      <p class="desc">社区教育主题网站，含文章、资源、社区板块</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="products/grade3-games/math-game.html">
+      <span class="tag tag-course">数学</span>
+      <h3>三年级数学闯关</h3>
+      <p class="desc">三年级下册数学游戏化复习</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="products/grade3-games/chinese-game.html">
+      <span class="tag tag-course">语文</span>
+      <h3>三年级语文闯关</h3>
+      <p class="desc">三年级下册语文游戏化复习</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="products/grade5-english/english-game.html">
+      <span class="tag tag-course">英语</span>
+      <h3>五年级英语闯关</h3>
+      <p class="desc">五年级下册英语游戏化复习</p>
+      <span class="arrow">→</span>
+    </a>
+  </div>
+
+  <!-- 活动方案 -->
+  <div class="section-title">
+    <span class="icon">📋</span> 活动方案
+    <span class="line"></span>
+  </div>
+  <div class="grid">
+    <a class="card" href="products/activity-pack-100/index.html">
+      <span class="tag tag-plan">方案库</span>
+      <h3>100个社区探索活动方案</h3>
+      <p class="desc">10批×10个场景，含角色、自然、科学、艺术等</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="products/growth-portfolio/index.html">
+      <span class="tag tag-plan">成长</span>
+      <h3>成长档案</h3>
+      <p class="desc">儿童成长记录系统</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="products/emotion-activities/index.html">
+      <span class="tag tag-plan">情绪</span>
+      <h3>情绪认知活动</h3>
+      <p class="desc">情绪法则书签、活动卡片（含打印版）</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="products/community-explorer/index.html">
+      <span class="tag tag-plan">社区</span>
+      <h3>社区探索活动包</h3>
+      <p class="desc">侦察兵证、学习单、社区地图、探索家证书等</p>
+      <span class="arrow">→</span>
+    </a>
+  </div>
+
+  <!-- 工具 -->
+  <div class="section-title">
+    <span class="icon">🛠️</span> 工具
+    <span class="line"></span>
+  </div>
+  <div class="grid">
+    <a class="card" href="products/voice-input/index.html">
+      <span class="tag tag-tool">工具</span>
+      <h3>语音输入助手</h3>
+      <p class="desc">语音转文字工具，含macOS应用和网页版</p>
+      <span class="arrow">→</span>
+    </a>
+  </div>
+
+  <!-- 攻略参考 -->
+  <div class="section-title">
+    <span class="icon">🗺️</span> 攻略与参考
+    <span class="line"></span>
+  </div>
+  <div class="grid">
+    <a class="card" href="products/chongqing-trip/overview.md" target="_blank">
+      <span class="tag tag-guide">攻略</span>
+      <h3>重庆亲子游攻略</h3>
+      <p class="desc">3套方案（3天/4天/5天），含景点卡片和PPT</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="products/roco-guide/index.html">
+      <span class="tag tag-guide">指南</span>
+      <h3>洛克王国家长指南</h3>
+      <p class="desc">帮助家长了解孩子玩的游戏</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="products/summer-plan/summer-plan.html">
+      <span class="tag tag-guide">计划</span>
+      <h3>暑假计划</h3>
+      <p class="desc">暑假学习与活动计划</p>
+      <span class="arrow">→</span>
+    </a>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>用 <span class="heart">♥</span> 和 AI 一起创造 · 2026</p>
+</div>
+
+</body>
+</html>

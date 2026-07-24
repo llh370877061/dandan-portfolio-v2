@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>社区探索家 · 侦察兵证</title>
+<style>
+  @page {
+    size: A4;
+    margin: 15mm 15mm;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+    background: #f5f5f5;
+    color: #333;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 20mm auto;
+    background: #fff;
+    padding: 12mm 15mm;
+    page-break-after: always;
+    position: relative;
+  }
+
+  .page:last-child {
+    page-break-after: avoid;
+  }
+
+  .card-wrapper {
+    width: 100%;
+    height: 133.5mm;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* 剪刀裁切标记 */
+  .cut-marks {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .cut-marks .scissors-tl {
+    position: absolute;
+    top: 4mm;
+    left: 4mm;
+    font-size: 14px;
+    color: #999;
+  }
+  .cut-marks .scissors-tr {
+    position: absolute;
+    top: 4mm;
+    right: 4mm;
+    font-size: 14px;
+    color: #999;
+  }
+  .cut-marks .scissors-bl {
+    position: absolute;
+    bottom: 4mm;
+    left: 4mm;
+    font-size: 14px;
+    color: #999;
+  }
+  .cut-marks .scissors-br {
+    position: absolute;
+    bottom: 4mm;
+    right: 4mm;
+    font-size: 14px;
+    color: #999;
+  }
+
+  /* 卡片基础样式 */
+  .card {
+    width: 120mm;
+    height: 80mm;
+    border: 2.5px solid #333;
+    border-radius: 6px;
+    padding: 5mm 6mm;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* 裁切虚线 */
+  .page::after {
+    content: "✂ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -";
+    position: absolute;
+    bottom: 133.5mm;
+    left: 15mm;
+    right: 15mm;
+    text-align: center;
+    color: #ccc;
+    font-size: 10px;
+    letter-spacing: 1px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  /* 卡片标题 */
+  .card-title {
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    padding-bottom: 2mm;
+    border-bottom: 1.5px dashed #ccc;
+    margin-bottom: 2mm;
+  }
+
+  /* 编号 */
+  .card-number {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    line-height: 1;
+    margin: 1mm 0;
+  }
+
+  /* 表单区域 */
+  .card-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6mm;
+    font-size: 12px;
+  }
+
+  .form-line {
+    display: flex;
+    align-items: baseline;
+    gap: 2mm;
+  }
+
+  .form-line .label {
+    white-space: nowrap;
+    font-weight: 600;
+  }
+
+  .form-line .line {
+    flex: 1;
+    border-bottom: 1.5px solid #999;
+    height: 14px;
+  }
+
+  /* 有效期 */
+  .card-validity {
+    text-align: center;
+    font-size: 10px;
+    color: #888;
+    padding-top: 1.5mm;
+    border-top: 1px dashed #ddd;
+  }
+
+  /* 底部说明 */
+  .card-footer {
+    text-align: center;
+    font-size: 8.5px;
+    color: #aaa;
+    margin-top: 1mm;
+  }
+
+  /* 页码 */
+  .page-number {
+    position: absolute;
+    bottom: 6mm;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 10px;
+    color: #bbb;
+  }
+
+  /* ======================== */
+  /* 10种设计风格 */
+  /* ======================== */
+
+  /* 1. 橙色探险风 */
+  .style-orange .card {
+    border-color: #F28C28;
+    background: linear-gradient(135deg, #FFF8F0 0%, #FFF2E0 100%);
+  }
+  .style-orange .card-title {
+    color: #D46A00;
+    border-bottom-color: #F28C28;
+  }
+  .style-orange .card-number {
+    color: #F28C28;
+  }
+  .style-orange .card-bg-decor {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .style-orange .card-bg-decor::before {
+    content: "";
+    position: absolute;
+    top: -20px; right: -20px;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: rgba(242, 140, 40, 0.08);
+  }
+  .style-orange .card-bg-decor::after {
+    content: "";
+    position: absolute;
+    top: 10px; left: 10px; right: 10px; bottom: 10px;
+    border: 1px dashed rgba(242, 140, 40, 0.2);
+    border-radius: 4px;
+  }
+  /* 斜纹 */
+  .style-orange .stripe-decor {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 8px,
+      rgba(242, 140, 40, 0.04) 8px,
+      rgba(242, 140, 40, 0.04) 10px
+    );
+    pointer-events: none;
+  }
+  .style-orange .emoji-icon {
+    position: absolute;
+    top: 4mm;
+    right: 5mm;
+    font-size: 20px;
+    opacity: 0.7;
+  }
+
+  /* 2. 绿色丛林风 */
+  .style-green .card {
+    border-color: #4CAF50;
+    background: linear-gradient(135deg, #F0FFF0 0%, #E8F5E9 100%);
+  }
+  .style-green .card-title {
+    color: #2E7D32;
+    border-bottom-color: #4CAF50;
+  }
+  .style-green .card-number {
+    color: #4CAF50;
+  }
+  .style-green .card-bg-decor {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .style-green .card-bg-decor::before {
+    content: "";
+    position: absolute;
+    top: -10px; right: -10px;
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: rgba(76, 175, 80, 0.07);
+  }
+  .style-green .leaf-decor {
+    position: absolute;
+    top: 5mm; left: 5mm;
+    font-size: 18px;
+    opacity: 0.3;
+  }
+  .style-green .leaf-decor2 {
+    position: absolute;
+    bottom: 5mm; right: 5mm;
+    font-size: 14px;
+    opacity: 0.25;
+    transform: rotate(45deg);
+  }
+  .style-green .emoji-icon {
+    position: absolute;
+    top: 4mm;
+    right: 5mm;
+    font-size: 20px;
+    opacity: 0.7;
+  }
+
+  /* 3. 蓝色科技风 */
+  .style-blue .card {
+    border-color: #2196F3;
+    background: linear-gradient(135deg, #F0F8FF 0%, #E3F2FD 100%);
+  }
+  .style-blue .card-title {
+    color: #1565C0;
+    border-bottom-color: #2196F3;
+  }
+  .style-blue .card-number {
+    color: #2196F3;
+  }
+  .style-blue .card-bg-decor {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .style-blue .geo-line {
+    position: absolute;
+    background: rgba(33, 150, 243, 0.08);
+  }
+  .style-blue .geo-line:nth-child(1) {
+    top: 15mm; left: 0; width: 40mm; height: 1px;
+  }
+  .style-blue .geo-line:nth-child(2) {
+    top: 0; left: 25mm; width: 1px; height: 30mm;
+  }
+  .style-blue .geo-line:nth-child(3) {
+    bottom: 15mm; right: 0; width: 35mm; height: 1px;
+  }
+  .style-blue .geo-line:nth-child(4) {
+    bottom: 0; right: 20mm; width: 1px; height: 25mm;
+  }
+  .style-blue .geo-circle {
+    position: absolute;
+    bottom: 8mm; left: 8mm;
+    width: 15mm; height: 15mm;
+    border: 1px solid rgba(33, 150, 243, 0.12);
+    border-radius: 50%;
+  }
+  .style-blue .emoji-icon {
+    position: absolute;
+    top: 4mm;
+    right: 5mm;
+    font-size: 20px;
+    opacity: 0.7;
+  }
+
+  /* 4. 紫色神秘风 */
+  .style-purple .card {
+    border-color: #9C27B0;
+    background: linear-gradient(135deg, #F8F0FF 0%, #F3E5F5 100%);
+  }
+  .style-purple .card-title {
+    color: #7B1FA2;
+    border-bottom-color: #9C27B0;
+  }
+  .style-purple .card-number {
+    color: #9C27B0;
+  }
+  .style-purple .card-bg-decor {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .style-purple .star {
+    position: absolute;
+    color: rgba(156, 39, 176, 0.1);
+    font-size: 10px;
+  }
+  .style-purple .star:nth-child(1) { top: 8mm; left: 10mm; font-size: 8px; }
+  .style-purple .star:nth-child(2) { top: 15mm; right: 15mm; font-size: 12px; }
+  .style-purple .star:nth-child(3) { bottom: 12mm; left: 18mm; font-size: 6px; }
+  .style-purple .star:nth-child(4) { bottom: 8mm; right: 10mm; font-size: 10px; }
+  .style-purple .star:nth-child(5) { top: 25mm; left: 5mm; font-size: 7px; }
+  .style-purple .emoji-icon {
+    position: absolute;
+    top: 4mm;
+    right: 5mm;
+    font-size: 20px;
+    opacity: 0.7;
+  }
+
+  /* 5. 红色热血风 */
+  .style-red .card {
+    border-color: #F44336;
+    background: linear-gradient(135deg, #FFF5F5 0%, #FFEBEE 100%);
+  }
+  .style-red .card-title {
+    color: #C62828;
+    border-bottom-color: #F44336;
+  }
+  .style-red .card-number {
+    color: #F44336;
+  }
+  .style-red .card-bg-decor {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .style-red .lightning {
+    position: absolute;
+    font-size: 16px;
+    opacity: 0.1;
+  }
+  .style-red .lightning:nth-child(1) { top: 6mm; left: 8mm; }
+  .style-red .lightning:nth-child(2) { bottom: 10mm; right: 12mm; font-size: 12px; }
+  .style-red .lightning:nth-child(3) { top: 20mm; right: 8mm; font-size: 10px; transform: rotate(20deg); }
+  .style-red .emoji-icon {
+    position: absolute;
+    top: 4mm;
+    right: 5mm;
+    font-size: 20px;
+    opacity: 0.7;
+  }
+
+  /* 6. 金色王牌风 */
+  .style-gold .card {
+    border-color: #DAA520;
+    background: linear-gradient(135deg, #FFFBF0 0%, #FFF8E1 100%);
+  }
+  .style-gold .card-title {
+    color: #B8860B;
+    border-bottom-color: #DAA520;
+  }
+  .style-gold .card-number {
+    color: #DAA520;
+    text-shadow: 1px 1px 0 rgba(218, 165, 32, 0.15);
+  }
+  .style-gold .card-bg-decor {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .style-gold .star-decor {
+    position: absolute;
+    color: rgba(218, 165, 32, 0.12);
+    font-size: 12px;
+  }
+  .style-gold .star-decor:nth-child(1) { top: 6mm; left: 8mm; font-size: 14px; }
+  .style-gold .star-decor:nth-child(2) { top: 12mm; right: 12mm; font-size: 8px; }
+  .style-gold .star-decor:nth-child(3) { bottom: 10mm; left: 15mm; font-size: 10px; }
+  .style-gold .star-decor:nth-child(4) { bottom: 6mm; right: 8mm; font-size: 16px; }
+  .style-gold .emoji-icon {
+    position: absolute;
+    top: 4mm;
+    right: 5mm;
+    font-size: 20px;
+    opacity: 0.7;
+  }
+
+  /* 7. 青色海洋风 */
+  .style-cyan .card {
+    border-color: #00BCD4;
+    background: linear-gradient(135deg, #F0FFFF 0%, #E0F7FA 100%);
+  }
+  .style-cyan .card-title {
+    color: #00838F;
+    border-bottom-color: #00BCD4;
+  }
+  .style-cyan .card-number {
+    color: #00BCD4;
+  }
+  .style-cyan .card-bg-decor {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .style-cyan .wave {
+    position: absolute;
+    bottom: 10mm;
+    left: 0;
+    right: 0;
+    height: 8px;
+    border-bottom: 2px solid rgba(0, 188, 212, 0.08);
+    border-radius: 0 0 50% 50% / 0 0 100% 100%;
+  }
+  .style-cyan .wave:nth-child(2) {
+    bottom: 14mm;
+    border-color: rgba(0, 188, 212, 0.05);
+  }
+  .style-cyan .emoji-icon {
+    position: absolute;
+    top: 4mm;
+    right: 5mm;
+    font-size: 20px;
+    opacity: 0.7;
+  }
+
+  /* 8. 棕色复古风 */
+  .style-brown .card {
+    border-color: #8D6E63;
+    background: linear-gradient(135deg, #FFF8F0 0%, #EFEBE9 100%);
+  }
+  .style-brown .card-title {
+    color: #5D4037;
+    border-bottom-color: #8D6E63;
+  }
+  .style-brown .card-number {
+    color: #8D6E63;
+  }
+  .style-brown .card-bg-decor {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .style-brown .vintage-border {
+    position: absolute;
+    top: 3mm; left: 3mm; right: 3mm; bottom: 3mm;
+    border: 2px dashed rgba(141, 110, 99, 0.15);
+    border-radius: 3px;
+  }
+  .style-brown .emoji-icon {
+    position: absolute;
+    top: 4mm;
+    right: 5mm;
+    font-size: 20px;
+    opacity: 0.7;
+  }
+
+  /* 9. 粉色可爱风 */
+  .style-pink .card {
+    border-color: #E91E63;
+    background: linear-gradient(135deg, #FFF5F8 0%, #FCE4EC 100%);
+  }
+  .style-pink .card-title {
+    color: #AD1457;
+    border-bottom-color: #E91E63;
+  }
+  .style-pink .card-number {
+    color: #E91E63;
+  }
+  .style-pink .card-bg-decor {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .style-pink .dot {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(233, 30, 99, 0.06);
+  }
+  .style-pink .dot:nth-child(1) { top: 8mm; left: 10mm; width: 8mm; height: 8mm; }
+  .style-pink .dot:nth-child(2) { top: 5mm; right: 20mm; width: 5mm; height: 5mm; }
+  .style-pink .dot:nth-child(3) { bottom: 8mm; left: 20mm; width: 6mm; height: 6mm; }
+  .style-pink .dot:nth-child(4) { bottom: 12mm; right: 10mm; width: 4mm; height: 4mm; }
+  .style-pink .dot:nth-child(5) { top: 20mm; left: 5mm; width: 3mm; height: 3mm; }
+  .style-pink .dot:nth-child(6) { bottom: 5mm; left: 8mm; width: 5mm; height: 5mm; }
+  .style-pink .emoji-icon {
+    position: absolute;
+    top: 4mm;
+    right: 5mm;
+    font-size: 20px;
+    opacity: 0.7;
+  }
+
+  /* 10. 黑色酷帅风 */
+  .style-black .card {
+    border-color: #333;
+    background: linear-gradient(135deg, #FAFAFA 0%, #F0F0F0 100%);
+  }
+  .style-black .card-title {
+    color: #222;
+    border-bottom-color: #333;
+  }
+  .style-black .card-number {
+    color: #222;
+  }
+  .style-black .card-bg-decor {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .style-black .slash-line {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.04);
+    transform: rotate(-30deg);
+  }
+  .style-black .slash-line:nth-child(1) {
+    top: -10mm; left: 15mm; width: 1px; height: 50mm;
+  }
+  .style-black .slash-line:nth-child(2) {
+    top: -5mm; left: 30mm; width: 1px; height: 45mm;
+  }
+  .style-black .slash-line:nth-child(3) {
+    top: 0; right: 20mm; width: 1px; height: 40mm;
+  }
+  .style-black .slash-line:nth-child(4) {
+    bottom: -5mm; right: 35mm; width: 1px; height: 35mm;
+  }
+  .style-black .emoji-icon {
+    position: absolute;
+    top: 4mm;
+    right: 5mm;
+    font-size: 20px;
+    opacity: 0.7;
+  }
+
+  /* 打印样式 */
+  @media print {
+    body {
+      background: none;
+    }
+    .page {
+      margin: 0;
+      padding: 12mm 15mm;
+      box-shadow: none;
+      border: none;
+    }
+    .page-number {
+      color: #ccc;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== 第1页：卡片1&2 ==================== -->
+<div class="page">
+  <!-- 卡片1：橙色探险风 -->
+  <div class="card-wrapper">
+    <div class="cut-marks">
+      <span class="scissors-tl">✂</span>
+      <span class="scissors-tr">✂</span>
+    </div>
+    <div class="card style-orange">
+      <div class="card-bg-decor"></div>
+      <div class="stripe-decor"></div>
+      <span class="emoji-icon">🕵️</span>
+      <div class="card-title">社区探索家 · 侦察兵证</div>
+      <div class="card-number">NO.01</div>
+      <div class="card-form">
+        <div class="form-line">
+          <span class="label">侦察兵代号：</span>
+          <span class="line"></span>
+        </div>
+        <div class="form-line">
+          <span class="label">所属小队：</span>
+          <span class="line"></span>
+        </div>
+      </div>
+      <div class="card-validity">有效期：2026年社区探索活动期间</div>
+      <div class="card-footer">凭此证可进入社区执行侦察任务</div>
+    </div>
+  </div>
+
+  <!-- 卡片2：绿色丛林风 -->
+  <div class="card-wrapper">
+    <div class="cut-marks">
+      <span class="scissors-bl">✂</span>
+      <span class="scissors-br">✂</span>
+    </div>
+    <div class="card style-green">
+      <div class="card-bg-decor"></div>
+      <span class="leaf-decor">🌿</span>
+      <span class="leaf-decor2">🍃</span>
+      <span class="emoji-icon">🔍</span>
+      <div class="card-title">社区探索家 · 侦察兵证</div>
+      <div class="card-number">NO.02</div>
+      <div class="card-form">
+        <div class="form-line">
+          <span class="label">侦察兵代号：</span>
+          <span class="line"></span>
+        </div>
+        <div class="form-line">
+          <span class="label">所属小队：</span>
+          <span class="line"></span>
+        </div>
+      </div>
+      <div class="card-validity">有效期：2026年社区探索活动期间</div>
+      <div class="card-footer">凭此证可进入社区执行侦察任务</div>
+    </div>
+  </div>
+
+  <div class="page-number">— 第 1 页 / 共 5 页 —</div>
+</div>
+
+<!-- ==================== 第2页：卡片3&4 ==================== -->
+<div class="page">
+  <!-- 卡片3：蓝色科技风 -->
+  <div class="card-wrapper">
+    <div class="cut-marks">
+      <span class="scissors-tl">✂</span>
+      <span class="scissors-tr">✂</span>
+    </div>
+    <div class="card style-blue">
+      <div class="card-bg-decor">
+        <div class="geo-line"></div>
+        <div class="geo-line"></div>
+        <div class="geo-line"></div>
+        <div class="geo-line"></div>
+        <div class="geo-circle"></div>
+      </div>
+      <span class="emoji-icon">🛰️</span>
+      <div class="card-title">社区探索家 · 侦察兵证</div>
+      <div class="card-number">NO.03</div>
+      <div class="card-form">
+        <div class="form-line">
+          <span class="label">侦察兵代号：</span>
+          <span class="line"></span>
+        </div>
+        <div class="form-line">
+          <span class="label">所属小队：</span>
+          <span class="line"></span>
+        </div>
+      </div>
+      <div class="card-validity">有效期：2026年社区探索活动期间</div>
+      <div class="card-footer">凭此证可进入社区执行侦察任务</div>
+    </div>
+  </div>
+
+  <!-- 卡片4：紫色神秘风 -->
+  <div class="card-wrapper">
+    <div class="cut-marks">
+      <span class="scissors-bl">✂</span>
+      <span class="scissors-br">✂</span>
+    </div>
+    <div class="card style-purple">
+      <div class="card-bg-decor">
+        <span class="star">✦</span>
+        <span class="star">✦</span>
+        <span class="star">✦</span>
+        <span class="star">✦</span>
+        <span class="star">✦</span>
+      </div>
+      <span class="emoji-icon">🌟</span>
+      <div class="card-title">社区探索家 · 侦察兵证</div>
+      <div class="card-number">NO.04</div>
+      <div class="card-form">
+        <div class="form-line">
+          <span class="label">侦察兵代号：</span>
+          <span class="line"></span>
+        </div>
+        <div class="form-line">
+          <span class="label">所属小队：</span>
+          <span class="line"></span>
+        </div>
+      </div>
+      <div class="card-validity">有效期：2026年社区探索活动期间</div>
+      <div class="card-footer">凭此证可进入社区执行侦察任务</div>
+    </div>
+  </div>
+
+  <div class="page-number">— 第 2 页 / 共 5 页 —</div>
+</div>
+
+<!-- ==================== 第3页：卡片5&6 ==================== -->
+<div class="page">
+  <!-- 卡片5：红色热血风 -->
+  <div class="card-wrapper">
+    <div class="cut-marks">
+      <span class="scissors-tl">✂</span>
+      <span class="scissors-tr">✂</span>
+    </div>
+    <div class="card style-red">
+      <div class="card-bg-decor">
+        <span class="lightning">⚡</span>
+        <span class="lightning">⚡</span>
+        <span class="lightning">⚡</span>
+      </div>
+      <span class="emoji-icon">🚀</span>
+      <div class="card-title">社区探索家 · 侦察兵证</div>
+      <div class="card-number">NO.05</div>
+      <div class="card-form">
+        <div class="form-line">
+          <span class="label">侦察兵代号：</span>
+          <span class="line"></span>
+        </div>
+        <div class="form-line">
+          <span class="label">所属小队：</span>
+          <span class="line"></span>
+        </div>
+      </div>
+      <div class="card-validity">有效期：2026年社区探索活动期间</div>
+      <div class="card-footer">凭此证可进入社区执行侦察任务</div>
+    </div>
+  </div>
+
+  <!-- 卡片6：金色王牌风 -->
+  <div class="card-wrapper">
+    <div class="cut-marks">
+      <span class="scissors-bl">✂</span>
+      <span class="scissors-br">✂</span>
+    </div>
+    <div class="card style-gold">
+      <div class="card-bg-decor">
+        <span class="star-decor">★</span>
+        <span class="star-decor">★</span>
+        <span class="star-decor">★</span>
+        <span class="star-decor">★</span>
+      </div>
+      <span class="emoji-icon">👑</span>
+      <div class="card-title">社区探索家 · 侦察兵证</div>
+      <div class="card-number">NO.06</div>
+      <div class="card-form">
+        <div class="form-line">
+          <span class="label">侦察兵代号：</span>
+          <span class="line"></span>
+        </div>
+        <div class="form-line">
+          <span class="label">所属小队：</span>
+          <span class="line"></span>
+        </div>
+      </div>
+      <div class="card-validity">有效期：2026年社区探索活动期间</div>
+      <div class="card-footer">凭此证可进入社区执行侦察任务</div>
+    </div>
+  </div>
+
+  <div class="page-number">— 第 3 页 / 共 5 页 —</div>
+</div>
+
+<!-- ==================== 第4页：卡片7&8 ==================== -->
+<div class="page">
+  <!-- 卡片7：青色海洋风 -->
+  <div class="card-wrapper">
+    <div class="cut-marks">
+      <span class="scissors-tl">✂</span>
+      <span class="scissors-tr">✂</span>
+    </div>
+    <div class="card style-cyan">
+      <div class="card-bg-decor">
+        <div class="wave"></div>
+        <div class="wave"></div>
+      </div>
+      <span class="emoji-icon">⚓</span>
+      <div class="card-title">社区探索家 · 侦察兵证</div>
+      <div class="card-number">NO.07</div>
+      <div class="card-form">
+        <div class="form-line">
+          <span class="label">侦察兵代号：</span>
+          <span class="line"></span>
+        </div>
+        <div class="form-line">
+          <span class="label">所属小队：</span>
+          <span class="line"></span>
+        </div>
+      </div>
+      <div class="card-validity">有效期：2026年社区探索活动期间</div>
+      <div class="card-footer">凭此证可进入社区执行侦察任务</div>
+    </div>
+  </div>
+
+  <!-- 卡片8：棕色复古风 -->
+  <div class="card-wrapper">
+    <div class="cut-marks">
+      <span class="scissors-bl">✂</span>
+      <span class="scissors-br">✂</span>
+    </div>
+    <div class="card style-brown">
+      <div class="card-bg-decor">
+        <div class="vintage-border"></div>
+      </div>
+      <span class="emoji-icon">🗺️</span>
+      <div class="card-title">社区探索家 · 侦察兵证</div>
+      <div class="card-number">NO.08</div>
+      <div class="card-form">
+        <div class="form-line">
+          <span class="label">侦察兵代号：</span>
+          <span class="line"></span>
+        </div>
+        <div class="form-line">
+          <span class="label">所属小队：</span>
+          <span class="line"></span>
+        </div>
+      </div>
+      <div class="card-validity">有效期：2026年社区探索活动期间</div>
+      <div class="card-footer">凭此证可进入社区执行侦察任务</div>
+    </div>
+  </div>
+
+  <div class="page-number">— 第 4 页 / 共 5 页 —</div>
+</div>
+
+<!-- ==================== 第5页：卡片9&10 ==================== -->
+<div class="page">
+  <!-- 卡片9：粉色可爱风 -->
+  <div class="card-wrapper">
+    <div class="cut-marks">
+      <span class="scissors-tl">✂</span>
+      <span class="scissors-tr">✂</span>
+    </div>
+    <div class="card style-pink">
+      <div class="card-bg-decor">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <span class="emoji-icon">🌸</span>
+      <div class="card-title">社区探索家 · 侦察兵证</div>
+      <div class="card-number">NO.09</div>
+      <div class="card-form">
+        <div class="form-line">
+          <span class="label">侦察兵代号：</span>
+          <span class="line"></span>
+        </div>
+        <div class="form-line">
+          <span class="label">所属小队：</span>
+          <span class="line"></span>
+        </div>
+      </div>
+      <div class="card-validity">有效期：2026年社区探索活动期间</div>
+      <div class="card-footer">凭此证可进入社区执行侦察任务</div>
+    </div>
+  </div>
+
+  <!-- 卡片10：黑色酷帅风 -->
+  <div class="card-wrapper">
+    <div class="cut-marks">
+      <span class="scissors-bl">✂</span>
+      <span class="scissors-br">✂</span>
+    </div>
+    <div class="card style-black">
+      <div class="card-bg-decor">
+        <div class="slash-line"></div>
+        <div class="slash-line"></div>
+        <div class="slash-line"></div>
+        <div class="slash-line"></div>
+      </div>
+      <span class="emoji-icon">⚡</span>
+      <div class="card-title">社区探索家 · 侦察兵证</div>
+      <div class="card-number">NO.10</div>
+      <div class="card-form">
+        <div class="form-line">
+          <span class="label">侦察兵代号：</span>
+          <span class="line"></span>
+        </div>
+        <div class="form-line">
+          <span class="label">所属小队：</span>
+          <span class="line"></span>
+        </div>
+      </div>
+      <div class="card-validity">有效期：2026年社区探索活动期间</div>
+      <div class="card-footer">凭此证可进入社区执行侦察任务</div>
+    </div>
+  </div>
+
+  <div class="page-number">— 第 5 页 / 共 5 页 —</div>
+</div>
+
+</body>
+</html>

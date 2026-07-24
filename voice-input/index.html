@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>语音输入助手</title>
+<style>
+  :root {
+    --bg: #f7f6f3;
+    --card: #ffffff;
+    --border: #e4e2de;
+    --text: #1a1a1a;
+    --text-dim: #999;
+    --text-mid: #666;
+    --accent: #4a7c59;
+    --accent-hover: #3d6a4b;
+    --accent-light: #eaf3ec;
+    --danger: #d94452;
+    --danger-light: #fde8ea;
+    --warn: #e8a33d;
+    --warn-light: #fef7e8;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+    --shadow: 0 4px 16px rgba(0,0,0,0.06);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.10);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --radius-xs: 6px;
+    --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { height: 100%; }
+  body {
+    font-family: -apple-system, "PingFang SC", "SF Pro Text", "Helvetica Neue", "Noto Sans SC", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px 40px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* === Header === */
+  .header {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .header h1 {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    color: var(--text);
+  }
+  .header .sub {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  /* === Main Card === */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    width: 100%;
+    max-width: 520px;
+    box-shadow: var(--shadow);
+    margin-bottom: 12px;
+  }
+
+  /* === Lang Bar === */
+  .lang-bar {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .lang-bar::-webkit-scrollbar { display: none; }
+  .lang-pill {
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    font-size: 12px;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: all var(--transition);
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-family: inherit;
+  }
+  .lang-pill.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    font-weight: 500;
+  }
+  .lang-pill:not(.active):hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* === Waveform === */
+  .waveform-wrap {
+    position: relative;
+    height: 64px;
+    margin-bottom: 16px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: #fafaf8;
+    border: 1px solid var(--border);
+  }
+  .waveform-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .waveform-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    transition: opacity var(--transition);
+  }
+  .waveform-overlay.idle { opacity: 1; }
+  .waveform-overlay.active { opacity: 0; }
+  .waveform-hint {
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+  }
+  .volume-meter {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 32px;
+    border-radius: 2px;
+    background: #eee;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .volume-fill {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    border-radius: 2px;
+    background: var(--accent);
+    transition: height 0.08s;
+    min-height: 2px;
+  }
+
+  /* === Mic Button === */
+  .mic-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .mic-btn {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    border: none;
+    background: var(--accent);
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+  .mic-btn:hover { background: var(--accent-hover); transform: scale(1.03); }
+  .mic-btn:active { transform: scale(0.97); }
+  .mic-btn.recording {
+    background: var(--danger);
+    animation: micPulse 1.5s ease-in-out infinite;
+  }
+  .mic-btn.recording:hover { background: #c0392b; }
+  @keyframes micPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(217,68,82,0.25); }
+    50% { box-shadow: 0 0 0 14px rgba(217,68,82,0); }
+  }
+  .mic-btn .ripple {
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px solid var(--danger);
+    opacity: 0;
+    animation: rippleOut 1.5s ease-out infinite;
+  }
+  .mic-btn:not(.recording) .ripple { display: none; }
+  @keyframes rippleOut {
+    0% { transform: scale(0.85); opacity: 0.6; }
+    100% { transform: scale(1.3); opacity: 0; }
+  }
+
+  .side-btn {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--text-dim);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .side-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .side-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .side-btn:disabled:hover { border-color: var(--border); color: var(--text-dim); }
+
+  /* === Transcript === */
+  .transcript-wrap {
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: #fcfbf9;
+    transition: border-color var(--transition);
+  }
+  .transcript-wrap:focus-within { border-color: var(--accent); }
+  #transcriptBox {
+    width: 100%;
+    min-height: 140px;
+    max-height: 360px;
+    padding: 14px 14px 14px 14px;
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text);
+    background: transparent;
+    border: none;
+    resize: vertical;
+    outline: none;
+    font-family: inherit;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  #transcriptBox:empty::before {
+    content: attr(data-placeholder);
+    color: #c5c3bf;
+    pointer-events: none;
+  }
+  #transcriptBox .interim {
+    color: var(--text-dim);
+    border-bottom: 1px dashed #ccc;
+  }
+  .char-count {
+    position: absolute;
+    bottom: 8px;
+    right: 12px;
+    font-size: 11px;
+    color: #ccc;
+    pointer-events: none;
+  }
+
+  /* === Action Bar === */
+  .action-bar {
+    display: flex;
+    gap: 6px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .action-btn {
+    padding: 7px 14px;
+    border-radius: var(--radius-xs);
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--text-mid);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all var(--transition);
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .action-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .action-btn.primary {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  .action-btn.primary:hover { background: var(--accent-hover); }
+  .action-btn.danger { color: var(--danger); }
+  .action-btn.danger:hover { background: var(--danger-light); border-color: var(--danger); }
+
+  /* === Options Row === */
+  .options-row {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .opt-label {
+    font-size: 12px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .opt-label input { accent-color: var(--accent); width: 14px; height: 14px; }
+  .opt-label select {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xs);
+    padding: 2px 6px;
+    font-size: 11px;
+    color: var(--text-mid);
+    background: white;
+    font-family: inherit;
+  }
+
+  /* === Tips === */
+  .tips {
+    background: var(--accent-light);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    font-size: 12px;
+    line-height: 1.8;
+    color: #4a6b50;
+  }
+  .tips strong { color: var(--accent); }
+  .tips kbd {
+    display: inline-block;
+    padding: 1px 5px;
+    border-radius: 3px;
+    background: white;
+    border: 1px solid #c5d8c8;
+    font-size: 11px;
+    font-family: inherit;
+    margin: 0 1px;
+  }
+
+  /* === History === */
+  .history-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    width: 100%;
+    max-width: 520px;
+    box-shadow: var(--shadow-sm);
+  }
+  .history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .history-title {
+    font-size: 12px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .history-clear {
+    font-size: 11px;
+    color: var(--text-dim);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .history-clear:hover { color: var(--danger); }
+  .history-empty {
+    text-align: center;
+    padding: 20px;
+    color: #ccc;
+    font-size: 13px;
+  }
+  .h-item {
+    padding: 10px 12px;
+    border-radius: var(--radius-xs);
+    background: #fafaf8;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    transition: background var(--transition);
+  }
+  .h-item:hover { background: #f3f2ef; }
+  .h-item .h-text {
+    flex: 1;
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .h-item .h-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .h-item .h-time {
+    font-size: 11px;
+    color: #ccc;
+  }
+  .h-item .h-copy {
+    font-size: 11px;
+    color: var(--accent);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    padding: 0;
+  }
+  .h-item .h-copy:hover { color: var(--accent-hover); }
+
+  /* === Toast === */
+  .toast {
+    position: fixed;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(30,30,30,0.92);
+    color: white;
+    padding: 10px 22px;
+    border-radius: 20px;
+    font-size: 13px;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* === No Support === */
+  .no-support {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--danger);
+    font-size: 15px;
+    line-height: 1.8;
+  }
+  .no-support .icon { font-size: 36px; margin-bottom: 12px; }
+  .no-support a { color: var(--accent); }
+
+  /* === Responsive === */
+  @media (max-width: 400px) {
+    body { padding: 16px 10px 32px; }
+    .card { padding: 18px; }
+    #transcriptBox { font-size: 14px; min-height: 120px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>语音输入助手</h1>
+  <p class="sub">按住说话 · 松开转文字 · 复制到对话框</p>
+</div>
+
+<div class="card" id="mainCard">
+  <div class="lang-bar" id="langBar">
+    <button class="lang-pill active" data-lang="zh-CN">中文</button>
+    <button class="lang-pill" data-lang="en-US">English</button>
+    <button class="lang-pill" data-lang="ja">日本語</button>
+    <button class="lang-pill" data-lang="ko">한국어</button>
+    <button class="lang-pill" data-lang="yue-Hant-HK">粤语</button>
+  </div>
+
+  <div class="options-row">
+    <label class="opt-label"><input type="checkbox" id="optPunct" checked> 智能标点</label>
+    <label class="opt-label"><input type="checkbox" id="optPara" checked> 自动分段</label>
+    <label class="opt-label">
+      静音断句
+      <select id="optSilence">
+        <option value="0">关</option>
+        <option value="1500">1.5秒</option>
+        <option value="2000" selected>2秒</option>
+        <option value="3000">3秒</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="waveform-wrap">
+    <canvas class="waveform-canvas" id="waveCanvas"></canvas>
+    <div class="volume-meter"><div class="volume-fill" id="volumeFill"></div></div>
+    <div class="waveform-overlay idle" id="waveOverlay">
+      <span class="waveform-hint" id="waveHint">按住空格或点击麦克风开始</span>
+    </div>
+  </div>
+
+  <div class="mic-area">
+    <button class="side-btn" id="undoBtn" title="撤销上一句 (Esc)" disabled>↩</button>
+    <button class="mic-btn" id="micBtn" title="按住说话，松开停止">
+      <span class="ripple"></span>
+      <span id="micIcon">🎙</span>
+    </button>
+    <button class="side-btn" id="punctBtn" title="手动添加标点">。 </button>
+  </div>
+
+  <div class="transcript-wrap">
+    <div id="transcriptBox" contenteditable="true" data-placeholder="语音转录的文字会出现在这里..."></div>
+    <div class="char-count" id="charCount">0 字</div>
+  </div>
+
+  <div class="action-bar">
+    <button class="action-btn primary" id="copyAllBtn">复制全部</button>
+    <button class="action-btn" id="copyLastBtn">复制末句</button>
+    <button class="action-btn" id="selectBtn">全选</button>
+    <button class="action-btn" id="appendBtn">粘贴到剪贴板</button>
+    <button class="action-btn danger" id="clearBtn">清空</button>
+  </div>
+</div>
+
+<div class="tips" id="tipsBox">
+  <strong>快捷键</strong><br>
+  <kbd>Space</kbd> 按住说话，松开停止 &nbsp;
+  <kbd>Esc</kbd> 撤销上一句 &nbsp;
+  <kbd>Enter</kbd> 插入换行<br>
+  <kbd>Ctrl+A</kbd> 全选 &nbsp;
+  <kbd>Ctrl+Z</kbd> 撤销编辑 &nbsp;
+  长文本自动分段，可直接在文本框内编辑
+</div>
+
+<div class="history-card">
+  <div class="history-header">
+    <span class="history-title">历史记录</span>
+    <button class="history-clear" id="historyClear">清空历史</button>
+  </div>
+  <div id="historyList">
+    <div class="history-empty">暂无记录</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ========== DOM ==========
+const micBtn = document.getElementById('micBtn');
+const micIcon = document.getElementById('micIcon');
+const undoBtn = document.getElementById('undoBtn');
+const punctBtn = document.getElementById('punctBtn');
+const transcriptBox = document.getElementById('transcriptBox');
+const charCount = document.getElementById('charCount');
+const waveCanvas = document.getElementById('waveCanvas');
+const waveOverlay = document.getElementById('waveOverlay');
+const waveHint = document.getElementById('waveHint');
+const volumeFill = document.getElementById('volumeFill');
+const copyAllBtn = document.getElementById('copyAllBtn');
+const copyLastBtn = document.getElementById('copyLastBtn');
+const selectBtn = document.getElementById('selectBtn');
+const appendBtn = document.getElementById('appendBtn');
+const clearBtn = document.getElementById('clearBtn');
+const historyList = document.getElementById('historyList');
+const historyClear = document.getElementById('historyClear');
+const toastEl = document.getElementById('toast');
+const tipsBox = document.getElementById('tipsBox');
+const optPunct = document.getElementById('optPunct');
+const optPara = document.getElementById('optPara');
+const optSilence = document.getElementById('optSilence');
+const langPills = document.querySelectorAll('.lang-pill');
+
+// ========== State ==========
+let recognition = null;
+let audioCtx = null;
+let analyser = null;
+let animFrame = null;
+let micStream = null;
+let isRecording = false;
+let isPushToTalk = false; // space key held
+let selectedLang = 'zh-CN';
+let history = JSON.parse(localStorage.getItem('vih_history') || '[]');
+let undoStack = []; // for undo last sentence
+let silenceTimer = null;
+let lastSpeechTime = 0;
+let charTotal = 0;
+
+// ========== Speech Recognition ==========
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (!SpeechRecognition) {
+  document.getElementById('mainCard').innerHTML = `
+    <div class="no-support">
+      <div class="icon">🎙</div>
+      <p>你的浏览器不支持语音识别</p>
+      <p style="margin-top:8px;font-size:13px;color:#888;">
+        推荐使用 <a href="https://www.google.cn/chrome/" target="_blank">Chrome</a> 或
+        <a href="https://www.apple.com/safari/" target="_blank">Safari</a> 浏览器
+      </p>
+    </div>`;
+  document.getElementById('tipsBox').style.display = 'none';
+  throw new Error('SpeechRecognition not supported');
+}
+
+function createRecognition() {
+  const r = new SpeechRecognition();
+  r.continuous = true;
+  r.interimResults = true;
+  r.lang = selectedLang;
+  r.maxAlternatives = 1;
+  return r;
+}
+
+// ========== Punctuation Engine ==========
+const CN_CONNECTORS = /^(然后|但是|不过|所以|因为|如果|虽然|而且|或者|就是|其实|反正|另外|还有|接着|后来|总之|那么|就是说|也就是说|换句话说|不然|否则|因此|从而|进而|与此同时|另一方面|比如说|比如|例如|尤其是|特别是|总之|总而言之|综上所述|话说回来|说实话|老实说|实际上|事实上|严格来说|广义上|通俗来讲)$/;
+const CN_QUESTIONS = /[^。！？]*(吗|呢|嘛|对吧|是吧|好不好|行不行|对不对|是不是|有没有|能不能|会不会|可不可以|对不对|怎么样|什么|怎么|为什么|哪里|哪个|谁|几|多少)[^。！？]*$/;
+const CN_EXCLAIM = /^(太好了|太棒了|天哪|天啊|我去|厉害|牛|绝了|好的很|真是的|服了|无语|离谱|牛逼|卧槽|救命|真的假的|不会吧|我去|我天|牛批|太强了|666|awesome|amazing)$/;
+const CN_BROKEN = /(了|的|过|着|呢|啊|呀|哦|哈|咯|啦|吧)$/;
+const CN_MODAL = /^(嗯|啊|哦|呃|额|唉|哎|喂|嘿|噢|喔|哟|嘻|呵|哼|哈|啧|嗯嗯|嗯啊|好的?|行|可以|对|是|没错|确实|也是|也是啊|那倒是)$/;
+const CN_REPEAT_RE = /([一-鿿])\1{1,}/g;
+
+function punctuateZh(text) {
+  if (!text) return text;
+  let s = text.replace(/\s+/g, '');
+
+  // Split into chunks by long pauses (detected as spaces in final transcript)
+  // Process each chunk
+  const chunks = s.split(/(?<=[。！？])/);
+  let result = '';
+
+  for (let chunk of chunks) {
+    if (!chunk) continue;
+    // Already has sentence-ending punct
+    if (/[。！？]$/.test(chunk)) {
+      result += chunk;
+      continue;
+    }
+
+    // Question detection
+    if (CN_QUESTIONS.test(chunk)) {
+      result += chunk + '？';
+      continue;
+    }
+
+    // Exclamation detection
+    const lastWord = chunk.match(/([一-鿿]{2,6})$/)?.[1];
+    if (lastWord && CN_EXCLAIM.test(lastWord)) {
+      result += chunk + '！';
+      continue;
+    }
+
+    // Connector words → comma
+    chunk = chunk.replace(/(然后|但是|不过|所以|因为|如果|虽然|而且|或者|就是|其实|反正|另外|还有|接着|后来|总之|那么|不然|否则|因此|从而|进而|与此同时|另一方面|比如说|比如|例如|尤其是|特别是|总之|总而言之|综上所述|话说回来|说实话|老实说|实际上|事实上)(?=[^\s，。！？])/g, '$1，');
+
+    // Modal particles → comma if sentence continues
+    chunk = chunk.replace(/(嗯|啊|哦|好吧|行吧|对吧|是不是)(?=[^\s，。！？]{2,})/g, '$1，');
+
+    // Repeat characters → comma
+    chunk = chunk.replace(CN_REPEAT_RE, '$1$1，');
+
+    // Final modal without continuation
+    chunk = chunk.replace(/(了|的|过|着|呢|啊|呀|哦|哈|咯|啦|吧|嘛)(?=[^\s，。！？]*$)/g, '$1。');
+
+    // No ending punct? Add period
+    if (!/[。！？]$/.test(chunk)) chunk += '。';
+
+    result += chunk;
+  }
+
+  // Cleanup
+  result = result.replace(/，+/g, '，').replace(/。+/g, '。').replace(/，([。！？])/g, '$1');
+  result = result.replace(/^[，。！？]+/, '');
+  if (result && !/[。！？"]$/.test(result)) result += '。';
+  return result;
+}
+
+function punctuateEn(text) {
+  if (!text) return text;
+  let s = text.trim();
+  // Question detection
+  if (/^(what|how|why|where|when|who|which|is|are|do|does|can|could|would|should|will|shall|have|has|did)\b/i.test(s) || /\b(that's right|right|isn't it|aren't you|don't you|can you|could you|would you)\b/i.test(s)) {
+    if (!/[.!?]$/.test(s)) s += '?';
+    return s;
+  }
+  // Connector commas
+  s = s.replace(/\b(then|but|so|because|although|however|moreover|furthermore|also|well|okay|right|now|anyway|besides|meanwhile|instead|otherwise|for example|in fact|actually|honestly)\b(?=[^\s,])/gi, '$1,');
+  if (s && !/[.!?]"?$/.test(s)) s += '.';
+  return s;
+}
+
+function applyPunct(text) {
+  if (!optPunct.checked) return text;
+  if (selectedLang.startsWith('zh') || selectedLang === 'yue-Hant-HK') return punctuateZh(text);
+  if (selectedLang === 'en-US') return punctuateEn(text);
+  return text;
+}
+
+// ========== Audio Visualization ==========
+function initAudio(stream) {
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  micStream = stream;
+  const source = audioCtx.createMediaStreamSource(stream);
+  analyser = audioCtx.createAnalyser();
+  analyser.fftSize = 256;
+  analyser.smoothingTimeConstant = 0.75;
+  source.connect(analyser);
+  drawWaveform();
+}
+
+function drawWaveform() {
+  if (!analyser) return;
+  const canvas = waveCanvas;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  const W = rect.width, H = rect.height;
+  const bufLen = analyser.frequencyBinCount;
+  const data = new Uint8Array(bufLen);
+
+  function draw() {
+    if (!analyser) return;
+    animFrame = requestAnimationFrame(draw);
+    analyser.getByteFrequencyData(data);
+
+    // Volume meter
+    let sum = 0;
+    for (let i = 0; i < bufLen; i++) sum += data[i];
+    const avg = sum / bufLen;
+    volumeFill.style.height = Math.min(100, (avg / 128) * 100) + '%';
+
+    // Waveform
+    ctx.clearRect(0, 0, W, H);
+
+    // Center line
+    ctx.strokeStyle = '#eee';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, H / 2);
+    ctx.lineTo(W, H / 2);
+    ctx.stroke();
+
+    // Frequency bars
+    const barW = Math.max(2, (W / bufLen) * 2.5);
+    const gap = 1;
+    for (let i = 0; i < bufLen; i++) {
+      const v = data[i] / 255;
+      const barH = Math.max(2, v * (H * 0.8));
+      const x = i * (barW + gap);
+      const y = (H - barH) / 2;
+
+      const green = Math.round(74 + v * 40);
+      const alpha = 0.4 + v * 0.6;
+      ctx.fillStyle = `rgba(74, ${green}, 89, ${alpha})`;
+      ctx.beginPath();
+      ctx.roundRect(x, y, barW, barH, 1);
+      ctx.fill();
+    }
+  }
+  draw();
+}
+
+function stopAudio() {
+  if (animFrame) cancelAnimationFrame(animFrame);
+  animFrame = null;
+  if (micStream) {
+    micStream.getTracks().forEach(t => t.stop());
+    micStream = null;
+  }
+  if (audioCtx && audioCtx.state !== 'closed') {
+    audioCtx.close().catch(() => {});
+  }
+  audioCtx = null;
+  analyser = null;
+  // Clear canvas
+  const ctx = waveCanvas.getContext('2d');
+  const rect = waveCanvas.getBoundingClientRect();
+  ctx.clearRect(0, 0, rect.width * 2, rect.height * 2);
+  volumeFill.style.height = '2px';
+}
+
+// ========== Recording Control ==========
+let pendingText = ''; // accumulated interim text
+
+async function startRecording() {
+  if (isRecording) return;
+  isRecording = true;
+  pendingText = '';
+
+  micBtn.classList.add('recording');
+  micIcon.textContent = '⏹';
+  waveOverlay.classList.remove('idle');
+  waveOverlay.classList.add('active');
+  waveHint.textContent = '正在听...';
+
+  // Start audio visualization
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    initAudio(stream);
+  } catch(e) {
+    // Visualization is nice-to-have, continue without it
+  }
+
+  // Start speech recognition
+  recognition = createRecognition();
+
+  recognition.onresult = (event) => {
+    let finalText = '';
+    let interimText = '';
+
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const t = event.results[i][0].transcript;
+      if (event.results[i].isFinal) {
+        finalText += t;
+      } else {
+        interimText += t;
+      }
+    }
+
+    if (finalText) {
+      // Save raw for undo
+      undoStack.push(finalText);
+
+      // Apply punctuation
+      const punctuated = applyPunct(finalText);
+
+      // Auto paragraph on long silence
+      const currentText = getFinalText();
+      const shouldBreak = optPara.checked && currentText && !/[。！？\n]$/.test(currentText.trim());
+      const separator = shouldBreak ? '\n' : '';
+
+      setFinalText(currentText + separator + punctuated);
+      lastSpeechTime = Date.now();
+
+      // Start silence timer
+      startSilenceTimer();
+    }
+
+    // Show interim with lighter color
+    renderInterim(interimText);
+  };
+
+  recognition.onerror = (event) => {
+    if (event.error === 'no-speech') {
+      waveHint.textContent = '没有检测到声音';
+    } else if (event.error === 'audio-capture') {
+      waveHint.textContent = '无法访问麦克风';
+    } else if (event.error === 'not-allowed') {
+      waveHint.textContent = '麦克风权限被拒绝';
+    } else if (event.error === 'aborted') {
+      // Normal stop
+    } else {
+      waveHint.textContent = '识别出错: ' + event.error;
+    }
+  };
+
+  recognition.onend = () => {
+    if (isRecording) {
+      // Auto-restart (browser may stop unexpectedly)
+      try { recognition.start(); } catch(e) {}
+    }
+  };
+
+  try {
+    recognition.start();
+  } catch(e) {
+    stopRecording();
+  }
+}
+
+function stopRecording() {
+  if (!isRecording) return;
+  isRecording = false;
+  isPushToTalk = false;
+
+  micBtn.classList.remove('recording');
+  micIcon.textContent = '🎙';
+  waveOverlay.classList.add('idle');
+  waveOverlay.classList.remove('active');
+  waveHint.textContent = '按住空格或点击麦克风开始';
+
+  if (recognition) {
+    try { recognition.stop(); } catch(e) {}
+    recognition = null;
+  }
+
+  stopAudio();
+  clearSilenceTimer();
+  clearInterim();
+
+  // Update status
+  const text = getFinalText();
+  charTotal = text.length;
+  charCount.textContent = charTotal + ' 字';
+
+  if (text.trim()) {
+    saveToHistory(text.trim());
+  }
+
+  updateUndoBtn();
+}
+
+function startSilenceTimer() {
+  clearSilenceTimer();
+  const ms = parseInt(optSilence.value);
+  if (!ms) return;
+  silenceTimer = setInterval(() => {
+    if (Date.now() - lastSpeechTime > ms && isRecording) {
+      // Auto-stop after silence
+      stopRecording();
+      showToast('静音自动停止');
+    }
+  }, 300);
+}
+
+function clearSilenceTimer() {
+  if (silenceTimer) { clearInterval(silenceTimer); silenceTimer = null; }
+}
+
+// ========== Text Management ==========
+function getFinalText() {
+  // Get only final text (not interim)
+  const clone = transcriptBox.cloneNode(true);
+  clone.querySelectorAll('.interim').forEach(el => el.remove());
+  return clone.textContent;
+}
+
+function setFinalText(text) {
+  const interim = transcriptBox.querySelector('.interim');
+  const interimHtml = interim ? interim.outerHTML : '';
+  transcriptBox.innerHTML = escapeHtml(text) + interimHtml;
+  charTotal = text.length;
+  charCount.textContent = charTotal + ' 字';
+  transcriptBox.scrollTop = transcriptBox.scrollHeight;
+}
+
+function renderInterim(text) {
+  const final = getFinalText();
+  let html = escapeHtml(final);
+  if (text) html += `<span class="interim">${escapeHtml(text)}</span>`;
+  transcriptBox.innerHTML = html;
+  transcriptBox.scrollTop = transcriptBox.scrollHeight;
+}
+
+function clearInterim() {
+  const interim = transcriptBox.querySelector('.interim');
+  if (interim) interim.remove();
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function updateUndoBtn() {
+  undoBtn.disabled = undoStack.length === 0;
+}
+
+// ========== Undo ==========
+function undoLastSentence() {
+  if (undoStack.length === 0) return;
+  undoStack.pop();
+
+  // Rebuild text from remaining stack
+  const text = undoStack.join('');
+  const punctuated = applyPunct(text);
+  setFinalText(punctuated);
+  updateUndoBtn();
+  showToast('已撤销');
+}
+
+// ========== Events ==========
+
+// Push-to-talk: hold space
+let spaceHeld = false;
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space' && !spaceHeld && document.activeElement !== transcriptBox) {
+    e.preventDefault();
+    spaceHeld = true;
+    if (!isRecording) startRecording();
+  }
+  if (e.code === 'Escape') {
+    e.preventDefault();
+    if (isRecording) stopRecording();
+    else undoLastSentence();
+  }
+});
+document.addEventListener('keyup', (e) => {
+  if (e.code === 'Space' && spaceHeld) {
+    e.preventDefault();
+    spaceHeld = false;
+    if (isRecording) stopRecording();
+  }
+});
+
+// Click mic
+micBtn.addEventListener('click', () => {
+  if (isRecording) stopRecording();
+  else startRecording();
+});
+
+// Undo
+undoBtn.addEventListener('click', undoLastSentence);
+
+// Manual punctuation
+punctBtn.addEventListener('click', () => {
+  const box = transcriptBox;
+  const text = getFinalText();
+  if (!text) return;
+  // Add appropriate punct at end
+  const last = text.slice(-1);
+  if ('。！？'.includes(last)) {
+    setFinalText(text.slice(0, -1) + '？');
+  } else {
+    setFinalText(text + '。');
+  }
+  box.focus();
+});
+
+// Language
+langPills.forEach(pill => {
+  pill.addEventListener('click', () => {
+    langPills.forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    selectedLang = pill.dataset.lang;
+    if (recognition) recognition.lang = selectedLang;
+    showToast('已切换: ' + pill.textContent);
+  });
+});
+
+// Copy
+copyAllBtn.addEventListener('click', () => {
+  const text = getFinalText().trim();
+  if (!text) { showToast('没有内容'); return; }
+  navigator.clipboard.writeText(text).then(() => showToast('已复制全部'));
+});
+
+copyLastBtn.addEventListener('click', () => {
+  const text = getFinalText().trim();
+  if (!text) { showToast('没有内容'); return; }
+  // Split by sentence-ending punct or newline
+  const parts = text.split(/(?<=[。！？\n])/);
+  const last = (parts[parts.length - 1] || '').trim();
+  if (last) navigator.clipboard.writeText(last).then(() => showToast('已复制末句'));
+  else showToast('没有完整句子');
+});
+
+selectBtn.addEventListener('click', () => {
+  const range = document.createRange();
+  range.selectNodeContents(transcriptBox);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+});
+
+appendBtn.addEventListener('click', () => {
+  const text = getFinalText().trim();
+  if (!text) { showToast('没有内容'); return; }
+  navigator.clipboard.writeText(text).then(() => showToast('已复制到剪贴板'));
+});
+
+clearBtn.addEventListener('click', () => {
+  if (getFinalText().trim() && !confirm('确定清空全部内容？')) return;
+  transcriptBox.innerHTML = '';
+  undoStack = [];
+  charTotal = 0;
+  charCount.textContent = '0 字';
+  updateUndoBtn();
+  showToast('已清空');
+});
+
+// History
+function saveToHistory(text) {
+  if (!text) return;
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const time = `${now.getMonth()+1}/${now.getDate()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  history.unshift({ text, time, id: Date.now() });
+  if (history.length > 30) history = history.slice(0, 30);
+  localStorage.setItem('vih_history', JSON.stringify(history));
+  renderHistory();
+}
+
+function renderHistory() {
+  if (history.length === 0) {
+    historyList.innerHTML = '<div class="history-empty">暂无记录</div>';
+    return;
+  }
+  historyList.innerHTML = history.map((item, i) => `
+    <div class="h-item">
+      <div class="h-text">${escapeHtml(item.text.length > 120 ? item.text.slice(0, 120) + '...' : item.text)}</div>
+      <div class="h-meta">
+        <span class="h-time">${item.time}</span>
+        <button class="h-copy" data-idx="${i}">复制</button>
+      </div>
+    </div>
+  `).join('');
+
+  historyList.querySelectorAll('.h-copy').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.dataset.idx);
+      navigator.clipboard.writeText(history[idx].text).then(() => showToast('已复制'));
+    });
+  });
+}
+
+historyClear.addEventListener('click', () => {
+  if (history.length === 0) return;
+  if (!confirm('确定清空所有历史记录？')) return;
+  history = [];
+  localStorage.removeItem('vih_history');
+  renderHistory();
+  showToast('历史已清空');
+});
+
+// Toast
+function showToast(msg) {
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => toastEl.classList.remove('show'), 1800);
+}
+
+// Canvas resize
+window.addEventListener('resize', () => {
+  if (analyser) {
+    const ctx = waveCanvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const rect = waveCanvas.getBoundingClientRect();
+    waveCanvas.width = rect.width * dpr;
+    waveCanvas.height = rect.height * dpr;
+  }
+});
+
+// ========== Init ==========
+renderHistory();
+updateUndoBtn();
+</script>
+</body>
+</html>

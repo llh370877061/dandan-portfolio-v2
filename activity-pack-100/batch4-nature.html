@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>社区探索活动包 · 第四批：10个自然探索方案</title>
+<style>
+@page { size: A4; margin: 18mm 16mm; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; color: #2d2d2d; line-height: 1.65; background: #fff; font-size: 12.5px; }
+.page { width: 210mm; min-height: 297mm; padding: 18mm 16mm; page-break-after: always; }
+.page:last-child { page-break-after: auto; }
+.cover { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: linear-gradient(160deg, #e8f5e9 0%, #f1f8e9 50%, #fffde7 100%); }
+.cover h1 { font-size: 34px; color: #2e7d32; margin-bottom: 8px; letter-spacing: 2px; }
+.cover .sub { font-size: 16px; color: #555; margin-bottom: 30px; }
+.cover .meta { font-size: 12px; color: #999; margin-top: 20px; }
+.cover .principle { background: #fff; border-radius: 14px; padding: 20px 30px; box-shadow: 0 3px 16px rgba(0,0,0,0.06); margin-top: 24px; max-width: 440px; text-align: left; }
+.cover .principle h3 { color: #2e7d32; font-size: 14px; margin-bottom: 8px; }
+.cover .principle li { margin-bottom: 4px; font-size: 12px; color: #444; }
+.toc { background: #fafafa; border-radius: 12px; padding: 16px 20px; }
+.toc h2 { color: #2e7d32; font-size: 18px; margin-bottom: 12px; border-bottom: 2px solid #a5d6a7; padding-bottom: 6px; }
+.toc table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.toc th { background: #e8f5e9; color: #2e7d32; padding: 6px 8px; text-align: left; border: 1px solid #c8e6c9; }
+.toc td { padding: 5px 8px; border: 1px solid #c8e6c9; }
+.toc tr:nth-child(even) { background: #f5faf5; }
+.plan-num { font-size: 11px; color: #fff; background: #2e7d32; display: inline-block; padding: 2px 10px; border-radius: 10px; margin-bottom: 6px; }
+.plan-title { font-size: 20px; color: #2e7d32; margin-bottom: 10px; font-weight: bold; }
+.tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.tag { background: #e8f5e9; color: #2e7d32; padding: 2px 10px; border-radius: 16px; font-size: 11px; font-weight: bold; }
+.tag.blue { background: #e3f2fd; color: #1565c0; }
+.tag.purple { background: #f3e5f5; color: #7b1fa2; }
+.tag.orange { background: #fff3e0; color: #e65100; }
+.sec { margin-bottom: 12px; }
+.sec h4 { color: #1b5e20; font-size: 13px; margin-bottom: 5px; border-left: 3px solid #a5d6a7; padding-left: 8px; }
+.sec p, .sec li { font-size: 12px; }
+.sec ul, .sec ol { padding-left: 18px; }
+.sec li { margin-bottom: 3px; }
+.age-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 10px; }
+.age-table th { background: #e8f5e9; color: #1b5e20; padding: 5px 8px; text-align: left; border: 1px solid #c8e6c9; }
+.age-table td { padding: 5px 8px; border: 1px solid #c8e6c9; vertical-align: top; }
+.steps-box { background: #fafafa; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
+.steps-box h4 { color: #1b5e20; font-size: 13px; margin-bottom: 5px; }
+.steps-box ol { padding-left: 18px; }
+.steps-box li { margin-bottom: 4px; font-size: 12px; }
+.output-box { background: #e8f5e9; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
+.output-box h4 { color: #1b5e20; font-size: 13px; margin-bottom: 5px; }
+.talk-box { background: #e3f2fd; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
+.talk-box h4 { color: #1565c0; font-size: 13px; margin-bottom: 5px; }
+.talk-box p { font-style: italic; font-size: 12px; color: #333; margin-bottom: 3px; }
+.smart-box { background: #f3e5f5; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
+.smart-box h4 { color: #7b1fa2; font-size: 13px; margin-bottom: 5px; }
+.zpd-box { background: #fff8e1; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
+.zpd-box h4 { color: #f57f17; font-size: 13px; margin-bottom: 5px; }
+.footer { text-align: center; font-size: 10px; color: #bbb; margin-top: 16px; padding-top: 8px; border-top: 1px solid #eee; }
+</style>
+</head>
+<body>
+
+<div class="page cover">
+  <h1>社区探索活动包</h1>
+  <p class="sub">第四批 · 10个自然探索方案</p>
+  <div class="principle">
+    <h3>本批设计逻辑：自然主题深度探索</h3>
+    <ul>
+      <li><strong>生物多样性</strong>：认识社区里的动植物，了解它们的习性</li>
+      <li><strong>生态链思维</strong>：理解"谁吃谁"、"谁住在谁家"</li>
+      <li><strong>季节感知</strong>：感受四季变化对自然的影响</li>
+      <li><strong>环境意识</strong>：发现环境问题，培养保护意识</li>
+      <li><strong>自然艺术</strong>：用自然材料进行艺术创作</li>
+      <li><strong>科学观察</strong>：用科学家的方法观察自然</li>
+    </ul>
+  </div>
+  <p class="meta">设计：丹丹 &nbsp;|&nbsp; v1.0 &nbsp;|&nbsp; 2026年5月</p>
+</div>
+
+<div class="page">
+  <div class="toc">
+    <h2>第四批：10个自然探索方案总览</h2>
+    <table>
+      <tr><th>#</th><th>方案名称</th><th>自然主题</th><th>场景</th><th>时长</th></tr>
+      <tr><td>31</td><td>昆虫侦探</td><td>昆虫观察</td><td>公园/花坛</td><td>1.5-2h</td></tr>
+      <tr><td>32</td><td>鸟类观察员</td><td>鸟类观察</td><td>公园/河边</td><td>2h</td></tr>
+      <tr><td>33</td><td>蚂蚁帝国</td><td>昆虫社会</td><td>花坛/墙角</td><td>1-1.5h</td></tr>
+      <tr><td>34</td><td>落叶博物馆</td><td>植物季节变化</td><td>公园/街道</td><td>1.5-2h</td></tr>
+      <tr><td>35</td><td>水的秘密</td><td>水循环与生态</td><td>河边/池塘</td><td>2h</td></tr>
+      <tr><td>36</td><td>石头的故事</td><td>地质观察</td><td>公园/河滩</td><td>1.5-2h</td></tr>
+      <tr><td>37</td><td>云朵观察站</td><td>气象观察</td><td>阳台/公园</td><td>1-1.5h</td></tr>
+      <tr><td>38</td><td>种子旅行家</td><td>植物传播</td><td>公园/绿地</td><td>1.5-2h</td></tr>
+      <tr><td>39</td><td>生态瓶制作</td><td>微生态</td><td>家中</td><td>2h+持续观察</td></tr>
+      <tr><td>40</td><td>自然笔记</td><td>综合自然观察</td><td>任意自然环境</td><td>1.5-2h</td></tr>
+    </table>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 第四批：10个自然探索方案 · 目录</div>
+</div>
+
+<!-- 方案31-35 -->
+<div class="page">
+  <span class="plan-num">方案 31</span>
+  <h2 class="plan-title">昆虫侦探</h2>
+  <div class="tags">
+    <span class="tag">主题：昆虫观察</span>
+    <span class="tag blue">场景：公园/花坛</span>
+    <span class="tag orange">时长：1.5-2小时</span>
+  </div>
+  <div class="sec"><h4>活动简介</h4><p>在花坛、草地、树干上寻找昆虫，用放大镜观察它们的身体结构，记录它们的行为，做一份"社区昆虫图鉴"。</p></div>
+  <div class="sec"><h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>找虫虫：找到5种不同的虫子，画下来</td><td>感官体验+简单记录</td></tr>
+      <tr><td>7-9岁</td><td>昆虫图鉴：找到5种昆虫，记录名称、特征、栖息地</td><td>能做分类和描述</td></tr>
+      <tr><td>10-12岁</td><td>生态调查：做一份"社区昆虫生态报告"（含食物链分析）</td><td>能做系统分析</td></tr>
+    </table>
+  </div>
+  <div class="smart-box"><h4>多元智能覆盖</h4><p>自然观察（核心）、逻辑数学（分类）、语言（描述）、空间（画图）、身体动觉（趴在地上观察）</p></div>
+  <div class="steps-box"><h4>具体步骤</h4>
+    <ol>
+      <li><strong>准备（5分钟）</strong>：带上放大镜、速写本、彩笔</li>
+      <li><strong>搜索（40-50分钟）</strong>：在花坛、草地、树干上寻找昆虫</li>
+      <li><strong>观察（20分钟）</strong>：用放大镜仔细观察昆虫的身体结构</li>
+      <li><strong>记录（20分钟）</strong>：画下昆虫的样子，记录发现的地点和行为</li>
+      <li><strong>分享（10分钟）</strong>：互相介绍"我找到的最酷的昆虫"</li>
+    </ol>
+  </div>
+  <div class="output-box"><h4>孩子的产出</h4><ul>
+    <li>4-6岁：一张"虫虫画"</li>
+    <li>7-9岁：一份"昆虫图鉴"（5种昆虫的画像+特征）</li>
+    <li>10-12岁：一份"昆虫生态报告"（含食物链分析、栖息地描述）</li>
+  </ul></div>
+  <div class="talk-box"><h4>引导话术</h4>
+    <p>"这只虫子有几条腿？它的身体分几部分？"</p>
+    <p>"你觉得它在找什么？吃的？住的？还是朋友？"</p>
+    <p>"如果这只虫子是这个花坛的国王，它的王国是什么样的？"</p>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 方案31：昆虫侦探</div>
+</div>
+
+<div class="page">
+  <span class="plan-num">方案 32</span>
+  <h2 class="plan-title">鸟类观察员</h2>
+  <div class="tags">
+    <span class="tag">主题：鸟类观察</span>
+    <span class="tag blue">场景：公园/河边</span>
+    <span class="tag orange">时长：2小时</span>
+  </div>
+  <div class="sec"><h4>活动简介</h4><p>带上望远镜（或手机放大功能），去公园或河边观察鸟类。记录你看到的鸟——它长什么样？在做什么？发出什么声音？做一份"观鸟记录"。</p></div>
+  <div class="sec"><h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>找鸟鸟：找到3种不同的鸟，说说它们在干嘛</td><td>感官体验+简单描述</td></tr>
+      <tr><td>7-9岁</td><td>观鸟记录：记录5种鸟的外貌、行为、叫声</td><td>能做有目的的观察和记录</td></tr>
+      <tr><td>10-12岁</td><td>鸟类调查：做一份"社区鸟类调查报告"（含种类、数量、栖息地）</td><td>能做系统调查</td></tr>
+    </table>
+  </div>
+  <div class="smart-box"><h4>多元智能覆盖</h4><p>自然观察（核心）、听觉（辨别鸟叫）、空间（定位鸟类位置）、语言（描述外貌和行为）、逻辑数学（统计种类和数量）</p></div>
+  <div class="steps-box"><h4>具体步骤</h4>
+    <ol>
+      <li><strong>准备（10分钟）</strong>：带上望远镜、鸟类图鉴（或手机APP）</li>
+      <li><strong>静候（10分钟）</strong>：找一个安静的地方坐下，安静等待鸟出现</li>
+      <li><strong>观察（50-60分钟）</strong>：发现鸟就记录——外貌、行为、声音</li>
+      <li><strong>识别（15分钟）</strong>：用图鉴或APP识别鸟的种类</li>
+      <li><strong>记录（15分钟）</strong>：整理成"观鸟记录"</li>
+    </ol>
+  </div>
+  <div class="output-box"><h4>孩子的产出</h4><ul>
+    <li>4-6岁：一张"我看到的鸟"的画</li>
+    <li>7-9岁：一份"观鸟记录"（5种鸟的画像+描述）</li>
+    <li>10-12岁：一份"社区鸟类调查报告"（含种类、数量、行为记录、栖息地分析）</li>
+  </ul></div>
+  <div class="talk-box"><h4>引导话术</h4>
+    <p>"这只鸟在干什么？找吃的？筑巢？还是在唱歌？"</p>
+    <p>"你觉得这只鸟在说什么？"</p>
+    <p>"如果这个公园没有鸟了，会发生什么？"</p>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 方案32：鸟类观察员</div>
+</div>
+
+<div class="page">
+  <span class="plan-num">方案 33</span>
+  <h2 class="plan-title">蚂蚁帝国</h2>
+  <div class="tags">
+    <span class="tag">主题：昆虫社会</span>
+    <span class="tag blue">场景：花坛/墙角</span>
+    <span class="tag orange">时长：1-1.5小时</span>
+  </div>
+  <div class="sec"><h4>活动简介</h4><p>找一个蚂蚁窝，蹲下来观察蚂蚁的社会——它们怎么分工？怎么搬运食物？怎么交流？蚂蚁是自然界最伟大的"建筑师"和"组织者"，观察它们能学到很多。</p></div>
+  <div class="sec"><h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>看蚂蚁：观察蚂蚁搬家，说说"它们在干嘛"</td><td>简单观察+口头表达</td></tr>
+      <tr><td>7-9岁</td><td>蚂蚁观察报告：记录蚂蚁的行为、分工、路线</td><td>能做有目的的观察和记录</td></tr>
+      <tr><td>10-12岁</td><td>蚂蚁社会研究：分析蚂蚁的社会结构，对比人类社会</td><td>能做分析和类比思考</td></tr>
+    </table>
+  </div>
+  <div class="smart-box"><h4>多元智能覆盖</h4><p>自然观察（核心）、逻辑数学（分析分工和路线）、语言（描述行为）、空间（追踪蚂蚁路线）、内省（思考社会组织）</p></div>
+  <div class="steps-box"><h4>具体步骤</h4>
+    <ol>
+      <li><strong>找到蚂蚁窝（10分钟）</strong>：在花坛、墙角、石缝中寻找</li>
+      <li><strong>投放食物（5分钟）</strong>：放一小块饼干或面包屑，观察蚂蚁的反应</li>
+      <li><strong>观察（30-40分钟）</strong>：跟踪蚂蚁的行为——搬运、交流、分工</li>
+      <li><strong>记录（15分钟）</strong>：画蚂蚁的路线图，记录观察到的行为</li>
+      <li><strong>讨论（10分钟）</strong>：讨论"蚂蚁的社会和人类的社会有什么像？"</li>
+    </ol>
+  </div>
+  <div class="output-box"><h4>孩子的产出</h4><ul>
+    <li>4-6岁：一段"蚂蚁观察日记"（口述）</li>
+    <li>7-9岁：一份"蚂蚁观察报告"（含路线图、行为记录）</li>
+    <li>10-12岁：一份"蚂蚁社会研究"（含社会结构分析、与人类社会的对比）</li>
+  </ul></div>
+  <div class="talk-box"><h4>引导话术</h4>
+    <p>"蚂蚁怎么告诉同伴'这里有吃的'？你觉得它们用什么方式交流？"</p>
+    <p>"蚂蚁王国里有没有'国王'？谁在指挥它们？"</p>
+    <p>"如果你是一只蚂蚁，你觉得自己在这个团队里是什么角色？"</p>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 方案33：蚂蚁帝国</div>
+</div>
+
+<div class="page">
+  <span class="plan-num">方案 34</span>
+  <h2 class="plan-title">落叶博物馆</h2>
+  <div class="tags">
+    <span class="tag">主题：植物季节变化</span>
+    <span class="tag blue">场景：公园/街道</span>
+    <span class="tag orange">时长：1.5-2小时</span>
+  </div>
+  <div class="sec"><h4>活动简介</h4><p>收集不同形状、颜色、大小的落叶，把它们做成一个"微型博物馆"——分类、标签、展示。秋天是做这个活动的最佳季节，但其他季节也可以收集不同阶段的叶子。</p></div>
+  <div class="sec"><h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>捡叶子：收集10片不同形状的叶子</td><td>感官体验+形状认知</td></tr>
+      <tr><td>7-9岁</td><td>分类展示：把叶子按形状/颜色分类，做标签</td><td>能做分类和标签制作</td></tr>
+      <tr><td>10-12岁</td><td>落叶博物馆：设计并布置一个"微型落叶博物馆"</td><td>能做策展和设计</td></tr>
+    </table>
+  </div>
+  <div class="smart-box"><h4>多元智能覆盖</h4><p>自然观察（核心）、空间（分类和布局）、艺术（设计展览）、语言（写标签）、逻辑数学（分类标准）</p></div>
+  <div class="steps-box"><h4>具体步骤</h4>
+    <ol>
+      <li><strong>收集（30-40分钟）</strong>：在公园或街道上收集落叶</li>
+      <li><strong>整理（20分钟）</strong>：把叶子按形状/颜色/大小分类</li>
+      <li><strong>压制（10分钟）</strong>：把叶子夹在书里压平</li>
+      <li><strong>标签（15分钟）</strong>：为每片叶子写标签（名称、发现地点、发现日期）</li>
+      <li><strong>布展（15-20分钟）</strong>：把叶子排列成一个"微型博物馆"</li>
+    </ol>
+  </div>
+  <div class="output-box"><h4>孩子的产出</h4><ul>
+    <li>4-6岁：一袋"落叶收藏"</li>
+    <li>7-9岁：一本"落叶图鉴"（分类+标签）</li>
+    <li>10-12岁：一个"微型落叶博物馆"（含展览设计、标签、导览词）</li>
+  </ul></div>
+  <div class="talk-box"><h4>引导话术</h4>
+    <p>"这片叶子为什么是红色的？那片为什么还是绿色的？"</p>
+    <p>"你觉得这片叶子从树上掉下来的时候，它会想什么？"</p>
+    <p>"如果你来给这个博物馆取名字，你叫它什么？"</p>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 方案34：落叶博物馆</div>
+</div>
+
+<div class="page">
+  <span class="plan-num">方案 35</span>
+  <h2 class="plan-title">水的秘密</h2>
+  <div class="tags">
+    <span class="tag">主题：水循环与生态</span>
+    <span class="tag blue">场景：河边/池塘</span>
+    <span class="tag orange">时长：2小时</span>
+  </div>
+  <div class="sec"><h4>活动简介</h4><p>水从哪里来？到哪里去？在河边或池塘边观察水的生态——水里有什么生物？水面有什么？水的声音是什么样的？了解"水循环"的基本概念。</p></div>
+  <div class="sec"><h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>玩水观察：观察水的流动、水面的倒影、水里的小生物</td><td>感官体验+简单观察</td></tr>
+      <tr><td>7-9岁</td><td>水生态记录：记录水里的生物、水面的现象、水边的植物</td><td>能做系统观察和记录</td></tr>
+      <tr><td>10-12岁</td><td>水循环研究：了解水循环概念，做一份"水生态调查报告"</td><td>能做科学分析</td></tr>
+    </table>
+  </div>
+  <div class="smart-box"><h4>多元智能覆盖</h4><p>自然观察（核心）、科学思维（水循环）、语言（描述）、空间（观察水面倒影）、身体动觉（玩水、触摸）</p></div>
+  <div class="steps-box"><h4>具体步骤</h4>
+    <ol>
+      <li><strong>观察水面（15分钟）</strong>：观察水面的波纹、倒影、漂浮物</li>
+      <li><strong>观察水边（20分钟）</strong>：观察水边的植物、石头、生物</li>
+      <li><strong>观察水声（10分钟）</strong>：闭眼听水的声音，说说"水在说什么"</li>
+      <li><strong>取水样（10分钟）</strong>：取一小瓶水，观察水里有什么</li>
+      <li><strong>记录（20分钟）</strong>：整理观察记录，画一幅"水的世界"</li>
+    </ol>
+  </div>
+  <div class="output-box"><h4>孩子的产出</h4><ul>
+    <li>4-6岁：一张"水的画"（画水面的倒影或波纹）</li>
+    <li>7-9岁：一份"水边观察记录"（含生物、植物、现象）</li>
+    <li>10-12岁：一份"水生态调查报告"（含水循环概念、生物记录、环境分析）</li>
+  </ul></div>
+  <div class="talk-box"><h4>引导话术</h4>
+    <p>"你觉得这条河的水最终会流到哪里去？"</p>
+    <p>"水里有什么生物？它们怎么生活？"</p>
+    <p>"如果这条河变脏了，水里的生物会怎么样？"</p>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 方案35：水的秘密</div>
+</div>
+
+<!-- 方案36-40 -->
+<div class="page">
+  <span class="plan-num">方案 36</span>
+  <h2 class="plan-title">石头的故事</h2>
+  <div class="tags">
+    <span class="tag">主题：地质观察</span>
+    <span class="tag blue">场景：公园/河滩</span>
+    <span class="tag orange">时长：1.5-2小时</span>
+  </div>
+  <div class="sec"><h4>活动简介</h4><p>捡一块石头，它可能已经有几百万年的历史了。观察石头的颜色、纹路、硬度、形状，猜猜它是怎么形成的。每一块石头都是一个"时间胶囊"。</p></div>
+  <div class="sec"><h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>捡石头：收集5块不同的石头，比比看哪块最特别</td><td>感官体验+简单比较</td></tr>
+      <tr><td>7-9岁</td><td>石头图鉴：记录5块石头的颜色、形状、硬度、纹路</td><td>能做系统记录</td></tr>
+      <tr><td>10-12岁</td><td>石头研究：查资料了解石头的种类，做一份"石头研究笔记"</td><td>能做研究和写作</td></tr>
+    </table>
+  </div>
+  <div class="smart-box"><h4>多元智能覆盖</h4><p>自然观察（核心）、逻辑数学（比较和分类）、空间（观察纹路）、语言（描述和研究）、身体动觉（触摸不同质感）</p></div>
+  <div class="steps-box"><h4>具体步骤</h4>
+    <ol>
+      <li><strong>搜索（20-30分钟）</strong>：在公园或河滩上寻找有趣的石头</li>
+      <li><strong>观察（20分钟）</strong>：用放大镜观察石头的纹路和质感</li>
+      <li><strong>测试（10分钟）</strong>：用指甲或硬币测试石头的硬度</li>
+      <li><strong>记录（20分钟）</strong>：为每块石头画图、写描述</li>
+      <li><strong>讨论（10分钟）</strong>：猜猜"这块石头是怎么形成的"</li>
+    </ol>
+  </div>
+  <div class="output-box"><h4>孩子的产出</h4><ul>
+    <li>4-6岁：一袋"特别的石头"</li>
+    <li>7-9岁：一份"石头图鉴"（5块石头的画像+描述）</li>
+    <li>10-12岁：一份"石头研究笔记"（含种类、形成过程、个人感悟）</li>
+  </ul></div>
+  <div class="talk-box"><h4>引导话术</h4>
+    <p>"你觉得这块石头有多少岁了？它见过什么？"</p>
+    <p>"为什么有的石头是圆的，有的是尖的？"</p>
+    <p>"如果你能把这块石头变成一样东西，你想变成什么？"</p>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 方案36：石头的故事</div>
+</div>
+
+<div class="page">
+  <span class="plan-num">方案 37</span>
+  <h2 class="plan-title">云朵观察站</h2>
+  <div class="tags">
+    <span class="tag">主题：气象观察</span>
+    <span class="tag blue">场景：阳台/公园</span>
+    <span class="tag orange">时长：1-1.5小时</span>
+  </div>
+  <div class="sec"><h4>活动简介</h4><p>躺在草地上看云，猜猜云像什么、云从哪里来、云要去哪里。云是天空的表情，观察云就是观察天气的"心情"。</p></div>
+  <div class="sec"><h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>云像什么：看云，说说"这片云像什么"</td><td>想象力+感官体验</td></tr>
+      <tr><td>7-9岁</td><td>云的日记：记录云的形状、颜色、移动方向</td><td>能做有目的的观察和记录</td></tr>
+      <tr><td>10-12岁</td><td>云的研究：了解云的种类，分析云和天气的关系</td><td>能做科学分析</td></tr>
+    </table>
+  </div>
+  <div class="smart-box"><h4>多元智能覆盖</h4><p>自然观察（核心）、空间（云的形状和移动）、语言（描述和想象）、内省（安静地看云）、科学思维（分析云和天气的关系）</p></div>
+  <div class="steps-box"><h4>具体步骤</h4>
+    <ol>
+      <li><strong>找一个看云的好地方（5分钟）</strong>：草地、阳台、天台都可以</li>
+      <li><strong>躺下看云（20-30分钟）</strong>：安静地看云，记录云的形状和变化</li>
+      <li><strong>画云（15分钟）</strong>：把看到的云画下来</li>
+      <li><strong>讨论（10分钟）</strong>：讨论"云是怎么形成的"</li>
+    </ol>
+  </div>
+  <div class="output-box"><h4>孩子的产出</h4><ul>
+    <li>4-6岁：一张"云像什么"的画</li>
+    <li>7-9岁：一本"云的日记"（连续观察3天的云）</li>
+    <li>10-12岁：一份"云的研究"（含云的种类、形成原因、与天气的关系）</li>
+  </ul></div>
+  <div class="talk-box"><h4>引导话术</h4>
+    <p>"这片云像什么？你觉得它在干嘛？"</p>
+    <p>"云在动！你觉得它要去哪里？"</p>
+    <p>"你觉得明天会是什么天气？从云能看出来吗？"</p>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 方案37：云朵观察站</div>
+</div>
+
+<div class="page">
+  <span class="plan-num">方案 38</span>
+  <h2 class="plan-title">种子旅行家</h2>
+  <div class="tags">
+    <span class="tag">主题：植物传播</span>
+    <span class="tag blue">场景：公园/绿地</span>
+    <span class="tag orange">时长：1.5-2小时</span>
+  </div>
+  <div class="sec"><h4>活动简介</h4><p>蒲公英靠风传播，苍耳靠动物传播，莲蓬靠水传播……收集不同的种子，了解它们的"旅行方式"，然后做一个"种子旅行计划"——如果种子可以旅行，它们想去哪里？</p></div>
+  <div class="sec"><h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>吹蒲公英：吹蒲公英，观察种子怎么飞走</td><td>感官体验+身体参与</td></tr>
+      <tr><td>7-9岁</td><td>种子收集：收集5种不同的种子，记录它们的传播方式</td><td>能做分类和记录</td></tr>
+      <tr><td>10-12岁</td><td>种子旅行研究：分析不同种子的传播策略，写一篇"种子旅行记"</td><td>能做科学分析和写作</td></tr>
+    </table>
+  </div>
+  <div class="smart-box"><h4>多元智能覆盖</h4><p>自然观察（核心）、科学思维（分析传播方式）、语言（写作）、艺术（设计种子旅行计划）、身体动觉（吹蒲公英、收集种子）</p></div>
+  <div class="steps-box"><h4>具体步骤</h4>
+    <ol>
+      <li><strong>搜索（20-30分钟）</strong>：寻找不同的种子——蒲公英、苍耳、莲蓬等</li>
+      <li><strong>观察（15分钟）</strong>：观察种子的结构，猜猜它们怎么传播</li>
+      <li><strong>实验（15分钟）</strong>：吹蒲公英、扔苍耳，观察传播效果</li>
+      <li><strong>记录（20分钟）</strong>：为每种种子记录传播方式</li>
+      <li><strong>创作（15分钟）</strong>：写一篇"种子旅行记"或画一幅"种子旅行地图"</li>
+    </ol>
+  </div>
+  <div class="output-box"><h4>孩子的产出</h4><ul>
+    <li>4-6岁：一个"蒲公英吹吹乐"视频或照片</li>
+    <li>7-9岁：一份"种子图鉴"（5种种子的画像+传播方式）</li>
+    <li>10-12岁：一篇"种子旅行记"（含传播方式分析、种子的旅行计划）</li>
+  </ul></div>
+  <div class="talk-box"><h4>引导话术</h4>
+    <p>"蒲公英的种子是怎么飞走的？它想飞到哪里去？"</p>
+    <p>"苍耳为什么能粘在衣服上？这对它有什么好处？"</p>
+    <p>"如果你是一颗种子，你想去哪里旅行？"</p>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 方案38：种子旅行家</div>
+</div>
+
+<div class="page">
+  <span class="plan-num">方案 39</span>
+  <h2 class="plan-title">生态瓶制作</h2>
+  <div class="tags">
+    <span class="tag">主题：微生态</span>
+    <span class="tag blue">场景：家中</span>
+    <span class="tag orange">时长：2小时+持续观察</span>
+  </div>
+  <div class="sec"><h4>活动简介</h4><p>用一个透明的瓶子，制作一个"微型生态系统"——放入水、沙石、水草、小鱼（或螺），观察它们怎么在一个封闭的环境里生存。这是一个可以持续观察数周的"长线项目"。</p></div>
+  <div class="sec"><h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>帮忙放材料：在家长指导下把水草、石头放进瓶子</td><td>动手参与+感官体验</td></tr>
+      <tr><td>7-9岁</td><td>制作+记录：自己动手制作生态瓶，每天观察记录</td><td>能做动手制作和持续记录</td></tr>
+      <tr><td>10-12岁</td><td>制作+研究：制作生态瓶，分析瓶中的生态平衡</td><td>能做科学分析</td></tr>
+    </table>
+  </div>
+  <div class="smart-box"><h4>多元智能覆盖</h4><p>自然观察（核心）、科学思维（生态平衡）、动手能力（制作）、内省（耐心观察）、语言（记录变化）</p></div>
+  <div class="steps-box"><h4>具体步骤</h4>
+    <ol>
+      <li><strong>准备材料（10分钟）</strong>：透明瓶、沙石、水草、水、小鱼或螺</li>
+      <li><strong>制作（20-30分钟）</strong>：按顺序放入材料——沙石→水草→水→生物</li>
+      <li><strong>观察（10分钟）</strong>：观察瓶中的生态——生物在做什么？</li>
+      <li><strong>每天记录（持续2-4周）</strong>：每天观察5分钟，记录变化</li>
+      <li><strong>总结（2-4周后）</strong>：整理所有记录，写一份"生态瓶观察报告"</li>
+    </ol>
+  </div>
+  <div class="output-box"><h4>孩子的产出</h4><ul>
+    <li>4-6岁：一个"我的生态瓶"+ 每天的口述观察</li>
+    <li>7-9岁：一个"生态瓶"+ 一本"观察日记"</li>
+    <li>10-12岁：一个"生态瓶"+ 一份"生态平衡研究报告"</li>
+  </ul></div>
+  <div class="talk-box"><h4>引导话术</h4>
+    <p>"你觉得小鱼在这个瓶子里能活多久？为什么？"</p>
+    <p>"水草对小鱼有什么用？小鱼对水草有什么用？"</p>
+    <p>"如果瓶子里没有水草了，会发生什么？"</p>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 方案39：生态瓶制作</div>
+</div>
+
+<div class="page">
+  <span class="plan-num">方案 40</span>
+  <h2 class="plan-title">自然笔记</h2>
+  <div class="tags">
+    <span class="tag">主题：综合自然观察</span>
+    <span class="tag blue">场景：任意自然环境</span>
+    <span class="tag orange">时长：1.5-2小时</span>
+  </div>
+  <div class="sec"><h4>活动简介</h4><p>"自然笔记"是国际上最流行的自然观察方式——用文字和图画记录你观察到的自然事物。不是美术课，不需要画得好看，只需要画得"真"。一棵树、一朵花、一只虫、一片云，都可以成为你的笔记对象。</p></div>
+  <div class="sec"><h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>画一样东西：选一样自然物，画下来，说说它是什么</td><td>绘画表达+感官体验</td></tr>
+      <tr><td>7-9岁</td><td>图文笔记：画一样东西+写几句话描述它</td><td>能做图文结合的记录</td></tr>
+      <tr><td>10-12岁</td><td>完整自然笔记：包含观察对象、日期时间、天气、详细描述、个人感受</td><td>能做完整的科学笔记</td></tr>
+    </table>
+  </div>
+  <div class="smart-box"><h4>多元智能覆盖</h4><p>自然观察（核心）、艺术（绘画）、语言（写作）、内省（感受和思考）、空间（观察角度）</p></div>
+  <div class="steps-box"><h4>具体步骤</h4>
+    <ol>
+      <li><strong>选择对象（5分钟）</strong>：在自然环境中选一样你想记录的东西</li>
+      <li><strong>观察（15-20分钟）</strong>：仔细观察它——形状、颜色、纹路、质感、气味</li>
+      <li><strong>绘画（20-30分钟）</strong>：把观察到的画下来（不需要画得好看，只需要画得真）</li>
+      <li><strong>记录（15-20分钟）</strong>：写上日期、天气、地点、你的观察和感受</li>
+      <li><strong>分享（10分钟）</strong>：互相展示笔记，说说"我画的是什么"</li>
+    </ol>
+  </div>
+  <div class="output-box"><h4>孩子的产出</h4><ul>
+    <li>4-6岁：一幅"自然画"</li>
+    <li>7-9岁：一页"自然笔记"（画+文字）</li>
+    <li>10-12岁：一本"自然笔记册"（多页完整笔记）</li>
+  </ul></div>
+  <div class="talk-box"><h4>引导话术</h4>
+    <p>"你选的这个东西最吸引你的是什么？"</p>
+    <p>"你不需要画得像，只需要画得真——你觉得它是什么颜色就画什么颜色"</p>
+    <p>"你觉得这个东西最特别的地方是什么？"</p>
+  </div>
+  <div class="sec"><h4>自然笔记模板</h4>
+    <ul>
+      <li>日期：____ 天气：____ 地点：____</li>
+      <li>我观察的是：____</li>
+      <li>它的形状：____ 颜色：____ 大小：____</li>
+      <li>摸起来的感觉：____ 闻起来的味道：____</li>
+      <li>我画的画：（留空）</li>
+      <li>我的发现：____</li>
+      <li>我的感受：____</li>
+    </ul>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 方案40：自然笔记</div>
+</div>
+
+</body>
+</html>

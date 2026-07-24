@@ -1,0 +1,454 @@
+/* ========== 全局 ========== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: #0a0a0a;
+  color: #e0e0e0;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  user-select: none;
+}
+
+/* ========== 屏幕系统 ========== */
+.screen { position: fixed; inset: 0; display: none; z-index: 10; }
+.screen.active { display: flex; }
+#game.active { z-index: 1; display: block; }
+#game.active canvas { display: block; }
+
+.overlay {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(8px);
+}
+.panel {
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  border: 1px solid #0f3460;
+  border-radius: 12px;
+  padding: 40px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+.panel.wide { max-width: 960px; }
+.panel h2 {
+  font-size: 28px;
+  margin-bottom: 24px;
+  color: #e94560;
+}
+
+/* ========== 按钮 ========== */
+.btn {
+  padding: 12px 32px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 1px;
+}
+.btn-primary {
+  background: linear-gradient(135deg, #e94560, #c23152);
+  color: #fff;
+}
+.btn-primary:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(233,69,96,0.5); }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-secondary {
+  background: transparent;
+  color: #aaa;
+  border: 1px solid #333;
+}
+.btn-secondary:hover { border-color: #e94560; color: #e94560; }
+
+/* ========== 主菜单 ========== */
+#main-menu {
+  background: #0a0a0a;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.menu-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(233,69,96,0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 50%, rgba(15,52,96,0.3) 0%, transparent 50%);
+}
+.menu-content { position: relative; text-align: center; z-index: 2; }
+.game-title {
+  font-size: 72px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #e94560, #ff6b6b, #e94560);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+  margin-bottom: 8px;
+}
+.game-subtitle {
+  font-size: 18px;
+  color: #555;
+  letter-spacing: 8px;
+  margin-bottom: 48px;
+}
+.menu-buttons { display: flex; flex-direction: column; gap: 16px; align-items: center; }
+.menu-buttons .btn { min-width: 200px; }
+
+/* ========== 操作说明 ========== */
+.controls-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.control-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 6px;
+}
+kbd {
+  background: #222;
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 13px;
+  color: #e94560;
+  min-width: 60px;
+  text-align: center;
+}
+.control-item span { font-size: 14px; color: #aaa; }
+
+/* ========== 地图选择 ========== */
+.map-cards { display: flex; gap: 20px; margin-bottom: 24px; }
+.map-card {
+  flex: 1;
+  background: rgba(255,255,255,0.03);
+  border: 2px solid transparent;
+  border-radius: 10px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.25s;
+  text-align: center;
+}
+.map-card:hover { border-color: #e94560; }
+.map-card.selected { border-color: #e94560; background: rgba(233,69,96,0.1); }
+.map-preview {
+  height: 100px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.city-preview { background: linear-gradient(135deg, #2d2d2d, #4a3f3f); }
+.office-preview { background: linear-gradient(135deg, #1a2a3a, #2a3a4a); }
+.manor-preview { background: linear-gradient(135deg, #2a1a1a, #3a2a2a); }
+.map-icon { font-size: 40px; }
+.map-card h3 { font-size: 18px; margin-bottom: 8px; }
+.map-card p { font-size: 13px; color: #888; line-height: 1.5; }
+.map-actions { display: flex; justify-content: space-between; }
+
+/* ========== 武器选择 ========== */
+.equip-hint { font-size: 14px; color: #888; font-weight: normal; }
+.equip-layout { display: flex; gap: 24px; margin-bottom: 20px; }
+.gun-section { flex: 3; }
+.knife-section { flex: 1; min-width: 180px; }
+
+.weapon-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.tab {
+  padding: 8px 16px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: #888;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+.tab:hover { border-color: #e94560; color: #ccc; }
+.tab.active { background: rgba(233,69,96,0.15); border-color: #e94560; color: #e94560; }
+.tab .count { font-size: 11px; color: #666; }
+
+.weapon-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+.weapon-list::-webkit-scrollbar { width: 4px; }
+.weapon-list::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+.weapon-card {
+  background: rgba(255,255,255,0.03);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.weapon-card:hover { border-color: #555; background: rgba(255,255,255,0.06); }
+.weapon-card.selected { border-color: #e94560; background: rgba(233,69,96,0.1); }
+.weapon-card .weapon-name { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.weapon-card .weapon-type { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.weapon-stats { display: flex; gap: 6px; flex-wrap: wrap; }
+.stat-bar {
+  flex: 1;
+  min-width: 60px;
+}
+.stat-label { font-size: 10px; color: #666; margin-bottom: 2px; }
+.stat-track {
+  height: 4px;
+  background: #222;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.stat-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+.stat-fill.damage { background: #e94560; }
+.stat-fill.speed { background: #f5a623; }
+.stat-fill.accuracy { background: #4ecdc4; }
+.stat-fill.portability { background: #a8e6cf; }
+
+.knife-section h3 { font-size: 16px; margin-bottom: 12px; color: #aaa; }
+.knife-list { display: flex; flex-direction: column; gap: 8px; }
+.knife-card {
+  background: rgba(255,255,255,0.03);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.knife-card:hover { border-color: #555; }
+.knife-card.selected { border-color: #e94560; background: rgba(233,69,96,0.1); }
+.knife-card .knife-icon { font-size: 24px; }
+.knife-card .knife-info { flex: 1; }
+.knife-card .knife-name { font-size: 14px; font-weight: 600; }
+.knife-card .knife-desc { font-size: 11px; color: #666; }
+
+.equip-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+.preview-slot {
+  text-align: center;
+  min-width: 140px;
+}
+.slot-label { font-size: 11px; color: #666; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+.slot-content { font-size: 15px; font-weight: 600; color: #e94560; min-height: 24px; }
+.preview-plus { font-size: 24px; color: #333; }
+.btn-go { min-width: 120px; }
+.btn-back-equip { position: absolute; bottom: 20px; left: 40px; }
+
+/* ========== HUD ========== */
+#hud {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 20;
+}
+#hud > * { pointer-events: auto; }
+
+.hud-top {
+  position: absolute;
+  top: 16px; left: 16px; right: 16px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.hud-hp, .hud-armor { display: flex; align-items: center; gap: 8px; }
+.hud-label { font-size: 11px; color: #888; width: 30px; text-align: right; }
+.bar {
+  width: 140px; height: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.bar-fill { height: 100%; border-radius: 4px; transition: width 0.3s; width: 100%; }
+.hp-fill { background: linear-gradient(90deg, #e94560, #ff6b6b); }
+.armor-fill { background: linear-gradient(90deg, #4ecdc4, #44bd9e); }
+.hud-hp span, .hud-armor span { font-size: 13px; font-weight: 600; min-width: 30px; }
+.hud-wave {
+  margin-left: auto;
+  font-size: 16px;
+  font-weight: 700;
+  color: #e94560;
+}
+
+.hud-bottom {
+  position: absolute;
+  bottom: 20px; left: 20px; right: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.hud-ammo {
+  font-size: 36px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.ammo-sep { color: #555; margin: 0 2px; }
+#ammo-reserve { font-size: 20px; color: #888; }
+.hud-weapon { font-size: 14px; color: #888; margin-bottom: 4px; }
+.hud-crosshair {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  color: rgba(255,255,255,0.7);
+  pointer-events: none;
+  z-index: 25;
+}
+
+.hud-teammates {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.teammate-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: rgba(0,0,0,0.5);
+  border-radius: 6px;
+}
+.tm-icon { font-size: 16px; }
+.tm-bar {
+  width: 80px; height: 5px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.tm-bar-fill { height: 100%; background: #4ecdc4; border-radius: 3px; width: 100%; transition: width 0.3s; }
+
+.minimap {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px; height: 150px;
+  background: rgba(0,0,0,0.6);
+  border: 1px solid #333;
+  border-radius: 8px;
+  overflow: hidden;
+  display: none;
+}
+
+/* 瞄准镜 */
+.scope-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.95);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.scope-crosshair-v, .scope-crosshair-h {
+  position: absolute;
+  background: rgba(255,0,0,0.6);
+}
+.scope-crosshair-v { width: 1px; height: 100%; left: 50%; }
+.scope-crosshair-h { height: 1px; width: 100%; top: 50%; }
+.scope-circle {
+  width: 300px; height: 300px;
+  border: 2px solid rgba(255,0,0,0.4);
+  border-radius: 50%;
+  position: absolute;
+}
+
+/* 波次提示 */
+.wave-announce {
+  position: fixed; inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 35;
+  pointer-events: none;
+}
+.wave-number {
+  font-size: 80px;
+  font-weight: 900;
+  color: #e94560;
+  text-shadow: 0 0 40px rgba(233,69,96,0.8);
+  animation: waveIn 0.8s ease-out;
+}
+.wave-text-sub {
+  font-size: 20px;
+  color: #666;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+}
+@keyframes waveIn {
+  0% { transform: scale(2); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* 暂停菜单 & 结算画面 */
+#pause-menu .panel, #result-screen .panel { text-align: center; }
+#pause-menu .btn, #result-screen .btn { margin: 8px; min-width: 180px; }
+.result-stats { margin: 20px 0; font-size: 16px; line-height: 2; }
+
+/* 命中反馈 */
+.hit-marker {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  color: #e94560;
+  pointer-events: none;
+  z-index: 26;
+  animation: hitPop 0.3s ease-out forwards;
+}
+@keyframes hitPop {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -80%) scale(1.5); }
+}
+
+.damage-number {
+  position: fixed;
+  font-size: 18px;
+  font-weight: 700;
+  color: #e94560;
+  pointer-events: none;
+  z-index: 26;
+  animation: dmgFloat 0.8s ease-out forwards;
+}
+@keyframes dmgFloat {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-40px); }
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .game-title { font-size: 42px; }
+  .map-cards { flex-direction: column; }
+  .equip-layout { flex-direction: column; }
+  .weapon-tabs { flex-wrap: wrap; }
+  .panel { padding: 24px; }
+}

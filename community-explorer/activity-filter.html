@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>活动灵感筛</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #fdf8f0;
+    --card: #fff;
+    --border: #f0e8d8;
+    --text: #3d3426;
+    --muted: #a89880;
+    --accent: #e8734a;
+    --accent-light: rgba(232,115,74,0.08);
+    --green: #6db87a;
+    --yellow: #e8b84a;
+    --purple: #9b7ec8;
+    --blue: #5a9fd4;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 2px 16px rgba(80,60,30,0.06);
+    --font: -apple-system, 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .container { max-width: 720px; margin: 0 auto; }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 32px 0 20px;
+  }
+  .header-emoji { font-size: 42px; margin-bottom: 8px; }
+  .header h1 { font-size: 22px; font-weight: 600; margin-bottom: 6px; }
+  .header p { font-size: 14px; color: var(--muted); }
+
+  /* Input area */
+  .input-area {
+    background: var(--card);
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: border-color 0.2s;
+  }
+  .input-area:focus-within { border-color: var(--accent); }
+  .input-area textarea {
+    width: 100%;
+    min-height: 100px;
+    border: none;
+    outline: none;
+    resize: vertical;
+    font-family: var(--font);
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text);
+    background: transparent;
+  }
+  .input-area textarea::placeholder { color: var(--muted); }
+  .input-hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 10px; margin-bottom: 24px; }
+  .btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover { background: #d4633c; transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  .btn-secondary {
+    background: var(--accent-light);
+    color: var(--accent);
+    border: 1px solid rgba(232,115,74,0.15);
+  }
+  .btn-secondary:hover { background: rgba(232,115,74,0.14); }
+
+  /* Idea cards */
+  .ideas-section { margin-bottom: 24px; }
+  .section-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  .idea-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: all 0.2s;
+    cursor: grab;
+    position: relative;
+  }
+  .idea-card:hover { box-shadow: 0 4px 20px rgba(80,60,30,0.1); }
+  .idea-card.dragging { opacity: 0.4; }
+  .idea-card.selected { border-color: var(--accent); background: var(--accent-light); }
+
+  .idea-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+    color: #fff;
+  }
+  .idea-num.c1 { background: var(--accent); }
+  .idea-num.c2 { background: var(--green); }
+  .idea-num.c3 { background: var(--yellow); }
+  .idea-num.c4 { background: var(--purple); }
+  .idea-num.c5 { background: var(--blue); }
+
+  .idea-content { flex: 1; }
+  .idea-title { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+  .idea-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .idea-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .idea-tag {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    background: rgba(0,0,0,0.04);
+    color: var(--muted);
+  }
+
+  .idea-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .idea-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    transition: background 0.15s;
+    color: var(--muted);
+  }
+  .idea-btn:hover { background: rgba(0,0,0,0.06); }
+  .idea-btn.pick { color: var(--accent); }
+  .idea-btn.pick:hover { background: var(--accent-light); }
+
+  /* Result */
+  .result-area {
+    background: linear-gradient(135deg, #fdf0e8, #f8ede4);
+    border: 1px solid rgba(232,115,74,0.15);
+    border-radius: var(--radius);
+    padding: 24px;
+    text-align: center;
+    display: none;
+  }
+  .result-area.show { display: block; }
+  .result-emoji { font-size: 36px; margin-bottom: 10px; }
+  .result-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+  .result-desc { font-size: 14px; color: var(--muted); line-height: 1.8; }
+  .result-actions { margin-top: 16px; display: flex; gap: 10px; justify-content: center; }
+  .result-btn {
+    padding: 10px 24px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .result-btn-primary { background: var(--accent); color: #fff; }
+  .result-btn-primary:hover { background: #d4633c; }
+  .result-btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+  .result-btn-ghost:hover { background: rgba(0,0,0,0.03); }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+  }
+  .empty-state .emoji { font-size: 48px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
+
+  /* Tags filter */
+  .tag-filter {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .filter-tag {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-family: var(--font);
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+  .filter-tag.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .filter-tag:hover:not(.active) { background: rgba(0,0,0,0.03); }
+
+  /* Animations */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-in { animation: fadeInUp 0.4s ease forwards; }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+  .shake { animation: shake 0.3s ease; }
+
+  /* Mobile */
+  @media (max-width: 500px) {
+    body { padding: 12px; }
+    .header h1 { font-size: 19px; }
+    .btn-row { flex-direction: column; }
+    .idea-card { padding: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="header-emoji">🎲</div>
+    <h1>活动灵感筛</h1>
+    <p>倒出想法，抓住重点，找到最值得先做的那个</p>
+  </div>
+
+  <div class="input-area">
+    <textarea id="ideaInput" placeholder="把你脑子里的想法倒出来，什么都行——&#10;比如：亲子读书会、社区寻宝、绘本剧场、户外自然课……&#10;想到什么写什么，不用整理。"></textarea>
+    <div class="input-hint">💡 写得越具体越好，比如"带孩子去社区菜园观察昆虫"比"自然活动"更容易帮你筛</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" id="btnParse" disabled>帮我理一理</button>
+    <button class="btn btn-secondary" id="btnClear">清空重来</button>
+  </div>
+
+  <div id="ideasContainer" style="display:none;">
+    <div class="tag-filter" id="tagFilter"></div>
+
+    <div class="ideas-section">
+      <div class="section-label">你的想法们</div>
+      <div id="ideaList"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btnPick" disabled>就选这个！</button>
+      <button class="btn btn-secondary" id="btnReshuffle">🔀 再洗一次牌</button>
+    </div>
+  </div>
+
+  <div class="result-area" id="resultArea">
+    <div class="result-emoji" id="resultEmoji">🎯</div>
+    <div class="result-title" id="resultTitle"></div>
+    <div class="result-desc" id="resultDesc"></div>
+    <div class="result-actions">
+      <button class="result-btn result-btn-primary" id="btnStart">就做这个</button>
+      <button class="result-btn result-btn-ghost" id="btnBack">再看看别的</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const input = $('ideaInput');
+const btnParse = $('btnParse');
+const btnClear = $('btnClear');
+const ideasContainer = $('ideasContainer');
+const ideaList = $('ideaList');
+const tagFilter = $('tagFilter');
+const btnPick = $('btnPick');
+const btnReshuffle = $('btnReshuffle');
+const resultArea = $('resultArea');
+
+let ideas = [];
+let selectedIndex = -1;
+let activeFilter = '全部';
+
+const COLORS = ['c1','c2','c3','c4','c5'];
+
+// Enable/disable parse button
+input.addEventListener('input', () => {
+  btnParse.disabled = !input.value.trim();
+});
+
+// Parse ideas
+btnParse.addEventListener('click', () => {
+  const text = input.value.trim();
+  if (!text) return;
+
+  ideas = parseIdeas(text);
+  if (ideas.length === 0) {
+    input.classList.add('shake');
+    setTimeout(() => input.classList.remove('shake'), 300);
+    return;
+  }
+
+  renderIdeas();
+  ideasContainer.style.display = 'block';
+  ideasContainer.classList.add('animate-in');
+  selectedIndex = -1;
+  updatePickBtn();
+});
+
+// Clear
+btnClear.addEventListener('click', () => {
+  input.value = '';
+  ideas = [];
+  ideasContainer.style.display = 'none';
+  resultArea.classList.remove('show');
+  btnParse.disabled = true;
+  input.focus();
+});
+
+// Parse text into structured ideas
+function parseIdeas(text) {
+  // Split by common delimiters
+  const lines = text.split(/[,，;；\n]+/).map(s => s.trim()).filter(Boolean);
+  if (lines.length === 0) return [];
+
+  const result = [];
+  const themes = ['阅读','自然','手工','运动','戏剧','音乐','科学','美食','社区','艺术','探索','游戏','亲子','节日'];
+  const ages = ['幼儿','低龄','大童','亲子','全家'];
+
+  lines.forEach((line, i) => {
+    const tags = [];
+    themes.forEach(t => { if (line.includes(t)) tags.push(t); });
+    ages.forEach(a => { if (line.includes(a)) tags.push(a); });
+    if (tags.length === 0) tags.push('综合');
+
+    result.push({
+      id: i,
+      title: line,
+      desc: generateDesc(line),
+      tags: [...new Set(tags)],
+      color: COLORS[i % COLORS.length],
+      score: Math.floor(Math.random() * 3) + 3
+    });
+  });
+
+  // Shuffle
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+
+  return result;
+}
+
+function generateDesc(title) {
+  const descs = [
+    '这个挺有意思，可以跟社区场景结合',
+    '孩子们应该会喜欢，互动性强',
+    '操作门槛不高，容易落地',
+    '可以做成系列活动，有延续性',
+    '跟阅读推广有天然的结合点',
+    '适合在社区里小范围先试一次'
+  ];
+  return descs[Math.floor(Math.random() * descs.length)];
+}
+
+// Render ideas
+function renderIdeas() {
+  // Tags
+  const allTags = ['全部', ...new Set(ideas.flatMap(i => i.tags))];
+  tagFilter.innerHTML = allTags.map(t =>
+    `<button class="filter-tag ${t === activeFilter ? 'active' : ''}" data-tag="${t}">${t}</button>`
+  ).join('');
+
+  tagFilter.querySelectorAll('.filter-tag').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeFilter = btn.dataset.tag;
+      renderIdeas();
+    });
+  });
+
+  // Cards
+  const filtered = activeFilter === '全部' ? ideas : ideas.filter(i => i.tags.includes(activeFilter));
+  ideaList.innerHTML = filtered.map((idea, idx) => `
+    <div class="idea-card ${idx === selectedIndex ? 'selected' : ''}" data-id="${idx}" draggable="true">
+      <div class="idea-num ${idea.color}">${idx + 1}</div>
+      <div class="idea-content">
+        <div class="idea-title">${esc(idea.title)}</div>
+        <div class="idea-desc">${esc(idea.desc)}</div>
+        <div class="idea-tags">${idea.tags.map(t => `<span class="idea-tag">${esc(t)}</span>`).join('')}</div>
+      </div>
+      <div class="idea-actions">
+        <button class="idea-btn pick" data-id="${idx}" title="选这个">🎯</button>
+      </div>
+    </div>
+  `).join('');
+
+  // Events
+  ideaList.querySelectorAll('.idea-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.idea-btn')) return;
+      const id = parseInt(card.dataset.id);
+      selectedIndex = selectedIndex === id ? -1 : id;
+      renderIdeas();
+      updatePickBtn();
+    });
+  });
+
+  ideaList.querySelectorAll('.idea-btn.pick').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedIndex = parseInt(btn.dataset.id);
+      renderIdeas();
+      showResult();
+    });
+  });
+
+  // Drag & drop
+  let dragIdx = null;
+  ideaList.querySelectorAll('.idea-card').forEach(card => {
+    card.addEventListener('dragstart', () => {
+      dragIdx = parseInt(card.dataset.id);
+      card.classList.add('dragging');
+    });
+    card.addEventListener('dragend', () => {
+      card.classList.remove('dragging');
+      dragIdx = null;
+    });
+    card.addEventListener('dragover', e => {
+      e.preventDefault();
+      if (dragIdx === null) return;
+      const targetIdx = parseInt(card.dataset.id);
+      if (dragIdx === targetIdx) return;
+      const [moved] = ideas.splice(dragIdx, 1);
+      ideas.splice(targetIdx, 0, moved);
+      dragIdx = targetIdx;
+      renderIdeas();
+    });
+  });
+}
+
+function updatePickBtn() {
+  btnPick.disabled = selectedIndex < 0;
+}
+
+// Pick button
+btnPick.addEventListener('click', () => {
+  if (selectedIndex < 0) return;
+  showResult();
+});
+
+// Reshuffle
+btnReshuffle.addEventListener('click', () => {
+  for (let i = ideas.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [ideas[i], ideas[j]] = [ideas[j], ideas[i]];
+  }
+  selectedIndex = -1;
+  renderIdeas();
+  updatePickBtn();
+
+  // Visual feedback
+  ideaList.querySelectorAll('.idea-card').forEach((card, i) => {
+    card.style.animation = `fadeInUp 0.3s ease ${i * 0.05}s both`;
+  });
+});
+
+// Show result
+function showResult() {
+  const idea = ideas[selectedIndex];
+  if (!idea) return;
+
+  $('resultEmoji').textContent = '🎯';
+  $('resultTitle').textContent = idea.title;
+  $('resultDesc').textContent = idea.desc + '。建议先小范围试一次，看看效果再调整。';
+
+  resultArea.classList.add('show');
+  resultArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// Result actions
+$('btnStart').addEventListener('click', () => {
+  const idea = ideas[selectedIndex];
+  if (!idea) return;
+  $('resultEmoji').textContent = '🎉';
+  $('resultTitle').textContent = '好，就它了！';
+  $('resultDesc').textContent = `「${idea.title}」——接下来你可以跟 Her 说"帮我把这个活动策划一下"，她会帮你展开。`;
+  $('btnStart').style.display = 'none';
+});
+
+$('btnBack').addEventListener('click', () => {
+  resultArea.classList.remove('show');
+  selectedIndex = -1;
+  renderIdeas();
+  updatePickBtn();
+});
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+</script>
+</body>
+</html>

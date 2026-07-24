@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>废墟突击</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- 主菜单 -->
+  <div id="main-menu" class="screen active">
+    <div class="menu-bg"></div>
+    <div class="menu-content">
+      <h1 class="game-title">废墟突击</h1>
+      <p class="game-subtitle">RUINS ASSAULT</p>
+      <div class="menu-buttons">
+        <button class="btn btn-primary" id="btn-start">开始游戏</button>
+        <button class="btn btn-secondary" id="btn-how">操作说明</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 操作说明 -->
+  <div id="how-to-play" class="screen">
+    <div class="overlay">
+      <div class="panel">
+        <h2>操作说明</h2>
+        <div class="controls-grid">
+          <div class="control-item"><kbd>W A S D</kbd><span>移动</span></div>
+          <div class="control-item"><kbd>鼠标</kbd><span>视角</span></div>
+          <div class="control-item"><kbd>左键</kbd><span>射击</span></div>
+          <div class="control-item"><kbd>右键</kbd><span>瞄准</span></div>
+          <div class="control-item"><kbd>R</kbd><span>换弹</span></div>
+          <div class="control-item"><kbd>1</kbd><span>切换枪</span></div>
+          <div class="control-item"><kbd>2</kbd><span>切换刀</span></div>
+          <div class="control-item"><kbd>空格</kbd><span>跳跃</span></div>
+          <div class="control-item"><kbd>Shift</kbd><span>冲刺</span></div>
+          <div class="control-item"><kbd>E</kbd><span>互动</span></div>
+        </div>
+        <button class="btn btn-secondary" id="btn-back-menu">返回</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 地图选择 -->
+  <div id="map-select" class="screen">
+    <div class="overlay">
+      <div class="panel wide">
+        <h2>选择战场</h2>
+        <div class="map-cards">
+          <div class="map-card selected" data-map="city">
+            <div class="map-preview city-preview">
+              <div class="map-icon">🏚️</div>
+            </div>
+            <h3>废弃城市</h3>
+            <p>破败街道、坍塌建筑、锈迹斑斑的车辆。开阔与巷战并存。</p>
+          </div>
+          <div class="map-card" data-map="office">
+            <div class="map-preview office-preview">
+              <div class="map-icon">🏢</div>
+            </div>
+            <h3>办公楼</h3>
+            <p>现代办公环境、玻璃幕墙、隔间。室内近战为主。</p>
+          </div>
+          <div class="map-card" data-map="manor">
+            <div class="map-preview manor-preview">
+              <div class="map-icon">🏰</div>
+            </div>
+            <h3>庄园</h3>
+            <p>欧式古典庄园、花园、石墙。高低差丰富。</p>
+          </div>
+        </div>
+        <div class="map-actions">
+          <button class="btn btn-secondary" id="btn-back-map">返回</button>
+          <button class="btn btn-primary" id="btn-to-equip">下一步：装备武器</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 武器选择 -->
+  <div id="equip" class="screen">
+    <div class="overlay">
+      <div class="panel wide">
+        <h2>装备武器 <span class="equip-hint">选择 1把枪 + 1把刀</span></h2>
+        <div class="equip-layout">
+          <!-- 枪械选择 -->
+          <div class="gun-section">
+            <div class="weapon-tabs">
+              <button class="tab active" data-category="sniper">狙击枪 <span class="count">3</span></button>
+              <button class="tab" data-category="rifle">突击步枪 <span class="count">10</span></button>
+              <button class="tab" data-category="smg">冲锋枪 <span class="count">8</span></button>
+              <button class="tab" data-category="pistol">手枪 <span class="count">5</span></button>
+            </div>
+            <div class="weapon-list" id="gun-list">
+              <!-- JS 动态填充 -->
+            </div>
+          </div>
+          <!-- 刀选择 -->
+          <div class="knife-section">
+            <h3>近战武器</h3>
+            <div class="knife-list" id="knife-list">
+              <!-- JS 动态填充 -->
+            </div>
+          </div>
+        </div>
+        <!-- 已选装备预览 -->
+        <div class="equip-preview">
+          <div class="preview-slot" id="preview-gun">
+            <div class="slot-label">枪械</div>
+            <div class="slot-content">未选择</div>
+          </div>
+          <div class="preview-plus">+</div>
+          <div class="preview-slot" id="preview-knife">
+            <div class="slot-label">刀</div>
+            <div class="slot-content">未选择</div>
+          </div>
+          <button class="btn btn-primary btn-go" id="btn-go" disabled>出发</button>
+        </div>
+        <button class="btn btn-secondary btn-back-equip" id="btn-back-equip">返回选地图</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 游戏画面 -->
+  <div id="game" class="screen">
+    <canvas id="game-canvas"></canvas>
+    <!-- HUD -->
+    <div id="hud">
+      <div class="hud-top">
+        <div class="hud-hp">
+          <div class="hud-label">HP</div>
+          <div class="bar"><div class="bar-fill hp-fill" id="hp-bar"></div></div>
+          <span id="hp-text">100</span>
+        </div>
+        <div class="hud-armor">
+          <div class="hud-label">护甲</div>
+          <div class="bar"><div class="bar-fill armor-fill" id="armor-bar"></div></div>
+          <span id="armor-text">100</span>
+        </div>
+        <div class="hud-wave">
+          <span id="wave-text">波次 1/5</span>
+        </div>
+      </div>
+      <div class="hud-bottom">
+        <div class="hud-ammo">
+          <span id="ammo-current">30</span>
+          <span class="ammo-sep">/</span>
+          <span id="ammo-reserve">90</span>
+        </div>
+        <div class="hud-weapon" id="weapon-name">AK-47</div>
+        <div class="hud-crosshair" id="crosshair">+</div>
+      </div>
+      <div class="hud-teammates">
+        <div class="teammate-status" id="tm-shield">
+          <span class="tm-icon shield-icon">🛡️</span>
+          <div class="tm-bar"><div class="tm-bar-fill" id="tm-shield-bar"></div></div>
+        </div>
+        <div class="teammate-status" id="tm-rocket">
+          <span class="tm-icon rocket-icon">🚀</span>
+          <span id="tm-rocket-ammo">12</span>
+        </div>
+        <div class="teammate-status" id="tm-c4">
+          <span class="tm-icon c4-icon">💣</span>
+          <span id="tm-c4-ammo">8</span>
+        </div>
+      </div>
+      <!-- 小地图 -->
+      <div class="minimap" id="minimap">
+        <canvas id="minimap-canvas" width="150" height="150"></canvas>
+      </div>
+      <!-- 瞄准镜遮罩 -->
+      <div class="scope-overlay" id="scope-overlay" style="display:none;">
+        <div class="scope-crosshair-v"></div>
+        <div class="scope-crosshair-h"></div>
+        <div class="scope-circle"></div>
+      </div>
+      <!-- 波次提示 -->
+      <div class="wave-announce" id="wave-announce" style="display:none;">
+        <div class="wave-number" id="announce-wave-num"></div>
+        <div class="wave-text-sub">incoming</div>
+      </div>
+    </div>
+    <!-- 暂停菜单 -->
+    <div id="pause-menu" style="display:none;">
+      <div class="overlay">
+        <div class="panel">
+          <h2>暂停</h2>
+          <button class="btn btn-primary" id="btn-resume">继续游戏</button>
+          <button class="btn btn-secondary" id="btn-quit">退出到菜单</button>
+        </div>
+      </div>
+    </div>
+    <!-- 结算画面 -->
+    <div id="result-screen" style="display:none;">
+      <div class="overlay">
+        <div class="panel">
+          <h2 id="result-title">胜利</h2>
+          <div class="result-stats" id="result-stats"></div>
+          <button class="btn btn-primary" id="btn-result-menu">返回菜单</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 加载 Three.js 和游戏模块 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="js/weapons.js"></script>
+  <script src="js/maps.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/enemies.js"></script>
+  <script src="js/teammates.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

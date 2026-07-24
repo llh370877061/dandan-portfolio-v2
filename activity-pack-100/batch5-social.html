@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>社区探索活动包 · 第五批：10个社会认知方案</title>
+<style>
+@page { size: A4; margin: 18mm 16mm; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; color: #2d2d2d; line-height: 1.65; background: #fff; font-size: 12.5px; }
+.page { width: 210mm; min-height: 297mm; padding: 18mm 16mm; page-break-after: always; }
+.page:last-child { page-break-after: auto; }
+.cover { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: linear-gradient(160deg, #e3f2fd 0%, #f3e5f5 50%, #fce4ec 100%); }
+.cover h1 { font-size: 34px; color: #1565c0; margin-bottom: 8px; letter-spacing: 2px; }
+.cover .sub { font-size: 16px; color: #555; margin-bottom: 30px; }
+.cover .meta { font-size: 12px; color: #999; margin-top: 20px; }
+.cover .principle { background: #fff; border-radius: 14px; padding: 20px 30px; box-shadow: 0 3px 16px rgba(0,0,0,0.06); margin-top: 24px; max-width: 440px; text-align: left; }
+.cover .principle h3 { color: #1565c0; font-size: 14px; margin-bottom: 8px; }
+.cover .principle li { margin-bottom: 4px; font-size: 12px; color: #444; }
+.toc { background: #fafafa; border-radius: 12px; padding: 16px 20px; }
+.toc h2 { color: #1565c0; font-size: 18px; margin-bottom: 12px; border-bottom: 2px solid #90caf9; padding-bottom: 6px; }
+.toc table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.toc th { background: #e3f2fd; color: #1565c0; padding: 6px 8px; text-align: left; border: 1px solid #bbdefb; }
+.toc td { padding: 5px 8px; border: 1px solid #bbdefb; }
+.toc tr:nth-child(even) { background: #f5f9ff; }
+.plan-num { font-size: 11px; color: #fff; background: #1565c0; display: inline-block; padding: 2px 10px; border-radius: 10px; margin-bottom: 6px; }
+.plan-title { font-size: 20px; color: #1565c0; margin-bottom: 10px; font-weight: bold; }
+.tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.tag { background: #e3f2fd; color: #1565c0; padding: 2px 10px; border-radius: 16px; font-size: 11px; font-weight: bold; }
+.tag.green { background: #e8f5e9; color: #2e7d32; }
+.tag.purple { background: #f3e5f5; color: #7b1fa2; }
+.tag.orange { background: #fff3e0; color: #e65100; }
+.sec { margin-bottom: 12px; }
+.sec h4 { color: #0d47a1; font-size: 13px; margin-bottom: 5px; border-left: 3px solid #90caf9; padding-left: 8px; }
+.sec p, .sec li { font-size: 12px; }
+.sec ul, .sec ol { padding-left: 18px; }
+.sec li { margin-bottom: 3px; }
+.age-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 10px; }
+.age-table th { background: #e3f2fd; color: #0d47a1; padding: 5px 8px; text-align: left; border: 1px solid #bbdefb; }
+.age-table td { padding: 5px 8px; border: 1px solid #bbdefb; vertical-align: top; }
+.steps-box { background: #fafafa; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
+.steps-box h4 { color: #0d47a1; font-size: 13px; margin-bottom: 5px; }
+.steps-box ol { padding-left: 18px; }
+.steps-box li { margin-bottom: 4px; font-size: 12px; }
+.output-box { background: #e8f5e9; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
+.output-box h4 { color: #2e7d32; font-size: 13px; margin-bottom: 5px; }
+.talk-box { background: #fce4ec; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
+.talk-box h4 { color: #c62828; font-size: 13px; margin-bottom: 5px; }
+.talk-box p { font-style: italic; font-size: 12px; color: #333; margin-bottom: 3px; }
+.smart-box { background: #f3e5f5; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
+.smart-box h4 { color: #7b1fa2; font-size: 13px; margin-bottom: 5px; }
+.zpd-box { background: #fff8e1; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
+.zpd-box h4 { color: #f57f17; font-size: 13px; margin-bottom: 5px; }
+.footer { text-align: center; font-size: 10px; color: #bbb; margin-top: 16px; padding-top: 8px; border-top: 1px solid #eee; }
+</style>
+</head>
+<body>
+
+<div class="page cover">
+  <h1>社区探索活动包</h1>
+  <p class="sub">第五批 · 10个社会认知方案</p>
+  <div class="principle">
+    <h3>本批设计逻辑：认识社会与他人</h3>
+    <ul>
+      <li><strong>职业认知</strong>：了解社区里不同人的工作</li>
+      <li><strong>社区运作</strong>：理解社区是怎么运转的</li>
+      <li><strong>规则意识</strong>：发现和理解社区里的规则</li>
+      <li><strong>文化感知</strong>：感受社区里的文化多样性</li>
+      <li><strong>公民意识</strong>：培养"我是社区一份子"的意识</li>
+      <li><strong>同理心</strong>：理解不同人的处境和感受</li>
+    </ul>
+  </div>
+  <p class="meta">设计：丹丹 &nbsp;|&nbsp; v1.0 &nbsp;|&nbsp; 2026年5月</p>
+</div>
+
+<div class="page">
+  <div class="toc">
+    <h2>第五批：10个社会认知方案总览</h2>
+    <table>
+      <tr><th>#</th><th>方案名称</th><th>社会主题</th><th>时长</th></tr>
+      <tr><td>41</td><td>职业大调查</td><td>职业认知</td><td>2-3h</td></tr>
+      <tr><td>42</td><td>社区运转的秘密</td><td>社区运作</td><td>2h</td></tr>
+      <tr><td>43</td><td>规则猎人</td><td>规则意识</td><td>1.5-2h</td></tr>
+      <tr><td>44</td><td>社区文化地图</td><td>文化感知</td><td>2-3h</td></tr>
+      <tr><td>45</td><td>小小公民</td><td>公民意识</td><td>2h</td></tr>
+      <tr><td>46</td><td>如果我是你</td><td>同理心</td><td>1.5-2h</td></tr>
+      <tr><td>47</td><td>社区经济学</td><td>经济认知</td><td>2h</td></tr>
+      <tr><td>48</td><td>安全地图</td><td>安全意识</td><td>1.5-2h</td></tr>
+      <tr><td>49</td><td>社区声音地图</td><td>社区感知</td><td>1.5-2h</td></tr>
+      <tr><td>50</td><td>我的社区名片</td><td>社区认同</td><td>2h</td></tr>
+    </table>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 第五批：10个社会认知方案 · 目录</div>
+</div>
+
+<!-- 方案41-45 -->
+<div class="page">
+  <span class="plan-num">方案 41</span>
+  <h2 class="plan-title">职业大调查</h2>
+  <div class="tags"><span class="tag">主题：职业认知</span><span class="tag green">时长：2-3小时</span></div>
+  <div class="sec"><h4>活动简介</h4><p>社区里有多少种职业？保安、保洁、快递员、便利店店员、外卖员、物业管理员、花店老板……采访不同职业的人，了解他们的工作内容、工作时间、最辛苦的部分和最开心的部分。</p></div>
+  <div class="sec"><h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th></tr>
+      <tr><td>4-6岁</td><td>认识3种职业：看看他们在干什么，画下来</td></tr>
+      <tr><td>7-9岁</td><td>采访2种职业：问3个问题，记录回答</td></tr>
+      <tr><td>10-12岁</td><td>做一份"社区职业图谱"：采访4-5种职业，分析社区的职业生态</td></tr>
+    </table>
+  </div>
+  <div class="smart-box"><h4>多元智能</h4><p>人际（核心：采访交流）、语言（提问和记录）、观察力（观察工作场景）、逻辑（分析职业关系）、内省（思考"我以后想做什么"）</p></div>
+  <div class="steps-box"><h4>具体步骤</h4>
+    <ol>
+      <li><strong>列清单（10分钟）</strong>：在社区里能找到哪些职业？</li>
+      <li><strong>采访（60-90分钟）</strong>：找到不同职业的人，进行采访</li>
+      <li><strong>记录（20分钟）</strong>：整理采访记录</li>
+      <li><strong>分享（15分钟）</strong>：互相介绍"我采访的职业"</li>
+    </ol>
+  </div>
+  <div class="output-box"><h4>产出</h4><ul>
+    <li>4-6岁：3张"职业画像"</li>
+    <li>7-9岁：一份"职业采访记"（2种职业）</li>
+    <li>10-12岁：一份"社区职业图谱"（含职业分布、工作内容分析）</li>
+  </ul></div>
+  <div class="talk-box"><h4>引导话术</h4>
+    <p>"你觉得这个叔叔/阿姨每天几点上班？几点下班？"</p>
+    <p>"这个工作最辛苦的是什么？最开心的是什么？"</p>
+    <p>"如果你来做这个工作，你觉得最难的是什么？"</p>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 方案41：职业大调查</div>
+</div>
+
+<div class="page">
+  <span class="plan-num">方案 42</span>
+  <h2 class="plan-title">社区运转的秘密</h2>
+  <div class="tags"><span class="tag">主题：社区运作</span><span class="tag green">时长：2小时</span></div>
+  <div class="sec"><h4>活动简介</h4><p>社区每天都在运转——垃圾谁来收？水电怎么来的？快递怎么送到的？保安怎么知道谁是住户？了解社区的"基础设施"和"运作系统"，理解我们每天享受的服务是怎么来的。</p></div>
+  <div class="sec"><h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th></tr>
+      <tr><td>4-6岁</td><td>找一找：找到社区里的设施（路灯、消防栓、配电箱、垃圾桶）</td></tr>
+      <tr><td>7-9岁</td><td>画一张"社区运作图"：标注不同设施的位置和功能</td></tr>
+      <tr><td>10-12岁</td><td>做一份"社区运作报告"：分析社区的基础设施和运作系统</td></tr>
+    </table>
+  </div>
+  <div class="smart-box"><h4>多元智能</h4><p>空间（观察设施位置）、逻辑（理解运作系统）、语言（描述功能）、观察力（发现设施）、人际（采访物业人员）</p></div>
+  <div class="steps-box"><h4>具体步骤</h4>
+    <ol>
+      <li><strong>搜索（30分钟）</strong>：在社区里找到各种基础设施</li>
+      <li><strong>采访（20分钟）</strong>：问保安或物业"这些设施是干嘛的"</li>
+      <li><strong>记录（20分钟）</strong>：画"社区运作图"或写"社区运作报告"</li>
+      <li><strong>讨论（10分钟）</strong>：讨论"如果没有这些设施，会怎样"</li>
+    </ol>
+  </div>
+  <div class="output-box"><h4>产出</h4><ul>
+    <li>4-6岁：一张"我找到的设施"照片集</li>
+    <li>7-9岁：一张手绘"社区运作图"</li>
+    <li>10-12岁：一份"社区运作报告"（含设施分布、功能分析、改进建议）</li>
+  </ul></div>
+  <div class="talk-box"><h4>引导话术</h4>
+    <p>"你觉得我们喝的水是从哪里来的？"</p>
+    <p>"垃圾被收走之后去了哪里？"</p>
+    <p>"如果社区停电了，会发生什么？"</p>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 方案42：社区运转的秘密</div>
+</div>
+
+<div class="page">
+  <span class="plan-num">方案 43</span>
+  <h2 class="plan-title">规则猎人</h2>
+  <div class="tags"><span class="tag">主题：规则意识</span><span class="tag green">时长：1.5-2小时</span></div>
+  <div class="sec"><h4>活动简介</h4><p>社区里有很多"规则"——交通规则、小区规定、公共场所的行为规范……找到这些规则，理解它们为什么存在，如果没有这些规则会怎样。</p></div>
+  <div class="sec"><h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th></tr>
+      <tr><td>4-6岁</td><td>找标志：找到5个不同的标志（交通标志、警示标志）</td></tr>
+      <tr><td>7-9岁</td><td>找规则：找到10条不同的规则，记录它们在哪里</td></tr>
+      <tr><td>10-12岁</td><td>分析规则：找出规则，分析它们存在的原因，讨论"如果没有会怎样"</td></tr>
+    </table>
+  </div>
+  <div class="smart-box"><h4>多元智能</h4><p>观察力（发现规则）、逻辑（分析规则存在的原因）、语言（描述和讨论）、空间（记录规则的位置）、内省（反思自己的行为）</p></div>
+  <div class="steps-box"><h4>具体步骤</h4>
+    <ol>
+      <li><strong>搜索（30-40分钟）</strong>：在社区里找到各种规则和标志</li>
+      <li><strong>记录（15分钟）</strong>：拍照或画下来</li>
+      <li><strong>讨论（20分钟）</strong>：讨论"这条规则为什么存在"</li>
+      <li><strong>假设（10分钟）</strong>：讨论"如果没有这条规则，会怎样"</li>
+    </ol>
+  </div>
+  <div class="output-box"><h4>产出</h4><ul>
+    <li>4-6岁：一张"我找到的标志"照片集</li>
+    <li>7-9岁：一份"社区规则清单"（10条规则+位置）</li>
+    <li>10-12岁：一份"规则分析报告"（含规则、原因分析、假设推演）</li>
+  </ul></div>
+  <div class="talk-box"><h4>引导话术</h4>
+    <p>"你觉得这条规则是为谁定的？"</p>
+    <p>"如果没有'禁止停车'的标志，这里会变成什么样？"</p>
+    <p>"有没有你觉得不太合理的规则？为什么？"</p>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 方案43：规则猎人</div>
+</div>
+
+<div class="page">
+  <span class="plan-num">方案 44</span>
+  <h2 class="plan-title">社区文化地图</h2>
+  <div class="tags"><span class="tag">主题：文化感知</span><span class="tag green">时长：2-3小时</span></div>
+  <div class="sec"><h4>活动简介</h4><p>社区里住着不同的人——不同的年龄、不同的职业、不同的文化背景。观察社区里的文化多样性：有什么样的商店？有什么样的节日装饰？人们说什么语言？画一张"社区文化地图"。</p></div>
+  <div class="sec"><h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th></tr>
+      <tr><td>4-6岁</td><td>找不同：找到3种不同的商店（餐馆、花店、杂货店）</td></tr>
+      <tr><td>7-9岁</td><td>画文化地图：标注不同商店、不同文化元素的位置</td></tr>
+      <tr><td>10-12岁</td><td>文化调查：分析社区的文化多样性，做一份"文化地图"</td></tr>
+    </table>
+  </div>
+  <div class="smart-box"><h4>多元智能</h4><p>观察力（发现文化元素）、空间（画地图）、语言（描述文化差异）、人际（与不同背景的人交流）、内省（反思文化多样性）</p></div>
+  <div class="steps-box"><h4>具体步骤</h4>
+    <ol>
+      <li><strong>搜索（40-50分钟）</strong>：在社区里寻找不同的文化元素</li>
+      <li><strong>记录（20分钟）</strong>：拍照、画图、记录</li>
+      <li><strong>整理（20分钟）</strong>：把记录整理成"文化地图"</li>
+      <li><strong>讨论（10分钟）</strong>：讨论"社区里的文化多样性"</li>
+    </ol>
+  </div>
+  <div class="output-box"><h4>产出</h4><ul>
+    <li>4-6岁：3张"不同商店"的照片</li>
+    <li>7-9岁：一张手绘"社区文化地图"</li>
+    <li>10-12岁：一份"社区文化调查报告"（含文化分布、多样性分析）</li>
+  </ul></div>
+  <div class="talk-box"><h4>引导话术</h4>
+    <p>"这条街上有什么不同的商店？它们卖什么？"</p>
+    <p>"你觉得住在这个社区的人来自哪些地方？"</p>
+    <p>"不同文化的人住在一起，有什么好处？有什么挑战？"</p>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 方案44：社区文化地图</div>
+</div>
+
+<div class="page">
+  <span class="plan-num">方案 45</span>
+  <h2 class="plan-title">小小公民</h2>
+  <div class="tags"><span class="tag">主题：公民意识</span><span class="tag green">时长：2小时</span></div>
+  <div class="sec"><h4>活动简介</h4><p>你是社区的一份子，你有权利也有责任。了解"公民"的含义——我能为社区做什么？社区为我做了什么？做一个"社区贡献计划"。</p></div>
+  <div class="sec"><h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th></tr>
+      <tr><td>4-6岁</td><td>找贡献：说说"我为社区做了什么"（如不乱扔垃圾）</td></tr>
+      <tr><td>7-9岁</td><td>做计划：制定一个"本周社区贡献计划"</td></tr>
+      <tr><td>10-12岁</td><td>写提案：写一份"社区改善提案"，提出一个具体的改进建议</td></tr>
+    </table>
+  </div>
+  <div class="smart-box"><h4>多元智能</h4><p>内省（反思自己的角色）、人际（与社区互动）、语言（写作和表达）、逻辑（分析社区问题）、行动力（执行贡献计划）</p></div>
+  <div class="steps-box"><h4>具体步骤</h4>
+    <ol>
+      <li><strong>反思（10分钟）</strong>：讨论"社区为我做了什么？我为社区做了什么？"</li>
+      <li><strong>发现（20分钟）</strong>：在社区里找到"可以改进的地方"</li>
+      <li><strong>计划（20分钟）</strong>：制定一个"社区贡献计划"</li>
+      <li><strong>行动（30分钟）</strong>：执行计划（如捡拾垃圾、帮助邻居）</li>
+      <li><strong>反思（10分钟）</strong>：讨论"做了之后感觉怎么样"</li>
+    </ol>
+  </div>
+  <div class="output-box"><h4>产出</h4><ul>
+    <li>4-6岁：一句"我为社区做了____"</li>
+    <li>7-9岁：一份"社区贡献计划"+ 执行记录</li>
+    <li>10-12岁：一份"社区改善提案"（含问题分析、解决方案、行动计划）</li>
+  </ul></div>
+  <div class="talk-box"><h4>引导话术</h4>
+    <p>"社区为我做了什么？我为社区做了什么？"</p>
+    <p>"你觉得你能为社区做的最重要的一件事是什么？"</p>
+    <p>"做完之后，你感觉怎么样？"</p>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 方案45：小小公民</div>
+</div>
+
+<!-- 方案46-50 -->
+<div class="page">
+  <span class="plan-num">方案 46</span>
+  <h2 class="plan-title">如果我是你</h2>
+  <div class="tags"><span class="tag">主题：同理心</span><span class="tag green">时长：1.5-2小时</span></div>
+  <div class="sec"><h4>活动简介</h4><p>如果我是清洁工，每天凌晨4点就要起床；如果我是保安，整夜都不能睡觉；如果我是外卖员，下雨天也要送餐……通过"角色代入"，培养同理心——理解不同人的处境和感受。</p></div>
+  <div class="sec"><h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th></tr>
+      <tr><td>4-6岁</td><td>说感受：看到不同职业的人，说说"他们累不累"</td></tr>
+      <tr><td>7-9岁</td><td>写日记：以"如果我是你"为主题，写一篇短文</td></tr>
+      <tr><td>10-12岁</td><td>做访谈：采访一个你不太了解的职业，写一篇"同理心访谈"</td></tr>
+    </table>
+  </div>
+  <div class="smart-box"><h4>多元智能</h4><p>内省（核心：同理心）、人际（理解他人）、语言（写作和表达）、观察力（观察不同人的处境）、想象力（角色代入）</p></div>
+  <div class="steps-box"><h4>具体步骤</h4>
+    <ol>
+      <li><strong>观察（20分钟）</strong>：观察社区里不同职业的人在做什么</li>
+      <li><strong>代入（15分钟）</strong>：选一个人，想象"如果我是TA"</li>
+      <li><strong>创作（30-40分钟）</strong>：写或画"如果我是你"</li>
+      <li><strong>分享（10分钟）</strong>：互相分享"我代入的是谁"</li>
+    </ol>
+  </div>
+  <div class="output-box"><h4>产出</h4><ul>
+    <li>4-6岁：一张"如果我是你"的画</li>
+    <li>7-9岁：一篇"如果我是你"的短文</li>
+    <li>10-12岁：一篇"同理心访谈"（含采访记录+反思）</li>
+  </ul></div>
+  <div class="talk-box"><h4>引导话术</h4>
+    <p>"你觉得他/她今天最辛苦的是什么时候？"</p>
+    <p>"如果让你做一天他的工作，你觉得最难的是什么？"</p>
+    <p>"你以后想对这样的人说什么？做什么？"</p>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 方案46：如果我是你</div>
+</div>
+
+<div class="page">
+  <span class="plan-num">方案 47</span>
+  <h2 class="plan-title">社区经济学</h2>
+  <div class="tags"><span class="tag">主题：经济认知</span><span class="tag green">时长：2小时</span></div>
+  <div class="sec"><h4>活动简介</h4><p>社区里处处是"经济"——商店怎么赚钱？为什么有的东西贵有的便宜？钱是怎么流动的？了解基本的经济概念：供需、价格、成本、利润。</p></div>
+  <div class="sec"><h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th></tr>
+      <tr><td>7-9岁</td><td>价格调查：比较3种商品在不同地方的价格</td></tr>
+      <tr><td>10-12岁</td><td>商业分析：分析一家小店的"赚钱逻辑"</td></tr>
+    </table>
+  </div>
+  <div class="smart-box"><h4>多元智能</h4><p>逻辑数学（核心：价格计算、成本分析）、语言（采访和描述）、人际（与店主交流）、观察力（观察商业运作）、内省（思考消费行为）</p></div>
+  <div class="steps-box"><h4>具体步骤</h4>
+    <ol>
+      <li><strong>调查（40分钟）</strong>：在便利店、超市、小摊比较商品价格</li>
+      <li><strong>采访（20分钟）</strong>：问店主"什么卖得最好？为什么定价是这样？"</li>
+      <li><strong>计算（15分钟）</strong>：估算一家店每天的营业额和利润</li>
+      <li><strong>讨论（15分钟）</strong>：讨论"钱是怎么流动的"</li>
+    </ol>
+  </div>
+  <div class="output-box"><h4>产出</h4><ul>
+    <li>7-9岁：一张"价格对比表"</li>
+    <li>10-12岁：一份"社区商业分析报告"（含价格对比、成本估算、利润分析）</li>
+  </ul></div>
+  <div class="talk-box"><h4>引导话术</h4>
+    <p>"同样的东西，为什么这里卖3块，那里卖2块？"</p>
+    <p>"你觉得这家店一天能赚多少钱？"</p>
+    <td>"如果你来开一家店，你想卖什么？你觉得能赚钱吗？"</p>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 方案47：社区经济学</div>
+</div>
+
+<div class="page">
+  <span class="plan-num">方案 48</span>
+  <h2 class="plan-title">安全地图</h2>
+  <div class="tags"><span class="tag">主题：安全意识</span><span class="tag green">时长：1.5-2小时</span></div>
+  <div class="sec"><h4>活动简介</h4><p>社区里有哪些"安全设施"？消防栓、灭火器、安全出口、监控摄像头……画一张"安全地图"，标注所有安全设施的位置。同时发现"安全隐患"——哪里不安全？怎么改进？</p></div>
+  <div class="sec"><h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th></tr>
+      <tr><td>4-6岁</td><td>找安全标志：找到5个安全相关的标志</td></tr>
+      <tr><td>7-9岁</td><td>画安全地图：标注消防栓、灭火器、安全出口的位置</td></tr>
+      <tr><td>10-12岁</td><td>安全评估：做一份"社区安全评估报告"（含隐患发现和改进建议）</td></tr>
+    </table>
+  </div>
+  <div class="smart-box"><h4>多元智能</h4><p>观察力（发现安全设施）、空间（画地图）、逻辑（分析安全隐患）、语言（描述和建议）、内省（安全意识）</p></div>
+  <div class="steps-box"><h4>具体步骤</h4>
+    <ol>
+      <li><strong>搜索（30-40分钟）</strong>：在社区里找到所有安全设施</li>
+      <li><strong>记录（15分钟）</strong>：拍照、标注位置</li>
+      <li><strong>发现隐患（15分钟）</strong>：找到"不安全的地方"</li>
+      <li><strong>讨论（15分钟）</strong>：讨论"怎么让社区更安全"</li>
+    </ol>
+  </div>
+  <div class="output-box"><h4>产出</h4><ul>
+    <li>4-6岁：一张"安全标志"照片集</li>
+    <li>7-9岁：一张手绘"安全地图"</li>
+    <li>10-12岁：一份"社区安全评估报告"（含设施分布、隐患分析、改进建议）</li>
+  </ul></div>
+  <div class="talk-box"><h4>引导话术</h4>
+    <p>"如果发生火灾，你觉得最近的消防栓在哪里？"</p>
+    <p>"你觉得这个社区最不安全的地方是哪里？"</p>
+    <p>"如果你是社区的安全官，你会做什么？"</p>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 方案48：安全地图</div>
+</div>
+
+<div class="page">
+  <span class="plan-num">方案 49</span>
+  <h2 class="plan-title">社区声音地图</h2>
+  <div class="tags"><span class="tag">主题：社区感知</span><span class="tag green">时长：1.5-2小时</span></div>
+  <div class="sec"><h4>活动简介</h4><p>每个社区都有自己独特的"声音"——早上有鸟叫和早餐摊的声音，中午有放学的喧闹，晚上有广场舞的音乐。画一张"声音地图"，标注社区在不同时间的声音。</p></div>
+  <div class="sec"><h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th></tr>
+      <tr><td>4-6岁</td><td>听声音：在社区里走一圈，说说"听到了什么"</td></tr>
+      <tr><td>7-9岁</td><td>画声音地图：标注不同地点的声音</td></tr>
+      <tr><td>10-12岁</td><td>时间维度：在不同时间段观察，画一张"社区声音时间表"</td></tr>
+    </table>
+  </div>
+  <div class="smart-box"><h4>多元智能</h4><p>听觉（核心）、空间（定位声音来源）、时间感知（不同时间的声音变化）、语言（描述声音）、艺术（画声音地图）</p></div>
+  <div class="steps-box"><h4>具体步骤</h4>
+    <ol>
+      <li><strong>漫步（30-40分钟）</strong>：在社区里走，记录听到的声音</li>
+      <li><strong>定位（15分钟）</strong>：标注声音的来源和位置</li>
+      <li><strong>整理（20分钟）</strong>：画"声音地图"</li>
+      <li><strong>讨论（10分钟）</strong>：讨论"社区的声音有什么特点"</li>
+    </ol>
+  </div>
+  <div class="output-box"><h4>产出</h4><ul>
+    <li>4-6岁：一段"声音日记"（口述）</li>
+    <li>7-9岁：一张"社区声音地图"</li>
+    <li>10-12岁：一份"社区声音时间表"（不同时间段的声音记录）</li>
+  </ul></div>
+  <div class="talk-box"><h4>引导话术</h4>
+    <p>"早上和晚上，社区的声音有什么不一样？"</p>
+    <p>"你最喜欢社区的什么声音？最不喜欢什么声音？"</p>
+    <p>"如果社区完全没有声音，你觉得怎么样？"</p>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 方案49：社区声音地图</div>
+</div>
+
+<div class="page">
+  <span class="plan-num">方案 50</span>
+  <h2 class="plan-title">我的社区名片</h2>
+  <div class="tags"><span class="tag">主题：社区认同</span><span class="tag green">时长：2小时</span></div>
+  <div class="sec"><h4>活动简介</h4><p>为你所在的社区设计一张"名片"——社区的名字、特色、最值得骄傲的地方、最需要改进的地方。这是对社区探索的一次"总结性"活动，帮助孩子建立对社区的认同感。</p></div>
+  <div class="sec"><h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th></tr>
+      <tr><td>4-6岁</td><td>画社区：画一幅"我的社区"的画</td></tr>
+      <tr><td>7-9岁</td><td>设计名片：设计一张社区名片（含名字、特色、一句话介绍）</td></tr>
+      <tr><td>10-12岁</td><td>做名片+写介绍：设计名片+写一段"社区介绍"</td></tr>
+    </table>
+  </div>
+  <div class="smart-box"><h4>多元智能</h4><p>空间（设计名片）、语言（写介绍）、艺术（美术设计）、内省（社区认同感）、观察力（回顾探索发现）</p></div>
+  <div class="steps-box"><h4>具体步骤</h4>
+    <ol>
+      <li><strong>回顾（10分钟）</strong>：回忆之前的探索，说说"社区最特别的地方是什么"</li>
+      <li><strong>讨论（10分钟）</strong>：讨论"社区名片上应该写什么"</li>
+      <li><strong>设计（30-40分钟）</strong>：设计社区名片</li>
+      <li><strong>展示（10分钟）</strong>：互相展示设计的名片</li>
+    </ol>
+  </div>
+  <div class="output-box"><h4>产出</h4><ul>
+    <li>4-6岁：一幅"我的社区"的画</li>
+    <li>7-9岁：一张设计好的"社区名片"</li>
+    <li>10-12岁：一张"社区名片"+ 一段"社区介绍"</li>
+  </ul></div>
+  <div class="talk-box"><h4>引导话术</h4>
+    <p>"如果让你用一句话介绍你的社区，你会怎么说？"</p>
+    <p>"社区最让你骄傲的是什么？最想改变的是什么？"</p>
+    <p>"你觉得别人看到这张名片，会想来你的社区吗？"</p>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 方案50：我的社区名片</div>
+</div>
+
+</body>
+</html>

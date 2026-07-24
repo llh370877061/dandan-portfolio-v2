@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>侦察方法 - 单页</title>
+<style>
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    background: #eee;
+    color: #333;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    width: 210mm;
+    height: 297mm;
+    margin: 16px auto;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+    page-break-after: always;
+  }
+
+  .page:last-child {
+    page-break-after: auto;
+  }
+
+  /* Page header */
+  .page-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    letter-spacing: 2px;
+    z-index: 10;
+  }
+
+  /* Page footer */
+  .page-footer {
+    position: absolute;
+    bottom: 8mm;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 8px;
+    color: #bbb;
+    letter-spacing: 1.5px;
+    z-index: 10;
+  }
+
+  /* Page inner content */
+  .page-inner {
+    padding: 28mm 20mm 22mm 20mm;
+    height: 297mm;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ====================================== */
+  /* PAGE 1: Orange - Telescope            */
+  /* ====================================== */
+  .page-orange .page-header {
+    background: linear-gradient(135deg, #f4845f, #f6a478);
+    color: #fff;
+  }
+  .page-orange .page-top-bar {
+    height: 5px;
+    background: linear-gradient(90deg, #f4845f, #f6a478, #f9c89e);
+  }
+
+  /* ====================================== */
+  /* PAGE 2: Blue - Treasure Map           */
+  /* ====================================== */
+  .page-blue .page-header {
+    background: linear-gradient(135deg, #4a9bd9, #6bb5e8);
+    color: #fff;
+  }
+  .page-blue .page-top-bar {
+    height: 5px;
+    background: linear-gradient(90deg, #4a9bd9, #6bb5e8, #a3d4f7);
+  }
+
+  /* ====================================== */
+  /* PAGE 3: Green - Emotion Map           */
+  /* ====================================== */
+  .page-green .page-header {
+    background: linear-gradient(135deg, #4caf7c, #6bc49a);
+    color: #fff;
+  }
+  .page-green .page-top-bar {
+    height: 5px;
+    background: linear-gradient(90deg, #4caf7c, #6bc49a, #a3dfc0);
+  }
+
+  /* Hero title area */
+  .hero {
+    text-align: center;
+    margin-bottom: 16px;
+    padding-top: 4mm;
+  }
+
+  .hero-emoji {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .hero-title {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+
+  .hero-subtitle {
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 1px;
+  }
+
+  .page-orange .hero-title { color: #d46a2e; }
+  .page-orange .hero-subtitle { color: #e88a55; }
+  .page-blue .hero-title { color: #2e7ab8; }
+  .page-blue .hero-subtitle { color: #5599cc; }
+  .page-green .hero-title { color: #2e8b57; }
+  .page-green .hero-subtitle { color: #5aad7a; }
+
+  /* Steps section */
+  .steps-section {
+    flex: 1;
+    margin-bottom: 10px;
+  }
+
+  .step-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    position: relative;
+  }
+
+  .page-orange .step-item { background: #fff8f3; border-left: 3px solid #f4845f; }
+  .page-blue .step-item { background: #f3f9ff; border-left: 3px solid #4a9bd9; }
+  .page-green .step-item { background: #f3faf6; border-left: 3px solid #4caf7c; }
+
+  .step-number {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 800;
+    color: #fff;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .page-orange .step-number { background: #f4845f; }
+  .page-blue .step-number { background: #4a9bd9; }
+  .page-green .step-number { background: #4caf7c; }
+
+  .step-content {
+    flex: 1;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #444;
+  }
+
+  .step-content strong {
+    color: #2c2c2c;
+  }
+
+  .step-sublist {
+    list-style: none;
+    padding: 4px 0 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .step-sublist li {
+    font-size: 11.5px;
+    padding: 3px 8px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .page-orange .step-sublist li { background: #ffeee4; color: #b85a2e; }
+  .page-blue .step-sublist li { background: #e4f0fa; color: #2e6a9a; }
+  .page-green .step-sublist li { background: #e4f5eb; color: #2e7a4e; }
+
+  /* Record area */
+  .record-area {
+    flex: 0 0 auto;
+    border: 2.5px dashed #ccc;
+    border-radius: 14px;
+    padding: 12px 16px;
+    min-height: 110mm;
+    position: relative;
+    margin-bottom: 8mm;
+  }
+
+  .page-orange .record-area { border-color: #f4a574; }
+  .page-blue .record-area { border-color: #7bb8e0; }
+  .page-green .record-area { border-color: #7bc49a; }
+
+  .record-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .page-orange .record-title { color: #d46a2e; }
+  .page-blue .record-title { color: #2e7ab8; }
+  .page-green .record-title { color: #2e8b57; }
+
+  .record-hint {
+    font-size: 10px;
+    color: #bbb;
+    position: absolute;
+    top: 12px;
+    right: 16px;
+  }
+
+  .record-grid {
+    width: 100%;
+    height: calc(100% - 30px);
+    min-height: 90mm;
+  }
+
+  .record-grid-lines {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* For print */
+  @media print {
+    body {
+      background: white;
+    }
+
+    .page {
+      margin: 0;
+      box-shadow: none;
+    }
+
+    .page-orange .step-item { background: #fff8f3; }
+    .page-blue .step-item { background: #f3f9ff; }
+    .page-green .step-item { background: #f3faf6; }
+
+    .step-sublist li { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    .step-number { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========================================== -->
+<!-- PAGE 1: 望远镜观察法 (Orange)              -->
+<!-- ========================================== -->
+<div class="page page-orange">
+  <div class="page-top-bar"></div>
+  <div class="page-header">社区探索家 · 侦察方法</div>
+
+  <div class="page-inner">
+    <!-- Hero -->
+    <div class="hero">
+      <span class="hero-emoji">🔭</span>
+      <div class="hero-title">望远镜观察法</div>
+      <div class="hero-subtitle">选一个地方，安静观察3分钟</div>
+    </div>
+
+    <!-- Steps -->
+    <div class="steps-section">
+      <ol class="step-list">
+        <li class="step-item">
+          <span class="step-number">1</span>
+          <div class="step-content">选一个你觉得<strong>有意思</strong>的地方</div>
+        </li>
+        <li class="step-item">
+          <span class="step-number">2</span>
+          <div class="step-content">站定不动，像望远镜一样<strong>慢慢扫描</strong></div>
+        </li>
+        <li class="step-item">
+          <span class="step-number">3</span>
+          <div class="step-content">安静观察<strong>3分钟</strong></div>
+        </li>
+        <li class="step-item">
+          <span class="step-number">4</span>
+          <div class="step-content">
+            把看到的一切记下来：
+            <ul class="step-sublist">
+              <li>👀 看到了什么人？在做什么？</li>
+              <li>👂 听到了什么声音？</li>
+              <li>🎨 有什么颜色和形状？</li>
+              <li>🧩 有什么细节让你好奇？</li>
+            </ul>
+          </div>
+        </li>
+        <li class="step-item">
+          <span class="step-number">5</span>
+          <div class="step-content">写下你观察中<strong>最有趣的一个发现</strong></div>
+        </li>
+      </ol>
+    </div>
+
+    <!-- Record Area -->
+    <div class="record-area">
+      <div class="record-title">✏️ 我的3分钟望远镜观察</div>
+      <div class="record-hint">画画 / 写字 / 画+字</div>
+      <svg class="record-grid-lines" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="orange-lines" patternUnits="userSpaceOnUse" width="100%" height="28">
+            <line x1="0" y1="27" x2="100%" y2="27" stroke="#f9dcc8" stroke-width="0.8"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#orange-lines)"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="page-footer">社区探索家 · 小小侦察兵培训手册</div>
+</div>
+
+<!-- ========================================== -->
+<!-- PAGE 2: 宝藏地图法 (Blue)                 -->
+<!-- ========================================== -->
+<div class="page page-blue">
+  <div class="page-top-bar"></div>
+  <div class="page-header">社区探索家 · 侦察方法</div>
+
+  <div class="page-inner">
+    <!-- Hero -->
+    <div class="hero">
+      <span class="hero-emoji">🗺️</span>
+      <div class="hero-title">宝藏地图法</div>
+      <div class="hero-subtitle">在地图上标出你觉得重要的地方</div>
+    </div>
+
+    <!-- Steps -->
+    <div class="steps-section">
+      <ol class="step-list">
+        <li class="step-item">
+          <span class="step-number">1</span>
+          <div class="step-content">画一张简单的<strong>社区地图</strong>（不需要很精确）</div>
+        </li>
+        <li class="step-item">
+          <span class="step-number">2</span>
+          <div class="step-content">用不同颜色和符号标出你发现的<strong>重要地点</strong></div>
+        </li>
+        <li class="step-item">
+          <span class="step-number">3</span>
+          <div class="step-content">
+            标记图例：
+            <ul class="step-sublist">
+              <li>🏠 红色 = 建筑</li>
+              <li>👤 橙色 = 有趣的人</li>
+              <li>🌳 绿色 = 自然</li>
+              <li>🏪 黄色 = 商店</li>
+              <li>❓ 紫色 = 问题</li>
+              <li>⭐ 金色 = 最喜欢的地方</li>
+            </ul>
+          </div>
+        </li>
+        <li class="step-item">
+          <span class="step-number">4</span>
+          <div class="step-content">在地图旁边写一句话说明<strong>每个标记</strong></div>
+        </li>
+        <li class="step-item">
+          <span class="step-number">5</span>
+          <div class="step-content">找到至少<strong>5个不同的地方</strong>标记</div>
+        </li>
+      </ol>
+    </div>
+
+    <!-- Record Area -->
+    <div class="record-area">
+      <div class="record-title">✏️ 我的宝藏地图</div>
+      <div class="record-hint">画地图 / 标记 / 写说明</div>
+      <svg class="record-grid-lines" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="blue-grid" patternUnits="userSpaceOnUse" width="28" height="28">
+            <path d="M 28 0 L 0 0 0 28" fill="none" stroke="#d4eaf8" stroke-width="0.6"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#blue-grid)"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="page-footer">社区探索家 · 小小侦察兵培训手册</div>
+</div>
+
+<!-- ========================================== -->
+<!-- PAGE 3: 表情图法 (Green)                  -->
+<!-- ========================================== -->
+<div class="page page-green">
+  <div class="page-top-bar"></div>
+  <div class="page-header">社区探索家 · 侦察方法</div>
+
+  <div class="page-inner">
+    <!-- Hero -->
+    <div class="hero">
+      <span class="hero-emoji">😊😢🤔</span>
+      <div class="hero-title">表情图法</div>
+      <div class="hero-subtitle">用表情标注社区里不同地方给你的感受</div>
+    </div>
+
+    <!-- Steps -->
+    <div class="steps-section">
+      <ol class="step-list">
+        <li class="step-item">
+          <span class="step-number">1</span>
+          <div class="step-content">画<strong>4个格子</strong>（2x2）</div>
+        </li>
+        <li class="step-item">
+          <span class="step-number">2</span>
+          <div class="step-content">
+            每个格子代表一种感受：
+            <ul class="step-sublist">
+              <li>😊 左上：开心的地方</li>
+              <li>😐 右上：普通的地方</li>
+              <li>😢 左下：难过/担心的地方</li>
+              <li>🤔 右下：好奇的地方</li>
+            </ul>
+          </div>
+        </li>
+        <li class="step-item">
+          <span class="step-number">3</span>
+          <div class="step-content">在每个格子里画出或写出你在社区里看到的<strong>对应场景</strong></div>
+        </li>
+        <li class="step-item">
+          <span class="step-number">4</span>
+          <div class="step-content">可以画图，也可以写字，<strong>又画又写也行</strong></div>
+        </li>
+        <li class="step-item">
+          <span class="step-number">5</span>
+          <div class="step-content">试着解释：为什么你觉得那个地方让你<strong>开心/难过/好奇</strong>？</div>
+        </li>
+      </ol>
+    </div>
+
+    <!-- Record Area -->
+    <div class="record-area">
+      <div class="record-title">✏️ 我的社区表情图</div>
+      <div class="record-hint">画 2x2 格子 / 感受 + 原因</div>
+      <svg class="record-grid-lines" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="green-dots" patternUnits="userSpaceOnUse" width="24" height="24">
+            <circle cx="12" cy="12" r="0.8" fill="#c8e6d5"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#green-dots)"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="page-footer">社区探索家 · 小小侦察兵培训手册</div>
+</div>
+
+</body>
+</html>

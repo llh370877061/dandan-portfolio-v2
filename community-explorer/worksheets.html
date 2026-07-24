@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>社区探索家 · 孩子们学习单合集</title>
+<style>
+  /* ===== 基础排版 ===== */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    color: #3a3a3a;
+    line-height: 1.7;
+    font-size: 14px;
+  }
+
+  /* ===== 打印样式 ===== */
+  @media print {
+    body { background: none !important; }
+    .page { box-shadow: none !important; margin: 0 !important; border: none !important; page-break-after: always; border-radius: 0 !important; }
+    .page:last-child { page-break-after: auto; }
+    .no-print { display: none !important; }
+    .draw-box { min-height: 160px !important; }
+  }
+
+  /* ===== 页面容器（模拟A4） ===== */
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 20px auto;
+    padding: 18mm 16mm 20mm 16mm;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    position: relative;
+    page-break-after: always;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  /* ===== 页眉 ===== */
+  .page-header {
+    text-align: center;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 3px solid #e8913a;
+  }
+  .page-header .logo {
+    font-size: 22px;
+    font-weight: 800;
+    color: #e8913a;
+    letter-spacing: 2px;
+  }
+  .page-header .session-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #5a4a3a;
+    margin-top: 2px;
+  }
+  .page-header .session-sub {
+    font-size: 12px;
+    color: #999;
+    margin-top: 1px;
+  }
+
+  /* ===== 页脚 ===== */
+  .page-footer {
+    text-align: center;
+    font-size: 11px;
+    color: #bbb;
+    margin-top: 12px;
+    padding-top: 6px;
+    border-top: 1px dashed #ddd;
+  }
+
+  /* ===== 信息栏（姓名、日期等） ===== */
+  .info-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    margin: 10px 0 12px 0;
+    font-size: 13.5px;
+  }
+  .info-bar .field {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+  .info-bar .label {
+    font-weight: 600;
+    color: #5a4a3a;
+    white-space: nowrap;
+  }
+  .info-bar .line {
+    display: inline-block;
+    min-width: 120px;
+    border-bottom: 1.5px solid #c8b89a;
+    flex: 1;
+    height: 1.2em;
+  }
+  .info-bar .line.short { min-width: 80px; }
+
+  /* ===== 观察维度选择 ===== */
+  .dimension-picker {
+    margin: 6px 0 12px 0;
+    font-size: 13.5px;
+    color: #5a4a3a;
+    font-weight: 600;
+  }
+  .dimension-picker .dims {
+    display: inline-flex;
+    gap: 8px;
+    margin-left: 6px;
+  }
+  .dimension-picker .dim {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 2px dashed #d4b896;
+    border-radius: 50%;
+    font-size: 15px;
+    font-weight: 700;
+    color: #b08860;
+    background: #fdf8f2;
+  }
+
+  /* ===== 区块标题 ===== */
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #e8913a;
+    margin: 14px 0 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .section-title .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: #e8913a;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+
+  /* ===== 填空行 ===== */
+  .blank-line {
+    min-height: 30px;
+    border-bottom: 1.5px solid #d8cbb8;
+    margin: 4px 0 8px 0;
+    padding: 2px 0;
+  }
+  .blank-line.tall { min-height: 44px; }
+
+  /* ===== 画图区域（虚线框） ===== */
+  .draw-box {
+    border: 2px dashed #d4b896;
+    border-radius: 10px;
+    min-height: 130px;
+    margin: 6px 0 10px 0;
+    padding: 10px;
+    background: #fdfaf5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #c8b89a;
+    font-size: 13px;
+    font-style: italic;
+  }
+  .draw-box.tall { min-height: 180px; }
+  .draw-box.xtall { min-height: 240px; }
+
+  /* ===== 分隔线 ===== */
+  .divider {
+    border: none;
+    border-top: 2px dashed #e0d0b8;
+    margin: 14px 0;
+  }
+
+  /* ===== 反思区（带背景框） ===== */
+  .reflection {
+    background: #fdf6ec;
+    border: 2px solid #e8c88a;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-top: 12px;
+  }
+  .reflection .ref-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #c0842a;
+    margin-bottom: 6px;
+  }
+  .reflection .ref-item {
+    margin: 6px 0;
+    font-size: 13.5px;
+  }
+  .reflection .ref-item .ref-q {
+    font-weight: 600;
+    color: #7a6040;
+  }
+
+  /* ===== 表情地图表格 ===== */
+  .emoji-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 8px 0;
+  }
+  .emoji-grid .cell {
+    border: 2px dashed #d4b896;
+    border-radius: 10px;
+    padding: 8px;
+    min-height: 110px;
+    text-align: center;
+  }
+  .emoji-grid .cell-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #7a6040;
+    margin-bottom: 4px;
+  }
+  .emoji-grid .cell-hint {
+    font-size: 11px;
+    color: #c8b89a;
+    font-style: italic;
+  }
+
+  /* ===== 图标对照表 ===== */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+    font-size: 12.5px;
+    color: #7a6040;
+    margin: 6px 0 4px 0;
+    padding: 6px 10px;
+    background: #fdf6ec;
+    border-radius: 6px;
+  }
+  .legend span { white-space: nowrap; }
+
+  /* ===== 投票区 ===== */
+  .vote-box {
+    border: 2px solid #e8913a;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin: 10px 0;
+    background: #fff9f2;
+  }
+  .vote-box .vote-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #e8913a;
+  }
+
+  /* ===== 分工区表格 ===== */
+  .task-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 6px 0;
+    font-size: 13.5px;
+  }
+  .task-table th {
+    background: #fdf6ec;
+    border: 1.5px solid #e0c89a;
+    padding: 6px 8px;
+    font-weight: 700;
+    color: #7a6040;
+    text-align: left;
+  }
+  .task-table td {
+    border: 1.5px solid #e0c89a;
+    padding: 6px 8px;
+    min-height: 30px;
+  }
+
+  /* ===== 三个词格子 ===== */
+  .three-words {
+    display: flex;
+    gap: 10px;
+    margin: 6px 0;
+  }
+  .three-words .word-box {
+    flex: 1;
+    border: 2px dashed #d4b896;
+    border-radius: 10px;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fdfaf5;
+  }
+
+  /* ===== 封面页 ===== */
+  .cover-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 297mm;
+    text-align: center;
+  }
+  .cover-page .big-title {
+    font-size: 36px;
+    font-weight: 900;
+    color: #e8913a;
+    letter-spacing: 4px;
+    margin-bottom: 10px;
+  }
+  .cover-page .sub-title {
+    font-size: 18px;
+    color: #9a8060;
+    margin-bottom: 30px;
+  }
+  .cover-page .cover-icon {
+    font-size: 72px;
+    margin-bottom: 20px;
+  }
+  .cover-page .cover-list {
+    text-align: left;
+    font-size: 15px;
+    color: #6a5a4a;
+    line-height: 2.2;
+  }
+  .cover-page .cover-list .dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: #e8913a;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .cover-page .cover-info {
+    margin-top: 40px;
+    font-size: 13px;
+    color: #aaa;
+    line-height: 2;
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== 封面页 ==================== -->
+<div class="page">
+  <div class="cover-page">
+    <div class="cover-icon">&#x1F9ED;</div>
+    <div class="big-title">社区探索家</div>
+    <div class="sub-title">孩子们学习单合集</div>
+    <div class="cover-list">
+      <div><span class="dot"></span>第1次：我的第一次社区发现</div>
+      <div><span class="dot"></span>第2次：侦察报告</div>
+      <div><span class="dot"></span>第3次：社区人物访谈记录</div>
+      <div><span class="dot"></span>第4次：我的社区地图</div>
+      <div><span class="dot"></span>第5次：我们的行动计划</div>
+      <div><span class="dot"></span>第6次：社区探索家 · 成长记录</div>
+    </div>
+    <div class="cover-info">
+      6-8位小探索家 · 6次社区冒险<br>
+      9-11岁为主，欢迎所有年龄段的小探险家！
+    </div>
+  </div>
+  <div class="page-footer">社区探索家 · 学习单合集 — 第 1 页</div>
+</div>
+
+<!-- ==================== 第1次活动 ==================== -->
+<div class="page">
+  <div class="page-header">
+    <div class="logo">&#x1F9ED; 社区探索家</div>
+    <div class="session-title">第1次活动：我的第一次社区发现</div>
+    <div class="session-sub">欢迎来到社区，小探险家！准备好用你的眼睛、耳朵和鼻子去发现宝藏了吗？</div>
+  </div>
+
+  <div class="info-bar">
+    <div class="field"><span class="label">探索者名字：</span><span class="line"></span></div>
+    <div class="field"><span class="label">探索日期：</span><span class="line short"></span></div>
+  </div>
+
+  <div class="dimension-picker">
+    我的观察维度：<span class="dims">
+      <span class="dim">人</span>
+      <span class="dim">文</span>
+      <span class="dim">地</span>
+      <span class="dim">产</span>
+      <span class="dim">景</span>
+    </span>
+    （圈一个你最想探索的方向）
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-title"><span class="num">1</span> &#x1F440; 我看到的</div>
+  <div class="draw-box tall">画一画或写一写你看到的（什么都可以！）</div>
+
+  <div class="section-title"><span class="num">2</span> &#x1F442; 我听到的</div>
+  <div class="blank-line"></div>
+
+  <div class="section-title"><span class="num">3</span> &#x1F443; 我闻到的（如果有的话）</div>
+  <div class="blank-line"></div>
+
+  <hr class="divider">
+
+  <div class="section-title"><span class="num">4</span> &#x2753; 我最好奇的事情</div>
+  <div class="blank-line"></div>
+
+  <div class="section-title"><span class="num">5</span> &#x2B50; 今天最开心的发现</div>
+  <div class="blank-line"></div>
+
+  <div class="reflection">
+    <div class="ref-title">&#x1F4AD; 体验圈反思</div>
+    <div class="ref-item"><span class="ref-q">今天最有趣的是：</span><span class="line"></span></div>
+    <div class="ref-item"><span class="ref-q">我发现了：</span><span class="line"></span></div>
+    <div class="ref-item"><span class="ref-q">下次我想：</span><span class="line"></span></div>
+  </div>
+
+  <div class="page-footer">社区探索家 · 第1次活动学习单 — 第 2 页</div>
+</div>
+
+<!-- ==================== 第2次活动 ==================== -->
+<div class="page">
+  <div class="page-header">
+    <div class="logo">&#x1F9ED; 社区探索家</div>
+    <div class="session-title">第2次活动：侦察报告</div>
+    <div class="session-sub">小侦察兵出动！带上你的放大镜（和好奇心），去社区里执行秘密任务吧！</div>
+  </div>
+
+  <div class="info-bar">
+    <div class="field"><span class="label">侦察兵代号：</span><span class="line"></span></div>
+    <div class="field"><span class="label">侦察日期：</span><span class="line short"></span></div>
+  </div>
+  <div class="info-bar">
+    <div class="field"><span class="label">侦察点：</span><span class="line"></span></div>
+  </div>
+
+  <div class="section-title"><span class="num">1</span> &#x23F1;&#xFE0F; 3分钟安静观察记录</div>
+  <div class="draw-box tall">画下或写下你注意到的细节（安静3分钟，你会发现很多！）</div>
+
+  <div class="section-title"><span class="num">2</span> &#x1F60A;&#x1F60A;&#x1F622;&#x1F914; 社区表情图</div>
+  <div class="emoji-grid">
+    <div class="cell">
+      <div class="cell-title">&#x1F60A; 开心的地方</div>
+      <div class="cell-hint">画一画社区里让你开心的场景</div>
+      <div class="draw-box" style="min-height:70px; margin:4px 0 0 0; border-width:1.5px;"></div>
+    </div>
+    <div class="cell">
+      <div class="cell-title">&#x1F610; 普通的地方</div>
+      <div class="cell-hint">画一画你觉得平平无奇的场景</div>
+      <div class="draw-box" style="min-height:70px; margin:4px 0 0 0; border-width:1.5px;"></div>
+    </div>
+    <div class="cell">
+      <div class="cell-title">&#x1F622; 难过的地方</div>
+      <div class="cell-hint">画一画社区里让你觉得可惜的场景</div>
+      <div class="draw-box" style="min-height:70px; margin:4px 0 0 0; border-width:1.5px;"></div>
+    </div>
+    <div class="cell">
+      <div class="cell-title">&#x1F914; 好奇的地方</div>
+      <div class="cell-hint">画一画社区里让你想了解更多的地方</div>
+      <div class="draw-box" style="min-height:70px; margin:4px 0 0 0; border-width:1.5px;"></div>
+    </div>
+  </div>
+
+  <div class="section-title"><span class="num">3</span> &#x1F50D; 我发现的问题</div>
+  <div class="blank-line"></div>
+
+  <div class="reflection">
+    <div class="ref-title">&#x1F4AD; 体验圈反思</div>
+    <div class="ref-item"><span class="ref-q">今天最难的是：</span><span class="line"></span></div>
+    <div class="ref-item"><span class="ref-q">我学会了：</span><span class="line"></span></div>
+    <div class="ref-item"><span class="ref-q">如果下次再去，我会：</span><span class="line"></span></div>
+  </div>
+
+  <div class="page-footer">社区探索家 · 第2次活动学习单 — 第 3 页</div>
+</div>
+
+<!-- ==================== 第3次活动 ==================== -->
+<div class="page">
+  <div class="page-header">
+    <div class="logo">&#x1F9ED; 社区探索家</div>
+    <div class="session-title">第3次活动：社区人物访谈记录</div>
+    <div class="session-sub">小记者上线！去认识社区里的人吧，每个人都有自己的故事！</div>
+  </div>
+
+  <div class="info-bar">
+    <div class="field"><span class="label">采访者名字：</span><span class="line"></span></div>
+    <div class="field"><span class="label">采访日期：</span><span class="line short"></span></div>
+  </div>
+  <div class="info-bar">
+    <div class="field"><span class="label">我采访的人：</span><span class="line"></span></div>
+    <div class="field"><span class="label">他/她是做什么的：</span><span class="line"></span></div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-title"><span class="num">1</span> &#x1F3A4; 我问了什么问题</div>
+  <div class="draw-box" style="min-height:80px; align-items:flex-start; justify-content:flex-start; padding:10px 14px;">写下你问的问题（可以不止一个哦！）</div>
+
+  <div class="section-title"><span class="num">2</span> &#x1F4AC; 他/她怎么回答的</div>
+  <div class="draw-box" style="min-height:80px; align-items:flex-start; justify-content:flex-start; padding:10px 14px;">写下回答（用自己的话就好）</div>
+
+  <div class="section-title"><span class="num">3</span> &#x1F60A; 采访中我最感动/意外的事</div>
+  <div class="blank-line tall"></div>
+
+  <div class="section-title"><span class="num">4</span> &#x1F3A8; 画一画这个人或让你印象深刻的事</div>
+  <div class="draw-box tall">拿起画笔，把这个人画下来吧！</div>
+
+  <div class="reflection">
+    <div class="ref-title">&#x1F4AD; 体验圈反思</div>
+    <div class="ref-item"><span class="ref-q">采访前我以为：</span><span class="line"></span></div>
+    <div class="ref-item"><span class="ref-q">采访后我发现：</span><span class="line"></span></div>
+    <div class="ref-item"><span class="ref-q">我想对这个人说：</span><span class="line"></span></div>
+  </div>
+
+  <div class="page-footer">社区探索家 · 第3次活动学习单 — 第 4 页</div>
+</div>
+
+<!-- ==================== 第4次活动 ==================== -->
+<div class="page">
+  <div class="page-header">
+    <div class="logo">&#x1F9ED; 社区探索家</div>
+    <div class="session-title">第4次活动：我的社区地图</div>
+    <div class="session-sub">像古代探险家一样，画出属于你的社区藏宝图！</div>
+  </div>
+
+  <div class="info-bar">
+    <div class="field"><span class="label">画图者名字：</span><span class="line"></span></div>
+    <div class="field"><span class="label">日期：</span><span class="line short"></span></div>
+  </div>
+
+  <div class="legend">
+    <span>&#x1F3E0; 建筑</span>
+    <span>&#x1F464; 有趣的人</span>
+    <span>&#x1F333; 自然景观</span>
+    <span>&#x1F3EA; 商店/店铺</span>
+    <span>&#x2753; 发现的问题</span>
+    <span>&#x2B50; 最喜欢的地方</span>
+  </div>
+
+  <div class="section-title"><span class="num">1</span> &#x1F5FA;&#xFE0F; 把你这几次探索发现的东西画在地图上</div>
+  <div class="draw-box xtall" style="border-width:2.5px;">在这里画你的社区地图，用上面的符号标记不同地方</div>
+
+  <div class="vote-box">
+    <div class="vote-title">&#x1F5F3;&#xFE0F; 投票：你最想改变社区里的哪件事？</div>
+    <div style="margin-top:6px;">
+      <span style="font-weight:600; color:#5a4a3a;">我投给：</span><span class="line" style="min-width:200px;"></span>
+    </div>
+    <div style="margin-top:4px;">
+      <span style="font-weight:600; color:#5a4a3a;">原因：</span><span class="line" style="min-width:200px;"></span>
+    </div>
+  </div>
+
+  <div class="reflection">
+    <div class="ref-title">&#x1F4AD; 体验圈反思</div>
+    <div class="ref-item"><span class="ref-q">画地图的时候我发现：</span><span class="line"></span></div>
+    <div class="ref-item"><span class="ref-q">大家投票选了：</span><span class="line"></span></div>
+    <div class="ref-item"><span class="ref-q">我觉得：</span><span class="line"></span></div>
+  </div>
+
+  <div class="page-footer">社区探索家 · 第4次活动学习单 — 第 5 页</div>
+</div>
+
+<!-- ==================== 第5次活动 ==================== -->
+<div class="page">
+  <div class="page-header">
+    <div class="logo">&#x1F9ED; 社区探索家</div>
+    <div class="session-title">第5次活动：我们的行动计划</div>
+    <div class="session-sub">光发现还不够，小探险家们要行动起来啦！一起头脑风暴吧！</div>
+  </div>
+
+  <div class="info-bar">
+    <div class="field"><span class="label">小组名字：</span><span class="line"></span></div>
+    <div class="field"><span class="label">日期：</span><span class="line short"></span></div>
+  </div>
+
+  <div style="font-size:14px; color:#5a4a3a; font-weight:600; margin-bottom:8px;">
+    我们要改变的事情是：<span class="line" style="min-width:260px;"></span>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-title"><span class="num">1</span> &#x1F914; 我们想怎么做</div>
+  <div class="draw-box tall" style="align-items:flex-start; justify-content:flex-start; padding:10px 14px; color:#b08860;">头脑风暴时间！写下所有想法，不管多疯狂都可以！<br><br>1. ____________________________<br><br>2. ____________________________<br><br>3. ____________________________<br><br>4. ____________________________</div>
+
+  <div class="section-title"><span class="num">2</span> &#x2705; 我们决定这样做</div>
+  <div class="blank-line tall"></div>
+
+  <div class="section-title"><span class="num">3</span> &#x1F450; 分工</div>
+  <table class="task-table">
+    <tr>
+      <th style="width:30%;">谁做什么</th>
+      <th style="width:40%;">需要什么材料</th>
+      <th style="width:30%;">大概需要多久</th>
+    </tr>
+    <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+    <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+    <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+  </table>
+
+  <div class="section-title"><span class="num">4</span> &#x26A0;&#xFE0F; 可能会遇到的困难</div>
+  <div class="blank-line"></div>
+
+  <div class="reflection">
+    <div class="ref-title">&#x1F4AD; 体验圈反思</div>
+    <div class="ref-item"><span class="ref-q">讨论中最有趣的分歧是：</span><span class="line"></span></div>
+    <div class="ref-item"><span class="ref-q">我觉得最难的是：</span><span class="line"></span></div>
+    <div class="ref-item"><span class="ref-q">我最期待的是：</span><span class="line"></span></div>
+  </div>
+
+  <div class="page-footer">社区探索家 · 第5次活动学习单 — 第 6 页</div>
+</div>
+
+<!-- ==================== 第6次活动 ==================== -->
+<div class="page">
+  <div class="page-header">
+    <div class="logo">&#x1F9ED; 社区探索家</div>
+    <div class="session-title">第6次活动：社区探索家 · 成长记录</div>
+    <div class="session-sub">探险之旅的最后一站！回顾这一路，你发现了怎样的自己？</div>
+  </div>
+
+  <div class="info-bar">
+    <div class="field"><span class="label">名字：</span><span class="line"></span></div>
+    <div class="field"><span class="label">日期：</span><span class="line short"></span></div>
+  </div>
+
+  <div class="section-title"><span class="num">1</span> &#x1F4F8; 最让我骄傲的一张照片/一件事</div>
+  <div class="draw-box tall">画出来或写下来，这是你的高光时刻！</div>
+
+  <div class="section-title"><span class="num">2</span> &#x1F5FA;&#xFE0F; 我画的社区地图里，最有成就感的是</div>
+  <div class="blank-line"></div>
+
+  <div class="section-title"><span class="num">3</span> &#x1F91D; 我帮助过谁 / 谁帮助过我</div>
+  <div class="blank-line"></div>
+
+  <div class="section-title"><span class="num">4</span> &#x1F31F; 如果用三个词形容这次探索，我会说</div>
+  <div class="three-words">
+    <div class="word-box"></div>
+    <div class="word-box"></div>
+    <div class="word-box"></div>
+  </div>
+
+  <div class="section-title"><span class="num">5</span> &#x2709;&#xFE0F; 给社区的一句话</div>
+  <div style="font-size:12.5px; color:#999; margin-bottom:2px; font-style:italic;">（你想对你的社区说什么？）</div>
+  <div class="blank-line"></div>
+
+  <div class="reflection">
+    <div class="ref-title">&#x1F4AD; 体验圈大回顾</div>
+    <div class="ref-item"><span class="ref-q">第一次走社区的时候，我以为：</span><span class="line"></span></div>
+    <div class="ref-item"><span class="ref-q">现在我知道了：</span><span class="line"></span></div>
+    <div class="ref-item"><span class="ref-q">下次我想在社区里：</span><span class="line"></span></div>
+    <div class="ref-item"><span class="ref-q">我想对新来的小朋友说：</span><span class="line"></span></div>
+  </div>
+
+  <div class="page-footer">社区探索家 · 第6次活动学习单 — 第 7 页</div>
+</div>
+
+</body>
+</html>

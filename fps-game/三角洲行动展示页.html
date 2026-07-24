@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三角洲行动 - 战术射击游戏展示</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: #0a0e17;
+    color: #e0e0e0;
+    overflow-x: hidden;
+  }
+
+  /* Hero Section */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 700px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background:
+      radial-gradient(ellipse at 20% 80%, rgba(0, 180, 255, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(255, 60, 60, 0.1) 0%, transparent 50%),
+      linear-gradient(180deg, #0a0e17 0%, #111927 100%);
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60"><rect fill="none" stroke="%23ffffff08" stroke-width="1" width="60" height="60"/></svg>') repeat;
+    opacity: 0.5;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    padding: 0 20px;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    padding: 6px 18px;
+    border: 1px solid rgba(0, 180, 255, 0.4);
+    border-radius: 20px;
+    font-size: 13px;
+    color: #00b4ff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    backdrop-filter: blur(10px);
+    background: rgba(0, 180, 255, 0.05);
+  }
+
+  .hero h1 {
+    font-size: clamp(48px, 8vw, 96px);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #ffffff 0%, #00b4ff 50%, #ff3c3c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -2px;
+  }
+
+  .hero .subtitle {
+    font-size: 20px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 32px;
+    font-weight: 300;
+    letter-spacing: 1px;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 48px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 36px;
+    font-weight: 800;
+    color: #00b4ff;
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,0.3);
+    font-size: 13px;
+    letter-spacing: 2px;
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(10px); }
+  }
+
+  /* Navigation */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(20px);
+    background: rgba(10, 14, 23, 0.8);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: all 0.3s;
+  }
+
+  nav.scrolled {
+    padding: 12px 40px;
+    background: rgba(10, 14, 23, 0.95);
+  }
+
+  .nav-logo {
+    font-size: 20px;
+    font-weight: 800;
+    color: #00b4ff;
+    letter-spacing: -1px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+    letter-spacing: 0.5px;
+  }
+
+  .nav-links a:hover {
+    color: #00b4ff;
+  }
+
+  /* Sections */
+  section {
+    padding: 100px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+
+  .section-tag {
+    display: inline-block;
+    font-size: 12px;
+    color: #00b4ff;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  .section-title {
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.2;
+    letter-spacing: -1px;
+  }
+
+  .section-desc {
+    max-width: 600px;
+    margin: 16px auto 0;
+    color: rgba(255,255,255,0.5);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  /* Game Modes */
+  .modes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 24px;
+  }
+
+  .mode-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 36px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mode-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #00b4ff, #ff3c3c);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .mode-card:hover {
+    border-color: rgba(0, 180, 255, 0.2);
+    transform: translateY(-4px);
+  }
+
+  .mode-card:hover::before {
+    opacity: 1;
+  }
+
+  .mode-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    background: rgba(0, 180, 255, 0.1);
+  }
+
+  .mode-card h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+
+  .mode-card p {
+    color: rgba(255,255,255,0.5);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .mode-card .tag {
+    display: inline-block;
+    padding: 4px 10px;
+    background: rgba(0, 180, 255, 0.1);
+    border-radius: 6px;
+    font-size: 12px;
+    color: #00b4ff;
+    margin-top: 16px;
+  }
+
+  /* Features */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 32px;
+  }
+
+  .feature {
+    text-align: center;
+    padding: 40px 24px;
+  }
+
+  .feature-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(0,180,255,0.15), rgba(255,60,60,0.1));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin: 0 auto 20px;
+  }
+
+  .feature h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+
+  .feature p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.6;
+  }
+
+  /* Operators */
+  .operators-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+
+  .operator-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 28px;
+    text-align: center;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .operator-card:hover {
+    border-color: rgba(0, 180, 255, 0.3);
+    background: rgba(0, 180, 255, 0.05);
+    transform: translateY(-4px);
+  }
+
+  .operator-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  .operator-card h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .operator-card .role {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Equipment */
+  .equip-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .equip-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.2s;
+  }
+
+  .equip-item:hover {
+    border-color: rgba(0,180,255,0.2);
+    background: rgba(0,180,255,0.03);
+  }
+
+  .equip-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: rgba(0,180,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .equip-info h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 2px;
+  }
+
+  .equip-info p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  /* Timeline / Story */
+  .story-timeline {
+    position: relative;
+    max-width: 700px;
+    margin: 0 auto;
+    padding-left: 40px;
+  }
+
+  .story-timeline::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, #00b4ff, #ff3c3c);
+    opacity: 0.3;
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 48px;
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: -34px;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #00b4ff;
+    border: 3px solid #0a0e17;
+  }
+
+  .timeline-year {
+    font-size: 14px;
+    color: #00b4ff;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .timeline-text {
+    font-size: 16px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.7;
+  }
+
+  /* Platforms */
+  .platforms {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 40px;
+  }
+
+  .platform {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 28px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .platform:hover {
+    border-color: #00b4ff;
+    background: rgba(0,180,255,0.05);
+  }
+
+  .platform-icon {
+    font-size: 24px;
+  }
+
+  .platform-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .platform-status {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 60px 40px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.3);
+    font-size: 13px;
+  }
+
+  footer a {
+    color: #00b4ff;
+    text-decoration: none;
+  }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    nav { padding: 12px 20px; }
+    .nav-links { display: none; }
+    section { padding: 60px 20px; }
+    .hero-stats { gap: 32px; }
+  }
+
+  /* Scroll animation */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav id="navbar">
+  <div class="nav-logo">DELTA FORCE</div>
+  <ul class="nav-links">
+    <li><a href="#modes">游戏模式</a></li>
+    <li><a href="#features">核心特色</a></li>
+    <li><a href="#operators">特战干员</a></li>
+    <li><a href="#equipment">武器装备</a></li>
+    <li><a href="#story">背景故事</a></li>
+    <li><a href="#platforms">平台</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">TACTICAL SHOOTER</div>
+    <h1>三角洲行动</h1>
+    <p class="subtitle">新一代战术射击品质标杆 · 化身特战干员执行极限行动</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-number">2035</span>
+        <span class="stat-label">故事背景</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">50v50</span>
+        <span class="stat-label">大战场对决</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">10+</span>
+        <span class="stat-label">特战干员</span>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">▼ 向下探索</div>
+</section>
+
+<!-- Game Modes -->
+<section id="modes">
+  <div class="section-header fade-up">
+    <div class="section-tag">GAME MODES</div>
+    <h2 class="section-title">多元战斗模式</h2>
+    <p class="section-desc">从秘密潜入到大规模战场，多种玩法满足不同战术风格</p>
+  </div>
+  <div class="modes-grid">
+    <div class="mode-card fade-up">
+      <div class="mode-icon">🎯</div>
+      <h3>全面战场</h3>
+      <p>50v50 大规模多人对战，驾驶重型载具、占领战略据点，在广阔地图上体验史诗级的现代战争。</p>
+      <span class="tag">多人对战</span>
+    </div>
+    <div class="mode-card fade-up">
+      <div class="mode-icon">🕵️</div>
+      <h3>危险行动</h3>
+      <p>4人小队深入敌后执行高风险任务，搜集情报、击败 AI 敌人、搜刮战利品，每局都是一场独立的冒险。</p>
+      <span class="tag">PvE + PvP</span>
+    </div>
+    <div class="mode-card fade-up">
+      <div class="mode-icon">⚔️</div>
+      <h3>突袭模式</h3>
+      <p>紧凑的近距离战斗，攻防双方围绕目标展开激烈交锋，考验团队配合与个人枪法。</p>
+      <span class="tag">战术对抗</span>
+    </div>
+    <div class="mode-card fade-up">
+      <div class="mode-icon">🏆</div>
+      <h3>竞技排位</h3>
+      <p>严肃的排位竞技模式，匹配实力相当的对手，在高压力环境下检验你的战术素养。</p>
+      <span class="tag">竞技</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Features -->
+<section id="features">
+  <div class="section-header fade-up">
+    <div class="section-tag">CORE FEATURES</div>
+    <h2 class="section-title">核心特色</h2>
+    <p class="section-desc">琳琅天上团队倾力打造的次世代射击体验</p>
+  </div>
+  <div class="features">
+    <div class="feature fade-up">
+      <div class="feature-icon">🗺️</div>
+      <h3>开放战场</h3>
+      <p>超大地图自由探索，海量随机事件增加战斗变数</p>
+    </div>
+    <div class="feature fade-up">
+      <div class="feature-icon">🚁</div>
+      <h3>载具作战</h3>
+      <p>坦克、直升机、装甲车，驾驶重型载具火力输出</p>
+    </div>
+    <div class="feature fade-up">
+      <div class="feature-icon">🎭</div>
+      <h3>干员技能</h3>
+      <p>每位特战干员拥有独特战斗道具与专属技能</p>
+    </div>
+    <div class="feature fade-up">
+      <div class="feature-icon">🔫</div>
+      <h3>深度枪械</h3>
+      <p>丰富的武器自定义系统，配件改装打造专属武器</p>
+    </div>
+    <div class="feature fade-up">
+      <div class="feature-icon">📱</div>
+      <h3>多端互通</h3>
+      <p>PC、移动端同步上线，随时随地加入战场</p>
+    </div>
+    <div class="feature fade-up">
+      <div class="feature-icon">🌍</div>
+      <h3>沉浸叙事</h3>
+      <p>设定在2035年，调查哈夫克公司的非法活动</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Operators -->
+<section id="operators">
+  <div class="section-header fade-up">
+    <div class="section-tag">OPERATORS</div>
+    <h2 class="section-title">特战干员</h2>
+    <p class="section-desc">每位干员都有独特的战斗风格和专属技能</p>
+  </div>
+  <div class="operators-grid">
+    <div class="operator-card fade-up">
+      <div class="operator-avatar" style="background: linear-gradient(135deg, #ff6b35, #ff3c3c);">🪖</div>
+      <h4>先锋</h4>
+      <p class="role">突击手</p>
+    </div>
+    <div class="operator-card fade-up">
+      <div class="operator-avatar" style="background: linear-gradient(135deg, #00b4ff, #0066cc);">💉</div>
+      <h4>医官</h4>
+      <p class="role">医疗支援</p>
+    </div>
+    <div class="operator-card fade-up">
+      <div class="operator-avatar" style="background: linear-gradient(135deg, #00cc88, #008855);">🛡️</div>
+      <h4>重装</h4>
+      <p class="role">防御专家</p>
+    </div>
+    <div class="operator-card fade-up">
+      <div class="operator-avatar" style="background: linear-gradient(135deg, #ff9500, #cc7700);">🔧</div>
+      <h4>工程兵</h4>
+      <p class="role">战术支援</p>
+    </div>
+    <div class="operator-card fade-up">
+      <div class="operator-avatar" style="background: linear-gradient(135deg, #a855f7, #7c3aed);">🦅</div>
+      <h4>侦察兵</h4>
+      <p class="role">情报搜集</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Equipment -->
+<section id="equipment">
+  <div class="section-header fade-up">
+    <div class="section-tag">EQUIPMENT</div>
+    <h2 class="section-title">武器装备</h2>
+    <p class="section-desc">丰富的武器库与装备系统，打造你的专属战斗风格</p>
+  </div>
+  <div class="equip-list">
+    <div class="equip-item fade-up">
+      <div class="equip-icon">🔫</div>
+      <div class="equip-info">
+        <h4>突击步枪</h4>
+        <p>中远距离战术战斗的主力武器</p>
+      </div>
+    </div>
+    <div class="equip-item fade-up">
+      <div class="equip-icon">🎯</div>
+      <div class="equip-info">
+        <h4>狙击步枪</h4>
+        <p>远距离精准打击，一击制敌</p>
+      </div>
+    </div>
+    <div class="equip-item fade-up">
+      <div class="equip-icon">💥</div>
+      <div class="equip-info">
+        <h4>霰弹枪</h4>
+        <p>近距离作战的毁灭性火力</p>
+      </div>
+    </div>
+    <div class="equip-item fade-up">
+      <div class="equip-icon">💣</div>
+      <div class="equip-info">
+        <h4>投掷物</h4>
+        <p>手雷、烟雾弹等战术道具</p>
+      </div>
+    </div>
+    <div class="equip-item fade-up">
+      <div class="equip-icon">🛡️</div>
+      <div class="equip-info">
+        <h4>防弹衣</h4>
+        <p>提供额外防护，提高生存能力</p>
+      </div>
+    </div>
+    <div class="equip-item fade-up">
+      <div class="equip-icon">📡</div>
+      <div class="equip-info">
+        <h4>战术装备</h4>
+        <p>无人机、传感器等高科技装备</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Story -->
+<section id="story">
+  <div class="section-header fade-up">
+    <div class="section-tag">BACKSTORY</div>
+    <h2 class="section-title">背景故事</h2>
+    <p class="section-desc">2035年，一场关于真相与正义的行动即将展开</p>
+  </div>
+  <div class="story-timeline fade-up">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">2035</div>
+      <div class="timeline-text">世界局势动荡不安，神秘的阿萨拉大陆成为各方势力角逐的焦点。一家名为「哈夫克公司」的企业被怀疑在暗中进行非法军事活动。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">三角洲部队</div>
+      <div class="timeline-text">作为精锐中的精锐，你被选中加入三角洲特种部队，前往阿萨拉大陆执行秘密调查任务。你的目标：揭露哈夫克公司的真面目。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">极限行动</div>
+      <div class="timeline-text">在这个充满危机的战场上，运用战斗道具与技能，与队友紧密协作，灵活制定战术，挑战强大的敌人，完成各种看似不可能的极限行动。</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Platforms -->
+<section id="platforms">
+  <div class="section-header fade-up">
+    <div class="section-tag">PLATFORMS</div>
+    <h2 class="section-title">支持平台</h2>
+    <p class="section-desc">多端同步，随时随地加入战场</p>
+  </div>
+  <div class="platforms fade-up">
+    <div class="platform">
+      <span class="platform-icon">🖥️</span>
+      <div>
+        <div class="platform-text">PC</div>
+        <div class="platform-status">已上线</div>
+      </div>
+    </div>
+    <div class="platform">
+      <span class="platform-icon">📱</span>
+      <div>
+        <div class="platform-text">移动端</div>
+        <div class="platform-status">已上线</div>
+      </div>
+    </div>
+    <div class="platform">
+      <span class="platform-icon">🎮</span>
+      <div>
+        <div class="platform-text">主机</div>
+        <div class="platform-status">即将推出</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>三角洲行动 · DELTA FORCE — 由琳琅天上团队研发运营</p>
+  <p style="margin-top: 8px;">本页面为展示用途 · <a href="https://df.qq.com" target="_blank">访问官网</a></p>
+</footer>
+
+<script>
+  // Scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Navbar scroll effect
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,642 @@
+var VIDEO_DATA = {
+  "1": {
+    "videos": [
+      {
+        "title": "当人们都在谈AI时，你知道AI到底是什么吗？欢迎收看<五分钟了解一个AI概念>第一期《AI是什么》——大白话讲解人工智能的概念、要素、机制。",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1Li2jBdEzS",
+        "embedUrl": ""
+      },
+      {
+        "title": "我悟了！用AI一键做科普视频，so easy",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1RMTtzKENR",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "2": {
+    "videos": [
+      {
+        "title": "20分钟从机器学习到深度学习！一路大白话理解AI发展史",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1vZHmzvE6D",
+        "embedUrl": ""
+      },
+      {
+        "title": "牛津大学科普 | 几分钟带你了解：什么是机器学习",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1Z5411P7vt",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "3": {
+    "videos": [
+      {
+        "title": "计算机视觉零基础入门",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV19x411X7k6",
+        "embedUrl": ""
+      },
+      {
+        "title": "【计算机视觉】目标检测从入门到精通-基础原理与项目实战",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1m5411A7FD",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "4": {
+    "videos": [
+      {
+        "title": "【语音识别技术】重度鉴赏",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1Km4y1Q7w7",
+        "embedUrl": ""
+      },
+      {
+        "title": "语音识别的原理是什么？你说的话是怎么变成文字的【冰山实验室#12】",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1gt4y1G7Wg",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "5": {
+    "videos": [
+      {
+        "title": "啊？这些声音都是AI合成的？- 现在的AI语音有多逼真！",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1DC411G7Av",
+        "embedUrl": ""
+      },
+      {
+        "title": "AI声音合成 & TTS演化史（OpenAI Voice Engine、ElevenLabs、讯飞TTS、网易有道、亚马逊 BASE TTS…）",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1qM4m1X74W",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "6": {
+    "videos": [
+      {
+        "title": "【珍藏必看】安德烈·卡帕西AI普及课：大语言模型入门介绍｜Andrej Karpathy",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1yUAAemEJh",
+        "embedUrl": ""
+      },
+      {
+        "title": "【吴恩达】2025年公认最好的【LLM大模型】教程！大模型入门到进阶，一套全解决！2025生成式人工智能-附带课件代码",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1sMEyzhEM3",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "7": {
+    "videos": [
+      {
+        "title": "【科普-AI】AI如何防幻觉？",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1QY546vEJ2",
+        "embedUrl": ""
+      },
+      {
+        "title": "AI为什么会一本正经的胡说八道?什么是AI幻觉?幻觉降低技巧科普",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1ggGn6gEnt",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "8": {
+    "videos": [
+      {
+        "title": "Ethics in AI Applications 人工智能应用的伦理问题 | From A Business Professor",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1EY9JYhEGi",
+        "embedUrl": ""
+      },
+      {
+        "title": "AI系统级伦理与安全治理：以豆包手机助手为例",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1tQSyBFE5F",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "9": {
+    "videos": [
+      {
+        "title": "【AI简史】AI到底是什么、AI的发展历程！",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV13tPteAEZE",
+        "embedUrl": ""
+      },
+      {
+        "title": "【动画】人工智能发展史",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1j34y1t7nL",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "10": {
+    "videos": [
+      {
+        "title": "从主宰到共治：未来人类与AI关系的展望",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1mMXnYkEWR",
+        "embedUrl": ""
+      },
+      {
+        "title": "AI时代人机关系：从工具到伙伴",
+        "source": "bilibili",
+        "url": "https://search.bilibili.com/all?keyword=%E4%BA%BA%E7%B1%BB%E4%B8%8EAI%E5%85%B3%E7%B3%BB",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "11": {
+    "videos": [
+      {
+        "title": "【大数据】小白也能看懂的大数据概念科普！入门学习必看！",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1zjcyzVE2E",
+        "embedUrl": ""
+      },
+      {
+        "title": "大数据科普系列：搞懂这些专业术语，就算数据治理入门的啦!",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1TQ4y1u7ao",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "12": {
+    "videos": [
+      {
+        "title": "什么是算法？算法入门科普",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1G441187Qg",
+        "embedUrl": ""
+      },
+      {
+        "title": "4分钟搞懂, 算法是什么",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1u34y1Q72h",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "13": {
+    "videos": [
+      {
+        "title": "五分钟秒懂神经网络原理，机器学习入门教程",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1mu411x7VD",
+        "embedUrl": ""
+      },
+      {
+        "title": "【通俗易懂】5分钟带你简单理解卷积神经网络CNN，AI领域的关键底层算法入门，学到就是赚到",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1Xhb6zsExC",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "14": {
+    "videos": [
+      {
+        "title": "边敲边讲！深度学习还不会训练模型的赶紧进来看，究极细致的纯新手代码讲解！ -人工智能/机器学习/神经网络",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1khrpYLEaq",
+        "embedUrl": ""
+      },
+      {
+        "title": "【小萌五分钟】机器学习 | 数据集的划分(一): 训练集及测试集",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1df4y117TT",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "15": {
+    "videos": [
+      {
+        "title": "【吴恩达】2025年公认最好的【提示词工程】教程！大模型入门到进阶，一套全解决！Prompt Engineering-附带课件代码",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1173jzNELG",
+        "embedUrl": ""
+      },
+      {
+        "title": "翻遍整个B站，这绝对是2025讲的最好的提示词工程（Prompt Engineering）教程，全程干货无废话！让你少走99%的弯路！AI大模型|LLM",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV19psRzpEPX",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "16": {
+    "videos": [
+      {
+        "title": "图灵奖系列（一）：人工智能之父图灵",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1y24y1o716",
+        "embedUrl": ""
+      },
+      {
+        "title": "人工智能之父: 艾伦·图灵 - How Alan Turing Laid the Foundations for AI [人工智能课程资料]",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1a741147NU",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "17": {
+    "videos": [
+      {
+        "title": "人工智能的前世今生，两度寒冬三次复兴，成就如今数据时代！",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1eX4y1w7vk",
+        "embedUrl": ""
+      },
+      {
+        "title": "什么样的寒冬差点冻死人工智能？",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1ztHse7EYZ",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "18": {
+    "videos": [
+      {
+        "title": "创建现代AI的大神-Geoff Hinton【深度学习之父】",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1PZ4y147nQ",
+        "embedUrl": ""
+      },
+      {
+        "title": "【深度学习】神经网络机器学习课程（Geoffrey Hinton 2012）（英文字幕）",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1gx411D769",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "19": {
+    "videos": [
+      {
+        "title": "终于有人把chatGPT说清楚了——全网最深入浅出的chatGPT原理科普，包你看懂",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1yV4y1k7Tc",
+        "embedUrl": ""
+      },
+      {
+        "title": "杀疯了！ChatGPT底层原理全解读，两个小时快速啃透，引爆AI聊天机器人领域，学不会你打我！！！",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV14Y411D79y",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "20": {
+    "videos": [
+      {
+        "title": "CCTV10 纪录片《智能中国》【全7集】1080P+",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1rL4y1c7x9",
+        "embedUrl": ""
+      },
+      {
+        "title": "中国的AI世界观",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1TFLh6BE59",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "21": {
+    "videos": [
+      {
+        "title": "一个视频看懂AI医疗的一切",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1UmBBBEENk",
+        "embedUrl": ""
+      },
+      {
+        "title": "【中字】人工智能在医学领域的应用和展望 ｜AI in Medicine- Possible Applications and Potentials",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1Qq4y1a7bW",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "22": {
+    "videos": [
+      {
+        "title": "麻省理工给孩子的AI课第1集：什么是AI？【通俗易懂的AI课程，大白话讲清楚当下最火的AI】全年龄段AI通识",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV12NEczCE8b",
+        "embedUrl": ""
+      },
+      {
+        "title": "AI+教育",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1Ze4y187Hx",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "23": {
+    "videos": [
+      {
+        "title": "Blender 与 AI 的深度结合：掌握创作主动权 - Andrew Price 谈 3D 艺术家如何利用 AI 提升工作流",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1VELS6MEox",
+        "embedUrl": ""
+      },
+      {
+        "title": "生成式AI艺术原理与创作过程 | 罗霄 2025.5版",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1JdtozJEd9",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "24": {
+    "videos": [
+      {
+        "title": "收货一些悟空智能机器人，可以跳舞和编程，识别物品，真的黑科技",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1dv4y1P79Y",
+        "embedUrl": ""
+      },
+      {
+        "title": "ESP32 大模型 AI 桌面机器人",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1MezzYaEfP",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "25": {
+    "videos": [
+      {
+        "title": "自动驾驶并不复杂！五分钟带你深入了解自动驾驶技术原理！",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1KD4y1v7sM",
+        "embedUrl": ""
+      },
+      {
+        "title": "【科普】自动驾驶分级及原理",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1f7UGYfEHB",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "26": {
+    "videos": [
+      {
+        "title": "【双语字幕】Google开发出新一代围棋人工智能AlphaGo @新智元 译制",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1Es411X7mM",
+        "embedUrl": ""
+      },
+      {
+        "title": "AI是怎样炼成的 1 （AlphaGo Zero论文欣赏）",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1yb411U7Co",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "27": {
+    "videos": [
+      {
+        "title": "【地理科普】---天气预报是怎么来的？",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1wh4y147FE",
+        "embedUrl": ""
+      },
+      {
+        "title": "【36氪】让天气预报准确一点很难吗？为什么总是预测不准？",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1vm4y1r7Gm",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "28": {
+    "videos": [
+      {
+        "title": "人工智能和环境治理",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1Yk4y1J7kH",
+        "embedUrl": ""
+      },
+      {
+        "title": "人工智能技术在环保领域的应用场景",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1LW4y1Q712",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "29": {
+    "videos": [
+      {
+        "title": "网络安全科普第二期-人工智能安全",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV11xtVe6E7Q",
+        "embedUrl": ""
+      },
+      {
+        "title": "AI时代，这是你最需要关注的隐私安全！！！",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1RN9uBEEWW",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "30": {
+    "videos": [
+      {
+        "title": "【央视纪录片】《智能时代》（全6集）人工智能、Chatgpt如何改变世界？",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1as4y1q73s",
+        "embedUrl": ""
+      },
+      {
+        "title": "伟大的人类：从巴别塔到智能时代",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1KqVN68Em7",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "31": {
+    "videos": [
+      {
+        "title": "给孩子的MIT人工智能课 AI时代必须掌握 适合青少年零基础入门学习 科技竞赛白名单 少儿编程",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1UCdtYkEqe",
+        "embedUrl": ""
+      },
+      {
+        "title": "凉山教育公益纪录片《阿依的春天》",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1Xr4y147B5",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "32": {
+    "videos": [
+      {
+        "title": "Trae 保姆级教程｜AI 编程工具完整入门，实战项目手把手教学",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1PwBuBtEZo",
+        "embedUrl": ""
+      },
+      {
+        "title": "AI前端项目实战，vue3项目实战,Trae编程实战，AI-VUE企业级项目（已完结）AI心理健康助手,前端处理AI业务，vue3零基础入门到实战,真实后端接口",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1wHfmBDE4a",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "33": {
+    "videos": [
+      {
+        "title": "最强90后王兴兴，从偏科少年到机器人英雄，宇树科技做对了什么？",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV19j9AYTEwF",
+        "embedUrl": ""
+      },
+      {
+        "title": "科创猩球｜“编程1小时”嘉年华，青少年科技创新大赛「宣传片」",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1g5411N7qW",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "34": {
+    "videos": [
+      {
+        "title": "全国青少年人工智能创新挑战赛AI智能体专项赛赛前培训视频",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1qCgZzvENj",
+        "embedUrl": ""
+      },
+      {
+        "title": "外媒探访中国小学课堂上应用的AI人工智能技术",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1wJ411U71M",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "35": {
+    "videos": [
+      {
+        "title": "中学生AI课入门10节 适合青少年自主学习的课程  竞赛 培训 白名单 升学",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1Y8dAYLEbz",
+        "embedUrl": ""
+      },
+      {
+        "title": "青少年AIGC启蒙课  AI时代必懂  适合青少年零基础入门学习 科技竞赛白名单 少儿编程",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1h9dVYzEpS",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "36": {
+    "videos": [
+      {
+        "title": "一个视频看懂PBL（project based learning）",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1Sa411a7pg",
+        "embedUrl": ""
+      },
+      {
+        "title": "【中字】项目化学习案例——保护环境项目Taking Care of Our Environment Project",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1zh411J7pQ",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "37": {
+    "videos": [
+      {
+        "title": "一个案例看懂什么是设计思维（Design Thinking）",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1vu41127dR",
+        "embedUrl": ""
+      },
+      {
+        "title": "【公开课】浙江大学：设计思维与创新设计",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1uT4y157r6",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "38": {
+    "videos": [
+      {
+        "title": "10分钟快速学会画产品原型，新手产品经理必备技能，原型设计工具测评推荐",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1y14y1n7CE",
+        "embedUrl": ""
+      },
+      {
+        "title": "低保真设计稿如何转化为高保真原型图？-从小白到大神！UI产品项目设计从零到一全精通课程-第06集",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1t94y1X7Ph",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "39": {
+    "videos": [
+      {
+        "title": "我开发Skill的真实流程：测试、反馈、迭代",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1ni5t6pErG",
+        "embedUrl": ""
+      },
+      {
+        "title": "7分钟视频：什么是敏捷开发Scrum",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1rW411K7vD",
+        "embedUrl": ""
+      }
+    ]
+  },
+  "40": {
+    "videos": [
+      {
+        "title": "公众演讲呈现技巧",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV18Q4y1E7YE",
+        "embedUrl": ""
+      },
+      {
+        "title": "面试技巧 | 一分钟即兴演讲、干货教学、五点秘诀！误区和温馨提示",
+        "source": "bilibili",
+        "url": "https://www.bilibili.com/video/BV1vJ41197Lt",
+        "embedUrl": ""
+      }
+    ]
+  }
+};

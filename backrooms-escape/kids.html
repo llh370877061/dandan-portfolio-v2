@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>神奇迷宫大冒险</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:#111;color:#fff;overflow:hidden;height:100vh;display:flex;flex-direction:column;user-select:none;-webkit-user-select:none}
+#game{flex:1;display:flex;flex-direction:column;max-width:600px;margin:0 auto;width:100%}
+
+/* 状态栏 */
+#hud{display:flex;justify-content:space-between;align-items:center;padding:8px 16px;background:rgba(0,0,0,.85);border-bottom:1px solid rgba(255,255,255,.1);font-size:14px;gap:8px}
+.hud-item{display:flex;align-items:center;gap:4px}
+.hud-bar{width:60px;height:8px;background:rgba(255,255,255,.15);border-radius:4px;overflow:hidden}
+.hud-fill{height:100%;border-radius:4px;transition:width .4s}
+.hud-fill.hp{background:#e74c3c}
+.hud-fill.brave{background:#f39c12}
+#star-count{color:#f1c40f;font-weight:bold;font-size:16px}
+#level-name{color:#aaa;font-size:12px}
+
+/* Canvas区 */
+#canvas-wrap{flex:1;position:relative;overflow:hidden;min-height:0}
+canvas{width:100%;height:100%;display:block}
+
+/* 方向控制 */
+#controls{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:10px 16px;background:rgba(0,0,0,.9)}
+.dir-btn{padding:14px;font-size:22px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);color:#fff;border-radius:10px;cursor:pointer;text-align:center;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.dir-btn:active{background:rgba(201,168,76,.3);border-color:#c9a84c;transform:scale(.95)}
+.dir-btn.empty{visibility:hidden}
+#btn-up{grid-column:2}
+
+/* 事件面板 */
+#event-panel{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.85);flex-direction:column;justify-content:center;align-items:center;padding:20px}
+#event-panel.active{display:flex}
+#event-box{background:#1a1a2e;border:2px solid rgba(255,255,255,.15);border-radius:16px;padding:24px;max-width:420px;width:100%;text-align:center}
+#event-icon{font-size:48px;margin-bottom:12px}
+#event-text{font-size:16px;line-height:1.8;margin-bottom:20px;color:#ddd}
+#event-choices{display:flex;flex-direction:column;gap:10px}
+.evt-btn{padding:12px 16px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#fff;border-radius:10px;font-size:15px;cursor:pointer;transition:all .2s;font-family:inherit}
+.evt-btn:hover{border-color:#c9a84c;background:rgba(201,168,76,.15)}
+
+/* 开始画面 */
+#start-screen{position:fixed;inset:0;z-index:200;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:30px}
+#start-screen h1{font-size:2.2rem;margin-bottom:8px;background:linear-gradient(90deg,#f1c40f,#e67e22);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+#start-screen .sub{color:#888;margin-bottom:40px;font-size:14px}
+#start-screen .desc{color:#aaa;font-size:14px;line-height:2;margin-bottom:30px;max-width:320px}
+.start-btn{padding:14px 48px;border:2px solid #f1c40f;background:transparent;color:#f1c40f;font-size:18px;border-radius:30px;cursor:pointer;font-family:inherit;transition:all .3s}
+.start-btn:hover{background:#f1c40f;color:#1a1a2e}
+
+/* 结局 */
+#end-screen{position:fixed;inset:0;z-index:200;background:linear-gradient(135deg,#0f0c29,#302b63);display:none;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:30px}
+#end-screen.active{display:flex}
+#end-screen h2{font-size:2rem;margin-bottom:20px}
+#end-screen p{color:#aaa;line-height:2;margin-bottom:30px;max-width:360px}
+
+/* 提示浮层 */
+#toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);border:1px solid rgba(255,255,255,.2);padding:10px 20px;border-radius:20px;font-size:14px;z-index:50;opacity:0;transition:opacity .3s;pointer-events:none}
+#toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- 开始画面 -->
+<div id="start-screen">
+  <h1>神奇迷宫大冒险</h1>
+  <div class="sub">THE AMAZING MAZE</div>
+  <div class="desc">
+    小乐和好朋友小美在图书馆看书时，不小心掉进了一座神奇迷宫！<br><br>
+    要闯过5个关卡，收集勇气星星，找到小美一起回家！<br><br>
+    小心迷宫里的迷路精灵哦～
+  </div>
+  <button class="start-btn" onclick="startGame()">开始冒险</button>
+</div>
+
+<!-- 结局画面 -->
+<div id="end-screen">
+  <h2 id="end-title"></h2>
+  <p id="end-text"></p>
+  <button class="start-btn" onclick="location.reload()">再玩一次</button>
+</div>
+
+<!-- 事件面板 -->
+<div id="event-panel">
+  <div id="event-box">
+    <div id="event-icon"></div>
+    <div id="event-text"></div>
+    <div id="event-choices"></div>
+  </div>
+</div>
+
+<div id="game">
+  <div id="hud">
+    <div class="hud-item"><span>❤️</span><div class="hud-bar"><div class="hud-fill hp" id="hp-fill"></div></div><span id="hp-num">100</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center">
+      <span id="level-name">第1关：黄色走廊</span>
+      <span id="star-count">⭐ 0/5</span>
+    </div>
+    <div class="hud-item"><span>💪</span><div class="hud-bar"><div class="hud-fill brave" id="br-fill"></div></div><span id="br-num">100</span></div>
+  </div>
+  <div id="canvas-wrap"><canvas id="maze"></canvas></div>
+  <div id="controls">
+    <div class="dir-btn empty"></div>
+    <div class="dir-btn" id="btn-up" ontouchstart="move(0,-1);event.preventDefault()" onclick="move(0,-1)">⬆️</div>
+    <div class="dir-btn empty"></div>
+    <div class="dir-btn" ontouchstart="move(-1,0);event.preventDefault()" onclick="move(-1,0)">⬅️</div>
+    <div class="dir-btn empty"></div>
+    <div class="dir-btn" ontouchstart="move(1,0);event.preventDefault()" onclick="move(1,0)">➡️</div>
+    <div class="dir-btn empty"></div>
+    <div class="dir-btn" ontouchstart="move(0,1);event.preventDefault()" onclick="move(0,1)">⬇️</div>
+    <div class="dir-btn empty"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+//  引擎
+// ═══════════════════════════════════════
+const $ = id => document.getElementById(id);
+const canvas = $('maze');
+const ctx = canvas.getContext('2d');
+
+let W, H;
+function resize() {
+  const wrap = $('canvas-wrap');
+  W = canvas.width = wrap.clientWidth;
+  H = canvas.height = wrap.clientHeight;
+  draw();
+}
+window.addEventListener('resize', resize);
+
+// ── 状态 ──
+const S = {
+  hp: 100, brave: 100, stars: 0,
+  level: 0, // 0-4
+  px: 0, py: 0, // 玩家地图坐标
+  dir: 0, // 0=上 1=右 2=下 3=左
+  flags: {},
+  moving: false,
+};
+
+function updateHud() {
+  $('hp-fill').style.width = Math.max(0, S.hp) + '%';
+  $('br-fill').style.width = Math.max(0, S.brave) + '%';
+  $('hp-num').textContent = Math.max(0, S.hp);
+  $('br-num').textContent = Math.max(0, S.brave);
+  $('star-count').textContent = '⭐ ' + S.stars + '/5';
+  const names = ['第1关：黄色走廊','第2关：彩色商场','第3关：黑暗管道','第4关：魔法图书馆','第5关：彩虹之门'];
+  $('level-name').textContent = names[S.level] || '';
+}
+
+function hurt(v) { S.hp = Math.max(0, S.hp - v); updateHud(); toast('❤️ 能量 -' + v); }
+function heal(v) { S.hp = Math.min(100, S.hp + v); updateHud(); }
+function braveDown(v) { S.brave = Math.max(0, S.brave - v); updateHud(); toast('💪 勇气 -' + v); }
+function braveUp(v) { S.brave = Math.min(100, S.brave + v); updateHud(); }
+function addStar() { S.stars++; updateHud(); toast('⭐ 获得一颗勇气星星！'); }
+
+function toast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1500);
+}
+
+function showEvent(icon, text, choices) {
+  $('event-icon').textContent = icon;
+  $('event-text').innerHTML = text;
+  const cc = $('event-choices');
+  cc.innerHTML = '';
+  choices.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'evt-btn';
+    btn.textContent = c.text;
+    btn.onclick = () => {
+      $('event-panel').classList.remove('active');
+      if (c.effect) c.effect();
+      if (c.next) setTimeout(c.next, 300);
+    };
+    cc.appendChild(btn);
+  });
+  $('event-panel').classList.add('active');
+}
+
+// ═══════════════════════════════════════
+//  地图系统
+// ═══════════════════════════════════════
+// 地图用二维数组：0=墙 1=路 2=起点 3=出口 4=事件点 5=星星 6=特殊
+// 每个事件点有对应的事件ID
+
+const LEVELS = [];
+
+// ── Level 0: 黄色走廊 ──
+LEVELS[0] = {
+  name: '黄色走廊',
+  wallColor: '#3d3520', floorColor: '#8b7d3c', ceilingColor: '#4a4020',
+  lightColor: '#fffde0', fogColor: 'rgba(60,50,20,0.3)',
+  map: [
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,1,0,0,0,1,1,1,1,1,0,0,0,0,0,0],
+    [0,0,0,0,0,1,1,1,1,1,0,0,0,1,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  events: {
+    '4,4': { type: 'monster', id: 'wanderer' },
+    '9,5': { type: 'star' },
+    '13,7': { type: 'monster', id: 'wanderer2' },
+  },
+  start: [1,1],
+  exit: [18,13],
+};
+
+// ── Level 1: 彩色商场 ──
+LEVELS[1] = {
+  name: '彩色商场',
+  wallColor: '#1a2a3a', floorColor: '#2c3e50', ceilingColor: '#1a2530',
+  lightColor: '#a0d0ff', fogColor: 'rgba(20,40,60,0.3)',
+  map: [
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,2,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  events: {
+    '5,3': { type: 'star' },
+    '10,5': { type: 'npc', id: 'crier' },
+    '14,7': { type: 'item', id: 'keycard' },
+    '12,5': { type: 'monster', id: 'shadow' },
+  },
+  start: [1,1],
+  exit: [14,10],
+};
+
+// ── Level 2: 黑暗管道 ──
+LEVELS[2] = {
+  name: '黑暗管道',
+  wallColor: '#1a1a1a', floorColor: '#2a2a2a', ceilingColor: '#111',
+  lightColor: '#556b2f', fogColor: 'rgba(10,10,10,0.5)',
+  map: [
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0],
+    [0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0],
+    [0,0,0,0,0,0,1,1,1,1,1,0,0,0,1,1,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  events: {
+    '4,3': { type: 'star' },
+    '7,5': { type: 'monster', id: 'crawler' },
+    '11,3': { type: 'npc', id: 'voice' },
+    '14,5': { type: 'monster', id: 'crawler2' },
+  },
+  start: [1,1],
+  exit: [17,10],
+};
+
+// ── Level 3: 魔法图书馆 ──
+LEVELS[3] = {
+  name: '魔法图书馆',
+  wallColor: '#2a1a3a', floorColor: '#3a2a4a', ceilingColor: '#1a1028',
+  lightColor: '#d0a0ff', fogColor: 'rgba(40,20,60,0.3)',
+  map: [
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,2,1,1,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  events: {
+    '6,3': { type: 'star' },
+    '8,5': { type: 'npc', id: 'scribe' },
+    '11,7': { type: 'puzzle', id: 'book_puzzle' },
+    '13,9': { type: 'monster', id: '吞噬者' },
+  },
+  start: [1,1],
+  exit: [14,11],
+};
+
+// ── Level 4: 彩虹之门 ──
+LEVELS[4] = {
+  name: '彩虹之门',
+  wallColor: '#f0f0f0', floorColor: '#e0e0e0', ceilingColor: '#f5f5f5',
+  lightColor: '#ffffff', fogColor: 'rgba(255,255,255,0.1)',
+  map: [
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,2,1,1,1,1,1,1,1,1,1,0],
+    [0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,3,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  events: {
+    '10,1': { type: 'final', id: 'gatekeeper' },
+  },
+  start: [1,1],
+  exit: [10,7],
+};
+
+// ═══════════════════════════════════════
+//  渲染（第一人称伪3D）
+// ═══════════════════════════════════════
+function draw() {
+  if (!W || !H) return;
+  const L = LEVELS[S.level];
+  if (!L) return;
+
+  // 天花板
+  const grd1 = ctx.createLinearGradient(0, 0, 0, H * 0.4);
+  grd1.addColorStop(0, L.ceilingColor);
+  grd1.addColorStop(1, L.lightColor + '33');
+  ctx.fillStyle = grd1;
+  ctx.fillRect(0, 0, W, H * 0.4);
+
+  // 地板
+  const grd2 = ctx.createLinearGradient(0, H * 0.6, 0, H);
+  grd2.addColorStop(0, L.floorColor + '88');
+  grd2.addColorStop(1, L.floorColor);
+  ctx.fillStyle = grd2;
+  ctx.fillRect(0, H * 0.6, W, H * 0.4);
+
+  // 地板网格线（透视）
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 1;
+  for (let i = 1; i < 8; i++) {
+    const y = H * 0.6 + (H * 0.4) * (i / 8);
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(W, y);
+    ctx.stroke();
+  }
+
+  // 画前方视野的墙壁
+  drawWalls(L);
+}
+
+function drawWalls(L) {
+  const map = L.map;
+  const px = S.px, py = S.py;
+  const dir = S.dir; // 0上 1右 2下 3左
+
+  // 方向向量
+  const dx = [0, 1, 0, -1][dir];
+  const dy = [-1, 0, 1, 0][dir];
+  // 右方向向量
+  const rx = [1, 0, -1, 0][dir];
+  const ry = [0, 1, 0, -1][dir];
+
+  // 画3层深度的墙壁
+  for (let depth = 3; depth >= 0; depth--) {
+    const fx = px + dx * depth;
+    const fy = py + dy * depth;
+
+    const scale = 1 / (depth + 1);
+    const wallH = H * 0.4 * scale;
+    const wallW = W * scale;
+    const cx = W / 2;
+    const cy = H / 2;
+
+    // 左墙
+    const lx = fx + rx;
+    const ly = fy + ry;
+    if (!inBounds(lx, ly, map) || map[ly][lx] === 0) {
+      drawSideWall('left', depth, L, scale);
+    }
+
+    // 右墙
+    const rrx = fx - rx;
+    const rry = fy - ry;
+    if (!inBounds(rrx, rry, map) || map[rry][rrx] === 0) {
+      drawSideWall('right', depth, L, scale);
+    }
+
+    // 前墙
+    const ffx = fx + dx;
+    const ffy = fy + dy;
+    if (!inBounds(ffx, ffy, map) || map[ffy][ffx] === 0) {
+      drawFrontWall(depth, L, scale);
+    }
+  }
+
+  // 画出口门
+  const ex = LEVELS[S.level].exit;
+  if (ex) {
+    const edx = (ex[0] - px);
+    const edy = (ex[1] - py);
+    // 检查出口是否在前方
+    if (Math.abs(edx) <= 1 && Math.abs(edy) <= 1) {
+      drawDoor(scale, L);
+    }
+  }
+
+  // 画前方最近的事件
+  drawFrontEntity(L);
+}
+
+function inBounds(x, y, map) {
+  return y >= 0 && y < map.length && x >= 0 && x < map[0].length;
+}
+
+function drawSideWall(side, depth, L, scale) {
+  const alpha = 0.4 + 0.6 * (1 - depth / 4);
+  ctx.fillStyle = L.wallColor;
+  ctx.globalAlpha = alpha;
+
+  const x = side === 'left' ? 0 : W * (1 - scale) / 2 + W * scale / 2;
+  const w = W * (1 - scale) / 2;
+  const y = H * (0.5 - scale * 0.4);
+  const h = scale * H * 0.8;
+
+  if (side === 'left') {
+    ctx.fillRect(0, y, w + 10, h);
+    // 墙壁纹理线
+    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+    ctx.strokeRect(2, y + 5, w - 4, h - 10);
+  } else {
+    ctx.fillRect(W - w - 10, y, w + 10, h);
+    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+    ctx.strokeRect(W - w - 8, y + 5, w - 4, h - 10);
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawFrontWall(depth, L, scale) {
+  const alpha = 0.3 + 0.7 * (1 - depth / 4);
+  ctx.fillStyle = L.wallColor;
+  ctx.globalAlpha = alpha;
+
+  const w = W * scale;
+  const h = H * scale * 0.8;
+  const x = (W - w) / 2;
+  const y = (H - h) / 2;
+  ctx.fillRect(x, y, w, h);
+
+  // 窗户/装饰
+  if (depth <= 1) {
+    ctx.fillStyle = L.lightColor + '22';
+    ctx.fillRect(x + w * 0.3, y + h * 0.2, w * 0.4, h * 0.3);
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawDoor(scale, L) {
+  const w = W * scale * 0.5;
+  const h = H * scale * 0.6;
+  const x = (W - w) / 2;
+  const y = (H - h) / 2 + h * 0.2;
+
+  ctx.fillStyle = '#8B4513';
+  ctx.fillRect(x, y, w, h);
+  ctx.fillStyle = '#D4A03C';
+  ctx.beginPath();
+  ctx.arc(x + w * 0.8, y + h * 0.5, w * 0.08, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = '#fff';
+  ctx.font = `${Math.max(12, w * 0.15)}px sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.fillText('🚪 出口', x + w / 2, y - 10);
+}
+
+function drawFrontEntity(L) {
+  const map = L.map;
+  const dx = [0, 1, 0, -1][S.dir];
+  const dy = [-1, 0, 1, 0][S.dir];
+  const fx = S.px + dx;
+  const fy = S.py + dy;
+
+  const key = fx + ',' + fy;
+  const ev = L.events[key];
+
+  if (!ev) return;
+
+  const cx = W / 2;
+  const cy = H * 0.45;
+  const size = 40;
+
+  if (ev.type === 'monster') {
+    // 怪物：红色眼睛 + 黑影
+    ctx.fillStyle = '#200';
+    ctx.beginPath();
+    ctx.ellipse(cx, cy + 10, size * 0.8, size * 1.2, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#ff3333';
+    ctx.beginPath();
+    ctx.arc(cx - 10, cy - 5, 5, 0, Math.PI * 2);
+    ctx.arc(cx + 10, cy - 5, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(cx - 10, cy - 6, 2, 0, Math.PI * 2);
+    ctx.arc(cx + 10, cy - 6, 2, 0, Math.PI * 2);
+    ctx.fill();
+    // 名字
+    ctx.fillStyle = '#ff6666';
+    ctx.font = '12px sans-serif';
+    ctx.textAlign = 'center';
+    const mNames = {wanderer:'迷路精灵',wanderer2:'迷路精灵',crawler:'管道精灵',crawler2:'管道精灵',shadow:'影子精灵','吞噬者':'书页精灵'};
+    ctx.fillText(mNames[ev.id] || '精灵', cx, cy + size + 20);
+  } else if (ev.type === 'star') {
+    // 星星
+    drawStar(cx, cy, 20, '#f1c40f');
+  } else if (ev.type === 'npc') {
+    ctx.fillStyle = '#4a9';
+    ctx.beginPath();
+    ctx.arc(cx, cy, size * 0.6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = '28px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('😊', cx, cy + 10);
+  } else if (ev.type === 'item') {
+    ctx.fillStyle = '#3498db';
+    ctx.beginPath();
+    ctx.arc(cx, cy, size * 0.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = '24px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('🔑', cx, cy + 8);
+  } else if (ev.type === 'puzzle') {
+    ctx.fillStyle = '#9b59b6';
+    ctx.beginPath();
+    ctx.arc(cx, cy, size * 0.7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = '32px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('📖', cx, cy + 12);
+  } else if (ev.type === 'final') {
+    // 影子守门人
+    ctx.fillStyle = '#000';
+    ctx.beginPath();
+    ctx.ellipse(cx, cy + 5, size * 0.6, size * 1.3, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#8a2be2';
+    ctx.font = '12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('影子守门人', cx, cy + size + 25);
+  }
+}
+
+function drawStar(cx, cy, r, color) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  for (let i = 0; i < 5; i++) {
+    const angle = (i * 4 * Math.PI) / 5 - Math.PI / 2;
+    const method = i === 0 ? 'moveTo' : 'lineTo';
+    ctx[method](cx + r * Math.cos(angle), cy + r * Math.sin(angle));
+  }
+  ctx.closePath();
+  ctx.fill();
+  // 发光
+  ctx.shadowColor = color;
+  ctx.shadowBlur = 15;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+}
+
+// ═══════════════════════════════════════
+//  移动与交互
+// ═══════════════════════════════════════
+function move(mx, my) {
+  if (S.moving) return;
+  if ($('event-panel').classList.contains('active')) return;
+  if ($('start-screen').style.display !== 'none') return;
+
+  const L = LEVELS[S.level];
+  const nx = S.px + mx;
+  const ny = S.py + my;
+
+  // 更新朝向
+  if (mx === 0 && my === -1) S.dir = 0;
+  else if (mx === 1 && my === 0) S.dir = 1;
+  else if (mx === 0 && my === 1) S.dir = 2;
+  else if (mx === -1 && my === 0) S.dir = 3;
+
+  // 检查是否可以移动
+  if (!inBounds(nx, ny, L.map) || L.map[ny][nx] === 0) {
+    // 撞墙
+    draw();
+    return;
+  }
+
+  S.px = nx;
+  S.py = ny;
+  draw();
+
+  // 检查事件
+  const key = nx + ',' + ny;
+  const ev = L.events[key];
+  if (ev) {
+    triggerEvent(ev);
+  }
+
+  // 检查出口
+  if (nx === L.exit[0] && ny === L.exit[1]) {
+    if (S.level === 4) {
+      // 最终关，需要触发事件才能出
+    } else {
+      nextLevel();
+    }
+  }
+}
+
+function triggerEvent(ev) {
+  S.moving = true;
+
+  if (ev.type === 'star') {
+    showEvent('⭐', '你找到了一颗勇气星星！', [
+      { text: '太棒了！', effect: () => addStar() }
+    ]);
+  } else if (ev.type === 'monster') {
+    triggerMonster(ev.id);
+  } else if (ev.type === 'npc') {
+    triggerNpc(ev.id);
+  } else if (ev.type === 'item') {
+    triggerItem(ev.id);
+  } else if (ev.type === 'puzzle') {
+    triggerPuzzle(ev.id);
+  } else if (ev.type === 'final') {
+    triggerFinal();
+  }
+
+  setTimeout(() => { S.moving = false; }, 500);
+}
+
+// ── 怪物事件 ──
+function triggerMonster(id) {
+  if (id === 'wanderer' || id === 'wanderer2') {
+    showEvent('👻', '一个迷路精灵出现了！它看起来很孤独，在走廊里游荡……', [
+      { text: '悄悄绕过去', effect: () => {
+        if (Math.random() < 0.7) {
+          setTimeout(() => toast('安全绕过了！'), 500);
+        } else {
+          hurt(15);
+          setTimeout(() => toast('被发现了！'), 500);
+        }
+      }},
+      { text: '对它说"你好"', effect: () => {
+        braveUp(10);
+        setTimeout(() => showEvent('👻', '迷路精灵愣住了……它好像很久没听到有人跟它说话了。它慢慢飘走了。', [
+          { text: '继续前进', effect: () => braveUp(5) }
+        ]), 500);
+      }}
+    ]);
+  } else if (id === 'crawler' || id === 'crawler2') {
+    showEvent('🕷️', '一只管道精灵从缝隙里探出头来！它看起来有点凶……', [
+      { text: '用手电筒照它', effect: () => {
+        setTimeout(() => showEvent('🕷️', '管道精灵怕光！它缩回了缝隙里。', [
+          { text: '赶紧通过', effect: () => {} }
+        ]), 500);
+      }},
+      { text: '慢慢走过去', effect: () => {
+        hurt(20);
+        braveDown(10);
+        setTimeout(() => toast('被它抓住了！'), 500);
+      }}
+    ]);
+  } else if (id === 'shadow') {
+    showEvent('🌑', '一个影子精灵挡住了路！它一动不动地站在那里……', [
+      { text: '盯着它看', effect: () => {
+        braveUp(15);
+        setTimeout(() => showEvent('🌑', '你盯着它看了很久……它好像变小了一点。原来面对它，它就会变弱！', [
+          { text: '继续走', effect: () => {} }
+        ]), 500);
+      }},
+      { text: '转身跑', effect: () => {
+        hurt(10);
+        braveDown(15);
+        setTimeout(() => toast('跑了好远才甩掉它'), 500);
+      }}
+    ]);
+  } else if (id === '吞噬者') {
+    showEvent('📚', '一阵书页风暴席卷而来！它会吞噬掉你知道的东西……', [
+      { text: '用空白本子引开它', effect: () => {
+        setTimeout(() => showEvent('📚', '书页精灵被空白本子吸引了！你趁机跑过去。', [
+          { text: '太好了', effect: () => {} }
+        ]), 500);
+      }},
+      { text: '闭上眼睛冲过去', effect: () => {
+        braveDown(20);
+        setTimeout(() => toast('忘记了一些东西……'), 500);
+      }}
+    ]);
+  }
+}
+
+// ── NPC事件 ──
+function triggerNpc(id) {
+  if (id === 'crier') {
+    showEvent('😢', '"你好……你能帮帮我吗？" 一个小姐姐站在那里哭。她的嘴角好像裂开了一点……', [
+      { text: '"你怎么了？"', effect: () => {
+        braveUp(20);
+        setTimeout(() => showEvent('😢', '"我……我迷路了好久好久……" 她擦了擦眼泪。"谢谢你愿意跟我说话。" 她微笑着走开了，临走前说："前方有钥匙卡，你可以用它开门。"', [
+          { text: '继续探索', effect: () => {} }
+        ]), 500);
+      }},
+      { text: '回答"你很美"', effect: () => {
+        braveUp(10);
+        setTimeout(() => showEvent('😢', '她愣了一下，然后笑了。"真的吗？好久没人这么说了……" 她安静地离开了。', [
+          { text: '继续', effect: () => {} }
+        ]), 500);
+      }}
+    ]);
+  } else if (id === 'voice') {
+    showEvent('🌊', '管道里传来一个低沉的声音：', [
+      { text: '"左边有危险……右边安全"', effect: () => {
+        braveUp(10);
+        setTimeout(() => toast('记住了！走右边'), 500);
+      }},
+      { text: '"直走最快"', effect: () => {
+        hurt(15);
+        setTimeout(() => showEvent('❌', '直走走进了死路！那个声音有时候会骗人……', [
+          { text: '好吧……', effect: () => {} }
+        ]), 500);
+      }}
+    ]);
+  } else if (id === 'scribe') {
+    showEvent('👴', '一位戴眼镜的老爷爷出现了。"你好呀小朋友，我可以告诉你一个秘密。"', [
+      { text: '后室是什么？', effect: () => {
+        braveUp(20);
+        setTimeout(() => showEvent('👴', '"这不是一个真正的地方哦。它是你心里的迷宫。每一关都是你心里的一种感觉——迷失、好奇、害怕、学习……最后一关，是你自己。"', [
+          { text: '原来是这样！', effect: () => {} }
+        ]), 500);
+      }},
+      { text: '小美在哪里？', effect: () => {
+        setTimeout(() => showEvent('👴', '"她在最后一关等着你呢。别怕，继续走。"', [
+          { text: '我去找她！', effect: () => {} }
+        ]), 500);
+      }}
+    ]);
+  }
+}
+
+// ── 物品事件 ──
+function triggerItem(id) {
+  if (id === 'keycard') {
+    showEvent('🔑', '找到了一张彩虹钥匙卡！', [
+      { text: '太好了！', effect: () => { S.flags.hasKey = true; toast('获得钥匙卡！'); } }
+    ]);
+  }
+}
+
+// ── 谜题事件 ──
+function triggerPuzzle(id) {
+  if (id === 'book_puzzle') {
+    showEvent('📖', '一本魔法书打开着，上面写着：\n\n"把正确的词语放到正确的页面"\n\n第1页: 迷失是___，但不是终点\n第2页: 恐惧是___，你面对它时它就变小\n第3页: 知识不是力量，___才是', [
+      { text: '1-起点 2-影子 3-理解', effect: () => {
+        braveUp(25);
+        addStar();
+        setTimeout(() => showEvent('📖', '答对了！魔法书发出了温暖的光芒。\n\n"迷失是起点，但不是终点。"\n"恐惧是影子，你面对它时它就变小。"\n"知识不是力量，理解才是。"', [
+          { text: '好神奇！', effect: () => {} }
+        ]), 500);
+      }},
+      { text: '1-终点 2-怪物 3-勇气', effect: () => {
+        braveDown(10);
+        setTimeout(() => toast('不太对哦，再想想'), 500);
+      }}
+    ]);
+  }
+}
+
+// ── 最终关事件 ──
+function triggerFinal() {
+  showEvent('🌑', '影子守门人站在门前。\n\n它是纯黑色的，没有脸，没有表情。\n\n但它好像在等你说什么……', [
+    { text: '"你是我心里的影子，我不怕你！"', effect: () => {
+      braveUp(30);
+      setTimeout(() => showEvent('✨', '影子守门人颤抖了一下，然后慢慢变小、变淡……\n\n它化成了一缕光，消失了。\n\n门开了。门后有三扇门。', [
+        { text: '选择出口', effect: () => {
+          showChoices();
+        }}
+      ]), 800);
+    }},
+    { text: '冲过去！', effect: () => {
+      hurt(20);
+      braveDown(15);
+      setTimeout(() => showEvent('🌑', '过不去……它挡在面前。\n\n也许……需要说点什么？', [
+        { text: '再试一次', effect: () => triggerFinal() }
+      ]), 500);
+    }},
+    { text: '转身跑', effect: () => {
+      braveDown(20);
+      setTimeout(() => toast('跑不掉的……'), 500);
+    }}
+  ]);
+}
+
+function showChoices() {
+  showEvent('🚪', '三扇门出现在面前：\n\n🔵 蓝色之门 — 回到图书馆，但会忘记这一切\n⚪ 白色之门 — 留在这里，成为新的守护者\n🔴 红色之门 — 回到现实，记得一切', [
+    { text: '🔵 蓝色之门 — 遗忘', effect: () => showEnding('forget') },
+    { text: '⚪ 白色之门 — 守护', effect: () => showEnding('guard') },
+    { text: '🔴 红色之门 — 铭记', effect: () => showEnding('remember') }
+  ]);
+}
+
+function showEnding(type) {
+  $('event-panel').classList.remove('active');
+  const end = $('end-screen');
+  const title = $('end-title');
+  const text = $('end-text');
+
+  if (type === 'forget') {
+    title.textContent = '🌅 遗忘的早晨';
+    title.style.color = '#3498db';
+    text.innerHTML = '白光闪过，我醒来趴在图书馆的桌子上。<br><br>窗外阳光很好。我揉了揉眼睛。<br><br>"做了个好奇怪的梦……"<br><br>但我想不起来了。只觉得心里暖暖的。<br><br>也许有一天，我会想起来吧。';
+  } else if (type === 'guard') {
+    title.textContent = '🌙 守护者';
+    title.style.color = '#8e44ad';
+    text.innerHTML = '我发现自己变成了一个影子，站在门前。<br><br>以后会有更多迷路的小朋友来到这里。<br><br>我会陪着他们，帮他们找到勇气。<br><br>就像以前有人帮我一样。';
+  } else {
+    title.textContent = '☀️ 回家的路';
+    title.style.color = '#e74c3c';
+    text.innerHTML = '温暖的光包围了我。<br><br>我醒来时，小美就坐在我旁边！<br><br>"你刚才睡着啦！"<br><br>我笑了。口袋里有一张纸条：<br><br>"迷宫的门永远在，因为你选择了记住。"<br><br>我拉着小美的手，走出了图书馆。<br><br>外面的阳光，好暖好暖。';
+  }
+
+  end.classList.add('active');
+}
+
+// ── 下一关 ──
+function nextLevel() {
+  S.level++;
+  if (S.level >= LEVELS.length) return;
+
+  const L = LEVELS[S.level];
+  S.px = L.start[0];
+  S.py = L.start[1];
+  S.dir = 0;
+
+  updateHud();
+  resize();
+
+  // 过场
+  showEvent('🎉', `恭喜通过第${S.level}关！\n\n进入：${L.name}`, [
+    { text: '继续冒险！', effect: () => {} }
+  ]);
+}
+
+// ═══════════════════════════════════════
+//  初始化
+// ═══════════════════════════════════════
+function startGame() {
+  $('start-screen').style.display = 'none';
+  const L = LEVELS[0];
+  S.px = L.start[0];
+  S.py = L.start[1];
+  S.dir = 0;
+  updateHud();
+  resize();
+
+  showEvent('📖', '小乐和小美在图书馆看书。\n\n突然，书架开始旋转！地面裂开了一条缝！\n\n"小美——！"\n\n你掉了下去……醒来时，发现自己在一条黄色的走廊里。\n\n"得找到小美，一起回家！"', [
+    { text: '出发！', effect: () => {} }
+  ]);
+}
+
+// 键盘支持
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowUp' || e.key === 'w') move(0, -1);
+  if (e.key === 'ArrowDown' || e.key === 's') move(0, 1);
+  if (e.key === 'ArrowLeft' || e.key === 'a') move(-1, 0);
+  if (e.key === 'ArrowRight' || e.key === 'd') move(1, 0);
+});
+
+resize();
+</script>
+</body>
+</html>

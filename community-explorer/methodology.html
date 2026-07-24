@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>社区探索活动 · 设计理念与方法论</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --text: #2c2a26;
+    --muted: #6b5e52;
+    --accent: #e8734a;
+    --accent-light: rgba(232,115,74,0.08);
+    --border: #e8ddd4;
+    --bg: #fdf8f0;
+    --font: -apple-system, 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+  }
+
+  body {
+    font-family: var(--font);
+    color: var(--text);
+    line-height: 2;
+    background: #fff;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 60px 50px;
+    font-size: 15px;
+  }
+
+  /* Cover */
+  .cover {
+    text-align: center;
+    padding: 60px 0 50px;
+    border-bottom: 2px solid var(--accent);
+    margin-bottom: 40px;
+  }
+  .cover h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+  }
+  .cover .subtitle {
+    font-size: 16px;
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: 24px;
+  }
+  .cover .meta {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 2;
+  }
+
+  /* Section */
+  h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 40px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 28px 0 12px;
+    color: var(--text);
+  }
+  p {
+    margin-bottom: 14px;
+    text-align: justify;
+  }
+
+  /* Framework box */
+  .framework {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin: 20px 0;
+  }
+  .framework-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .framework p {
+    margin-bottom: 8px;
+    font-size: 14.5px;
+  }
+
+  /* Flow */
+  .flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin: 24px 0;
+    flex-wrap: wrap;
+  }
+  .flow-step {
+    background: var(--accent);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+  }
+  .flow-arrow {
+    font-size: 20px;
+    color: var(--accent);
+    padding: 0 6px;
+  }
+
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  th {
+    background: var(--accent);
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:nth-child(even) td {
+    background: rgba(0,0,0,0.015);
+  }
+
+  /* Quote */
+  .quote {
+    border-left: 3px solid var(--accent);
+    padding: 12px 20px;
+    margin: 20px 0;
+    background: var(--accent-light);
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  /* List */
+  ul, ol {
+    padding-left: 24px;
+    margin: 12px 0;
+  }
+  li {
+    margin-bottom: 6px;
+  }
+
+  /* Highlight */
+  .highlight {
+    background: var(--accent-light);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  /* Page break hint */
+  .page-break {
+    page-break-before: always;
+    margin-top: 40px;
+  }
+
+  @media print {
+    body { padding: 40px; }
+    .cover { page-break-after: always; }
+    h2 { page-break-after: avoid; }
+    .framework { page-break-inside: avoid; }
+    table { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== COVER ===== -->
+<div class="cover">
+  <h1>社区探索活动</h1>
+  <div class="subtitle">设计理念与方法论</div>
+  <div class="meta">
+    基于哆悉哒"阅见希望·在地社区探索共创计划"初阶与进阶培训<br>
+    设计：丹丹<br>
+    2026年5月
+  </div>
+</div>
+
+<!-- ===== 一、设计背景 ===== -->
+<h2>一、设计背景</h2>
+
+<p>这套社区探索活动面向6-8名儿童（9-11岁为主）和4-5名家长，每周一次，共6次，每次约2-2.5小时。活动的目标不只是"做活动"，而是让孩子们通过亲身体验，学会用全新的眼光看待自己每天生活的社区，并在这个过程中建立公共意识和行动力。</p>
+
+<p>设计的起点来自一个观察：<span class="highlight">孩子每天经过的街道、认识的邻居、常去的小店，他们真的"看见"了吗？</span>社区探索不是带孩子去一个新地方，而是帮他们在熟悉的地方重新发现。</p>
+
+<!-- ===== 二、三条设计主线 ===== -->
+<h2>二、三条设计主线</h2>
+
+<p>整个活动体系由三条线交织而成，每次活动同时推进三个维度，但孩子感受到的只是"好玩"。</p>
+
+<!-- 主线一 -->
+<h3>主线一：体验圈——怎么学</h3>
+
+<div class="framework">
+  <div class="framework-title">🔄 体验圈（Experiential Learning Cycle）</div>
+  <p>每次活动按「体验→反思→归纳→应用→再体验」的循环推进。不是先讲道理再做，而是先让孩子动手、看见、感受，再回过头想"我刚才经历了什么"。</p>
+</div>
+
+<p>这个方法的核心信念是：<span class="highlight">孩子不是通过"被告知"来学习的，而是通过"经历"来学习的。</span></p>
+
+<div class="flow">
+  <div class="flow-step">体验</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-step">反思</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-step">归纳</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-step">应用</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-step">再体验</div>
+</div>
+
+<p>所以第一次活动不是坐在那里讲"什么是社区探索"，而是直接带出去走一圈，回来再分享。体验圈还意味着：每次活动的结尾不是"结束"，而是下一次的起点——上次的反思会自然地驱动下一次的探索。</p>
+
+<!-- 主线二 -->
+<h3>主线二：五维观察法——看什么</h3>
+
+<div class="framework">
+  <div class="framework-title">🔭 人·文·地·产·景</div>
+  <p>从五个维度去看一个社区：<strong>人</strong>（社区里有什么人）、<strong>文</strong>（文化、历史、传统）、<strong>地</strong>（地理、建筑、空间）、<strong>产</strong>（生产经营、商业）、<strong>景</strong>（自然景观、环境）。这五个维度构成了一个完整的社区画像。</p>
+</div>
+
+<p>五个维度不是一次性全部交给孩子的，而是渐进式地打开：</p>
+
+<table>
+  <thead>
+    <tr><th>活动</th><th>打开的维度</th><th>方式</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>第1次</td><td>全部维度初体验</td><td>随便走、随便看，感受"原来有这么多"</td></tr>
+    <tr><td>第2次</td><td>聚焦观察方法</td><td>学望远镜法、表情图法，有目的地看</td></tr>
+    <tr><td>第3次</td><td>聚焦"人"</td><td>访谈社区人物，理解人的故事</td></tr>
+    <tr><td>第4次</td><td>整合所有维度</td><td>画社区地图，拼出全貌</td></tr>
+  </tbody>
+</table>
+
+<p>不是一次性把五个维度都丢给孩子，而是一次打开一扇窗，慢慢拼出全貌。到第4次画地图的时候，孩子会自然地发现：原来我之前看到的那些碎片，是可以拼成一幅完整的画的。</p>
+
+<!-- 主线三 -->
+<h3>主线三：公共性递进——为什么做</h3>
+
+<div class="framework">
+  <div class="framework-title">🌍 公共性三层</div>
+  <p><strong>公共性观察</strong>（接触、了解、有意识感知）→ <strong>公共性表达</strong>（说一说、辩一辩）→ <strong>公共性行动</strong>（连接、协作、改变）</p>
+</div>
+
+<p>这是整个活动体系的灵魂。很多社区活动直接跳到"行动"——让孩子"去改变"，但孩子没有前面的积累，那个改变是空的。</p>
+
+<table>
+  <thead>
+    <tr><th>阶段</th><th>对应活动</th><th>核心问题</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>公共性观察</td><td>第1-2次</td><td>我看见了什么？社区是什么样的？</td></tr>
+    <tr><td>公共性表达</td><td>第3-4次</td><td>我觉得应该怎样？大家怎么看？</td></tr>
+    <tr><td>公共性行动</td><td>第5-6次</td><td>我能做什么？我们一起做。</td></tr>
+  </tbody>
+</table>
+
+<p>这个递进不是人为设计的"教学步骤"，而是孩子认知的自然规律：先看见，再思考，最后行动。每一步都是下一步的基础。</p>
+
+<!-- ===== 三、儿童参与阶梯 ===== -->
+<h2>三、儿童参与阶梯</h2>
+
+<p>活动设计特别警惕"假参与"——看起来孩子在做事，但实际上是大人在主导。比如：大人画好线让孩子涂色、大人写好答案让孩子抄、大人决定主题让孩子"参与"。这些都是装饰性的参与。</p>
+
+<p>真正的参与意味着：<span class="highlight">孩子有权决定看什么、问什么、做什么。</span></p>
+
+<table>
+  <thead>
+    <tr><th>层级</th><th>特征</th><th>活动中的体现</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>假参与</td><td>装饰、摆设、被安排</td><td>大人决定看什么、做什么</td></tr>
+    <tr><td>象征性参与</td><td>被咨询但不影响结果</td><td>问孩子意见但最终大人决定</td></tr>
+    <tr><td>有意义的参与</td><td>赋权、自主决策</td><td>孩子投票选议题、分工、决定怎么做</td></tr>
+  </tbody>
+</table>
+
+<p>在第4次画地图时，孩子投票选出"最想改变的一件事"——这个投票是真实的。第5次制定计划时，孩子参与分工——这个分工也是真实的。大人是脚手架，不是建筑师。</p>
+
+<!-- ===== 四、成人角色 ===== -->
+<h2>四、成人角色</h2>
+
+<p>进阶培训中有一个核心区分：<span class="highlight">大人要做什么，和不做什么。</span></p>
+
+<table>
+  <thead>
+    <tr><th>✅ 做什么</th><th>❌ 不做什么</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>倾听孩子的发现</td><td>不评判"对不对"</td></tr>
+    <tr><td>用好奇的语气追问</td><td>不代替孩子回答</td></tr>
+    <tr><td>提供材料和工具</td><td>不代替孩子动手</td></tr>
+    <tr><td>推动讨论和思考</td><td>不主导决策</td></tr>
+    <tr><td>确保安全</td><td>不催促流程</td></tr>
+    <tr><td>记录孩子的表达</td><td>不淡化孩子的成果</td></tr>
+  </tbody>
+</table>
+
+<p>每次活动的家长指引都包含这个对照表。它不是给家长的"考核标准"，而是一个温柔的提醒：<span class="highlight">你不需要"教"孩子什么，你只需要在旁边，让他们去经历。</span></p>
+
+<!-- ===== 五、绘本作为线索 ===== -->
+<h2>五、绘本作为线索</h2>
+
+<p>《街道是大家的》讲述的是巴西贫民窟的孩子们自己动手改变社区的故事——他们观察社区、发现问题、去市政府表达诉求、动手美化街道。</p>
+
+<p>这个故事其实就是六次活动的缩影。绘本在第一次活动时翻开，为孩子们种下一颗种子："原来小朋友真的可以改变社区"。最后一次展览时回到这个故事，孩子们会发现：我做的事情，和那些巴西的小朋友一样。</p>
+
+<p>绘本不是"教学工具"，而是<span class="highlight">一面镜子</span>——让孩子在别人的故事里看见自己的可能性。</p>
+
+<!-- ===== 六、学习单设计 ===== -->
+<h2>六、学习单设计</h2>
+
+<p>每次活动都配有学习单，它是孩子探索的"脚手架"。设计原则：</p>
+
+<ul>
+  <li><strong>有趣优先</strong>：用"侦察兵""寻宝"这样的游戏化语言，不用"请填写"</li>
+  <li><strong>画画+写字</strong>：不强迫写字，画图和写字都可以，降低门槛</li>
+  <li><strong>开放性问题</strong>：没有标准答案，"我最好奇的事情"比"请写出三个发现"更好</li>
+  <li><strong>体验圈嵌入</strong>：学习单本身就是一个体验圈——先记录体验，再反思，最后想"下次我会怎么做"</li>
+</ul>
+
+<!-- ===== 七、整体结构 ===== -->
+<h2>七、整体结构</h2>
+
+<p>六次活动的节奏设计：</p>
+
+<table>
+  <thead>
+    <tr><th>阶段</th><th>活动</th><th>关键词</th></tr>
+  </thead>
+  <tbody>
+    <tr><td rowspan="2">亲近社区</td><td>第1次 · 走进我们的社区</td><td>体验、好奇、初识</td></tr>
+    <tr><td>第2次 · 小小侦察兵</td><td>观察、记录、问题</td></tr>
+    <tr><td rowspan="2">探究理解</td><td>第3次 · 社区里的人和故事</td><td>访谈、共情、理解</td></tr>
+    <tr><td>第4次 · 画一张社区地图</td><td>整合、民主、决策</td></tr>
+    <tr><td rowspan="2">参与行动</td><td>第5次 · 我们的改变计划</td><td>头脑风暴、分工、计划</td></tr>
+    <tr><td>第6次 · 社区展览 & 庆祝</td><td>展示、回顾、仪式感</td></tr>
+  </tbody>
+</table>
+
+<p>前三次侧重"输入"（看见、理解），后三次侧重"输出"（决策、行动、展示）。中间有一个自然的转折点——第4次画地图时的投票，把前面所有的观察转化为一个集体决定。</p>
+
+<!-- ===== 八、方法论来源 ===== -->
+<h2>八、方法论来源</h2>
+
+<ul>
+  <li><strong>体验圈</strong>（Kolb's Experiential Learning Cycle）：体验→反思→归纳→应用→再体验</li>
+  <li><strong>人·文·地·产·景五维观察法</strong>：社区探索课程共创计划核心框架</li>
+  <li><strong>公共性三层</strong>：观察→表达→行动，进阶培训核心模型</li>
+  <li><strong>儿童参与阶梯</strong>：从假参与到有意义的参与</li>
+  <li><strong>项目式学习</strong>（PBL）：发现问题→驱动性问题→调查学习→进行项目→分享展示</li>
+  <li><strong>成人角色模型</strong>：做什么 vs 不做什么</li>
+</ul>
+
+<div class="quote">
+  "亲近社区→探究理解社区→以社区为资源→参与乐享生活"——这不是四步走的流程，而是一个螺旋上升的过程。每一次参与都会加深对社区的理解，而更深的理解又会驱动更有意义的参与。
+</div>
+
+</body>
+</html>

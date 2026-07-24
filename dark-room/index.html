@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>暗室逃脱</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans SC',sans-serif;background:#0a0a0a;color:#e0e0e0;overflow:hidden;height:100vh;display:flex;flex-direction:column;user-select:none;-webkit-user-select:none}
+#game{flex:1;display:flex;flex-direction:column;max-width:700px;margin:0 auto;width:100%}
+
+/* HUD */
+#hud{display:flex;justify-content:space-between;align-items:center;padding:8px 16px;background:rgba(0,0,0,.92);border-bottom:1px solid rgba(255,255,255,.06);font-size:13px;gap:8px}
+.hud-item{display:flex;align-items:center;gap:6px}
+.hud-bar{width:70px;height:5px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
+.hud-fill{height:100%;border-radius:3px;transition:width .5s}
+.hud-fill.hp{background:#c0392b}
+.hud-fill.hp.ok{background:#27ae60}
+.hud-fill.hp.warn{background:#e67e22}
+.hud-fill.san{background:#8e44ad}
+.hud-fill.san.ok{background:#2980b9}
+.hud-fill.san.warn{background:#e67e22}
+.hud-label{color:#666;font-size:11px}
+#level-badge{color:#c9a84c;font-size:11px;letter-spacing:.15em;border:1px solid rgba(201,168,76,.3);padding:2px 10px}
+#key-badge{color:#f39c12;font-size:11px;letter-spacing:.1em}
+
+/* Canvas */
+#canvas-wrap{flex:1;position:relative;overflow:hidden;min-height:0;background:#000}
+canvas#maze{width:100%;height:100%;display:block}
+
+/* Controls */
+#controls{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:8px 16px;background:rgba(0,0,0,.95);border-top:1px solid rgba(255,255,255,.04)}
+.dir-btn{padding:16px;font-size:20px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02);color:#aaa;border-radius:8px;cursor:pointer;text-align:center;transition:all .12s;-webkit-tap-highlight-color:transparent}
+.dir-btn:active{background:rgba(201,168,76,.15);border-color:#c9a84c;color:#c9a84c;transform:scale(.93)}
+.dir-btn.empty{visibility:hidden}
+
+/* Event Panel */
+#evt{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.88);flex-direction:column;justify-content:center;align-items:center;padding:20px}
+#evt.on{display:flex}
+#evt-box{background:#111;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:28px;max-width:440px;width:100%;text-align:center}
+#evt-icon{font-size:42px;margin-bottom:14px}
+#evt-text{font-size:15px;line-height:1.9;margin-bottom:22px;color:#ccc;white-space:pre-line}
+#evt-choices{display:flex;flex-direction:column;gap:10px}
+.evt-btn{padding:13px 18px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:#ddd;border-radius:8px;font-size:14px;cursor:pointer;transition:all .2s;font-family:inherit;text-align:left;line-height:1.6}
+.evt-btn:hover{border-color:#c9a84c;background:rgba(201,168,76,.08);color:#c9a84c}
+
+/* Start Screen */
+#start{position:fixed;inset:0;z-index:200;background:#0a0a0a;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:30px}
+#start h1{font-size:2.4rem;color:#c9a84c;letter-spacing:.25em;margin-bottom:6px;text-shadow:0 0 40px rgba(201,168,76,.2)}
+#start .sub{color:#555;font-size:12px;letter-spacing:.5em;margin-bottom:50px}
+#start .desc{color:#777;font-size:14px;line-height:2;margin-bottom:40px;max-width:380px}
+.go-btn{padding:14px 50px;border:1px solid #c9a84c;background:transparent;color:#c9a84c;font-size:15px;letter-spacing:.2em;cursor:pointer;transition:all .3s;font-family:inherit}
+.go-btn:hover{background:#c9a84c;color:#0a0a0a}
+
+/* End Screen */
+#endscr{position:fixed;inset:0;z-index:200;background:#0a0a0a;display:none;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:30px}
+#endscr.on{display:flex}
+#endscr h2{font-size:2rem;margin-bottom:24px;letter-spacing:.2em}
+#endscr .etext{color:#888;font-size:15px;line-height:2.2;margin-bottom:40px;max-width:400px}
+
+/* Toast */
+#toast{position:fixed;top:52px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.92);border:1px solid rgba(255,255,255,.1);padding:8px 18px;border-radius:20px;font-size:13px;z-index:50;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+#toast.on{opacity:1}
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<div id="start">
+  <h1>暗室逃脱</h1>
+  <div class="sub">DARK ROOM ESCAPE</div>
+  <div class="desc">
+    你在一个废弃的设施中醒来。<br>
+    周围一片漆黑，只有手电筒微弱的光。<br><br>
+    迷宫深处传来奇怪的声音。<br>
+    有些东西在黑暗中游荡。<br><br>
+    <span style="color:#c0392b">找到出口，活着离开。</span>
+  </div>
+  <button class="go-btn" onclick="startGame()">开始</button>
+</div>
+
+<div id="endscr">
+  <h2 id="end-title"></h2>
+  <div class="etext" id="end-text"></div>
+  <button class="go-btn" onclick="location.reload()">再来一次</button>
+</div>
+
+<div id="evt">
+  <div id="evt-box">
+    <div id="evt-icon"></div>
+    <div id="evt-text"></div>
+    <div id="evt-choices"></div>
+  </div>
+</div>
+
+<div id="game">
+  <div id="hud">
+    <div class="hud-item">
+      <span class="hud-label">体力</span>
+      <div class="hud-bar"><div class="hud-fill hp ok" id="hp-fill"></div></div>
+      <span id="hp-num">100</span>
+    </div>
+    <div style="display:flex;gap:12px;align-items:center">
+      <span id="key-badge"></span>
+      <span id="level-badge">第 1 层</span>
+    </div>
+    <div class="hud-item">
+      <span class="hud-label">理智</span>
+      <div class="hud-bar"><div class="hud-fill san ok" id="san-fill"></div></div>
+      <span id="san-num">100</span>
+    </div>
+  </div>
+  <div id="canvas-wrap">
+    <canvas id="maze"></canvas>
+  </div>
+  <div id="controls">
+    <div class="dir-btn empty"></div>
+    <div class="dir-btn" id="btn-up" ontouchstart="go(0,-1);event.preventDefault()" onclick="go(0,-1)">▲</div>
+    <div class="dir-btn empty"></div>
+    <div class="dir-btn" ontouchstart="go(-1,0);event.preventDefault()" onclick="go(-1,0)">◀</div>
+    <div class="dir-btn" onclick="turnAround()">↻</div>
+    <div class="dir-btn" ontouchstart="go(1,0);event.preventDefault()" onclick="go(1,0)">▶</div>
+    <div class="dir-btn empty"></div>
+    <div class="dir-btn" ontouchstart="go(0,1);event.preventDefault()" onclick="go(0,1)">▼</div>
+    <div class="dir-btn empty"></div>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const C=$('maze'), X=C.getContext('2d');
+let W,H;
+
+function resize(){
+  const w=$('canvas-wrap');
+  W=C.width=w.clientWidth; H=C.height=w.clientHeight;
+  draw();
+}
+window.addEventListener('resize',resize);
+
+// ═══════════════════════════════════════
+//  状态
+// ═══════════════════════════════════════
+const S={hp:100,san:100,lv:0,px:0,py:0,hasKey:false,hasFlashlight:false,hasAlmond:false,busy:false,visited:new Set(),doorReached:false,keyGx:0,keyGy:0};
+
+const LEVEL_NAMES=['废弃走廊','地下管道','核心禁区'];
+const CELL=40; // 每格像素
+
+// ═══════════════════════════════════════
+//  迷宫生成 — 递归回溯
+// ═══════════════════════════════════════
+function generateMaze(cols,rows){
+  // 初始化：全墙
+  const w=cols*2+1, h=rows*2+1;
+  const grid=[];
+  for(let y=0;y<h;y++){grid[y]=[];for(let x=0;x<w;x++)grid[y][x]=0;}
+
+  // 递归回溯
+  const visited=[];
+  for(let y=0;y<rows;y++){visited[y]=[];for(let x=0;x<cols;x++)visited[y][x]=false;}
+
+  const stack=[];
+  const sx=0,sy=0;
+  visited[sy][sx]=true;
+  grid[sy*2+1][sx*2+1]=1;
+  stack.push({x:sx,y:sy});
+
+  const dirs=[{dx:0,dy:-1},{dx:1,dy:0},{dx:0,dy:1},{dx:-1,dy:0}];
+
+  while(stack.length>0){
+    const cur=stack[stack.length-1];
+    const unvisited=[];
+    for(const d of dirs){
+      const nx=cur.x+d.dx, ny=cur.y+d.dy;
+      if(nx>=0&&nx<cols&&ny>=0&&ny<rows&&!visited[ny][nx]){
+        unvisited.push({x:nx,y:ny,dx:d.dx,dy:d.dy});
+      }
+    }
+    if(unvisited.length===0){
+      stack.pop();
+    } else {
+      const next=unvisited[Math.floor(Math.random()*unvisited.length)];
+      visited[next.y][next.x]=true;
+      // 打通墙壁
+      grid[cur.y*2+1+next.dy][cur.x*2+1+next.dx]=1;
+      grid[next.y*2+1][next.x*2+1]=1;
+      stack.push({x:next.x,y:next.y});
+    }
+  }
+
+  return grid;
+}
+
+// ═══════════════════════════════════════
+//  关卡配置
+// ═══════════════════════════════════════
+const LEVELS=[
+  { // 第1关：废弃走廊
+    cols:7, rows:7,
+    wallColor:'#3d3520', floorColor:'#6b5d2c', fogColor:'rgba(40,30,10,',
+    monsters:[
+      {x:6,y:3,type:'wanderer',name:'游荡者'},
+      {x:10,y:9,type:'wanderer',name:'游荡者'},
+    ],
+    items:[
+      {x:4,y:7,type:'flashlight',name:'手电筒',icon:'🔦'},
+    ],
+    keyPos:{x:5,y:9}, // 钥匙在迷宫中的位置
+    npcs:[]
+  },
+  { // 第2关：地下管道
+    cols:10, rows:8,
+    wallColor:'#1a2535', floorColor:'#1e2d3d', fogColor:'rgba(10,20,35,',
+    monsters:[
+      {x:6,y:3,type:'crawler',name:'爬行者'},
+      {x:12,y:7,type:'shadow',name:'影子'},
+      {x:16,y:5,type:'wanderer',name:'游荡者'},
+    ],
+    items:[
+      {x:3,y:5,type:'almond',name:'杏仁水',icon:'💧'},
+    ],
+    keyPos:{x:7,y:5},
+    npcs:[
+      {x:9,y:5,type:'merchant',name:'沉默商人'},
+    ]
+  },
+  { // 第3关：核心禁区
+    cols:12, rows:10,
+    wallColor:'#201530', floorColor:'#2a1a3a', fogColor:'rgba(25,15,40,',
+    monsters:[
+      {x:8,y:5,type:'devourer',name:'吞噬者'},
+      {x:14,y:9,type:'crawler',name:'爬行者'},
+      {x:20,y:7,type:'shadow',name:'影子'},
+      {x:10,y:15,type:'gatekeeper',name:'守门人'},
+    ],
+    items:[
+      {x:5,y:9,type:'almond',name:'杏仁水',icon:'💧'},
+    ],
+    keyPos:{x:8,y:12},
+    npcs:[
+      {x:16,y:3,type:'merchant',name:'沉默商人'},
+    ]
+  }
+];
+
+let currentLevel=null;
+
+function initLevel(lv){
+  S.lv=lv;
+  const cfg=LEVELS[lv];
+  const map=generateMaze(cfg.cols,cfg.rows);
+
+  // 设置起点（左上角通道）
+  const startX=1, startY=1;
+  map[startY][startX]=2;
+
+  // 设置出口（右下角通道）
+  const exitX=map[0].length-2, exitY=map.length-2;
+  map[exitY][exitX]=3;
+
+  // 放置怪物到通道上
+  const monsters=cfg.monsters.filter(m=>{
+    const mx=m.x*2+1, my=m.y*2+1;
+    if(my<map.length&&mx<map[0].length&&map[my][mx]!==0&&map[my][mx]!==2){
+      m.gx=mx; m.gy=my; return true;
+    }
+    return false;
+  });
+
+  // 放置物品
+  const items=cfg.items.filter(it=>{
+    const ix=it.x*2+1, iy=it.y*2+1;
+    if(iy<map.length&&ix<map[0].length&&map[iy][ix]===1){
+      it.gx=ix; it.gy=iy; return true;
+    }
+    return false;
+  });
+
+  // 放置NPC
+  const npcs=cfg.npcs.filter(n=>{
+    const nx=n.x*2+1, ny=n.y*2+1;
+    if(ny<map.length&&nx<map[0].length&&map[ny][nx]===1){
+      n.gx=nx; n.gy=ny; return true;
+    }
+    return false;
+  });
+
+  currentLevel={map,monsters,items,npcs,exitX,exitY,...cfg};
+
+  S.px=startX; S.py=startY;
+  S.visited=new Set();
+  S.doorReached=false;
+
+  // 钥匙位置转为网格坐标，确保在通道上
+  if(cfg.keyPos){
+    const kx=cfg.keyPos.x*2+1, ky=cfg.keyPos.y*2+1;
+    if(ky<map.length&&kx<map[0].length&&map[ky][kx]!==0&&map[ky][kx]!==2){
+      S.keyGx=kx; S.keyGy=ky;
+    } else {
+      S.keyGx=exitX-2; S.keyGy=exitY-2;
+    }
+  }
+
+  markVisited();
+
+  updateHud();
+  resize();
+}
+
+function markVisited(){
+  // 标记玩家周围3格为已探索
+  for(let dy=-2;dy<=2;dy++){
+    for(let dx=-2;dx<=2;dx++){
+      const gx=S.px+dx, gy=S.py+dy;
+      if(gy>=0&&gy<currentLevel.map.length&&gx>=0&&gx<currentLevel.map[0].length){
+        S.visited.add(gy+','+gx);
+      }
+    }
+  }
+}
+
+// ═══════════════════════════════════════
+//  HUD
+// ═══════════════════════════════════════
+function updateHud(){
+  const hp=Math.max(0,S.hp),san=Math.max(0,S.san);
+  $('hp-fill').style.width=hp+'%';
+  $('san-fill').style.width=san+'%';
+  $('hp-num').textContent=hp; $('san-num').textContent=san;
+  $('hp-fill').className='hud-fill hp '+(hp>60?'ok':hp>30?'warn':'');
+  $('san-fill').className='hud-fill san '+(san>60?'ok':san>30?'warn':'');
+  $('level-badge').textContent='第 '+(S.lv+1)+' 层 — '+LEVEL_NAMES[S.lv];
+  $('key-badge').textContent=S.hasKey?'🔑 钥匙':'';
+}
+
+function hurt(v){S.hp=Math.max(0,S.hp-v);updateHud();toast('-'+v+' 体力','danger');}
+function heal(v){S.hp=Math.min(100,S.hp+v);updateHud();toast('+'+v+' 体力','safe');}
+function loseSan(v){S.san=Math.max(0,S.san-v);updateHud();toast('-'+v+' 理智','danger');}
+function gainSan(v){S.san=Math.min(100,S.san+v);updateHud();toast('+'+v+' 理智','safe');}
+
+function toast(msg,type){
+  const t=$('toast'); t.textContent=msg;
+  t.style.borderColor=type==='danger'?'#c0392b':type==='safe'?'#27ae60':'rgba(255,255,255,.15)';
+  t.style.color=type==='danger'?'#e74c3c':type==='safe'?'#2ecc71':'#aaa';
+  t.classList.add('on'); setTimeout(()=>t.classList.remove('on'),1400);
+}
+
+// ═══════════════════════════════════════
+//  事件面板
+// ═══════════════════════════════════════
+function showEvt(icon,text,choices){
+  $('evt-icon').textContent=icon;
+  $('evt-text').innerHTML=text;
+  const cc=$('evt-choices'); cc.innerHTML='';
+  choices.forEach(c=>{
+    const b=document.createElement('button');
+    b.className='evt-btn'; b.textContent=c.text;
+    b.onclick=()=>{
+      $('evt').classList.remove('on');
+      if(c.effect)c.effect();
+      if(c.next)setTimeout(c.next,300);
+    };
+    cc.appendChild(b);
+  });
+  $('evt').classList.add('on');
+}
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+
+// ═══════════════════════════════════════
+//  Canvas 渲染 — 俯视角
+// ═══════════════════════════════════════
+function draw(){
+  if(!W||!H||!currentLevel)return;
+  const map=currentLevel.map;
+  const rows=map.length, cols=map[0].length;
+
+  // 计算视口偏移（让玩家居中）
+  const mapW=cols*CELL, mapH=rows*CELL;
+  let camX=S.px*CELL+CELL/2-W/2;
+  let camY=S.py*CELL+CELL/2-H/2;
+  camX=Math.max(0,Math.min(camX,mapW-W));
+  camY=Math.max(0,Math.min(camY,mapH-H));
+
+  // 背景
+  X.fillStyle='#111';
+  X.fillRect(0,0,W,H);
+
+  // 绘制迷宫
+  for(let y=0;y<rows;y++){
+    for(let x=0;x<cols;x++){
+      const sx=x*CELL-camX, sy=y*CELL-camY;
+      // 跳过屏幕外的
+      if(sx+CELL<0||sx>W||sy+CELL<0||sy>H)continue;
+
+      const key=y+','+x;
+      const explored=S.visited.has(key);
+
+      if(map[y][x]===0){
+        // 墙壁
+        if(explored){
+          X.fillStyle=currentLevel.wallColor;
+          X.fillRect(sx,sy,CELL,CELL);
+          // 砖块纹理
+          X.strokeStyle='rgba(0,0,0,.3)';
+          X.lineWidth=1;
+          X.strokeRect(sx+2,sy+2,CELL/2-3,CELL/2-3);
+          X.strokeRect(sx+CELL/2+1,sy+CELL/2+1,CELL/2-3,CELL/2-3);
+        } else {
+          X.fillStyle='#080808';
+          X.fillRect(sx,sy,CELL,CELL);
+        }
+      } else {
+        // 地板
+        if(explored){
+          X.fillStyle=currentLevel.floorColor;
+          X.fillRect(sx,sy,CELL,CELL);
+          // 地板裂纹
+          X.strokeStyle='rgba(0,0,0,.15)';
+          X.lineWidth=0.5;
+          X.beginPath();
+          X.moveTo(sx+CELL*.3,sy+CELL*.2);
+          X.lineTo(sx+CELL*.6,sy+CELL*.8);
+          X.stroke();
+        } else {
+          // 迷雾
+          X.fillStyle='#0a0a0a';
+          X.fillRect(sx,sy,CELL,CELL);
+        }
+      }
+
+      // 出口标记
+      if(x===currentLevel.exitX&&y===currentLevel.exitY&&explored){
+        const pulse=.5+.5*Math.sin(Date.now()*.003);
+        X.fillStyle=`rgba(39,174,96,${.3+pulse*.3})`;
+        X.fillRect(sx,sy,CELL,CELL);
+        X.fillStyle='#27ae60';
+        X.font='18px sans-serif';
+        X.textAlign='center';
+        X.fillText('🚪',sx+CELL/2,sy+CELL/2+6);
+      }
+
+      // 起点标记
+      if(map[y][x]===2){
+        X.fillStyle='rgba(52,152,219,.15)';
+        X.fillRect(sx,sy,CELL,CELL);
+      }
+
+      // 钥匙标记（门被触发过且未拾取时，始终可见）
+      if(S.doorReached&&!S.hasKey&&x===S.keyGx&&y===S.keyGy){
+        const pulse=.5+.5*Math.sin(Date.now()*.004);
+        X.fillStyle=`rgba(243,156,18,${.2+pulse*.3})`;
+        X.fillRect(sx,sy,CELL,CELL);
+        X.font='20px sans-serif'; X.textAlign='center';
+        X.fillText('🔑',sx+CELL/2,sy+CELL/2+7);
+      }
+    }
+  }
+
+  // 绘制物品
+  if(currentLevel.items){
+    for(const it of currentLevel.items){
+      if(!S.visited.has(it.gy+','+it.gx))continue;
+      const sx=it.gx*CELL-camX, sy=it.gy*CELL-camY;
+      if(sx+CELL<0||sx>W||sy+CELL<0||sy>H)continue;
+      X.fillStyle='rgba(201,168,76,.15)';
+      X.beginPath(); X.arc(sx+CELL/2,sy+CELL/2,CELL*.35,0,Math.PI*2); X.fill();
+      X.font='18px sans-serif'; X.textAlign='center';
+      X.fillText(it.icon,sx+CELL/2,sy+CELL/2+6);
+    }
+  }
+
+  // 绘制NPC
+  if(currentLevel.npcs){
+    for(const n of currentLevel.npcs){
+      if(!S.visited.has(n.gy+','+n.gx))continue;
+      const sx=n.gx*CELL-camX, sy=n.gy*CELL-camY;
+      if(sx+CELL<0||sx>W||sy+CELL<0||sy>H)continue;
+      X.fillStyle='rgba(42,58,42,.8)';
+      X.beginPath(); X.arc(sx+CELL/2,sy+CELL/2,CELL*.35,0,Math.PI*2); X.fill();
+      X.font='16px sans-serif'; X.textAlign='center';
+      X.fillText('🎭',sx+CELL/2,sy+CELL/2+6);
+      X.fillStyle='rgba(200,200,200,.5)'; X.font='10px sans-serif';
+      X.fillText(n.name,sx+CELL/2,sy+CELL-4);
+    }
+  }
+
+  // 绘制怪物
+  if(currentLevel.monsters){
+    for(const m of currentLevel.monsters){
+      if(!S.visited.has(m.gy+','+m.gx))continue;
+      const sx=m.gx*CELL-camX, sy=m.gy*CELL-camY;
+      if(sx+CELL<0||sx>W||sy+CELL<0||sy>H)continue;
+
+      const cx=sx+CELL/2, cy=sy+CELL/2;
+      if(m.type==='wanderer'){
+        X.fillStyle='rgba(192,57,43,.7)';
+        X.beginPath(); X.arc(cx,cy,CELL*.3,0,Math.PI*2); X.fill();
+        X.fillStyle='#fff';
+        X.beginPath(); X.arc(cx-4,cy-2,2,0,Math.PI*2); X.arc(cx+4,cy-2,2,0,Math.PI*2); X.fill();
+      } else if(m.type==='crawler'){
+        X.fillStyle='rgba(80,20,20,.8)';
+        X.beginPath(); X.ellipse(cx,cy,CELL*.35,CELL*.25,0,0,Math.PI*2); X.fill();
+        X.fillStyle='#c0392b';
+        for(let i=0;i<4;i++){
+          const a=i*Math.PI/2+Date.now()*.002;
+          X.beginPath(); X.arc(cx+Math.cos(a)*CELL*.2,cy+Math.sin(a)*CELL*.15,2,0,Math.PI*2); X.fill();
+        }
+      } else if(m.type==='shadow'){
+        X.fillStyle='rgba(0,0,0,.85)';
+        X.beginPath(); X.ellipse(cx,cy,CELL*.2,CELL*.35,0,0,Math.PI*2); X.fill();
+      } else if(m.type==='devourer'){
+        X.strokeStyle='rgba(200,180,140,.5)'; X.lineWidth=1;
+        for(let i=0;i<8;i++){
+          const a=i*Math.PI/4+Date.now()*.001;
+          const r=CELL*.3+Math.sin(a*3)*5;
+          X.beginPath();
+          X.ellipse(cx+Math.cos(a)*r*.5,cy+Math.sin(a)*r*.5,6,3,a,0,Math.PI*2);
+          X.stroke();
+        }
+      } else if(m.type==='gatekeeper'){
+        X.fillStyle='rgba(30,0,50,.9)';
+        X.beginPath(); X.ellipse(cx,cy,CELL*.25,CELL*.4,0,0,Math.PI*2); X.fill();
+        X.fillStyle='#8a2be2';
+        X.beginPath(); X.arc(cx,cy-8,3,0,Math.PI*2); X.fill();
+      }
+      X.fillStyle='rgba(200,200,200,.5)'; X.font='10px sans-serif'; X.textAlign='center';
+      X.fillText(m.name,cx,cy+CELL*.4+10);
+    }
+  }
+
+  // 绘制玩家
+  const psx=S.px*CELL-camX, psy=S.py*CELL-camY;
+  X.fillStyle='rgba(52,152,219,.2)';
+  X.beginPath(); X.arc(psx+CELL/2,psy+CELL/2,CELL*.4,0,Math.PI*2); X.fill();
+  X.fillStyle='#3498db';
+  X.beginPath(); X.arc(psx+CELL/2,psy+CELL/2,CELL*.25,0,Math.PI*2); X.fill();
+  X.fillStyle='#fff';
+  X.beginPath(); X.arc(psx+CELL/2,psy+CELL/2-2,CELL*.1,0,Math.PI*2); X.fill();
+
+  // 手电筒光圈效果
+  if(S.hasFlashlight){
+    const gradient=X.createRadialGradient(psx+CELL/2,psy+CELL/2,CELL*.3,psx+CELL/2,psy+CELL/2,CELL*3);
+    gradient.addColorStop(0,'rgba(255,255,200,.08)');
+    gradient.addColorStop(1,'rgba(0,0,0,0)');
+    X.fillStyle=gradient;
+    X.fillRect(0,0,W,H);
+  }
+}
+
+// ═══════════════════════════════════════
+//  移动
+// ═══════════════════════════════════════
+function go(dx,dy){
+  if(S.busy)return;
+  if($('evt').classList.contains('on'))return;
+  if($('start').style.display!=='none')return;
+
+  const nx=S.px+dx, ny=S.py+dy;
+  const map=currentLevel.map;
+
+  if(ny<0||ny>=map.length||nx<0||nx>=map[0].length||map[ny][nx]===0)return;
+
+  S.px=nx; S.py=ny;
+  markVisited();
+  draw();
+  checkTile();
+}
+
+function turnAround(){}
+
+// ═══════════════════════════════════════
+//  格子检查
+// ═══════════════════════════════════════
+function checkTile(){
+  const L=currentLevel;
+
+  // 检查怪物
+  for(let i=L.monsters.length-1;i>=0;i--){
+    const m=L.monsters[i];
+    if(m.gx===S.px&&m.gy===S.py){
+      triggerMonster(m,i);
+      return;
+    }
+  }
+
+  // 检查NPC
+  for(const n of L.npcs){
+    if(n.gx===S.px&&n.gy===S.py){
+      triggerNpc(n);
+      return;
+    }
+  }
+
+  // 检查物品
+  for(let i=L.items.length-1;i>=0;i--){
+    const it=L.items[i];
+    if(it.gx===S.px&&it.gy===S.py){
+      L.items.splice(i,1);
+      triggerItem(it);
+      return;
+    }
+  }
+
+  // 检查钥匙拾取
+  if(!S.hasKey&&S.px===S.keyGx&&S.py===S.keyGy){
+    S.hasKey=true;
+    updateHud();
+    showEvt('🔑','你找到了钥匙！\n\n赶紧回去开门吧。',[
+      {text:'收下',effect:()=>{ toast('获得 钥匙','safe'); }}
+    ]);
+    return;
+  }
+
+  // 检查出口
+  if(S.px===L.exitX&&S.py===L.exitY){
+    if(S.lv<LEVELS.length-1){
+      if(S.hasKey){
+        nextLevel();
+      } else {
+        S.doorReached=true;
+        const dx=S.keyGx-S.px, dy=S.keyGy-S.py;
+        const dist=Math.abs(dx)+Math.abs(dy);
+        const dirX=dx>0?'右':dx<0?'左':'';
+        const dirY=dy>0?'下':dy<0?'上':'';
+        const dirHint=dirX&&dirY?dirY+'方'+dirX+'侧':dirX||dirY;
+        showEvt('🔒','出口被一扇厚重的铁门挡住了。\n\n门上需要一把钥匙。\n\n你感觉到钥匙就在'+dirHint+'大约'+dist+'步远的地方……',[
+          {text:'返回寻找钥匙',effect:()=>{toast('钥匙在'+dirHint+'，走过去拾取','');}}
+        ]);
+      }
+    } else {
+      triggerEnding();
+    }
+  }
+}
+
+// ═══════════════════════════════════════
+//  怪物事件
+// ═══════════════════════════════════════
+function triggerMonster(m,idx){
+  S.busy=true;
+  if(m.type==='wanderer'){
+    showEvt('👁️','一个模糊的人形轮廓出现在面前。它没有眼睛，但你能感觉到它在"看"你。\n\n湿漉漉的脚步声在黑暗中回荡。',[
+      {text:'屏住呼吸，蹲下不动',effect:()=>{
+        if(Math.random()<.6){
+          wait(600).then(()=>toast('它走过去了……','safe'));
+        } else {
+          hurt(20);
+          wait(400).then(()=>toast('被发现了！','danger'));
+        }
+      }},
+      {text:'转身跑',effect:()=>{
+        hurt(15); loseSan(10);
+        wait(400).then(()=>toast('甩掉了，但体力消耗很大','danger'));
+      }},
+      {text:'用手电照它',effect:()=>{
+        if(S.hasFlashlight){
+          loseSan(5);
+          wait(600).then(()=>{toast('它在强光下扭曲消散了','safe');currentLevel.monsters.splice(idx,1);});
+        } else {
+          loseSan(10);
+          wait(600).then(()=>toast('没有手电筒！','danger'));
+        }
+      }}
+    ]);
+  } else if(m.type==='crawler'){
+    showEvt('🕸️','多肢节肢动物趴在管壁上。它的肢体在黑暗中缓缓移动。\n\n它发现了你。',[
+      {text:'用手电照射',effect:()=>{
+        if(S.hasFlashlight){
+          wait(600).then(()=>{toast('它怕光，退缩了','safe');currentLevel.monsters.splice(idx,1);});
+        } else {
+          hurt(15); loseSan(5);
+          wait(600).then(()=>toast('没有手电筒！被咬了！','danger'));
+        }
+      }},
+      {text:'丢一个物品引开它',effect:()=>{
+        if(S.hasAlmond){
+          S.hasAlmond=false;
+          wait(600).then(()=>{toast('杏仁水吸引了它','safe');currentLevel.monsters.splice(idx,1);});
+        } else {
+          hurt(25); loseSan(10);
+          wait(400).then(()=>toast('没有东西可丢！被抓住了！','danger'));
+        }
+      }},
+      {text:'快速冲过去',effect:()=>{ hurt(30); loseSan(15); wait(400).then(()=>toast('被撕咬了！','danger')); }}
+    ]);
+  } else if(m.type==='shadow'){
+    showEvt('◼','一个纯黑的人形轮廓挡住了路。它一动不动。\n\n你盯着它看——它也盯着你。\n\n当你背过身时，你能感觉到它在靠近。',[
+      {text:'直视它，慢慢后退',effect:()=>{ gainSan(15); wait(600).then(()=>toast('它不会攻击直视它的人','safe')); }},
+      {text:'转身跑',effect:()=>{ hurt(10); loseSan(25); wait(400).then(()=>toast('理智在急速下降……','danger')); }}
+    ]);
+  } else if(m.type==='devourer'){
+    showEvt('📖','书页在空中聚集旋转，形成一个风暴。\n\n吞噬者——被卷入其中会失去记忆和理智。',[
+      {text:'用杏仁水护身',effect:()=>{
+        if(S.hasAlmond){
+          S.hasAlmond=false;
+          loseSan(5);
+          wait(600).then(()=>{toast('杏仁水保护了你的意识','safe');currentLevel.monsters.splice(idx,1);});
+        } else {
+          loseSan(30);
+          wait(600).then(()=>toast('失去了大量理智……','danger'));
+        }
+      }},
+      {text:'闭眼冲过去',effect:()=>{ loseSan(35); wait(400).then(()=>toast('忘记了很多事情……','danger')); }}
+    ]);
+  } else if(m.type==='gatekeeper'){
+    showEvt('◼','一个巨大的暗影站在门前。\n\n守门人——只有真正理解这座迷宫的人才能通过。',[
+      {text:'"我不怕你"',effect:()=>{
+        if(S.san>=50&&S.hp>=30){
+          wait(800).then(()=>{toast('守门人退开了……','safe');currentLevel.monsters.splice(idx,1);});
+        } else {
+          hurt(30); loseSan(20);
+          wait(400).then(()=>toast('你的意志还不够坚定……','danger'));
+        }
+      }},
+      {text:'转身寻找其他出路',effect:()=>{ wait(400).then(()=>toast('守门人挡住了唯一的出口','')); }}
+    ]);
+  }
+  setTimeout(()=>{S.busy=false;},600);
+}
+
+// ═══════════════════════════════════════
+//  NPC 事件
+// ═══════════════════════════════════════
+function triggerNpc(n){
+  S.busy=true;
+  if(n.type==='merchant'){
+    showEvt('🎭','一个戴面具的人形站在角落里。\n\n它不说话，只是伸出一只手。\n\n你感觉它在等你交换什么。',[
+      {text:'给它手电筒',effect:()=>{
+        if(S.hasFlashlight){
+          S.hasFlashlight=false; S.hasAlmond=true;
+          wait(600).then(()=>showEvt('🎭','商人收下手电筒，递给你一瓶杏仁水。\n\n瓶身上写着："保持清醒。"',['收下']));
+        } else {
+          toast('你没有手电筒','');
+        }
+      }},
+      {text:'给它杏仁水',effect:()=>{
+        if(S.hasAlmond){
+          S.hasAlmond=false; S.hasFlashlight=true;
+          wait(600).then(()=>showEvt('🎭','商人收下杏仁水，递给你一个手电筒。\n\n"光会保护你。"',['收下']));
+        } else {
+          toast('你没有杏仁水','');
+        }
+      }},
+      {text:'离开',effect:()=>{ wait(300); }}
+    ]);
+  }
+  setTimeout(()=>{S.busy=false;},600);
+}
+
+// ═══════════════════════════════════════
+//  物品事件
+// ═══════════════════════════════════════
+function triggerItem(it){
+  S.busy=true;
+  showEvt(it.icon,'发现了 '+it.name+'！',[
+    {text:'收下',effect:()=>{
+      if(it.type==='flashlight') S.hasFlashlight=true;
+      else if(it.type==='almond') S.hasAlmond=true;
+      else if(it.type==='key') S.hasKey=true;
+      updateHud();
+      toast('获得 '+it.name,'safe');
+    }}
+  ]);
+  setTimeout(()=>{S.busy=false;},500);
+}
+
+// ═══════════════════════════════════════
+//  关卡切换
+// ═══════════════════════════════════════
+function nextLevel(){
+  S.hasKey=false;
+  initLevel(S.lv+1);
+  showEvt('▸','进入第 '+(S.lv+1)+' 层：'+LEVEL_NAMES[S.lv],[
+    {text:'继续',effect:()=>{}}
+  ]);
+}
+
+// ═══════════════════════════════════════
+//  结局
+// ═══════════════════════════════════════
+function triggerEnding(){
+  $('evt').classList.remove('on');
+  const e=$('endscr'), t=$('end-title'), x=$('end-text');
+  if(S.hp>=70&&S.san>=70){
+    t.textContent='逃脱成功'; t.style.color='#27ae60';
+    x.innerHTML='你推开最后一扇门，刺眼的白光涌入。<br><br>当你睁开眼时，发现自己躺在废弃设施的入口处。<br>阳光洒在脸上，温暖而真实。<br><br>你深吸一口气，站了起来。<br><br>身后，设施的大门缓缓关闭。<br>那些黑暗中的东西，再也无法靠近。';
+  } else {
+    t.textContent='代价'; t.style.color='#e67e22';
+    x.innerHTML='你成功逃了出来。<br><br>但代价是——<br>有些记忆永远留在了那片黑暗里。<br><br>你站在阳光下，却想不起昨天发生了什么。<br>口袋里有一张纸条：<br><br>"你活下来了。但下次，会更难。"<br><br>……会有下次吗？';
+  }
+  e.classList.add('on');
+}
+
+// ═══════════════════════════════════════
+//  启动
+// ═══════════════════════════════════════
+function startGame(){
+  $('start').style.display='none';
+  S.hp=100; S.san=100; S.hasKey=false; S.hasFlashlight=false; S.hasAlmond=false;
+  initLevel(0);
+  showEvt('📖','你在一片黑暗中醒来。\n\n手电筒在口袋里，微弱的光照亮了周围几米。\n\n这是一座废弃的设施，走廊在黑暗中延伸。\n\n远处传来奇怪的声音。\n\n你需要找到出口，离开这里。',[
+    {text:'开始探索',effect:()=>{}}
+  ]);
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowUp'||e.key==='w')go(0,-1);
+  if(e.key==='ArrowDown'||e.key==='s')go(0,1);
+  if(e.key==='ArrowLeft'||e.key==='a')go(-1,0);
+  if(e.key==='ArrowRight'||e.key==='d')go(1,0);
+});
+
+resize();
+</script>
+</body>
+</html>

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>五维观察法卡片</title>
+<style>
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+    background: #f5f0eb;
+    color: #3a3a3a;
+  }
+
+  .page {
+    width: 210mm;
+    height: 297mm;
+    margin: 20mm auto;
+    background: white;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+    border: 1px solid #ddd;
+  }
+
+  /* ========== 正面 ========== */
+  .front {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 30px 20px 20px;
+  }
+
+  .front-title {
+    font-size: 52px;
+    font-weight: 800;
+    color: #e07040;
+    letter-spacing: 8px;
+    margin-bottom: 6px;
+    text-align: center;
+  }
+
+  .front-subtitle {
+    font-size: 20px;
+    color: #999;
+    margin-bottom: 28px;
+    letter-spacing: 2px;
+  }
+
+  /* 五维环形布局 */
+  .dimension-ring {
+    position: relative;
+    width: 440px;
+    height: 440px;
+    margin: 0 auto 20px;
+    flex-shrink: 0;
+  }
+
+  .dim-circle {
+    position: absolute;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 3px solid;
+    transition: transform 0.2s;
+    cursor: default;
+    z-index: 2;
+  }
+
+  .dim-circle:hover {
+    transform: scale(1.08);
+  }
+
+  .dim-circle .emoji {
+    font-size: 36px;
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+
+  .dim-circle .dim-name {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  .dim-circle .dim-hint {
+    font-size: 11px;
+    line-height: 1.3;
+    padding: 0 8px;
+    opacity: 0.85;
+  }
+
+  /* 人 - 橙色 */
+  .dim-ren {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff5ee;
+    border-color: #f0a060;
+    color: #c06020;
+  }
+
+  /* 文 - 紫色 */
+  .dim-wen {
+    top: 100px;
+    right: 0;
+    background: #f5f0fa;
+    border-color: #a070c0;
+    color: #7040a0;
+  }
+
+  /* 产 - 金色 */
+  .dim-chan {
+    bottom: 30px;
+    right: 30px;
+    background: #fdf8ee;
+    border-color: #d0a040;
+    color: #a07020;
+  }
+
+  /* 景 - 绿色 */
+  .dim-jing {
+    bottom: 30px;
+    left: 30px;
+    background: #f0f8f0;
+    border-color: #60b060;
+    color: #307030;
+  }
+
+  /* 地 - 蓝色 */
+  .dim-di {
+    top: 100px;
+    left: 0;
+    background: #f0f5fa;
+    border-color: #6090d0;
+    color: #3060a0;
+  }
+
+  /* 中心 */
+  .center-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f9e8d8, #fdecd4);
+    border: 2.5px dashed #d0a070;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 700;
+    color: #c07030;
+    z-index: 3;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  /* SVG 虚线连接 */
+  .ring-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .front-footer {
+    font-size: 13px;
+    color: #b0a090;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-top: 16px;
+  }
+
+  .fold-hint {
+    position: absolute;
+    bottom: 10px;
+    right: 16px;
+    font-size: 10px;
+    color: #ccc;
+    letter-spacing: 1px;
+  }
+
+  /* ========== 反面 ========== */
+  .back {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 48px;
+    background: #fffaf5;
+  }
+
+  .back-title {
+    font-size: 36px;
+    font-weight: 800;
+    color: #e07040;
+    margin-bottom: 12px;
+    letter-spacing: 4px;
+  }
+
+  .back-subtitle {
+    font-size: 16px;
+    color: #b0a090;
+    margin-bottom: 40px;
+    letter-spacing: 2px;
+  }
+
+  .tips-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .tip-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    background: white;
+    border-radius: 16px;
+    padding: 22px 26px;
+    border: 2px solid #f0e8e0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .tip-icon {
+    font-size: 38px;
+    flex-shrink: 0;
+    width: 50px;
+    text-align: center;
+  }
+
+  .tip-text {
+    font-size: 17px;
+    line-height: 1.7;
+    color: #555;
+  }
+
+  .tip-text strong {
+    color: #c06020;
+    font-weight: 700;
+  }
+
+  .back-footer {
+    font-size: 13px;
+    color: #b0a090;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-top: 48px;
+  }
+
+  .back-decoration {
+    position: absolute;
+    bottom: 60px;
+    right: 40px;
+    font-size: 80px;
+    opacity: 0.08;
+  }
+
+  /* 打印优化 */
+  @media print {
+    body {
+      background: white;
+    }
+
+    .page {
+      margin: 0;
+      border: none;
+      box-shadow: none;
+    }
+
+    .front, .back {
+      background: white !important;
+    }
+
+    .dim-circle {
+      background: white !important;
+    }
+
+    .dim-ren { border-color: #f0a060 !important; color: #c06020 !important; }
+    .dim-wen { border-color: #a070c0 !important; color: #7040a0 !important; }
+    .dim-chan { border-color: #d0a040 !important; color: #a07020 !important; }
+    .dim-jing { border-color: #60b060 !important; color: #307030 !important; }
+    .dim-di { border-color: #6090d0 !important; color: #3060a0 !important; }
+
+    .center-label {
+      background: white !important;
+      border-style: dashed !important;
+    }
+
+    .tip-card {
+      border-color: #ddd !important;
+      box-shadow: none !important;
+    }
+
+    .fold-hint {
+      display: block;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== 正面 ========== -->
+<div class="page front">
+  <div class="front-title">五维观察法</div>
+  <div class="front-subtitle">用五个维度看一个社区</div>
+
+  <div class="dimension-ring">
+    <!-- SVG 虚线连接 -->
+    <svg class="ring-lines" viewBox="0 0 440 440">
+      <!-- 中心到五个圆的连线 -->
+      <line x1="220" y1="220" x2="220" y2="80" stroke="#d0c0b0" stroke-width="1.5" stroke-dasharray="6,4" />
+      <line x1="220" y1="220" x2="370" y2="170" stroke="#d0c0b0" stroke-width="1.5" stroke-dasharray="6,4" />
+      <line x1="220" y1="220" x2="340" y2="370" stroke="#d0c0b0" stroke-width="1.5" stroke-dasharray="6,4" />
+      <line x1="220" y1="220" x2="100" y2="370" stroke="#d0c0b0" stroke-width="1.5" stroke-dasharray="6,4" />
+      <line x1="220" y1="220" x2="70" y2="170" stroke="#d0c0b0" stroke-width="1.5" stroke-dasharray="6,4" />
+      <!-- 圆之间也加一些连线 -->
+      <line x1="220" y1="130" x2="330" y2="170" stroke="#d0c0b0" stroke-width="1" stroke-dasharray="4,4" />
+      <line x1="330" y1="200" x2="310" y2="340" stroke="#d0c0b0" stroke-width="1" stroke-dasharray="4,4" />
+      <line x1="280" y1="370" x2="160" y2="370" stroke="#d0c0b0" stroke-width="1" stroke-dasharray="4,4" />
+      <line x1="110" y1="340" x2="110" y2="200" stroke="#d0c0b0" stroke-width="1" stroke-dasharray="4,4" />
+      <line x1="110" y1="170" x2="180" y2="130" stroke="#d0c0b0" stroke-width="1" stroke-dasharray="4,4" />
+    </svg>
+
+    <!-- 人 - 上方 -->
+    <div class="dim-circle dim-ren">
+      <span class="emoji">👤</span>
+      <span class="dim-name">人</span>
+      <span class="dim-hint">社区里有什么人？</span>
+    </div>
+
+    <!-- 文 - 右上 -->
+    <div class="dim-circle dim-wen">
+      <span class="emoji">📖</span>
+      <span class="dim-name">文</span>
+      <span class="dim-hint">文化、历史、传统</span>
+    </div>
+
+    <!-- 产 - 右下 -->
+    <div class="dim-circle dim-chan">
+      <span class="emoji">🏪</span>
+      <span class="dim-name">产</span>
+      <span class="dim-hint">商店、工厂、手艺人</span>
+    </div>
+
+    <!-- 景 - 左下 -->
+    <div class="dim-circle dim-jing">
+      <span class="emoji">🌳</span>
+      <span class="dim-name">景</span>
+      <span class="dim-hint">自然景观、环境</span>
+    </div>
+
+    <!-- 地 - 左上 -->
+    <div class="dim-circle dim-di">
+      <span class="emoji">🗺️</span>
+      <span class="dim-name">地</span>
+      <span class="dim-hint">地理、建筑、空间</span>
+    </div>
+
+    <!-- 中心标签 -->
+    <div class="center-label">社区<br>探索</div>
+  </div>
+
+  <div class="front-footer">社区探索家 · 哆悉哒阅见希望</div>
+  <div class="fold-hint">沿中线对折可做成小卡片</div>
+</div>
+
+<!-- ========== 反面 ========== -->
+<div class="page back">
+  <div class="back-title">观察小提示</div>
+  <div class="back-subtitle">带着好奇心出发吧</div>
+
+  <div class="tips-grid">
+    <div class="tip-card">
+      <div class="tip-icon">👁️</div>
+      <div class="tip-text">
+        <strong>用眼睛看、用耳朵听、用鼻子闻</strong><br>
+        观察不只是看——听听街上的声音，闻闻空气里的味道，感受脚下的路
+      </div>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-icon">✏️</div>
+      <div class="tip-text">
+        <strong>发现问题就记下来</strong><br>
+        不管是奇怪的、有趣的、还是让你困惑的，都可以记下来，它们都是宝贵的发现
+      </div>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-icon">🔢</div>
+      <div class="tip-text">
+        <strong>每个维度至少找到 3 样东西</strong><br>
+        人、文、地、产、景——每个圆圈里至少填上三样你的发现
+      </div>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-icon">💬</div>
+      <div class="tip-text">
+        <strong>不确定的可以问社区里的人</strong><br>
+        大人们很乐意分享他们知道的故事，勇敢开口问吧
+      </div>
+    </div>
+  </div>
+
+  <div class="back-footer">社区探索家 · 哆悉哒阅见希望</div>
+  <div class="back-decoration">🔍</div>
+</div>
+
+</body>
+</html>

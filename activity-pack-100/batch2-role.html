@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>社区探索活动包 · 第二批：10个角色方案</title>
+<style>
+@page { size: A4; margin: 18mm 16mm; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; color: #2d2d2d; line-height: 1.65; background: #fff; font-size: 12.5px; }
+.page { width: 210mm; min-height: 297mm; padding: 18mm 16mm; page-break-after: always; }
+.page:last-child { page-break-after: auto; }
+
+.cover { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: linear-gradient(160deg, #e8f5e9 0%, #e3f2fd 50%, #f3e5f5 100%); }
+.cover h1 { font-size: 34px; color: #1b5e20; margin-bottom: 8px; letter-spacing: 2px; }
+.cover .sub { font-size: 16px; color: #555; margin-bottom: 30px; }
+.cover .meta { font-size: 12px; color: #999; margin-top: 20px; }
+.cover .principle { background: #fff; border-radius: 14px; padding: 20px 30px; box-shadow: 0 3px 16px rgba(0,0,0,0.06); margin-top: 24px; max-width: 440px; text-align: left; }
+.cover .principle h3 { color: #1b5e20; font-size: 14px; margin-bottom: 8px; }
+.cover .principle li { margin-bottom: 4px; font-size: 12px; color: #444; }
+
+.toc { background: #fafafa; border-radius: 12px; padding: 16px 20px; }
+.toc h2 { color: #1b5e20; font-size: 18px; margin-bottom: 12px; border-bottom: 2px solid #a5d6a7; padding-bottom: 6px; }
+.toc table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.toc th { background: #e8f5e9; color: #1b5e20; padding: 6px 8px; text-align: left; border: 1px solid #c8e6c9; }
+.toc td { padding: 5px 8px; border: 1px solid #c8e6c9; }
+.toc tr:nth-child(even) { background: #f5faf5; }
+
+.plan-num { font-size: 11px; color: #fff; background: #1b5e20; display: inline-block; padding: 2px 10px; border-radius: 10px; margin-bottom: 6px; }
+.plan-title { font-size: 20px; color: #1b5e20; margin-bottom: 10px; font-weight: bold; }
+.tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.tag { background: #e8f5e9; color: #1b5e20; padding: 2px 10px; border-radius: 16px; font-size: 11px; font-weight: bold; }
+.tag.blue { background: #e3f2fd; color: #1565c0; }
+.tag.purple { background: #f3e5f5; color: #7b1fa2; }
+.tag.orange { background: #fff3e0; color: #e65100; }
+
+.sec { margin-bottom: 12px; }
+.sec h4 { color: #2e7d32; font-size: 13px; margin-bottom: 5px; border-left: 3px solid #a5d6a7; padding-left: 8px; }
+.sec p, .sec li { font-size: 12px; }
+.sec ul, .sec ol { padding-left: 18px; }
+.sec li { margin-bottom: 3px; }
+
+.age-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 10px; }
+.age-table th { background: #e8f5e9; color: #2e7d32; padding: 5px 8px; text-align: left; border: 1px solid #c8e6c9; }
+.age-table td { padding: 5px 8px; border: 1px solid #c8e6c9; vertical-align: top; }
+
+.steps-box { background: #fafafa; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
+.steps-box h4 { color: #2e7d32; font-size: 13px; margin-bottom: 5px; }
+.steps-box ol { padding-left: 18px; }
+.steps-box li { margin-bottom: 4px; font-size: 12px; }
+
+.output-box { background: #e8f5e9; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
+.output-box h4 { color: #1b5e20; font-size: 13px; margin-bottom: 5px; }
+
+.talk-box { background: #e3f2fd; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
+.talk-box h4 { color: #1565c0; font-size: 13px; margin-bottom: 5px; }
+.talk-box p { font-style: italic; font-size: 12px; color: #333; margin-bottom: 3px; }
+
+.smart-box { background: #f3e5f5; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
+.smart-box h4 { color: #7b1fa2; font-size: 13px; margin-bottom: 5px; }
+
+.zpd-box { background: #fff8e1; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
+.zpd-box h4 { color: #f57f17; font-size: 13px; margin-bottom: 5px; }
+
+.role-box { background: #fce4ec; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
+.role-box h4 { color: #c62828; font-size: 13px; margin-bottom: 5px; }
+
+.footer { text-align: center; font-size: 10px; color: #bbb; margin-top: 16px; padding-top: 8px; border-top: 1px solid #eee; }
+</style>
+</head>
+<body>
+
+<!-- 封面 -->
+<div class="page cover">
+  <h1>社区探索活动包</h1>
+  <p class="sub">第二批 · 10个角色方案</p>
+  <div class="principle">
+    <h3>本批设计逻辑：角色驱动</h3>
+    <ul>
+      <li><strong>角色代入</strong>：让孩子"成为"一个身份，从这个身份的视角去看世界</li>
+      <li><strong>具身认知</strong>：不是"学知识"，而是"做事情"——用身体和行动去理解</li>
+      <li><strong>多元智能</strong>：每个角色天然调动不同智能组合</li>
+      <li><strong>真实情境</strong>：角色对应的是社区里真实存在的职业或身份</li>
+      <li><strong>成果导向</strong>：每个角色都有一个"交付物"——报告、地图、证物、方案</li>
+    </ul>
+  </div>
+  <p class="meta">设计：丹丹 &nbsp;|&nbsp; v1.0 &nbsp;|&nbsp; 2026年5月</p>
+</div>
+
+<!-- 目录 -->
+<div class="page">
+  <div class="toc">
+    <h2>第二批：10个角色方案总览</h2>
+    <table>
+      <tr><th>#</th><th>方案名称</th><th>扮演角色</th><th>场景</th><th>核心能力</th><th>时长</th></tr>
+      <tr><td>11</td><td>社区记者</td><td>小记者</td><td>社区各处</td><td>采访+写作+观察</td><td>2-3h</td></tr>
+      <tr><td>12</td><td>小小建筑师</td><td>建筑师</td><td>社区建筑</td><td>空间+建构+审美</td><td>2h</td></tr>
+      <tr><td>13</td><td>植物猎人</td><td>植物学家</td><td>公园/绿地</td><td>自然观察+分类+记录</td><td>1.5-2h</td></tr>
+      <tr><td>14</td><td>声音收藏家</td><td>声音采集员</td><td>社区街道</td><td>音乐+技术+艺术</td><td>1.5-2h</td></tr>
+      <tr><td>15</td><td>美食地图绘制师</td><td>美食家</td><td>小吃店/菜市场</td><td>味觉+文化+记录</td><td>2h</td></tr>
+      <tr><td>16</td><td>社区气象站</td><td>气象员</td><td>阳台/窗外</td><td>科学+记录+数学</td><td>持续观察</td></tr>
+      <tr><td>17</td><td>小小外交官</td><td>外交官</td><td>社区公共场所</td><td>人际+语言+礼仪</td><td>2h</td></tr>
+      <tr><td>18</td><td>侦探事务所</td><td>侦探</td><td>社区各处</td><td>逻辑+观察+推理</td><td>2-3h</td></tr>
+      <tr><td>19</td><td>社区策展人</td><td>策展人</td><td>家中/社区</td><td>艺术+空间+表达</td><td>2-3h</td></tr>
+      <tr><td>20</td><td>时间旅人</td><td>时间旅行者</td><td>老社区/新社区</td><td>历史+对比+反思</td><td>2h</td></tr>
+    </table>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 第二批：10个角色方案 · 目录</div>
+</div>
+
+<!-- 方案11：社区记者 -->
+<div class="page">
+  <span class="plan-num">方案 11</span>
+  <h2 class="plan-title">社区记者</h2>
+  <div class="tags">
+    <span class="tag">角色：小记者</span>
+    <span class="tag blue">场景：社区各处</span>
+    <span class="tag purple">核心：采访+写作+观察</span>
+    <span class="tag orange">时长：2-3小时</span>
+  </div>
+
+  <div class="role-box">
+    <h4>角色设定</h4>
+    <p>你是《社区日报》的小记者，今天有一个重要任务：写一篇关于你所在社区的报道。你要采访不同的人，观察不同的地方，最后写出一篇"新闻稿"。</p>
+  </div>
+
+  <div class="sec">
+    <h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>家长角色</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>拍照记者：用手机拍10张"社区里的人"的照片</td><td>帮忙操作手机，引导观察</td><td>感官体验+简单记录</td></tr>
+      <tr><td>7-9岁</td><td>文字记者：采访2个人，写一段"新闻稿"</td><td>帮忙预约采访对象</td><td>能做简单采访和写作</td></tr>
+      <tr><td>10-12岁</td><td>深度记者：做一份"社区深度报道"（含多个采访+观察+分析）</td><td>放手让孩子主导</td><td>能做深度调研和写作</td></tr>
+    </table>
+  </div>
+
+  <div class="smart-box">
+    <h4>多元智能覆盖</h4>
+    <p>语言（采访、写作）、人际（与不同人交流）、观察力（发现细节）、逻辑（组织报道结构）、空间（选择拍摄角度）</p>
+  </div>
+
+  <div class="zpd-box">
+    <h4>最近发展区设计</h4>
+    <p><strong>基础版：</strong>拍照+口述，家长帮忙记录<br>
+    <strong>进阶版：</strong>独立完成采访、写作、排版，做成一份"报纸"</p>
+  </div>
+
+  <div class="sec">
+    <h4>准备清单</h4>
+    <ul>
+      <li>手机或相机</li>
+      <li>采访本+笔</li>
+      <li>"记者证"（可以自己做一张，增加仪式感）</li>
+      <li>采访问题清单（下方附）</li>
+    </ul>
+  </div>
+
+  <div class="steps-box">
+    <h4>具体步骤</h4>
+    <ol>
+      <li><strong>领任务（5分钟）</strong>：宣布"你是《社区日报》的小记者，今天的任务是……"</li>
+      <li><strong>采访准备（10分钟）</strong>：确定采访对象和问题</li>
+      <li><strong>实地采访（60-90分钟）</strong>：走访社区，采访2-3个人，拍照片</li>
+      <li><strong>写稿（30-40分钟）</strong>：整理采访记录，写一篇"新闻稿"</li>
+      <li><strong>发表（10分钟）</strong>：把"报纸"读给家人听</li>
+    </ol>
+  </div>
+
+  <div class="output-box">
+    <h4>孩子的产出</h4>
+    <ul>
+      <li>4-6岁：一组"社区人物"照片集（10张）</li>
+      <li>7-9岁：一篇"社区新闻稿"（300-500字+照片）</li>
+      <li>10-12岁：一份"社区深度报道"（含标题、导语、正文、采访摘录、照片）</li>
+    </ul>
+  </div>
+
+  <div class="talk-box">
+    <h4>家长引导话术</h4>
+    <p>"你觉得社区里最值得报道的一件事是什么？"</p>
+    <p>"采访的时候，如果对方说了一句很有趣的话，你要记下来——那是'金句'"</p>
+    <p>"你觉得这篇报道的标题应该怎么写才能吸引人？"</p>
+  </div>
+
+  <div class="sec">
+    <h4>采访问题清单</h4>
+    <ul>
+      <li>您住在这个社区多久了？</li>
+      <li>您最喜欢这个社区的什么？</li>
+      <li>如果能改变这里的一件事，您想改变什么？</li>
+      <li>您觉得这个社区最特别的地方是什么？</li>
+      <li>您对住在这里的小朋友有什么建议？</li>
+    </ul>
+  </div>
+
+  <div class="footer">社区探索活动包 v1.0 · 方案11：社区记者</div>
+</div>
+
+<!-- 方案12：小小建筑师 -->
+<div class="page">
+  <span class="plan-num">方案 12</span>
+  <h2 class="plan-title">小小建筑师</h2>
+  <div class="tags">
+    <span class="tag">角色：建筑师</span>
+    <span class="tag blue">场景：社区建筑</span>
+    <span class="tag purple">核心：空间+建构+审美</span>
+    <span class="tag orange">时长：2小时</span>
+  </div>
+
+  <div class="role-box">
+    <h4>角色设定</h4>
+    <p>你是一位建筑师，正在为社区做"建筑调研"。你要观察社区里每栋楼的样子——它们有多高？用什么材料建的？窗户是什么形状？然后画一张"建筑观察图"，甚至设计一栋"你理想中的房子"。</p>
+  </div>
+
+  <div class="sec">
+    <h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>家长角色</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>形状猎人：找到5种不同形状的窗户/门/屋顶</td><td>帮忙拍照，引导观察</td><td>形状认知+感官体验</td></tr>
+      <tr><td>7-9岁</td><td>建筑速写：画3栋不同风格的建筑，标注特点</td><td>提供画具，安静陪伴</td><td>能做有目的的观察和记录</td></tr>
+      <tr><td>10-12岁</td><td>建筑调研：做一份"社区建筑报告"+ 设计一栋"理想建筑"</td><td>提供参考书籍或网站</td><td>能做分析和创造性设计</td></tr>
+    </table>
+  </div>
+
+  <div class="smart-box">
+    <h4>多元智能覆盖</h4>
+    <p>空间（观察建筑结构、画图）、身体动觉（攀爬观察、触摸材质）、语言（描述建筑特点）、逻辑数学（测量、计算比例）、艺术（设计理想建筑）</p>
+  </div>
+
+  <div class="zpd-box">
+    <h4>最近发展区设计</h4>
+    <p><strong>基础版：</strong>找到不同的建筑元素（窗户、门、屋顶）<br>
+    <strong>进阶版：</strong>分析建筑风格，设计自己的理想建筑</p>
+  </div>
+
+  <div class="sec">
+    <h4>准备清单</h4>
+    <ul>
+      <li>速写本+铅笔+彩笔</li>
+      <li>尺子（测量建筑元素的尺寸）</li>
+      <li>手机（拍照记录）</li>
+    </ul>
+  </div>
+
+  <div class="steps-box">
+    <h4>具体步骤</h4>
+    <ol>
+      <li><strong>热身（10分钟）</strong>：观察一栋建筑，说说"它让你想到了什么？"</li>
+      <li><strong>观察记录（40分钟）</strong>：在社区里走一圈，画下3-5栋建筑的速写</li>
+      <li><strong>细节研究（20分钟）</strong>：选一栋建筑，仔细观察它的窗户、门、屋顶、材质</li>
+      <li><strong>设计（20-30分钟）</strong>：画一栋"你理想中的房子"——可以天马行空</li>
+      <li><strong>展示（10分钟）</strong>：向家人介绍你的设计</li>
+    </ol>
+  </div>
+
+  <div class="output-box">
+    <h4>孩子的产出</h4>
+    <ul>
+      <li>4-6岁：一张"形状猎人"照片集（找到的不同形状）</li>
+      <li>7-9岁：3幅"建筑速写"+ 简单的文字说明</li>
+      <li>10-12岁：一份"社区建筑报告"+ 一幅"理想建筑设计图"</li>
+    </ul>
+  </div>
+
+  <div class="talk-box">
+    <h4>家长引导话术</h4>
+    <p>"这栋楼的窗户是什么形状？为什么建筑师要这样设计？"</p>
+    <p>"你觉得住在顶楼和住在一楼有什么不一样？"</p>
+    <p>"如果你来设计一栋房子，你最想让它有什么？"</p>
+  </div>
+
+  <div class="footer">社区探索活动包 v1.0 · 方案12：小小建筑师</div>
+</div>
+
+<!-- 方案13：植物猎人 -->
+<div class="page">
+  <span class="plan-num">方案 13</span>
+  <h2 class="plan-title">植物猎人</h2>
+  <div class="tags">
+    <span class="tag">角色：植物学家</span>
+    <span class="tag blue">场景：公园/绿地</span>
+    <span class="tag purple">核心：自然观察+分类+记录</span>
+    <span class="tag orange">时长：1.5-2小时</span>
+  </div>
+
+  <div class="role-box">
+    <h4>角色设定</h4>
+    <p>你是一位植物学家，正在执行一次"社区植物大普查"。你的任务是：找到尽可能多的植物，记录它们的名字、特征、生长环境，最后做一份"社区植物图鉴"。</p>
+  </div>
+
+  <div class="sec">
+    <h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>家长角色</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>树叶猎人：收集10种不同形状的叶子</td><td>帮忙识别植物名称</td><td>感官体验+形状认知</td></tr>
+      <tr><td>7-9岁</td><td>植物图鉴：找到5种植物，画下来并标注名称和特征</td><td>提供放大镜和参考书</td><td>能做分类和记录</td></tr>
+      <tr><td>10-12岁</td><td>生态调查：做一份"社区植物生态报告"（含植物分布、生长环境分析）</td><td>提供手机查阅资料</td><td>能做系统分析</td></tr>
+    </table>
+  </div>
+
+  <div class="smart-box">
+    <h4>多元智能覆盖</h4>
+    <p>自然观察（识别植物）、身体动觉（采集标本）、语言（描述特征）、空间（画植物图鉴）、逻辑数学（分类、统计数量）</p>
+  </div>
+
+  <div class="zpd-box">
+    <h4>最近发展区设计</h4>
+    <p><strong>基础版：</strong>收集不同形状的叶子，画下来<br>
+    <strong>进阶版：</strong>做一份完整的"植物图鉴"或"生态报告"</p>
+  </div>
+
+  <div class="sec">
+    <h4>准备清单</h4>
+    <ul>
+      <li>放大镜</li>
+      <li>速写本+铅笔+彩笔</li>
+      <li>信封（装叶子标本）</li>
+      <li>手机（拍照+查植物名称）</li>
+    </ul>
+  </div>
+
+  <div class="steps-box">
+    <h4>具体步骤</h4>
+    <ol>
+      <li><strong>热身（5分钟）</strong>：在公园门口说说"你觉得这里有多少种植物？"</li>
+      <li><strong>搜索（40-50分钟）</strong>：在公园里搜索植物，收集叶子、画速写、拍照</li>
+      <li><strong>分类（15分钟）</strong>：把找到的植物按"树/花/草/藤"分类</li>
+      <li><strong>记录（20分钟）</strong>：整理成"植物图鉴"（每种植物画一张图+写几个特征）</li>
+      <li><strong>分享（10分钟）</strong>：互相介绍"我找到的最特别的植物"</li>
+    </ol>
+  </div>
+
+  <div class="output-box">
+    <h4>孩子的产出</h4>
+    <ul>
+      <li>4-6岁：一袋"树叶标本"+ 一本"叶子形状图"</li>
+      <li>7-9岁：一份"植物图鉴"（5种植物的画像+特征描述）</li>
+      <li>10-12岁：一份"社区植物生态报告"（含分布图、生长环境分析、保护建议）</li>
+    </ul>
+  </div>
+
+  <div class="talk-box">
+    <h4>家长引导话术</h4>
+    <p>"你觉得这棵大树和那棵小树，谁的年纪更大？我们怎么知道？"</p>
+    <p>"为什么有的植物长在阳光下，有的长在树荫里？"</p>
+    <p>"如果你是公园的园丁，你会在这里种什么植物？"</p>
+  </div>
+
+  <div class="footer">社区探索活动包 v1.0 · 方案13：植物猎人</div>
+</div>
+
+<!-- 方案14：声音收藏家 -->
+<div class="page">
+  <span class="plan-num">方案 14</span>
+  <h2 class="plan-title">声音收藏家</h2>
+  <div class="tags">
+    <span class="tag">角色：声音采集员</span>
+    <span class="tag blue">场景：社区街道</span>
+    <span class="tag purple">核心：音乐+技术+艺术</span>
+    <span class="tag orange">时长：1.5-2小时</span>
+  </div>
+
+  <div class="role-box">
+    <h4>角色设定</h4>
+    <p>你是一位声音收藏家，你的任务是"采集"社区里的声音。用手机录下有趣的声音，回家后用这些声音"创作"一段声音故事或一首"社区交响曲"。</p>
+  </div>
+
+  <div class="sec">
+    <h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>家长角色</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>声音猎人：录下5种有趣的声音，说说它们是什么</td><td>帮忙操作手机录音</td><td>感官体验+语言表达</td></tr>
+      <tr><td>7-9岁</td><td>声音策展人：录下10种声音，给它们分类，画一张"声音海报"</td><td>帮忙整理录音文件</td><td>能做分类和艺术表达</td></tr>
+      <tr><td>10-12岁</td><td>声音导演：用录下的声音剪辑一段"社区声音故事"</td><td>提供简单的剪辑软件</td><td>能做技术操作和叙事</td></tr>
+    </table>
+  </div>
+
+  <div class="smart-box">
+    <h4>多元智能覆盖</h4>
+    <p>音乐（声音感知、节奏）、技术（录音、剪辑）、语言（描述声音、讲故事）、空间（定位声音来源）、内省（感受声音带来的情绪）</p>
+  </div>
+
+  <div class="zpd-box">
+    <h4>最近发展区设计</h4>
+    <p><strong>基础版：</strong>录下声音并描述<br>
+    <strong>进阶版：</strong>用声音剪辑一段"声音故事"</p>
+  </div>
+
+  <div class="sec">
+    <h4>准备清单</h4>
+    <ul>
+      <li>手机（录音功能）</li>
+      <li>耳机（回放录音）</li>
+      <li>白纸+彩笔（画声音海报）</li>
+      <li>简单的音频剪辑APP（如：剪映、GarageBand）</li>
+    </ul>
+  </div>
+
+  <div class="steps-box">
+    <h4>具体步骤</h4>
+    <ol>
+      <li><strong>热身（5分钟）</strong>：闭眼1分钟，说说"你听到了什么？"</li>
+      <li><strong>采集（40-50分钟）</strong>：在社区里走，录下有趣的声音</li>
+      <li><strong>整理（20分钟）</strong>：回放录音，给声音分类、命名</li>
+      <li><strong>创作（20-30分钟）</strong>：画"声音海报"或剪辑"声音故事"</li>
+      <li><strong>展示（10分钟）</strong>：播放给家人听，说说每段声音的"故事"</li>
+    </ol>
+  </div>
+
+  <div class="output-box">
+    <h4>孩子的产出</h4>
+    <ul>
+      <li>4-6岁：一段"声音日记"（5段录音+口述描述）</li>
+      <li>7-9岁：一张"声音海报"（10种声音的分类图）</li>
+      <li>10-12岁：一段"社区声音故事"（用剪辑软件制作的音频作品）</li>
+    </ul>
+  </div>
+
+  <div class="talk-box">
+    <h4>家长引导话术</h4>
+    <p>"这个声音让你想到了什么画面？"</p>
+    <p>"你觉得这个社区是'安静'的还是'热闹'的？为什么？"</p>
+    <p>"如果你要给这个社区配一段背景音乐，你会选什么？"</p>
+  </div>
+
+  <div class="footer">社区探索活动包 v1.0 · 方案14：声音收藏家</div>
+</div>
+
+<!-- 方案15：美食地图绘制师 -->
+<div class="page">
+  <span class="plan-num">方案 15</span>
+  <h2 class="plan-title">美食地图绘制师</h2>
+  <div class="tags">
+    <span class="tag">角色：美食家</span>
+    <span class="tag blue">场景：小吃店/菜市场</span>
+    <span class="tag purple">核心：味觉+文化+记录</span>
+    <span class="tag orange">时长：2小时</span>
+  </div>
+
+  <div class="role-box">
+    <h4>角色设定</h4>
+    <p>你是一位美食地图绘制师，你的任务是：走遍社区，找到最好吃的东西，记录它们的位置、价格、味道，画一张"社区美食地图"。</p>
+  </div>
+
+  <div class="sec">
+    <h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>家长角色</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>品尝官：品尝3种小吃，用表情表达"好吃/一般/不好吃"</td><td>控制品尝数量和卫生</td><td>感官体验+情绪表达</td></tr>
+      <tr><td>7-9岁</td><td>记录员：品尝3种小吃，记录名称、价格、味道，画地图</td><td>帮忙付款，提醒卫生</td><td>能做记录和简单分析</td></tr>
+      <tr><td>10-12岁</td><td>美食评论家：做一份"社区美食评论"（含评分、推荐、分析）</td><td>放手让孩子主导</td><td>能做评价和写作</td></tr>
+    </table>
+  </div>
+
+  <div class="smart-box">
+    <h4>多元智能覆盖</h4>
+    <p>自然观察（味觉、嗅觉）、语言（描述味道、写评论）、数学（计算价格、评分）、空间（画地图）、人际（与店主交流）</p>
+  </div>
+
+  <div class="zpd-box">
+    <h4>最近发展区设计</h4>
+    <p><strong>基础版：</strong>品尝+用表情/颜色记录感受<br>
+    <strong>进阶版：</strong>写一份完整的"美食评论"，包含评分和推荐</p>
+  </div>
+
+  <div class="sec">
+    <h4>准备清单</h4>
+    <ul>
+      <li>20-30元零钱（用于品尝）</li>
+      <li>小本子+笔</li>
+      <li>纸巾和水（品尝后清洁）</li>
+      <li>手机（拍照记录）</li>
+    </ul>
+  </div>
+
+  <div class="steps-box">
+    <h4>具体步骤</h4>
+    <ol>
+      <li><strong>热身（5分钟）</strong>：说说"你最喜欢吃的东西是什么？"</li>
+      <li><strong>探索（60分钟）</strong>：在社区里找到3-5家小吃店/摊位，品尝并记录</li>
+      <li><strong>采访（15分钟）</strong>：问店主"这个东西怎么做出来的？开了多久了？"</li>
+      <li><strong>整理（20分钟）</strong>：画"美食地图"，标注每家店的位置和评分</li>
+      <li><strong>分享（10分钟）</strong>：互相推荐"最值得去的一家"</li>
+    </ol>
+  </div>
+
+  <div class="output-box">
+    <h4>孩子的产出</h4>
+    <ul>
+      <li>4-6岁：一张"表情美食卡"（好吃😊/一般😐/不好吃😠）</li>
+      <li>7-9岁：一张"美食地图"（含位置、价格、评分）</li>
+      <li>10-12岁：一份"社区美食评论"（含评分表、推荐理由、店主故事）</li>
+    </ul>
+  </div>
+
+  <div class="talk-box">
+    <h4>家长引导话术</h4>
+    <p>"你觉得这个好吃的秘密是什么？是调料？是做法？还是食材？"</p>
+    <p>"为什么这家店开在这里而不是别的地方？"</p>
+    <p>"如果你来开一家小吃店，你想卖什么？"</p>
+  </div>
+
+  <div class="footer">社区探索活动包 v1.0 · 方案15：美食地图绘制师</div>
+</div>
+
+<!-- 方案16：社区气象站 -->
+<div class="page">
+  <span class="plan-num">方案 16</span>
+  <h2 class="plan-title">社区气象站</h2>
+  <div class="tags">
+    <span class="tag">角色：气象员</span>
+    <span class="tag blue">场景：阳台/窗外</span>
+    <span class="tag purple">核心：科学+记录+数学</span>
+    <span class="tag orange">时长：持续观察（每天5-10分钟）</span>
+  </div>
+
+  <div class="role-box">
+    <h4>角色设定</h4>
+    <p>你是一位气象员，负责监测社区的天气变化。每天在同一时间、同一地点，记录温度、天气、风向、云的形状。连续记录一周，你就能发现"天气的规律"。</p>
+  </div>
+
+  <div class="sec">
+    <h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>家长角色</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>天气画画：每天画一幅"今天的天气"（太阳/云/雨）</td><td>帮忙记录日期和温度</td><td>感官体验+简单记录</td></tr>
+      <tr><td>7-9岁</td><td>气象日记：每天记录温度、天气、风向，画成图表</td><td>提供温度计</td><td>能做数据记录和简单图表</td></tr>
+      <tr><td>10-12岁</td><td>气象分析：连续记录2周，分析天气变化规律，写一份"气象报告"</td><td>提供参考数据</td><td>能做数据分析和科学推理</td></tr>
+    </table>
+  </div>
+
+  <div class="smart-box">
+    <h4>多元智能覆盖</h4>
+    <p>逻辑数学（记录数据、画图表）、自然观察（观察天气）、语言（描述天气变化）、空间（画天气图）、内省（养成观察习惯）</p>
+  </div>
+
+  <div class="zpd-box">
+    <h4>最近发展区设计</h4>
+    <p><strong>基础版：</strong>每天画一幅"天气画"<br>
+    <strong>进阶版：</strong>记录数据、画图表、分析规律</p>
+  </div>
+
+  <div class="sec">
+    <h4>准备清单</h4>
+    <ul>
+      <li>一个温度计（放在阳台或窗外）</li>
+      <li>"气象记录表"（下方附）</li>
+      <li>彩笔（画天气图）</li>
+    </ul>
+  </div>
+
+  <div class="steps-box">
+    <h4>具体步骤</h4>
+    <ol>
+      <li><strong>建站（10分钟）</strong>：在阳台或窗外设置"气象站"，放好温度计</li>
+      <li><strong>每天记录（5-10分钟）</strong>：每天同一时间记录温度、天气、风向、云的形状</li>
+      <li><strong>一周后整理（20分钟）</strong>：把记录整理成图表</li>
+      <li><strong>分析（15分钟）</strong>：讨论"这周的天气有什么规律？"</li>
+      <li><strong>预测（10分钟）</strong>：根据规律，预测"明天的天气"</li>
+    </ol>
+  </div>
+
+  <div class="output-box">
+    <h4>孩子的产出</h4>
+    <ul>
+      <li>4-6岁：一本"天气画册"（7天的天气画）</li>
+      <li>7-9岁：一份"气象记录表"+ 简单的天气图表</li>
+      <li>10-12岁：一份"社区气象分析报告"（含数据图表、规律分析、天气预测）</li>
+    </ul>
+  </div>
+
+  <div class="talk-box">
+    <h4>家长引导话术</h4>
+    <p>"你觉得明天会是什么天气？你猜对了吗？"</p>
+    <p>"为什么夏天比冬天热？太阳和我们之间发生了什么？"</p>
+    <p>"如果让你给社区的人播报天气，你会怎么说？"</p>
+  </div>
+
+  <div class="sec">
+    <h4>气象记录表</h4>
+    <table class="age-table">
+      <tr><th>日期</th><th>温度</th><th>天气（晴/阴/雨/雪）</th><th>风向</th><th>云的形状</th><th>我的感受</th></tr>
+      <tr><td>周一</td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>周二</td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>周三</td><td></td><td></td><td></td><td></td><td></td></tr>
+    </table>
+  </div>
+
+  <div class="footer">社区探索活动包 v1.0 · 方案16：社区气象站</div>
+</div>
+
+<!-- 方案17：小小外交官 -->
+<div class="page">
+  <span class="plan-num">方案 17</span>
+  <h2 class="plan-title">小小外交官</h2>
+  <div class="tags">
+    <span class="tag">角色：外交官</span>
+    <span class="tag blue">场景：社区公共场所</span>
+    <span class="tag purple">核心：人际+语言+礼仪</span>
+    <span class="tag orange">时长：2小时</span>
+  </div>
+
+  <div class="role-box">
+    <h4>角色设定</h4>
+    <p>你是一位外交官，被派到"社区国"去访问。你的任务是：认识不同的人，了解他们的工作，学习和陌生人交流的礼仪，最后写一份"外交访问报告"。</p>
+  </div>
+
+  <div class="sec">
+    <h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>家长角色</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>打招呼：主动和3个陌生人打招呼（保安、保洁、店主）</td><td>全程陪同，示范礼仪</td><td>社交勇气+基本礼仪</td></tr>
+      <tr><td>7-9岁</td><td>简短采访：采访2个人，问他们的工作是什么</td><td>在旁边观察，需要时协助</td><td>能做简单交流和记录</td></tr>
+      <tr><td>10-12岁</td><td>深度访谈：做一份"社区职业访谈录"（含3个不同职业的人）</td><td>帮忙联系采访对象</td><td>能做深度交流和写作</td></tr>
+    </table>
+  </div>
+
+  <div class="smart-box">
+    <h4>多元智能覆盖</h4>
+    <p>人际（与陌生人交流）、语言（提问、倾听、表达）、内省（克服社交恐惧）、观察力（观察不同职业的特点）、逻辑（组织访谈内容）</p>
+  </div>
+
+  <div class="zpd-box">
+    <h4>最近发展区设计</h4>
+    <p><strong>基础版：</strong>主动和3个陌生人打招呼<br>
+    <strong>进阶版：</strong>完成3个深度访谈，写成"职业访谈录"</p>
+  </div>
+
+  <div class="sec">
+    <h4>准备清单</h4>
+    <ul>
+      <li>采访本+笔</li>
+      <li>一份小礼物（可选，如一张自制贺卡）</li>
+      <li>"外交礼仪小贴士"（下方附）</li>
+    </ul>
+  </div>
+
+  <div class="steps-box">
+    <h4>具体步骤</h4>
+    <ol>
+      <li><strong>学习礼仪（10分钟）</strong>：和孩子一起学习"怎么和陌生人说话"</li>
+      <li><strong>出发（5分钟）</strong>：宣布"外交官出访任务开始！"</li>
+      <li><strong>访问（60-80分钟）</strong>：在社区里找到不同职业的人，和他们交流</li>
+      <li><strong>记录（20分钟）</strong>：整理采访记录</li>
+      <li><strong>汇报（10分钟）</strong>：向家人做"外交访问汇报"</li>
+    </ol>
+  </div>
+
+  <div class="output-box">
+    <h4>孩子的产出</h4>
+    <ul>
+      <li>4-6岁：一张"外交访问纪念卡"（画上见过的人）</li>
+      <li>7-9岁：一份"社区人物采访记"（2个人的采访记录）</li>
+      <li>10-12岁：一份"社区职业访谈录"（3个不同职业的深度访谈）</li>
+    </ul>
+  </div>
+
+  <div class="talk-box">
+    <h4>家长引导话术</h4>
+    <p>"你觉得和陌生人说话最难的是什么？"</p>
+    <p>"这位叔叔/阿姨的工作听起来有趣吗？你以后想做这个吗？"</p>
+    <p>"你今天说的哪句话最让对方开心？"</p>
+  </div>
+
+  <div class="sec">
+    <h4>外交礼仪小贴士</h4>
+    <ul>
+      <li>先微笑，再说"您好"</li>
+      <li>说明来意："我是社区的小探险家，想了解您的工作"</li>
+      <li>认真倾听，不要打断</li>
+      <li>说"谢谢您的分享"</li>
+      <li>如果对方很忙，不要勉强</li>
+    </ul>
+  </div>
+
+  <div class="footer">社区探索活动包 v1.0 · 方案17：小小外交官</div>
+</div>
+
+<!-- 方案18：侦探事务所 -->
+<div class="page">
+  <span class="plan-num">方案 18</span>
+  <h2 class="plan-title">侦探事务所</h2>
+  <div class="tags">
+    <span class="tag">角色：侦探</span>
+    <span class="tag blue">场景：社区各处</span>
+    <span class="tag purple">核心：逻辑+观察+推理</span>
+    <span class="tag orange">时长：2-3小时</span>
+  </div>
+
+  <div class="role-box">
+    <h4>角色设定</h4>
+    <p>你是一位侦探，社区里发生了一起"神秘事件"——有人在公园的长椅上留下了一张纸条，上面写着一串神秘的线索。你要根据这些线索，解开谜题，找到"真相"。</p>
+  </div>
+
+  <div class="sec">
+    <h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>家长角色</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>寻宝游戏：根据3条简单线索找到"宝藏"（一个贴纸或小礼物）</td><td>提前布置线索</td><td>简单的因果推理</td></tr>
+      <tr><td>7-9岁</td><td>解谜游戏：根据5条线索，解开一个"社区谜题"</td><td>提前设计谜题</td><td>能做多步推理</td></tr>
+      <tr><td>10-12岁</td><td>案件调查：设计一个完整的"社区案件"，自己调查、推理、破案</td><td>帮忙提供一些"证据"</td><td>能做系统推理和分析</td></tr>
+    </table>
+  </div>
+
+  <div class="smart-box">
+    <h4>多元智能覆盖</h4>
+    <p>逻辑数学（推理、解谜）、观察力（发现线索）、空间（根据地图找位置）、语言（分析线索）、身体动觉（跑动寻找）</p>
+  </div>
+
+  <div class="zpd-box">
+    <h4>最近发展区设计</h4>
+    <p><strong>基础版：</strong>3条简单线索，找到宝藏<br>
+    <strong>进阶版：</strong>5-8条线索，需要推理和分析才能破案</p>
+  </div>
+
+  <div class="sec">
+    <h4>准备清单</h4>
+    <ul>
+      <li>提前布置好的"线索卡"（家长提前准备）</li>
+      <li>一个放大镜（增加侦探感）</li>
+      <li>小本子+笔（记录线索）</li>
+      <li>"侦探证"（自己做一张）</li>
+    </ul>
+  </div>
+
+  <div class="steps-box">
+    <h4>具体步骤</h4>
+    <ol>
+      <li><strong>接案（5分钟）</strong>：家长宣布"案件"："有人在公园长椅上留了一张纸条……"</li>
+      <li><strong>领取线索（5分钟）</strong>：拿到第一条线索</li>
+      <li><strong>调查（60-90分钟）</strong>：根据线索在社区里寻找，每找到一条就解锁下一条</li>
+      <li><strong>推理（15分钟）</strong>：汇总所有线索，推理"真相"</li>
+      <li><strong>破案（10分钟）</strong>：找到"宝藏"或解开谜题</li>
+    </ol>
+  </div>
+
+  <div class="output-box">
+    <h4>孩子的产出</h4>
+    <ul>
+      <li>4-6岁：找到"宝藏"+ 一段"破案故事"（口述）</li>
+      <li>7-9岁：一份"侦探笔记"（记录所有线索和推理过程）</li>
+      <li>10-12岁：一份"案件调查报告"（含线索分析、推理过程、最终结论）</li>
+    </ul>
+  </div>
+
+  <div class="talk-box">
+    <h4>家长引导话术</h4>
+    <p>"这条线索指向哪里？你觉得下一步应该去哪找？"</p>
+    <p>"这两条线索之间有什么联系？"</p>
+    <p>"你的推理是什么？为什么这样想？"</p>
+  </div>
+
+  <div class="sec">
+    <h4>谜题设计参考（7-9岁版）</h4>
+    <ul>
+      <li>线索1："我藏在最高的那棵树下面"（需要找到社区里最高的树）</li>
+      <li>线索2："从那里往东走20步"（需要辨别方向）</li>
+      <li>线索3："我在一个蓝色的东西旁边"（需要找到蓝色的物体）</li>
+      <li>线索4："我的数字是3+4"（需要计算）</li>
+      <li>线索5："打开3号柜子"（需要找到3号柜子，里面有宝藏）</li>
+    </ul>
+  </div>
+
+  <div class="footer">社区探索活动包 v1.0 · 方案18：侦探事务所</div>
+</div>
+
+<!-- 方案19：社区策展人 -->
+<div class="page">
+  <span class="plan-num">方案 19</span>
+  <h2 class="plan-title">社区策展人</h2>
+  <div class="tags">
+    <span class="tag">角色：策展人</span>
+    <span class="tag blue">场景：家中/社区</span>
+    <span class="tag purple">核心：艺术+空间+表达</span>
+    <span class="tag orange">时长：2-3小时</span>
+  </div>
+
+  <div class="role-box">
+    <h4>角色设定</h4>
+    <p>你是一位策展人，要在家里或社区办一场"小小展览"。展品是什么？就是你在社区探索中收集到的东西——树叶、照片、画作、故事……你要把它们布置成一个展览，邀请家人来"参观"。</p>
+  </div>
+
+  <div class="sec">
+    <h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>家长角色</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>布置展台：把收集到的5样东西摆成一个小展览</td><td>帮忙准备展台材料</td><td>空间感知+审美体验</td></tr>
+      <tr><td>7-9岁</td><td>策展：选展品、写说明、布置展览、做"导览员"</td><td>帮忙准备材料，当观众</td><td>能做策划和表达</td></tr>
+      <tr><td>10-12岁</td><td>策展+运营：设计展览主题、写策展文案、布置展览、做导览、收集"观众反馈"</td><td>帮忙联系"观众"（邻居、朋友）</td><td>能做系统策划和运营</td></tr>
+    </table>
+  </div>
+
+  <div class="smart-box">
+    <h4>多元智能覆盖</h4>
+    <p>空间（布置展览）、艺术（审美设计）、语言（写说明、做导览）、人际（邀请观众、收集反馈）、内省（整理自己的探索成果）</p>
+  </div>
+
+  <div class="zpd-box">
+    <h4>最近发展区设计</h4>
+    <p><strong>基础版：</strong>把东西摆出来，说说每样东西的故事<br>
+    <strong>进阶版：</strong>设计主题、写策展文案、做完整导览</p>
+  </div>
+
+  <div class="sec">
+    <h4>准备清单</h4>
+    <ul>
+      <li>之前探索中收集到的物品（树叶、照片、画作等）</li>
+      <li>展台材料（桌子、布、纸板等）</li>
+      <li>标签纸（写展品说明）</li>
+      <li>一支笔</li>
+    </ul>
+  </div>
+
+  <div class="steps-box">
+    <h4>具体步骤</h4>
+    <ol>
+      <li><strong>选展品（15分钟）</strong>：从收集到的物品中选出5-10件"展品"</li>
+      <li><strong>定主题（10分钟）</strong>：给展览起一个名字（如"我眼中的社区"、"一棵树的故事"）</li>
+      <li><strong>写说明（15分钟）</strong>：为每件展品写一段"说明文字"</li>
+      <li><strong>布置展览（20-30分钟）</strong>：把展品摆好，贴上标签</li>
+      <li><strong>开幕导览（15-20分钟）</strong>：邀请家人参观，做"导览员"讲解每件展品</li>
+    </ol>
+  </div>
+
+  <div class="output-box">
+    <h4>孩子的产出</h4>
+    <ul>
+      <li>4-6岁：一个小展览 + 一段口述"展览介绍"</li>
+      <li>7-9岁：一个完整的展览（含主题、展品说明、导览讲解）</li>
+      <li>10-12岁：一个"策展方案"（含主题、展品选择理由、展览文案、观众反馈表）</li>
+    </ul>
+  </div>
+
+  <div class="talk-box">
+    <h4>家长引导话术</h4>
+    <p>"你觉得这个展览最想告诉观众什么？"</p>
+    <p>"这件展品和那件展品之间有什么关系？"</p>
+    <p>"如果你是观众，你最想看什么？"</p>
+  </div>
+
+  <div class="footer">社区探索活动包 v1.0 · 方案19：社区策展人</div>
+</div>
+
+<!-- 方案20：时间旅人 -->
+<div class="page">
+  <span class="plan-num">方案 20</span>
+  <h2 class="plan-title">时间旅人</h2>
+  <div class="tags">
+    <span class="tag">角色：时间旅行者</span>
+    <span class="tag blue">场景：老社区/新社区</span>
+    <span class="tag purple">核心：历史+对比+反思</span>
+    <span class="tag orange">时长：2小时</span>
+  </div>
+
+  <div class="role-box">
+    <h4>角色设定</h4>
+    <p>你是一位时间旅人，从"未来"回到"现在"，又从"现在"穿越到"过去"。你的任务是：对比"老社区"和"新社区"的不同，思考"社区是怎么变化的"，然后写一份"时间旅行报告"。</p>
+  </div>
+
+  <div class="sec">
+    <h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>家长角色</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>找不同：在老社区和新社区各拍3张照片，说说"哪里不一样"</td><td>帮忙拍照，引导观察</td><td>简单对比+感官体验</td></tr>
+      <tr><td>7-9岁</td><td>对比记录：在老社区和新社区各走一圈，记录"10个不同点"</td><td>帮忙规划路线</td><td>能做有目的的对比观察</td></tr>
+      <tr><td>10-12岁</td><td>时间旅行报告：对比两个社区，分析"为什么会不同"，写一份报告</td><td>提供历史资料或照片</td><td>能做因果分析和反思</td></tr>
+    </table>
+  </div>
+
+  <div class="smart-box">
+    <h4>多元智能覆盖</h4>
+    <p>空间（观察社区布局）、语言（描述差异、写报告）、逻辑数学（对比分析）、内省（反思变化的意义）、人际（采访老居民了解历史）</p>
+  </div>
+
+  <div class="zpd-box">
+    <h4>最近发展区设计</h4>
+    <p><strong>基础版：</strong>找到老社区和新社区的3个不同点<br>
+    <strong>进阶版：</strong>分析差异的原因，写一份"时间旅行报告"</p>
+  </div>
+
+  <div class="sec">
+    <h4>准备清单</h4>
+    <ul>
+      <li>手机或相机（拍照对比）</li>
+      <li>小本子+笔</li>
+      <li>一份老社区的照片（如果有）</li>
+    </ul>
+  </div>
+
+  <div class="steps-box">
+    <h4>具体步骤</h4>
+    <ol>
+      <li><strong>出发前（10分钟）</strong>：看看老社区的照片，说说"你觉得以前和现在有什么不一样？"</li>
+      <li><strong>老社区探访（30分钟）</strong>：在老社区走一圈，拍照、记录</li>
+      <li><strong>新社区探访（30分钟）</strong>：在新社区走一圈，拍照、记录</li>
+      <li><strong>对比分析（20分钟）</strong>：把照片和记录放在一起，找出"10个不同点"</li>
+      <li><strong>写报告（20分钟）</strong>：写一份"时间旅行报告"</li>
+    </ol>
+  </div>
+
+  <div class="output-box">
+    <h4>孩子的产出</h4>
+    <ul>
+      <li>4-6岁：一组"找不同"照片对比（3组）</li>
+      <li>7-9岁：一份"社区对比记录"（10个不同点+照片）</li>
+      <li>10-12岁：一份"时间旅行报告"（含对比分析、原因推理、对未来的想象）</li>
+    </ul>
+  </div>
+
+  <div class="talk-box">
+    <h4>家长引导话术</h4>
+    <p>"你觉得为什么老社区的房子比较矮，新社区的比较高？"</p>
+    <p>"如果你能回到50年前，你最想看看这个社区的什么？"</p>
+    <p>"你觉得50年后，这个社区会变成什么样？"</p>
+  </div>
+
+  <div class="sec">
+    <h4>对比观察维度</h4>
+    <ul>
+      <li>房子：高矮、新旧、材质、颜色</li>
+      <li>路：宽窄、有没有人行道、有没有绿化</li>
+      <li>商店：多不多、是什么类型的店</li>
+      <li>人：多不多、在做什么</li>
+      <li>声音：安静还是热闹</li>
+      <li>气味：有什么特别的味道</li>
+    </ul>
+  </div>
+
+  <div class="footer">社区探索活动包 v1.0 · 方案20：时间旅人</div>
+</div>
+
+</body>
+</html>

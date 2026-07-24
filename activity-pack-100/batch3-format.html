@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>社区探索活动包 · 第三批：10个形式方案</title>
+<style>
+@page { size: A4; margin: 18mm 16mm; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; color: #2d2d2d; line-height: 1.65; background: #fff; font-size: 12.5px; }
+.page { width: 210mm; min-height: 297mm; padding: 18mm 16mm; page-break-after: always; }
+.page:last-child { page-break-after: auto; }
+.cover { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: linear-gradient(160deg, #fff3e0 0%, #fce4ec 50%, #e3f2fd 100%); }
+.cover h1 { font-size: 34px; color: #e65100; margin-bottom: 8px; letter-spacing: 2px; }
+.cover .sub { font-size: 16px; color: #555; margin-bottom: 30px; }
+.cover .meta { font-size: 12px; color: #999; margin-top: 20px; }
+.cover .principle { background: #fff; border-radius: 14px; padding: 20px 30px; box-shadow: 0 3px 16px rgba(0,0,0,0.06); margin-top: 24px; max-width: 440px; text-align: left; }
+.cover .principle h3 { color: #e65100; font-size: 14px; margin-bottom: 8px; }
+.cover .principle li { margin-bottom: 4px; font-size: 12px; color: #444; }
+.toc { background: #fafafa; border-radius: 12px; padding: 16px 20px; }
+.toc h2 { color: #e65100; font-size: 18px; margin-bottom: 12px; border-bottom: 2px solid #ffcc80; padding-bottom: 6px; }
+.toc table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.toc th { background: #fff3e0; color: #e65100; padding: 6px 8px; text-align: left; border: 1px solid #ffe0b2; }
+.toc td { padding: 5px 8px; border: 1px solid #ffe0b2; }
+.toc tr:nth-child(even) { background: #fefaf5; }
+.plan-num { font-size: 11px; color: #fff; background: #e65100; display: inline-block; padding: 2px 10px; border-radius: 10px; margin-bottom: 6px; }
+.plan-title { font-size: 20px; color: #e65100; margin-bottom: 10px; font-weight: bold; }
+.tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.tag { background: #fff3e0; color: #e65100; padding: 2px 10px; border-radius: 16px; font-size: 11px; font-weight: bold; }
+.tag.green { background: #e8f5e9; color: #2e7d32; }
+.tag.blue { background: #e3f2fd; color: #1565c0; }
+.tag.purple { background: #f3e5f5; color: #7b1fa2; }
+.sec { margin-bottom: 12px; }
+.sec h4 { color: #bf360c; font-size: 13px; margin-bottom: 5px; border-left: 3px solid #ffcc80; padding-left: 8px; }
+.sec p, .sec li { font-size: 12px; }
+.sec ul, .sec ol { padding-left: 18px; }
+.sec li { margin-bottom: 3px; }
+.age-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 10px; }
+.age-table th { background: #fff3e0; color: #bf360c; padding: 5px 8px; text-align: left; border: 1px solid #ffe0b2; }
+.age-table td { padding: 5px 8px; border: 1px solid #ffe0b2; vertical-align: top; }
+.steps-box { background: #fafafa; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
+.steps-box h4 { color: #bf360c; font-size: 13px; margin-bottom: 5px; }
+.steps-box ol { padding-left: 18px; }
+.steps-box li { margin-bottom: 4px; font-size: 12px; }
+.output-box { background: #e8f5e9; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
+.output-box h4 { color: #2e7d32; font-size: 13px; margin-bottom: 5px; }
+.talk-box { background: #e3f2fd; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
+.talk-box h4 { color: #1565c0; font-size: 13px; margin-bottom: 5px; }
+.talk-box p { font-style: italic; font-size: 12px; color: #333; margin-bottom: 3px; }
+.smart-box { background: #f3e5f5; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
+.smart-box h4 { color: #7b1fa2; font-size: 13px; margin-bottom: 5px; }
+.zpd-box { background: #fff8e1; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
+.zpd-box h4 { color: #f57f17; font-size: 13px; margin-bottom: 5px; }
+.footer { text-align: center; font-size: 10px; color: #bbb; margin-top: 16px; padding-top: 8px; border-top: 1px solid #eee; }
+</style>
+</head>
+<body>
+
+<div class="page cover">
+  <h1>社区探索活动包</h1>
+  <p class="sub">第三批 · 10个形式方案</p>
+  <div class="principle">
+    <h3>本批设计逻辑：活动形式创新</h3>
+    <ul>
+      <li><strong>快闪任务</strong>：15-30分钟内完成，适合碎片时间</li>
+      <li><strong>长线项目</strong>：持续数周甚至数月，培养长期观察习惯</li>
+      <li><strong>亲子共玩</strong>：家长和孩子一起参与，不是旁观者</li>
+      <li><strong>小组协作</strong>：3-5个孩子一起完成，培养团队能力</li>
+      <li><strong>感官挑战</strong>：专门训练某一种感官，深度体验</li>
+      <li><strong>创作表达</strong>：用艺术、写作、手工等方式表达发现</li>
+      <li><strong>服务行动</strong>：不只是观察，而是真正为社区做一件事</li>
+    </ul>
+  </div>
+  <p class="meta">设计：丹丹 &nbsp;|&nbsp; v1.0 &nbsp;|&nbsp; 2026年5月</p>
+</div>
+
+<div class="page">
+  <div class="toc">
+    <h2>第三批：10个形式方案总览</h2>
+    <table>
+      <tr><th>#</th><th>方案名称</th><th>活动形式</th><th>时长</th><th>适合人数</th></tr>
+      <tr><td>21</td><td>15分钟快闪探索</td><td>快闪任务</td><td>15-30分钟</td><td>1-2人</td></tr>
+      <tr><td>22</td><td>一棵树的四季</td><td>长线项目</td><td>持续3-6个月</td><td>1人</td></tr>
+      <tr><td>23</td><td>亲子探险队</td><td>亲子共玩</td><td>2-3小时</td><td>1大1小</td></tr>
+      <tr><td>24</td><td>社区探索小队</td><td>小组协作</td><td>3-4小时</td><td>3-5人</td></tr>
+      <tr><td>25</td><td>蒙眼漫步</td><td>感官挑战</td><td>1-1.5小时</td><td>1-2人</td></tr>
+      <tr><td>26</td><td>社区诗歌集</td><td>创作表达</td><td>2-3小时</td><td>1人</td></tr>
+      <tr><td>27</td><td>社区美化行动</td><td>服务行动</td><td>2-3小时</td><td>2-5人</td></tr>
+      <tr><td>28</td><td>21天观察日记</td><td>习惯养成</td><td>每天10分钟</td><td>1人</td></tr>
+      <tr><td>29</td><td>社区运动会</td><td>游戏挑战</td><td>2-3小时</td><td>4-10人</td></tr>
+      <tr><td>30</td><td>社区故事会</td><td>分享共创</td><td>1.5-2小时</td><td>3-8人</td></tr>
+    </table>
+  </div>
+  <div class="footer">社区探索活动包 v1.0 · 第三批：10个形式方案 · 目录</div>
+</div>
+
+<!-- 方案21：15分钟快闪探索 -->
+<div class="page">
+  <span class="plan-num">方案 21</span>
+  <h2 class="plan-title">15分钟快闪探索</h2>
+  <div class="tags">
+    <span class="tag">形式：快闪任务</span>
+    <span class="tag blue">时长：15-30分钟</span>
+    <span class="tag purple">人数：1-2人</span>
+  </div>
+
+  <div class="sec">
+    <h4>活动简介</h4>
+    <p>等公交的15分钟、饭后散步的20分钟——这些碎片时间也能变成探索时间。快闪探索就是：给孩子一个"小任务"，在短时间内完成一次微型探索。不需要准备任何材料，出门就能玩。</p>
+  </div>
+
+  <div class="sec">
+    <h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务示例</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>找到3种不同颜色的东西 / 数一数路上有几辆车</td><td>简单计数+颜色识别</td></tr>
+      <tr><td>7-9岁</td><td>找到5种不同的树叶 / 观察一个路人，猜猜TA要去哪里</td><td>分类+推理</td></tr>
+      <tr><td>10-12岁</td><td>记录10种不同的招牌字体 / 分析一个路口的交通流量</td><td>观察+分析</td></tr>
+    </table>
+  </div>
+
+  <div class="smart-box">
+    <h4>多元智能覆盖</h4>
+    <p>根据具体任务不同，可覆盖自然观察、逻辑数学、空间、语言等多种智能</p>
+  </div>
+
+  <div class="zpd-box">
+    <h4>最近发展区设计</h4>
+    <p><strong>基础版：</strong>完成固定任务（如"找3种红色的东西"）<br>
+    <strong>进阶版：</strong>自己设计任务（如"找一个你觉得最有趣的东西"）</p>
+  </div>
+
+  <div class="steps-box">
+    <h4>具体步骤</h4>
+    <ol>
+      <li><strong>领取任务（1分钟）</strong>：从"快闪任务卡"里抽一张</li>
+      <li><strong>执行任务（10-20分钟）</strong>：在碎片时间内完成</li>
+      <li><strong>分享（2-3分钟）</strong>：说说"我发现了什么"</li>
+    </ol>
+  </div>
+
+  <div class="output-box">
+    <h4>孩子的产出</h4>
+    <p>一段口述的"发现"，或手机拍的一张照片</p>
+  </div>
+
+  <div class="sec">
+    <h4>快闪任务卡（20张）</h4>
+    <ul>
+      <li>找到3种不同颜色的花</li>
+      <li>数一数路上有几辆红色的车</li>
+      <li>找到一个圆圆的东西</li>
+      <li>闻到3种不同的味道</li>
+      <li>听到2种不同的鸟叫声</li>
+      <li>找到一个比你高的东西和一个比你矮的东西</li>
+      <li>观察一个人，猜猜TA在想什么</li>
+      <li>找到5种不同形状的窗户</li>
+      <li>数一数这棵树有多少根树枝</li>
+      <li>找到一个你觉得最奇怪的东西</li>
+      <li>闭眼30秒，说说你听到了什么</li>
+      <li>找到一个会动的东西</li>
+      <li>找到3种不同材质的东西（摸一摸）</li>
+      <li>观察一片叶子，说说它的纹路</li>
+      <li>找到一个写着字的东西</li>
+      <li>数一数从这里到那里有几级台阶</li>
+      <li>找到一个蓝色的东西</li>
+      <li>闻一闻，空气里有什么味道？</li>
+      <li>找到一个旧的东西和一个新的东西</li>
+      <li>观察一朵云，说说它像什么</li>
+    </ul>
+  </div>
+
+  <div class="footer">社区探索活动包 v1.0 · 方案21：15分钟快闪探索</div>
+</div>
+
+<!-- 方案22：一棵树的四季 -->
+<div class="page">
+  <span class="plan-num">方案 22</span>
+  <h2 class="plan-title">一棵树的四季</h2>
+  <div class="tags">
+    <span class="tag">形式：长线项目</span>
+    <span class="tag blue">时长：持续3-6个月</span>
+    <span class="tag purple">人数：1人</span>
+  </div>
+
+  <div class="sec">
+    <h4>活动简介</h4>
+    <p>选一棵树，每周去看它一次，连续看3-6个月。记录它的变化：春天发芽、夏天茂盛、秋天落叶、冬天光秃。这不是一次活动，而是一个"长期项目"——培养孩子的观察力和耐心。</p>
+  </div>
+
+  <div class="sec">
+    <h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>每周画一幅"我的树"的画</td><td>绘画表达+感官体验</td></tr>
+      <tr><td>7-9岁</td><td>每周记录树的变化（拍照+文字）</td><td>能做持续记录</td></tr>
+      <tr><td>10-12岁</td><td>做一份"四季观察报告"（含数据分析）</td><td>能做长期项目和分析</td></tr>
+    </table>
+  </div>
+
+  <div class="smart-box">
+    <h4>多元智能覆盖</h4>
+    <p>自然观察（核心）、内省（耐心和坚持）、语言（描述变化）、艺术（绘画记录）、逻辑数学（记录数据、对比变化）</p>
+  </div>
+
+  <div class="steps-box">
+    <h4>具体步骤</h4>
+    <ol>
+      <li><strong>选树（第1周）</strong>：选一棵"你的树"，给它取名字</li>
+      <li><strong>每周探访（持续）</strong>：每周同一时间去看它，记录变化</li>
+      <li><strong>每月底整理（每月1次）</strong>：把当月的记录整理成"月度报告"</li>
+      <li><strong>季末总结（每季1次）</strong>：把一个季度的记录整理成"季节报告"</li>
+      <li><strong>年终大总结（1次）</strong>：做一份完整的"四季观察报告"</li>
+    </ol>
+  </div>
+
+  <div class="output-box">
+    <h4>孩子的产出</h4>
+    <ul>
+      <li>4-6岁：一本"我的树"画册（12-24幅画）</li>
+      <li>7-9岁：一份"四季观察记录"（含照片、文字、月度对比）</li>
+      <li>10-12岁：一份完整的"四季观察报告"（含数据分析、变化规律、个人感悟）</li>
+    </ul>
+  </div>
+
+  <div class="talk-box">
+    <h4>家长引导话术</h4>
+    <p>"你的树和上周有什么不一样？"</p>
+    <p>"你觉得它冬天会冷吗？它怎么过冬？"</p>
+    <p>"如果你是这棵树，你觉得哪个季节最舒服？"</p>
+  </div>
+
+  <div class="footer">社区探索活动包 v1.0 · 方案22：一棵树的四季</div>
+</div>
+
+<!-- 方案23：亲子探险队 -->
+<div class="page">
+  <span class="plan-num">方案 23</span>
+  <h2 class="plan-title">亲子探险队</h2>
+  <div class="tags">
+    <span class="tag">形式：亲子共玩</span>
+    <span class="tag blue">时长：2-3小时</span>
+    <span class="tag purple">人数：1大1小</span>
+  </div>
+
+  <div class="sec">
+    <h4>活动简介</h4>
+    <p>家长不是"旁观者"，而是"队友"。在这次探索中，家长和孩子各有分工：孩子负责"发现"，家长负责"记录"；或者孩子负责"找路"，家长负责"提问"。两个人一起完成一次真正的"探险"。</p>
+  </div>
+
+  <div class="sec">
+    <h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>亲子分工</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>孩子：发现+指路 / 家长：记录+提问</td><td>孩子主导探索，家长支持</td></tr>
+      <tr><td>7-9岁</td><td>孩子：采访+记录 / 家长：拍照+协助</td><td>孩子能做更多独立任务</td></tr>
+      <tr><td>10-12岁</td><td>孩子：策划+执行 / 家长：陪伴+安全保障</td><td>孩子主导，家长退后</td></tr>
+    </table>
+  </div>
+
+  <div class="smart-box">
+    <h4>多元智能覆盖</h4>
+    <p>人际（亲子协作）、语言（对话交流）、观察力（共同发现）、逻辑（分工合作）、内省（亲子关系）</p>
+  </div>
+
+  <div class="steps-box">
+    <h4>具体步骤</h4>
+    <ol>
+      <li><strong>分工（5分钟）</strong>：和孩子商量"今天我们怎么分工？"</li>
+      <li><strong>探险（60-90分钟）</strong>：按分工一起探索社区</li>
+      <li><strong>发现分享（15分钟）</strong>：每走一段就停下来分享"我发现了什么"</li>
+      <li><strong>整理（20分钟）</strong>：一起整理今天的探险记录</li>
+      <li><strong>约定下次（5分钟）</strong>：商量下次探险的时间和目标</li>
+    </ol>
+  </div>
+
+  <div class="output-box">
+    <h4>亲子的产出</h4>
+    <ul>
+      <li>4-6岁：一本"亲子探险相册"（照片+孩子口述，家长记录）</li>
+      <li>7-9岁：一份"探险报告"（孩子写，家长帮忙整理）</li>
+      <li>10-12岁：一份"探险方案+执行报告"（孩子策划并执行，家长陪伴）</li>
+    </ul>
+  </div>
+
+  <div class="talk-box">
+    <h4>亲子对话引导</h4>
+    <p>"你觉得前面会有什么？我们赌一下！"</p>
+    <p>"今天你最惊喜的发现是什么？我最惊喜的是……"</p>
+    <p>"下次你想带我去哪里探险？"</p>
+  </div>
+
+  <div class="footer">社区探索活动包 v1.0 · 方案23：亲子探险队</div>
+</div>
+
+<!-- 方案24：社区探索小队 -->
+<div class="page">
+  <span class="plan-num">方案 24</span>
+  <h2 class="plan-title">社区探索小队</h2>
+  <div class="tags">
+    <span class="tag">形式：小组协作</span>
+    <span class="tag blue">时长：3-4小时</span>
+    <span class="tag purple">人数：3-5人</span>
+  </div>
+
+  <div class="sec">
+    <h4>活动简介</h4>
+    <p>3-5个孩子组成一个"探索小队"，每个人有自己的角色（队长、记录员、摄影师、采访员……），一起完成一个"社区探索任务"。重点不是任务本身，而是团队协作的过程——怎么分工、怎么沟通、怎么解决分歧。</p>
+  </div>
+
+  <div class="sec">
+    <h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务复杂度</th><th>设计依据</th></tr>
+      <tr><td>7-9岁</td><td>简单协作：一起完成一个寻宝任务</td><td>能做基本分工和协作</td></tr>
+      <tr><td>10-12岁</td><td>复杂协作：一起做一个"社区调查项目"</td><td>能做项目管理和团队合作</td></tr>
+    </table>
+  </div>
+
+  <div class="smart-box">
+    <h4>多元智能覆盖</h4>
+    <p>人际（核心：团队协作）、语言（沟通、讨论）、逻辑数学（分工、规划）、观察力（共同发现）、内省（处理分歧）</p>
+  </div>
+
+  <div class="steps-box">
+    <h4>具体步骤</h4>
+    <ol>
+      <li><strong>组队（15分钟）</strong>：确定队员、选队长、分配角色</li>
+      <li><strong>任务发布（10分钟）</strong>：发布今天的"探索任务"</li>
+      <li><strong>策划（15分钟）</strong>：小队讨论"怎么完成这个任务"</li>
+      <li><strong>执行（90-120分钟）</strong>：按计划执行任务</li>
+      <li><strong>整理+汇报（30分钟）</strong>：整理成果，向家长/其他小队汇报</li>
+    </ol>
+  </div>
+
+  <div class="output-box">
+    <h4>小队的产出</h4>
+    <ul>
+      <li>7-9岁：一份"小队探险报告"（含任务完成情况、每个队员的贡献）</li>
+      <li>10-12岁：一份"社区调查项目报告"（含分工表、调查过程、数据分析、结论）</li>
+    </ul>
+  </div>
+
+  <div class="talk-box">
+    <h4>引导话术</h4>
+    <p>"你们小队打算怎么分工？谁负责什么？"</p>
+    <p>"遇到意见不一样的时候，你们怎么决定？"</p>
+    <p>"你觉得你们小队今天配合得怎么样？哪里可以更好？"</p>
+  </div>
+
+  <div class="sec">
+    <h4>小队角色参考</h4>
+    <ul>
+      <li><strong>队长</strong>：负责协调和做决定</li>
+      <li><strong>记录员</strong>：负责写字和画图</li>
+      <li><strong>摄影师</strong>：负责拍照</li>
+      <li><strong>采访员</strong>：负责和陌生人交流</li>
+      <li><strong>时间官</strong>：负责看时间，提醒进度</li>
+    </ul>
+  </div>
+
+  <div class="footer">社区探索活动包 v1.0 · 方案24：社区探索小队</div>
+</div>
+
+<!-- 方案25：蒙眼漫步 -->
+<div class="page">
+  <span class="plan-num">方案 25</span>
+  <h2 class="plan-title">蒙眼漫步</h2>
+  <div class="tags">
+    <span class="tag">形式：感官挑战</span>
+    <span class="tag blue">时长：1-1.5小时</span>
+    <span class="tag purple">人数：1-2人（需家长陪同）</span>
+  </div>
+
+  <div class="sec">
+    <h4>活动简介</h4>
+    <p>蒙上眼睛，用其他感官去"看见"世界。这是一个专门训练"非视觉感官"的活动——当你看不见的时候，你的听觉、触觉、嗅觉会变得异常灵敏。蒙眼走一小段路，你会发现一个完全不同的世界。</p>
+  </div>
+
+  <div class="sec">
+    <h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>蒙眼30秒：家长牵着手，说说"你听到了什么？闻到了什么？"</td><td>短时间体验+安全保障</td></tr>
+      <tr><td>7-9岁</td><td>蒙眼走50米：在安全的环境下蒙眼走一段路，用手触摸路边的东西</td><td>能做有目的的感官探索</td></tr>
+      <tr><td>10-12岁</td><td>蒙眼漫步15分钟：在公园里蒙眼走15分钟，事后画一张"触觉地图"</td><td>能做深度感官体验和记录</td></tr>
+    </table>
+  </div>
+
+  <div class="smart-box">
+    <h4>多元智能覆盖</h4>
+    <p>身体动觉（核心：蒙眼行走）、触觉感知（触摸物体）、听觉（辨别声音）、嗅觉（闻气味）、内省（感受恐惧和信任）</p>
+  </div>
+
+  <div class="sec">
+    <h4>安全提醒</h4>
+    <ul>
+      <li>必须在安全、熟悉的环境中进行</li>
+      <li>4-6岁必须全程牵手陪同</li>
+      <li>7-9岁家长在旁边一臂距离内保护</li>
+      <li>10-12岁家长在旁边观察，随时准备保护</li>
+      <li>避开有台阶、水池、车辆的道路</li>
+    </ul>
+  </div>
+
+  <div class="steps-box">
+    <h4>具体步骤</h4>
+    <ol>
+      <li><strong>热身（5分钟）</strong>：闭眼1分钟，说说"你听到了什么"</li>
+      <li><strong>蒙眼体验（10-15分钟）</strong>：蒙上眼睛，在安全区域行走</li>
+      <li><strong>触摸探索（10分钟）</strong>：用手触摸路边的东西——树皮、墙壁、草地、花瓣</li>
+      <li><strong>摘下眼罩（5分钟）</strong>：慢慢睁开眼睛，说说"世界有什么不一样"</li>
+      <li><strong>记录（15分钟）</strong>：画一张"触觉地图"或写一段"蒙眼体验"</li>
+    </ol>
+  </div>
+
+  <div class="output-box">
+    <h4>孩子的产出</h4>
+    <ul>
+      <li>4-6岁：一段口述的"蒙眼体验"（家长记录）</li>
+      <li>7-9岁：一张"触觉发现卡"（记录摸到的东西和感受）</li>
+      <li>10-12岁：一张"触觉地图"+ 一段"蒙眼漫步日记"</li>
+    </ul>
+  </div>
+
+  <div class="talk-box">
+    <h4>引导话术</h4>
+    <p>"蒙上眼睛后，你最害怕的是什么？最惊喜的是什么？"</p>
+    <p>"你摸到的这个东西，你猜它是什么？"</p>
+    <p>"如果你每天都要蒙着眼睛走路，你觉得最难的是什么？"</p>
+  </div>
+
+  <div class="footer">社区探索活动包 v1.0 · 方案25：蒙眼漫步</div>
+</div>
+
+<!-- 方案26：社区诗歌集 -->
+<div class="page">
+  <span class="plan-num">方案 26</span>
+  <h2 class="plan-title">社区诗歌集</h2>
+  <div class="tags">
+    <span class="tag">形式：创作表达</span>
+    <span class="tag blue">时长：2-3小时</span>
+    <span class="tag purple">人数：1人</span>
+  </div>
+
+  <div class="sec">
+    <h4>活动简介</h4>
+    <p>社区里的一切都可以变成诗——一棵树、一阵风、一个路人的背影、一声鸟叫。带孩子在社区里走一圈，把看到的、听到的、闻到的、感受到的，写成一首首小诗。不需要押韵，不需要优美，只需要真实。</p>
+  </div>
+
+  <div class="sec">
+    <h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>说一句诗：看到什么就说什么（家长帮忙记录）</td><td>口头表达+感官体验</td></tr>
+      <tr><td>7-9岁</td><td>写3-5首小诗：每首2-4行</td><td>能做简单的文字表达</td></tr>
+      <tr><td>10-12岁</td><td>写一组诗（5-8首）+ 设计成一本"诗歌小册子"</td><td>能做文学创作和设计</td></tr>
+    </table>
+  </div>
+
+  <div class="smart-box">
+    <h4>多元智能覆盖</h4>
+    <p>语言（核心：诗歌创作）、内省（感受和表达情感）、自然观察（发现创作素材）、艺术（设计诗歌集）、空间（选择观察的地点）</p>
+  </div>
+
+  <div class="steps-box">
+    <h4>具体步骤</h4>
+    <ol>
+      <li><strong>示范（10分钟）</strong>：读一首关于社区的小诗，说说"诗可以怎么写"</li>
+      <li><strong>漫步（30-40分钟）</strong>：在社区里慢慢走，看到什么就记下来</li>
+      <li><strong>创作（30-40分钟）</strong>：把记下来的东西写成诗</li>
+      <li><strong>设计（20-30分钟）</strong>：把诗抄在漂亮的纸上，设计成一本"诗歌小册子"</li>
+      <li><strong>朗读（10分钟）</strong>：选最喜欢的一首，朗读给家人听</li>
+    </ol>
+  </div>
+
+  <div class="output-box">
+    <h4>孩子的产出</h4>
+    <ul>
+      <li>4-6岁：3句"我看到的诗"（家长记录）</li>
+      <li>7-9岁：一本手写"社区诗歌小册子"（3-5首诗）</li>
+      <li>10-12岁：一本设计精美的"社区诗歌集"（5-8首诗+插图+封面设计）</li>
+    </ul>
+  </div>
+
+  <div class="talk-box">
+    <h4>引导话术</h4>
+    <p>"这棵树让你想到了什么？用一句话说出来"</p>
+    <p>"你不需要写得很'好'，只需要写得很'真'"</p>
+    <p>"你觉得这首诗最适合配什么样的画？"</p>
+  </div>
+
+  <div class="sec">
+    <h4>诗歌创作灵感</h4>
+    <ul>
+      <li>写一样你看到的东西（树、花、猫、云……）</li>
+      <li>写一种你闻到的味道</li>
+      <li>写一个你听到的声音</li>
+      <li>写一个你触摸到的感觉</li>
+      <li>写一个你观察到的人</li>
+    </ul>
+  </div>
+
+  <div class="footer">社区探索活动包 v1.0 · 方案26：社区诗歌集</div>
+</div>
+
+<!-- 方案27：社区美化行动 -->
+<div class="page">
+  <span class="plan-num">方案 27</span>
+  <h2 class="plan-title">社区美化行动</h2>
+  <div class="tags">
+    <span class="tag">形式：服务行动</span>
+    <span class="tag blue">时长：2-3小时</span>
+    <span class="tag purple">人数：2-5人</span>
+  </div>
+
+  <div class="sec">
+    <h4>活动简介</h4>
+    <p>不只是观察，而是真正为社区做一件事。可以是：清理一个小花园、给流浪猫搭一个喂食点、在墙上画一幅壁画、捡拾路边的垃圾……让孩子体验"行动的力量"——我可以改变我身边的环境。</p>
+  </div>
+
+  <div class="sec">
+    <h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>行动项目</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>捡拾行动：在小区里捡拾垃圾，装进垃圾袋</td><td>简单的身体力行</td></tr>
+      <tr><td>7-9岁</td><td>花园行动：给社区的小花园除草、浇水、整理</td><td>能做有目的的劳动</td></tr>
+      <tr><td>10-12岁</td><td>美化行动：策划并执行一个"社区美化项目"（如壁画、标识牌）</td><td>能做策划和执行</td></tr>
+    </table>
+  </div>
+
+  <div class="smart-box">
+    <h4>多元智能覆盖</h4>
+    <p>身体动觉（核心：动手劳动）、人际（团队协作）、内省（服务意识）、自然观察（观察环境问题）、空间（美化设计）</p>
+  </div>
+
+  <div class="steps-box">
+    <h4>具体步骤</h4>
+    <ol>
+      <li><strong>发现问题（15分钟）</strong>：在社区里走一圈，找到"需要美化的地方"</li>
+      <li><strong>制定计划（15分钟）</strong>：讨论"我们能做什么？怎么做？"</li>
+      <li><strong>准备材料（10分钟）</strong>：收集需要的工具和材料</li>
+      <li><strong>行动（60-90分钟）</strong>：动手美化社区</li>
+      <li><strong>记录+分享（15分钟）</strong>：拍照记录，说说"我们做了什么"</li>
+    </ol>
+  </div>
+
+  <div class="output-box">
+    <h4>孩子的产出</h4>
+    <ul>
+      <li>4-6岁：一张"美化前后对比"照片</li>
+      <li>7-9岁：一份"美化行动报告"（含问题、计划、过程、成果）</li>
+      <li>10-12岁：一份"社区美化方案"（含调研、设计方案、执行记录、成果展示）</li>
+    </ul>
+  </div>
+
+  <div class="talk-box">
+    <h4>引导话术</h4>
+    <p>"你觉得这个地方为什么变成了这样？"</p>
+    <p>"如果我们什么都不做，这里会变成什么样？"</p>
+    <p>"做完之后，你感觉怎么样？"</p>
+  </div>
+
+  <div class="footer">社区探索活动包 v1.0 · 方案27：社区美化行动</div>
+</div>
+
+<!-- 方案28：21天观察日记 -->
+<div class="page">
+  <span class="plan-num">方案 28</span>
+  <h2 class="plan-title">21天观察日记</h2>
+  <div class="tags">
+    <span class="tag">形式：习惯养成</span>
+    <span class="tag blue">时长：每天10分钟，持续21天</span>
+    <span class="tag purple">人数：1人</span>
+  </div>
+
+  <div class="sec">
+    <h4>活动简介</h4>
+    <p>21天养成一个习惯。每天花10分钟，观察社区里的一个"小东西"——一棵树、一只猫、一个路灯、一片云——连续观察21天，记录它的变化。你会发现：原来"不变"的东西，其实每天都在变。</p>
+  </div>
+
+  <div class="sec">
+    <h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>每天画一幅"我的观察对象"的画</td><td>绘画表达+持续观察</td></tr>
+      <tr><td>7-9岁</td><td>每天写一段观察记录（3-5句话）</td><td>能做持续的文字记录</td></tr>
+      <tr><td>10-12岁</td><td>每天写观察记录+每周做一次"周分析"</td><td>能做数据分析和反思</td></tr>
+    </table>
+  </div>
+
+  <div class="smart-box">
+    <h4>多元智能覆盖</h4>
+    <p>自然观察（核心）、内省（耐心和坚持）、语言（记录和描述）、逻辑数学（数据分析）、时间感知（理解变化）</p>
+  </div>
+
+  <div class="steps-box">
+    <h4>具体步骤</h4>
+    <ol>
+      <li><strong>选对象（第1天）</strong>：选一个"你的观察对象"——可以是任何东西</li>
+      <li><strong>每天观察（第1-21天）</strong>：每天同一时间去看它，记录变化</li>
+      <li><strong>每周整理（每周1次）</strong>：把这一周的记录整理成"周报告"</li>
+      <li><strong>21天总结（第21天）</strong>：把所有记录整理成"观察日记"</li>
+      <li><strong>颁奖（第21天）</strong>：给自己颁发"21天观察家"证书</li>
+    </ol>
+  </div>
+
+  <div class="output-box">
+    <h4>孩子的产出</h4>
+    <ul>
+      <li>4-6岁：一本21天的"观察画册"</li>
+      <li>7-9岁：一本21天的"观察日记"+ 3份"周报告"</li>
+      <li>10-12岁：一本完整的"观察日记"（含每日记录、周分析、21天总结）</li>
+    </ul>
+  </div>
+
+  <div class="talk-box">
+    <h4>引导话术</h4>
+    <p>"你的观察对象今天和昨天有什么不一样？"</p>
+    <p>"你觉得21天后，它会变成什么样？"</p>
+    <p>"坚持了这么多天，你最想说什么？"</p>
+  </div>
+
+  <div class="footer">社区探索活动包 v1.0 · 方案28：21天观察日记</div>
+</div>
+
+<!-- 方案29：社区运动会 -->
+<div class="page">
+  <span class="plan-num">方案 29</span>
+  <h2 class="plan-title">社区运动会</h2>
+  <div class="tags">
+    <span class="tag">形式：游戏挑战</span>
+    <span class="tag blue">时长：2-3小时</span>
+    <span class="tag purple">人数：4-10人</span>
+  </div>
+
+  <div class="sec">
+    <h4>活动简介</h4>
+    <p>把社区探索变成一场"运动会"！设置不同的"比赛项目"——谁先找到5种不同颜色的叶子？谁画的社区地图最准确？谁采访的人最多？用游戏化的方式，让探索变得更有趣。</p>
+  </div>
+
+  <div class="sec">
+    <h4>比赛项目参考</h4>
+    <table class="age-table">
+      <tr><th>项目</th><th>规则</th><th>锻炼能力</th></tr>
+      <tr><td>颜色猎人</td><td>10分钟内找到最多不同颜色的东西</td><td>观察力+速度</td></tr>
+      <tr><td>声音辨别</td><td>闭眼听5种声音，猜对最多者胜</td><td>听觉+推理</td></tr>
+      <tr><td>地图绘制</td><td>30分钟内画一张社区地图，最准确者胜</td><td>空间+记录</td></tr>
+      <tr><td>采访达人</td><td>20分钟内采访最多的人</td><td>人际+勇气</td></tr>
+      <tr><td>气味侦探</td><td>蒙眼闻10种气味，猜对最多者胜</td><td>嗅觉+记忆</td></tr>
+      <tr><td>树叶分类</td><td>5分钟内把20片树叶按形状分类</td><td>分类+速度</td></tr>
+    </table>
+  </div>
+
+  <div class="smart-box">
+    <h4>多元智能覆盖</h4>
+    <p>根据项目不同，覆盖观察力、听觉、空间、人际、嗅觉、分类等多种智能。竞争激发动力，游戏化让学习更有趣。</p>
+  </div>
+
+  <div class="steps-box">
+    <h4>具体步骤</h4>
+    <ol>
+      <li><strong>开幕式（10分钟）</strong>：宣布"社区运动会"开始，介绍比赛项目</li>
+      <li><strong>分组（5分钟）</strong>：分成2-3个队伍</li>
+      <li><strong>比赛（90-120分钟）</strong>：逐个进行比赛项目</li>
+      <li><strong>计分（10分钟）</strong>：统计每个队伍的得分</li>
+      <li><strong>颁奖（10分钟）</strong>：给获胜队伍颁奖</li>
+    </ol>
+  </div>
+
+  <div class="output-box">
+    <h4>孩子的产出</h4>
+    <p>比赛成绩表 + 每个项目的"成果物"（地图、采访记录、树叶标本等）</p>
+  </div>
+
+  <div class="talk-box">
+    <h4>引导话术</h4>
+    <p>"你们队打算派谁参加这个项目？"</p>
+    <p>"输了没关系！你觉得哪个项目最好玩？"</p>
+    <p>"下次运动会你想加什么项目？"</p>
+  </div>
+
+  <div class="footer">社区探索活动包 v1.0 · 方案29：社区运动会</div>
+</div>
+
+<!-- 方案30：社区故事会 -->
+<div class="page">
+  <span class="plan-num">方案 30</span>
+  <h2 class="plan-title">社区故事会</h2>
+  <div class="tags">
+    <span class="tag">形式：分享共创</span>
+    <span class="tag blue">时长：1.5-2小时</span>
+    <span class="tag purple">人数：3-8人</span>
+  </div>
+
+  <div class="sec">
+    <h4>活动简介</h4>
+    <p>每个孩子在社区探索中都有自己的发现和故事。"社区故事会"就是一个平台——孩子们轮流分享自己的探索故事，互相倾听、互相启发。最后，大家一起"共创"一个属于这个社区的故事。</p>
+  </div>
+
+  <div class="sec">
+    <h4>分龄设计</h4>
+    <table class="age-table">
+      <tr><th>年龄段</th><th>任务</th><th>设计依据</th></tr>
+      <tr><td>4-6岁</td><td>说故事：分享"我在社区里看到了什么"</td><td>口头表达+倾听</td></tr>
+      <tr><td>7-9岁</td><td>讲故事：分享一段完整的"探索经历"</td><td>能做叙事表达</td></tr>
+      <tr><td>10-12岁</td><td>共创故事：大家一起接力，编一个"社区故事"</td><td>能做协作创作</td></tr>
+    </table>
+  </div>
+
+  <div class="smart-box">
+    <h4>多元智能覆盖</h4>
+    <p>语言（核心：讲故事）、人际（倾听、回应、协作）、内省（整理自己的经历）、创造力（共创故事）、观察力（回忆探索细节）</p>
+  </div>
+
+  <div class="steps-box">
+    <h4>具体步骤</h4>
+    <ol>
+      <li><strong>准备（10分钟）</strong>：每个孩子准备一个"探索故事"</li>
+      <li><strong>轮流分享（40-60分钟）</strong>：每个孩子讲3-5分钟</li>
+      <li><strong>提问互动（15分钟）</strong>：其他孩子可以提问</li>
+      <li><strong>共创故事（20-30分钟）</strong>：大家一起接力，编一个"社区故事"</li>
+      <li><strong>记录（10分钟）</strong>：把共创的故事写下来</li>
+    </ol>
+  </div>
+
+  <div class="output-box">
+    <h4>孩子的产出</h4>
+    <ul>
+      <li>4-6岁：一段口述的"探索故事"</li>
+      <li>7-9岁：一篇手写的"探索故事"</li>
+      <li>10-12岁：一个"共创故事"（大家一起编的）+ 每个孩子的个人探索故事</li>
+    </ul>
+  </div>
+
+  <div class="talk-box">
+    <h4>引导话术</h4>
+    <p>"你最想听谁的故事？为什么？"</p>
+    <p>"他的发现和你的发现有什么不一样？"</p>
+    <p>"如果我们把所有人的故事串起来，会变成一个什么样的故事？"</p>
+  </div>
+
+  <div class="footer">社区探索活动包 v1.0 · 方案30：社区故事会</div>
+</div>
+
+</body>
+</html>

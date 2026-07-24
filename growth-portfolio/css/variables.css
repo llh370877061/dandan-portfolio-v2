@@ -1,0 +1,102 @@
+/* ============================================
+   成长档案 - CSS 变量系统
+   ============================================ */
+
+:root {
+  /* 品牌色 - 自然绿 */
+  --color-primary: #4a7a59;
+  --color-primary-light: #6b9e7a;
+  --color-primary-dark: #3a6147;
+  --color-primary-bg: rgba(74, 122, 89, 0.1);
+
+  /* 背景色 */
+  --color-bg: #f7f6f3;
+  --color-bg-card: #ffffff;
+  --color-bg-sidebar: #fafaf8;
+  --color-bg-hover: #f0efe9;
+
+  /* 文字色 */
+  --color-text: #2c3e2d;
+  --color-text-secondary: #6b7c6d;
+  --color-text-muted: #9ca89e;
+  --color-text-inverse: #ffffff;
+
+  /* 边框色 */
+  --color-border: #e8e6e1;
+  --color-border-light: #f0efe9;
+
+  /* 状态色 */
+  --color-success: #4caf50;
+  --color-warning: #ff9800;
+  --color-error: #e74c3c;
+  --color-info: #3498db;
+
+  /* 孩子专属色 */
+  --color-child1: #e8a0bf;  /* 女儿 - 粉色 */
+  --color-child2: #7eb8da;  /* 儿子 - 蓝色 */
+
+  /* 成就色 */
+  --color-gold: #ffd700;
+  --color-silver: #c0c0c0;
+  --color-bronze: #cd7f32;
+
+  /* 评估维度色 */
+  --color-cognitive: #5c6bc0;
+  --color-social: #42a5f5;
+  --color-emotional: #ec407a;
+  --color-physical: #66bb6a;
+  --color-artistic: #ab47bc;
+  --color-moral: #ffa726;
+
+  /* 字体 */
+  --font-sans: -apple-system, "PingFang SC", "SF Pro Text", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+  --font-mono: "SF Mono", "Monaco", "Inconsolata", "Fira Code", monospace;
+
+  /* 字号 */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+
+  /* 间距 */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+
+  /* 圆角 */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* 阴影 */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+
+  /* 过渡 */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 350ms ease;
+
+  /* 层级 */
+  --z-dropdown: 100;
+  --z-modal: 200;
+  --z-toast: 300;
+
+  /* 布局 */
+  --sidebar-width: 240px;
+  --header-height: 64px;
+  --max-content-width: 1200px;
+}

@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英语趣味大冒险 - 五年级下册</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+  @keyframes pop { 0% { transform: scale(0.8); opacity: 0; } 50% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
+  @keyframes sparkle { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+  @keyframes confetti { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+  @keyframes starPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.3); } }
+  @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  @keyframes glow { 0%,100% { box-shadow: 0 0 5px rgba(255,215,0,0.3); } 50% { box-shadow: 0 0 20px rgba(255,215,0,0.6); } }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+    overflow-x: hidden;
+  }
+
+  /* ===== 主页 ===== */
+  .home-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    animation: fadeIn 0.6s ease;
+  }
+
+  .home-header {
+    text-align: center;
+    padding: 40px 20px;
+    color: white;
+  }
+
+  .home-header h1 {
+    font-size: 2.2em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    margin-bottom: 10px;
+  }
+
+  .home-header p {
+    font-size: 1.1em;
+    opacity: 0.9;
+  }
+
+  .game-select {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .game-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    animation: pop 0.5s ease backwards;
+  }
+
+  .game-card:nth-child(1) { animation-delay: 0.1s; }
+  .game-card:nth-child(2) { animation-delay: 0.2s; }
+  .game-card:nth-child(3) { animation-delay: 0.3s; }
+  .game-card:nth-child(4) { animation-delay: 0.4s; }
+
+  .game-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  }
+
+  .game-card .icon {
+    font-size: 3em;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .game-card h3 {
+    font-size: 1.15em;
+    color: #333;
+    margin-bottom: 6px;
+  }
+
+  .game-card p {
+    font-size: 0.85em;
+    color: #888;
+  }
+
+  /* ===== 选择单元页面 ===== */
+  .unit-select-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    animation: fadeIn 0.6s ease;
+  }
+
+  .unit-select-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+    margin-bottom: 20px;
+  }
+
+  .unit-select-header h2 {
+    font-size: 1.5em;
+  }
+
+  .module-group {
+    margin-bottom: 20px;
+  }
+
+  .module-title {
+    color: white;
+    font-size: 1em;
+    opacity: 0.9;
+    margin-bottom: 10px;
+    padding-left: 8px;
+    border-left: 3px solid rgba(255,255,255,0.6);
+  }
+
+  .unit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+  }
+
+  .unit-btn {
+    background: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 10px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.3s;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+
+  .unit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  }
+
+  .unit-btn .unit-num {
+    font-weight: bold;
+    color: #764ba2;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .unit-btn.all-units {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    grid-column: 1 / -1;
+  }
+
+  .unit-btn.all-units .unit-num { color: white; }
+
+  /* ===== 游戏页面 ===== */
+  .game-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+    animation: fadeIn 0.5s ease;
+  }
+
+  .game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .game-header h2 {
+    font-size: 1.3em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .stats {
+    display: flex;
+    gap: 12px;
+    font-size: 0.95em;
+  }
+
+  .stats span {
+    background: rgba(255,255,255,0.2);
+    padding: 4px 12px;
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 4px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ffd700, #ffaa00);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+  }
+
+  .question-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px 24px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    animation: slideUp 0.4s ease;
+  }
+
+  .question-type {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    margin-bottom: 14px;
+  }
+
+  .question-text {
+    font-size: 1.2em;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    color: #222;
+  }
+
+  .question-text .blank {
+    display: inline-block;
+    min-width: 100px;
+    border-bottom: 2px dashed #764ba2;
+    color: #764ba2;
+    font-weight: bold;
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  .question-text .chinese-hint {
+    color: #888;
+    font-size: 0.85em;
+  }
+
+  .options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .option-btn {
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: white;
+    text-align: center;
+  }
+
+  .option-btn:hover:not(.disabled) {
+    border-color: #764ba2;
+    background: #f8f0ff;
+  }
+
+  .option-btn.correct {
+    border-color: #4caf50;
+    background: #e8f5e9;
+    color: #2e7d32;
+    animation: bounce 0.4s ease;
+  }
+
+  .option-btn.wrong {
+    border-color: #f44336;
+    background: #ffebee;
+    color: #c62828;
+    animation: shake 0.4s ease;
+  }
+
+  .option-btn.disabled {
+    cursor: default;
+    opacity: 0.7;
+  }
+
+  .next-btn {
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: none;
+  }
+
+  .next-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+  }
+
+  .next-btn.show { display: block; }
+
+  .feedback {
+    margin-top: 16px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-size: 0.95em;
+    line-height: 1.5;
+    animation: pop 0.3s ease;
+  }
+
+  .feedback.correct-fb {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-left: 4px solid #4caf50;
+  }
+
+  .feedback.wrong-fb {
+    background: #fff3e0;
+    color: #e65100;
+    border-left: 4px solid #ff9800;
+  }
+
+  /* ===== 结果页 ===== */
+  .result-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+    animation: fadeIn 0.6s ease;
+  }
+
+  .result-card {
+    background: white;
+    border-radius: 24px;
+    padding: 40px 30px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  }
+
+  .result-emoji {
+    font-size: 4em;
+    animation: bounce 1s ease infinite;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .result-card h2 {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  .result-score {
+    font-size: 3em;
+    font-weight: bold;
+    color: #764ba2;
+    margin: 16px 0;
+  }
+
+  .result-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin: 24px 0;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 16px;
+  }
+
+  .result-stat {
+    text-align: center;
+  }
+
+  .result-stat .num {
+    font-size: 1.8em;
+    font-weight: bold;
+    display: block;
+  }
+
+  .result-stat .label {
+    font-size: 0.85em;
+    color: #888;
+    margin-top: 4px;
+  }
+
+  .result-stat.correct .num { color: #4caf50; }
+  .result-stat.wrong .num { color: #f44336; }
+  .result-stat.total .num { color: #764ba2; }
+
+  .star-rating {
+    font-size: 2em;
+    margin: 16px 0;
+    animation: starPulse 1s ease infinite;
+  }
+
+  .result-btns {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .result-btns button {
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-size: 1em;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s;
+  }
+
+  .result-btns .retry-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+  }
+
+  .result-btns .home-btn {
+    background: #f0f0f0;
+    color: #333;
+  }
+
+  .result-btns button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  /* ===== 拖拽匹配 ===== */
+  .match-area {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .match-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .match-item {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 120px;
+    text-align: center;
+    user-select: none;
+  }
+
+  .match-item:hover { border-color: #764ba2; }
+  .match-item.selected { border-color: #764ba2; background: #f3e8ff; }
+  .match-item.matched { border-color: #4caf50; background: #e8f5e9; cursor: default; }
+  .match-item.wrong-match { border-color: #f44336; background: #ffebee; }
+
+  /* ===== 填空输入 ===== */
+  .fill-input {
+    display: inline-block;
+    border: none;
+    border-bottom: 2px dashed #764ba2;
+    background: transparent;
+    font-size: 1.1em;
+    color: #764ba2;
+    font-weight: bold;
+    text-align: center;
+    width: 150px;
+    outline: none;
+    padding: 4px;
+  }
+
+  .fill-input:focus { border-bottom-style: solid; }
+
+  .submit-answer {
+    margin-top: 16px;
+    padding: 10px 24px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .submit-answer:hover { transform: translateY(-2px); }
+
+  /* ===== 打字游戏 ===== */
+  .typing-input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 1.1em;
+    outline: none;
+    transition: border-color 0.3s;
+    margin-top: 12px;
+  }
+
+  .typing-input:focus { border-color: #764ba2; }
+
+  .typing-hint {
+    color: #888;
+    font-size: 0.85em;
+    margin-top: 6px;
+  }
+
+  /* ===== 响应式 ===== */
+  @media (max-width: 500px) {
+    .home-header h1 { font-size: 1.6em; }
+    .options { grid-template-columns: 1fr; }
+    .game-header { font-size: 0.9em; }
+    .question-text { font-size: 1.05em; }
+    .result-details { grid-template-columns: 1fr; gap: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+// ============================================================
+// 课程数据 - 上海教育出版社五年级下册英语（牛津上海版）
+// ============================================================
+const UNITS = {
+  "M1U1": {
+    name: "Unit 1 What a mess!",
+    module: "Module 1: Using my five senses",
+    words: {
+      "crayon": "蜡笔", "glue": "胶水", "tape": "胶带", "brush": "毛笔",
+      "notebook": "笔记本", "school bag": "书包", "magnet": "磁铁", "nail": "钉子",
+      "mess": "杂乱", "paints": "绘画颜料", "workshop": "车间"
+    },
+    phrases: {
+      "fall onto": "掉到…上面", "stick to": "粘住", "tidy up": "收拾；整理"
+    },
+    pronouns: ["mine","yours","his","hers","ours","theirs"],
+    sentences: [
+      { en: "Whose crayon is this?", zh: "这是谁的蜡笔？" },
+      { en: "It is mine.", zh: "它是我的。" },
+      { en: "The glue sticks to the nail.", zh: "胶水粘住了钉子。" },
+      { en: "Please tidy up the workshop.", zh: "请收拾一下车间。" },
+      { en: "The magnet falls onto the desk.", zh: "磁铁掉到了桌子上。" }
+    ]
+  },
+  "M1U2": {
+    name: "Unit 2 Watch it grow!",
+    module: "Module 1: Using my five senses",
+    words: {
+      "caterpillar": "毛虫", "cocoon": "茧", "egg": "卵；蛋", "silk": "蚕丝",
+      "silkworm": "蚕", "duckling": "小鸭", "puppy": "小狗", "chicken": "鸡",
+      "wing": "翅膀", "fly": "飞", "moth": "蛾"
+    },
+    phrases: {
+      "(be)born": "出生", "lay egg": "下蛋", "grow up": "长大"
+    },
+    tenses: ["was (am/is的过去式)", "were (are的过去式)"],
+    sentences: [
+      { en: "I was born in spring.", zh: "我出生在春天。" },
+      { en: "The silkworm was small and white.", zh: "蚕又小又白。" },
+      { en: "The tadpoles were black.", zh: "蝌蚪是黑色的。" },
+      { en: "It was an egg before.", zh: "它以前是一个蛋。" },
+      { en: "Watch it grow!", zh: "看它长大！" }
+    ]
+  },
+  "M1U3": {
+    name: "Unit 3 How noisy!",
+    module: "Module 1: Using my five senses",
+    words: {
+      "clock": "钟", "drill": "钻机", "lorry": "卡车", "motorbike": "摩托车",
+      "noise": "噪音", "kingdom": "王国", "another": "另一个", "everything": "所有事物"
+    },
+    phrases: {
+      "enjoy doing": "享受做…", "fall asleep": "入睡"
+    },
+    pastTense: ["heard (hear的过去式)"],
+    sentences: [
+      { en: "I heard a loud noise.", zh: "我听到一个很大的噪音。" },
+      { en: "The clock makes a noise.", zh: "钟发出了噪音。" },
+      { en: "How noisy!", zh: "真吵！" },
+      { en: "The drill is very loud.", zh: "钻机声音很大。" },
+      { en: "Everything is noisy in the city.", zh: "城市里什么都很吵。" }
+    ]
+  },
+  "M2U1": {
+    name: "Unit 4 Food and drinks",
+    module: "Module 2: My favourite things",
+    words: {
+      "beef": "牛肉", "bean": "豆", "cabbage": "卷心菜", "carrot": "胡萝卜",
+      "chicken": "鸡肉", "fish": "鱼", "meat": "肉", "rice": "米饭",
+      "noodles": "面条", "bread": "面包", "milk": "牛奶", "juice": "果汁",
+      "water": "水", "tea": "茶"
+    },
+    phrases: {
+      "a glass of": "一杯", "a bottle of": "一瓶", "a bowl of": "一碗"
+    },
+    sentences: [
+      { en: "I'd like some beef.", zh: "我想要一些牛肉。" },
+      { en: "A bowl of noodles, please.", zh: "请来一碗面条。" },
+      { en: "Do you want some juice?", zh: "你想要一些果汁吗？" },
+      { en: "I do not like cabbage.", zh: "我不喜欢卷心菜。" },
+      { en: "Can I have a glass of water?", zh: "我能要一杯水吗？" }
+    ]
+  },
+  "M2U2": {
+    name: "Unit 5 Films",
+    module: "Module 2: My favourite things",
+    words: {
+      "film": "电影", "fair": "美丽的", "funny": "有趣的", "princess": "公主",
+      "minute": "分钟", "adult": "成年人", "dwarf": "小矮人", "witch": "女巫",
+      "castle": "城堡"
+    },
+    phrases: {
+      "find out": "找到；发现", "fall asleep": "入睡", "see a film": "看电影"
+    },
+    sentences: [
+      { en: "I want to see a film.", zh: "我想看电影。" },
+      { en: "The princess is very beautiful.", zh: "公主非常美丽。" },
+      { en: "It's a funny film.", zh: "这是一部有趣的电影。" },
+      { en: "How many minutes are there?", zh: "有多少分钟？" },
+      { en: "The film is on now.", zh: "电影正在上映。" }
+    ]
+  },
+  "M2U3": {
+    name: "Unit 6 School subjects",
+    module: "Module 2: My favourite things",
+    words: {
+      "Art": "美术", "Chinese": "语文", "English": "英语", "Maths": "数学",
+      "Music": "音乐", "PE": "体育", "Science": "科学", "class": "课",
+      "break": "课间休息", "carefully": "仔细地", "colour": "给…着色"
+    },
+    phrases: {
+      "be good at": "擅长", "study hard": "努力学习"
+    },
+    sentences: [
+      { en: "What subject do you like?", zh: "你喜欢什么学科？" },
+      { en: "I like Art.", zh: "我喜欢美术。" },
+      { en: "We have English at nine.", zh: "我们九点上英语课。" },
+      { en: "Be careful and listen carefully.", zh: "小心一点，仔细听。" },
+      { en: "I'm good at Maths.", zh: "我擅长数学。" }
+    ]
+  },
+  "M3U1": {
+    name: "Unit 7 Signs",
+    module: "Module 3: Things around us",
+    words: {
+      "sign": "标志", "mean": "意思是", "enter": "进入", "exit": "出口",
+      "lift": "电梯", "stairs": "楼梯", "push": "推", "pull": "拉",
+      "walk": "走", "keep off": "请勿靠近", "be careful": "当心"
+    },
+    phrases: {
+      "be careful": "当心", "keep off": "不要靠近"
+    },
+    sentences: [
+      { en: "What does this sign mean?", zh: "这个标志是什么意思？" },
+      { en: "It means Do not walk here.", zh: "它的意思是不要在这里走。" },
+      { en: "Please push the door.", zh: "请推门。" },
+      { en: "Take the lift or the stairs?", zh: "坐电梯还是走楼梯？" },
+      { en: "Be careful of the wet floor.", zh: "当心地滑。" }
+    ]
+  },
+  "M3U2": {
+    name: "Unit 8 Weather",
+    module: "Module 3: Things around us",
+    words: {
+      "cloud": "云", "cloudy": "多云的", "rain": "雨", "rainy": "下雨的",
+      "snow": "雪", "snowy": "下雪的", "wind": "风", "windy": "刮风的",
+      "sunny": "晴朗的", "warm": "暖和的", "hot": "热的", "cold": "冷的",
+      "cool": "凉爽的", "comfortable": "舒服的"
+    },
+    phrases: {
+      "go skating": "去滑冰", "go swimming": "去游泳"
+    },
+    sentences: [
+      { en: "How's the weather today?", zh: "今天天气怎么样？" },
+      { en: "It's sunny and warm.", zh: "天气晴朗暖和。" },
+      { en: "It was cloudy yesterday.", zh: "昨天是多云。" },
+      { en: "It will be snowy tomorrow.", zh: "明天会下雪。" },
+      { en: "I like rainy days.", zh: "我喜欢下雨天。" }
+    ]
+  },
+  "M3U3": {
+    name: "Unit 9 Changes",
+    module: "Module 3: Things around us",
+    words: {
+      "ago": "以前", "built": "建造（过去式）", "country": "国家",
+      "cupboard": "橱柜", "cushion": "坐垫", "different": "不同的",
+      "same": "相同的", "short": "矮的", "tall": "高的"
+    },
+    phrases: {
+      "long long ago": "很久以前", "at that time": "那时候"
+    },
+    sentences: [
+      { en: "There were no tall buildings long long ago.", zh: "很久以前没有高楼。" },
+      { en: "The school was small at that time.", zh: "那时候学校很小。" },
+      { en: "Shanghai is different now.", zh: "上海现在不一样了。" },
+      { en: "We live in the same country.", zh: "我们住在同一个国家。" },
+      { en: "He was short before, but now he is tall.", zh: "他以前很矮，但现在很高。" }
+    ]
+  },
+  "M4U1": {
+    name: "Unit 10 Museums",
+    module: "Module 4: More things to learn",
+    words: {
+      "museum": "博物馆", "art museum": "美术博物馆", "car museum": "汽车博物馆",
+      "Beijing Opera": "京剧", "culture": "文化", "bug": "小昆虫",
+      "beautifully": "优美地"
+    },
+    phrases: {
+      "art museum": "美术博物馆", "car museum": "汽车博物馆"
+    },
+    sentences: [
+      { en: "Let's go to the museum.", zh: "我们去博物馆吧。" },
+      { en: "I bought a book about culture.", zh: "我买了一本关于文化的书。" },
+      { en: "Beijing Opera is traditional.", zh: "京剧是传统的。" },
+      { en: "The bug looks interesting.", zh: "这只虫子看起来很有趣。" },
+      { en: "She sings beautifully.", zh: "她唱歌很优美。" }
+    ]
+  },
+  "M4U2": {
+    name: "Unit 11 Western holidays",
+    module: "Module 4: More things to learn",
+    words: {
+      "Christmas": "圣诞节", "Easter": "复活节", "candle": "蜡烛",
+      "present": "礼物", "card": "卡片", "tree": "树",
+      "find": "找到", "hide": "藏", "decorate": "装饰"
+    },
+    phrases: {
+      "Christmas tree": "圣诞树", "Christmas card": "圣诞卡"
+    },
+    sentences: [
+      { en: "Merry Christmas!", zh: "圣诞快乐！" },
+      { en: "We decorate the Christmas tree.", zh: "我们装饰圣诞树。" },
+      { en: "Easter is in spring.", zh: "复活节在春天。" },
+      { en: "I got many presents.", zh: "我收到了很多礼物。" },
+      { en: "Let's make a Christmas card.", zh: "我们来做一张圣诞卡吧。" }
+    ]
+  },
+  "M4U3": {
+    name: "Unit 12 Story time",
+    module: "Module 4: More things to learn",
+    words: {
+      "castle": "城堡", "build": "建造", "breakdown": "推倒；毁掉",
+      "at last": "终于"
+    },
+    phrases: {
+      "at last": "终于", "break down": "推倒"
+    },
+    sentences: [
+      { en: "They built a big castle.", zh: "他们建造了一座大城堡。" },
+      { en: "At last, the castle was ready.", zh: "终于，城堡建好了。" },
+      { en: "The wolf tried to break down the door.", zh: "狼试图推倒门。" },
+      { en: "Let me tell you a story.", zh: "让我给你讲一个故事。" },
+      { en: "The three little pigs built three houses.", zh: "三只小猪建了三座房子。" }
+    ]
+  }
+};
+
+// ============================================================
+// 游戏引擎
+// ============================================================
+class GameEngine {
+  constructor() {
+    this.currentGame = null;
+    this.currentUnit = null;
+    this.score = 0;
+    this.total = 0;
+    this.correct = 0;
+    this.wrong = 0;
+    this.currentQ = 0;
+    this.questions = [];
+    this.answered = false;
+  }
+
+  getUnitsByModule() {
+    const modules = {};
+    for (const [id, unit] of Object.entries(UNITS)) {
+      if (!modules[unit.module]) modules[unit.module] = [];
+      modules[unit.module].push({ id, ...unit });
+    }
+    return modules;
+  }
+
+  getAllWords(unitIds) {
+    const words = {};
+    unitIds.forEach(id => {
+      const unit = UNITS[id];
+      if (!unit) return;
+      Object.entries(unit.words).forEach(([en, zh]) => { words[en] = zh; });
+      if (unit.phrases) Object.entries(unit.phrases).forEach(([en, zh]) => { words[en] = zh; });
+    });
+    return words;
+  }
+
+  getAllSentences(unitIds) {
+    const sentences = [];
+    unitIds.forEach(id => {
+      const unit = UNITS[id];
+      if (!unit) return;
+      unit.sentences.forEach(s => { sentences.push({ ...s, unit: id }); });
+    });
+    return sentences;
+  }
+
+  shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  pickRandom(arr, n) {
+    return this.shuffle(arr).slice(0, Math.min(n, arr.length));
+  }
+
+  render(html) {
+    document.getElementById('app').innerHTML = html;
+  }
+
+  showHome() {
+    this.render(`
+      <div class="home-container">
+        <div class="home-header">
+          <h1>英语趣味大冒险</h1>
+          <p>上海教育出版社 五年级下册 | Unit 1 - 12</p>
+        </div>
+        <div class="game-select">
+          <div class="game-card" onclick="game.showUnitSelect('vocab')">
+            <span class="icon">📚</span>
+            <h3>单词大闯关</h3>
+            <p>英译中、中译英选择题</p>
+          </div>
+          <div class="game-card" onclick="game.showUnitSelect('match')">
+            <span class="icon">🔗</span>
+            <h3>连连看</h3>
+            <p>配对英文和中文</p>
+          </div>
+          <div class="game-card" onclick="game.showUnitSelect('sentence')">
+            <span class="icon">💬</span>
+            <h3>句子填空</h3>
+            <p>补全英语句子</p>
+          </div>
+          <div class="game-card" onclick="game.showUnitSelect('spell')">
+            <span class="icon">✏️</span>
+            <h3>拼写达人</h3>
+            <p>看中文拼单词</p>
+          </div>
+        </div>
+      </div>
+    `);
+  }
+
+  showUnitSelect(gameType) {
+    this.currentGame = gameType;
+    const modules = this.getUnitsByModule();
+    let html = `
+      <div class="unit-select-container">
+        <div class="unit-select-header">
+          <button onclick="game.showHome()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:1.2em;">←</button>
+          <h2>${gameType === 'vocab' ? '📚 单词大闯关' : gameType === 'match' ? '🔗 连连看' : gameType === 'sentence' ? '💬 句子填空' : '✏️ 拼写达人'}</h2>
+        </div>
+        <div class="unit-btn all-units" onclick="game.startGame('${gameType}', 'all')">
+          <span class="unit-num">全部 12 课</span>
+        </div>
+    `;
+    for (const [modName, units] of Object.entries(modules)) {
+      html += `<div class="module-group"><div class="module-title">${modName}</div><div class="unit-grid">`;
+      units.forEach(u => {
+        html += `<div class="unit-btn" onclick="game.startGame('${gameType}', '${u.id}')">
+          <span class="unit-num">${u.id}</span>${u.name.replace(/Unit \d+ /, '')}
+        </div>`;
+      });
+      html += `</div></div>`;
+    }
+    html += `</div>`;
+    this.render(html);
+  }
+
+  startGame(type, unitId) {
+    this.currentUnit = unitId;
+    this.score = 0;
+    this.correct = 0;
+    this.wrong = 0;
+    this.currentQ = 0;
+    this.answered = false;
+
+    const unitIds = unitId === 'all' ? Object.keys(UNITS) : [unitId];
+
+    if (type === 'vocab') this.generateVocabQuestions(unitIds);
+    else if (type === 'match') { this.startMatchGame(unitIds); return; }
+    else if (type === 'sentence') this.generateSentenceQuestions(unitIds);
+    else if (type === 'spell') this.generateSpellQuestions(unitIds);
+
+    this.total = this.questions.length;
+    this.renderQuestion();
+  }
+
+  // === 单词选择 ===
+  generateVocabQuestions(unitIds) {
+    const words = this.getAllWords(unitIds);
+    const entries = Object.entries(words);
+    this.questions = [];
+
+    this.shuffle(entries).slice(0, 15).forEach(([en, zh]) => {
+      const direction = Math.random() > 0.5 ? 'en2zh' : 'zh2en';
+      const wrongPool = entries.filter(([e]) => e !== en);
+      const wrongOptions = this.pickRandom(wrongPool, 3).map(([, wzh]) => wzh);
+
+      if (direction === 'en2zh') {
+        const options = this.shuffle([zh, ...wrongOptions]);
+        this.questions.push({
+          type: 'choice',
+          text: `<strong>${en}</strong> 的中文意思是？`,
+          options: options,
+          answer: zh,
+          explain: `${en} = ${zh}`
+        });
+      } else {
+        const wrongEnOptions = this.pickRandom(wrongPool, 3).map(([e]) => e);
+        const options = this.shuffle([en, ...wrongEnOptions]);
+        this.questions.push({
+          type: 'choice',
+          text: `<span class="chinese-hint">"${zh}"</span> 的英文是？`,
+          options: options,
+          answer: en,
+          explain: `${zh} = ${en}`
+        });
+      }
+    });
+  }
+
+  // === 连连看 ===
+  startMatchGame(unitIds) {
+    const words = this.getAllWords(unitIds);
+    const entries = Object.entries(words);
+    const pairs = this.shuffle(entries).slice(0, 6);
+
+    this.total = pairs.length;
+    this.correct = 0;
+    this.wrong = 0;
+
+    const enItems = this.shuffle(pairs.map(([en]) => en));
+    const zhItems = this.shuffle(pairs.map(([, zh]) => zh));
+
+    this._matchPairs = pairs;
+    this._selectedEn = null;
+    this._matchedCount = 0;
+
+    this.render(`
+      <div class="game-container">
+        <div class="game-header">
+          <button onclick="game.showUnitSelect('match')" style="background:rgba(255,255,255,0.2);border:none;color:white;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1.1em;">←</button>
+          <h2>🔗 连连看</h2>
+          <div class="stats">
+            <span>✅ ${this.correct}/${this.total}</span>
+          </div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${0}%"></div></div>
+        <div class="question-card">
+          <div class="question-type">配对题</div>
+          <p style="margin-bottom:16px;color:#666;">先点英文，再点中文，把它们配对起来</p>
+          <div class="match-area">
+            <div class="match-col" id="en-col">
+              ${enItems.map(en => `<div class="match-item" data-en="${en}" onclick="game.matchEn(this)">${en}</div>`).join('')}
+            </div>
+            <div class="match-col" id="zh-col">
+              ${zhItems.map(zh => `<div class="match-item" data-zh="${zh}" onclick="game.matchZh(this)">${zh}</div>`).join('')}
+            </div>
+          </div>
+          <div id="match-feedback"></div>
+          <button class="next-btn" id="match-next" onclick="game.showResult()">查看成绩</button>
+        </div>
+      </div>
+    `);
+  }
+
+  matchEn(el) {
+    document.querySelectorAll('#en-col .match-item').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    this._selectedEn = el.dataset.en;
+  }
+
+  matchZh(el) {
+    if (!this._selectedEn) return;
+    if (el.classList.contains('matched')) return;
+
+    const en = this._selectedEn;
+    const zh = el.dataset.zh;
+    const isCorrect = this._matchPairs.some(([e, z]) => e === en && z === zh);
+
+    if (isCorrect) {
+      el.classList.add('matched');
+      document.querySelector(`#en-col .match-item[data-en="${en}"]`).classList.add('matched');
+      this.correct++;
+      this._matchedCount++;
+
+      if (this._matchedCount === this._matchPairs.length) {
+        document.getElementById('match-next').classList.add('show');
+      }
+    } else {
+      this.wrong++;
+      el.classList.add('wrong-match');
+      setTimeout(() => el.classList.remove('wrong-match'), 600);
+    }
+
+    this._selectedEn = null;
+    document.querySelectorAll('#en-col .match-item').forEach(e => e.classList.remove('selected'));
+
+    const pct = Math.round((this.correct / this.total) * 100);
+    document.querySelector('.progress-fill').style.width = pct + '%';
+    document.querySelector('.stats span').innerHTML = `✅ ${this.correct}/${this.total}`;
+  }
+
+  // === 句子填空 ===
+  generateSentenceQuestions(unitIds) {
+    const sentences = this.getAllSentences(unitIds);
+    this.questions = this.shuffle(sentences).slice(0, 12).map(s => {
+      const words = s.en.split(/\s+/);
+      const idx = Math.floor(Math.random() * words.length);
+      const hidden = words[idx];
+      words[idx] = '<span class="blank">______</span>';
+      return {
+        type: 'fill',
+        text: words.join(' ') + `<br><span class="chinese-hint">${s.zh}</span>`,
+        answer: hidden,
+        hint: hidden[0] + '_'.repeat(hidden.length - 1)
+      };
+    });
+  }
+
+  // === 拼写达人 ===
+  generateSpellQuestions(unitIds) {
+    const words = this.getAllWords(unitIds);
+    const entries = Object.entries(words).filter(([en]) => en.length >= 3 && !en.includes(' '));
+    this.questions = this.shuffle(entries).slice(0, 10).map(([en, zh]) => ({
+      type: 'spell',
+      text: zh,
+      answer: en.toLowerCase(),
+      hint: en[0] + '_'.repeat(Math.max(0, en.length - 2)) + en[en.length - 1]
+    }));
+  }
+
+  // === 渲染题目 ===
+  renderQuestion() {
+    if (this.currentQ >= this.questions.length) {
+      this.showResult();
+      return;
+    }
+
+    this.answered = false;
+    const q = this.questions[this.currentQ];
+    const pct = Math.round((this.currentQ / this.total) * 100);
+
+    let questionContent = '';
+
+    if (q.type === 'choice') {
+      questionContent = `
+        <div class="options">
+          ${q.options.map(opt => `<div class="option-btn" onclick="game.checkAnswer(this, '${opt.replace(/'/g, "\\'")}')">${opt}</div>`).join('')}
+        </div>
+      `;
+    } else if (q.type === 'fill') {
+      questionContent = `
+        <input type="text" class="fill-input" id="fill-input" placeholder="${q.hint}" autocomplete="off" onkeydown="if(event.key==='Enter')game.checkFill()">
+        <br><button class="submit-answer" onclick="game.checkFill()">确认</button>
+      `;
+    } else if (q.type === 'spell') {
+      questionContent = `
+        <input type="text" class="typing-input" id="spell-input" placeholder="输入英文单词..." autocomplete="off" onkeydown="if(event.key==='Enter')game.checkSpell()">
+        <div class="typing-hint">提示：${q.hint}（${q.answer.length}个字母）</div>
+        <button class="submit-answer" onclick="game.checkSpell()">确认</button>
+      `;
+    }
+
+    this.render(`
+      <div class="game-container">
+        <div class="game-header">
+          <button onclick="game.showUnitSelect('${this.currentGame}')" style="background:rgba(255,255,255,0.2);border:none;color:white;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1.1em;">←</button>
+          <h2>${this.currentGame === 'vocab' ? '📚 单词' : this.currentGame === 'sentence' ? '💬 句子填空' : '✏️ 拼写'}</h2>
+          <div class="stats">
+            <span>🌟 ${this.score}</span>
+            <span>✅ ${this.correct}/${this.currentQ}</span>
+          </div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="question-card">
+          <div class="question-type">${q.type === 'choice' ? '选择题' : q.type === 'fill' ? '填空题' : '拼写题'} ${this.currentQ + 1}/${this.total}</div>
+          <div class="question-text">${q.text}</div>
+          ${questionContent}
+          <div id="feedback"></div>
+          <button class="next-btn" id="next-btn" onclick="game.nextQuestion()">下一题 →</button>
+        </div>
+      </div>
+    `);
+
+    if (q.type === 'fill' || q.type === 'spell') {
+      setTimeout(() => {
+        const input = document.getElementById(q.type === 'fill' ? 'fill-input' : 'spell-input');
+        if (input) input.focus();
+      }, 100);
+    }
+  }
+
+  checkAnswer(el, answer) {
+    if (this.answered) return;
+    this.answered = true;
+
+    const q = this.questions[this.currentQ];
+    const isCorrect = answer === q.answer;
+
+    document.querySelectorAll('.option-btn').forEach(btn => {
+      btn.classList.add('disabled');
+      if (btn.textContent === q.answer) btn.classList.add('correct');
+    });
+
+    if (isCorrect) {
+      el.classList.add('correct');
+      this.correct++;
+      this.score += 10;
+    } else {
+      el.classList.add('wrong');
+      this.wrong++;
+    }
+
+    this.showFeedback(isCorrect, q.explain);
+    document.getElementById('next-btn').classList.add('show');
+  }
+
+  checkFill() {
+    if (this.answered) return;
+    const input = document.getElementById('fill-input');
+    const answer = input.value.trim();
+    if (!answer) return;
+    this.answered = true;
+
+    const q = this.questions[this.currentQ];
+    const isCorrect = answer.toLowerCase() === q.answer.toLowerCase();
+
+    input.disabled = true;
+    input.style.borderColor = isCorrect ? '#4caf50' : '#f44336';
+
+    if (isCorrect) {
+      this.correct++;
+      this.score += 10;
+    } else {
+      this.wrong++;
+    }
+
+    this.showFeedback(isCorrect, `正确答案：${q.answer}`);
+    document.getElementById('next-btn').classList.add('show');
+  }
+
+  checkSpell() {
+    if (this.answered) return;
+    const input = document.getElementById('spell-input');
+    const answer = input.value.trim();
+    if (!answer) return;
+    this.answered = true;
+
+    const q = this.questions[this.currentQ];
+    const isCorrect = answer.toLowerCase() === q.answer.toLowerCase();
+
+    input.disabled = true;
+    input.style.borderColor = isCorrect ? '#4caf50' : '#f44336';
+
+    if (isCorrect) {
+      this.correct++;
+      this.score += 10;
+    } else {
+      this.wrong++;
+    }
+
+    this.showFeedback(isCorrect, `正确答案：${q.answer}`);
+    document.getElementById('next-btn').classList.add('show');
+  }
+
+  showFeedback(isCorrect, explain) {
+    const fb = document.getElementById('feedback');
+    fb.innerHTML = `<div class="feedback ${isCorrect ? 'correct-fb' : 'wrong-fb'}">
+      ${isCorrect ? '🎉 回答正确！' : '😅 再想想哦～'} ${explain}
+    </div>`;
+  }
+
+  nextQuestion() {
+    this.currentQ++;
+    this.renderQuestion();
+  }
+
+  // === 结果页 ===
+  showResult() {
+    const pct = Math.round((this.correct / this.total) * 100);
+    let emoji, title;
+    if (pct >= 90) { emoji = '🏆'; title = '太厉害了！'; }
+    else if (pct >= 70) { emoji = '🌟'; title = '非常棒！'; }
+    else if (pct >= 50) { emoji = '👍'; title = '还不错！'; }
+    else { emoji = '💪'; title = '继续加油！'; }
+
+    const stars = pct >= 90 ? '⭐⭐⭐' : pct >= 70 ? '⭐⭐' : pct >= 50 ? '⭐' : '';
+
+    // 生成彩色纸屑
+    let confetti = '';
+    if (pct >= 70) {
+      for (let i = 0; i < 30; i++) {
+        const left = Math.random() * 100;
+        const delay = Math.random() * 2;
+        const color = ['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff6b6b','#ffd93d'][i % 6];
+        confetti += `<div style="position:fixed;top:-10px;left:${left}%;width:10px;height:10px;background:${color};animation:confetti ${2+Math.random()*2}s ease ${delay}s infinite;border-radius:${Math.random()>0.5?'50%':'0'};"></div>`;
+      }
+    }
+
+    this.render(`
+      <div class="result-container">
+        ${confetti}
+        <div class="result-card">
+          <span class="result-emoji">${emoji}</span>
+          <h2>${title}</h2>
+          <div class="star-rating">${stars}</div>
+          <div class="result-score">${this.score}分</div>
+          <div class="result-details">
+            <div class="result-stat total"><span class="num">${this.total}</span><span class="label">总题数</span></div>
+            <div class="result-stat correct"><span class="num">${this.correct}</span><span class="label">答对</span></div>
+            <div class="result-stat wrong"><span class="num">${this.wrong}</span><span class="label">答错</span></div>
+          </div>
+          <div class="result-details" style="margin-top:0;padding:14px;">
+            <div class="result-stat" style="grid-column:1/-1;">
+              <span class="num" style="color:${pct>=70?'#4caf50':'#ff9800'}">${pct}%</span>
+              <span class="label">正确率</span>
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="retry-btn" onclick="game.startGame('${this.currentGame}', '${this.currentUnit}')">再来一次</button>
+            <button class="home-btn" onclick="game.showUnitSelect('${this.currentGame}')">换个单元</button>
+            <button class="home-btn" onclick="game.showHome()">返回首页</button>
+          </div>
+        </div>
+      </div>
+    `);
+  }
+}
+
+const game = new GameEngine();
+game.showHome();
+</script>
+</body>
+</html>

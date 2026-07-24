@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>森林生存</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="game-container"></div>
+
+  <!-- 准星 -->
+  <div id="crosshair">+</div>
+
+  <!-- HUD -->
+  <div id="hud" style="display:none">
+    <div id="day-counter">第 1 天</div>
+
+    <div id="time-indicator">
+      <div id="time-icon">☀️</div>
+      <div id="time-bar"><div id="time-fill"></div></div>
+    </div>
+
+    <div class="stat-bar" id="temp-bar">
+      <span class="stat-icon">🌡️</span>
+      <div class="bar-track"><div class="bar-fill" id="temp-fill"></div></div>
+      <span class="stat-value" id="temp-value">70</span>
+    </div>
+
+    <div class="stat-bar" id="hunger-bar">
+      <span class="stat-icon">🍖</span>
+      <div class="bar-track"><div class="bar-fill" id="hunger-fill"></div></div>
+      <span class="stat-value" id="hunger-value">80</span>
+    </div>
+
+    <div class="stat-bar" id="stamina-bar">
+      <span class="stat-icon">💪</span>
+      <div class="bar-track"><div class="bar-fill" id="stamina-fill"></div></div>
+      <span class="stat-value" id="stamina-value">100</span>
+    </div>
+
+    <div id="equipped-display"></div>
+
+    <div id="hotbar">
+      <div class="hotbar-slot" data-slot="0"></div>
+      <div class="hotbar-slot" data-slot="1"></div>
+      <div class="hotbar-slot" data-slot="2"></div>
+      <div class="hotbar-slot" data-slot="3"></div>
+    </div>
+
+    <div id="interaction-prompt" style="display:none">
+      <span id="prompt-icon">E</span>
+      <span id="prompt-text">互动</span>
+    </div>
+
+    <div id="message-display" style="display:none">
+      <div id="message-text"></div>
+    </div>
+
+    <div id="screen-effects">
+      <div id="vignette"></div>
+      <div id="cold-overlay"></div>
+    </div>
+  </div>
+
+  <!-- 背包面板 -->
+  <div id="inventory-panel" style="display:none">
+    <div class="panel-header">背包</div>
+    <div id="inventory-grid"></div>
+    <div id="item-description"></div>
+    <div id="inventory-actions">
+      <button id="use-btn">使用</button>
+      <button id="drop-btn">丢弃</button>
+    </div>
+    <div class="panel-hint">Tab 关闭</div>
+  </div>
+
+  <!-- 日记面板 -->
+  <div id="diary-panel" style="display:none">
+    <div class="panel-header">日记本</div>
+    <div id="diary-content"></div>
+    <div class="panel-hint">J 关闭</div>
+  </div>
+
+  <!-- 叙事弹窗 -->
+  <div id="narrative-popup" style="display:none">
+    <div id="narrative-text"></div>
+    <div id="narrative-continue">点击继续</div>
+  </div>
+
+  <!-- 箱子面板 -->
+  <div id="box-panel" style="display:none">
+    <div class="panel-header">箱子</div>
+    <div id="box-grid"></div>
+    <div class="panel-hint">E 关闭</div>
+  </div>
+
+  <!-- 烹饪面板 -->
+  <div id="craft-panel" style="display:none">
+    <div class="panel-header">烹饪</div>
+    <div id="craft-options">
+      <button class="craft-btn" data-recipe="heatWater">🫖 烧热水（木材 x1）</button>
+      <button class="craft-btn" data-recipe="cookMeat">🍳 烤肉（木材 x1 + 生肉 x1）</button>
+      <button class="craft-btn" data-recipe="makeSoup">🥣 煮汤（木材 x1 + 热水 x1 + 生肉 x1）</button>
+    </div>
+    <div class="panel-hint">E 关闭</div>
+  </div>
+
+  <!-- 死亡界面 -->
+  <div id="death-screen" style="display:none">
+    <div id="death-title">你死了</div>
+    <div id="death-cause"></div>
+    <button id="restart-btn">重新开始</button>
+  </div>
+
+  <!-- 开始界面 -->
+  <div id="start-screen">
+    <div id="start-title">森林生存</div>
+    <div id="start-subtitle">大雾弥漫的森林，一个关于生存与秘密的故事</div>
+    <div id="start-controls">
+      <div>WASD - 移动</div>
+      <div>鼠标 - 视角</div>
+      <div>1 - 开枪</div>
+      <div>2 - 拾取</div>
+      <div>3 - 查看日记</div>
+      <div>4 - 烹饪</div>
+      <div>5 - 互动（爬梯/开箱/睡觉/砍树）</div>
+      <div>Tab - 背包</div>
+      <div>Shift - 奔跑</div>
+    </div>
+    <button id="start-btn">开始游戏</button>
+  </div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

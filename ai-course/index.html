@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>青少年 AI 科普 40 集</title>
+  <link rel="stylesheet" href="css/style.css?v=3">
+  <style>
+    /* Inline critical SVG illustrations */
+    .illustration { width: 100%; height: auto; }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <div class="navbar-brand" onclick="navigateTo('home')">
+        <span style="margin-right:.5rem">🤖</span>AI 探索之旅
+      </div>
+      <div class="navbar-links">
+        <a href="#" onclick="navigateTo('home');return false" id="nav-home">课程首页</a>
+        <a href="#" onclick="navigateTo('about');return false" id="nav-about">关于课程</a>
+        <span id="nav-progress-display" style="font-size:.85rem;color:var(--text-muted)"></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PROGRESS BAR TOP -->
+  <div class="progress-bar-top" id="progressBarTop" style="display:none">
+    <div class="progress-bar-top-fill" id="progressBarTopFill"></div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main id="app"></main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>青少年 AI 科普 40 集 — 从好奇到创造的学习旅程</p>
+    <p style="margin-top:.5rem">保持好奇，保持学习，保持行动。</p>
+  </footer>
+
+  <script src="js/data.js?v=6"></script>
+  <script src="js/videos.js?v=1"></script>
+  <script src="js/illustrations.js?v=2"></script>
+  <script src="js/gamification.js?v=1"></script>
+  <script src="js/app.js?v=8"></script>
+</body>
+</html>

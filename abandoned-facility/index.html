@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>公寓</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #000;
+  overflow: hidden;
+  touch-action: none;
+  font-family: 'Courier New', monospace;
+}
+canvas { display: block; }
+
+/* 启动界面 */
+#start-screen {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: #0a0a0a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+#start-screen h1 {
+  color: #c44;
+  font-size: 2em;
+  letter-spacing: 8px;
+  margin-bottom: 20px;
+  text-shadow: 0 0 20px rgba(200,50,50,0.5);
+}
+#start-screen p {
+  color: #888;
+  font-size: 0.9em;
+  margin-bottom: 40px;
+}
+#start-screen .subtitle {
+  color: #666;
+  font-size: 0.7em;
+  margin-bottom: 30px;
+}
+#start-btn {
+  background: none;
+  border: 1px solid #c44;
+  color: #c44;
+  padding: 12px 40px;
+  font-size: 1em;
+  font-family: 'Courier New', monospace;
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: all 0.3s;
+}
+#start-btn:hover {
+  background: rgba(200,50,50,0.2);
+  box-shadow: 0 0 20px rgba(200,50,50,0.3);
+}
+
+/* HUD */
+#hud {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+  pointer-events: none;
+}
+#hp-bar {
+  width: 150px;
+  height: 8px;
+  background: #333;
+  border: 1px solid #555;
+  margin-bottom: 5px;
+}
+#hp-fill {
+  height: 100%;
+  background: #c44;
+  transition: width 0.3s;
+}
+#hp-text {
+  color: #888;
+  font-size: 0.7em;
+}
+#weapon-display {
+  color: #888;
+  font-size: 0.7em;
+  margin-top: 8px;
+}
+#weapon-display .weapon {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid #c44;
+  color: #c44;
+}
+
+/* 胜利文字 */
+#victory-text {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  pointer-events: none;
+  display: none;
+  text-align: center;
+}
+#victory-text h1 {
+  color: #4a4;
+  font-size: 2.5em;
+  letter-spacing: 12px;
+  text-shadow: 0 0 30px rgba(50,200,50,0.5);
+  margin-bottom: 15px;
+}
+#victory-text p {
+  color: #6a6;
+  font-size: 1em;
+  letter-spacing: 4px;
+}
+
+/* 叙事弹窗 */
+#narrative-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(10, 10, 10, 0.95);
+  border: 1px solid #444;
+  padding: 30px;
+  max-width: 400px;
+  width: 80%;
+  z-index: 50;
+  display: none;
+  color: #aaa;
+  font-size: 0.85em;
+  line-height: 1.6;
+}
+#narrative-popup .title {
+  color: #c44;
+  font-size: 1.1em;
+  margin-bottom: 15px;
+}
+#narrative-popup .hint {
+  color: #555;
+  font-size: 0.8em;
+  margin-top: 20px;
+  text-align: right;
+}
+
+/* 手机控制 */
+#mobile-controls {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 180px;
+  display: none;
+  z-index: 20;
+  pointer-events: none;
+}
+#joystick {
+  position: absolute;
+  left: 30px;
+  bottom: 30px;
+  width: 120px;
+  height: 120px;
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 50%;
+  pointer-events: auto;
+}
+#joystick-knob {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+#btn-attack {
+  position: absolute;
+  right: 30px;
+  bottom: 60px;
+  width: 70px;
+  height: 70px;
+  border: 2px solid rgba(200,50,50,0.5);
+  border-radius: 50%;
+  background: rgba(200,50,50,0.15);
+  color: #c44;
+  font-size: 0.8em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+#btn-dodge {
+  position: absolute;
+  right: 110px;
+  bottom: 80px;
+  width: 50px;
+  height: 50px;
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  color: #888;
+  font-size: 0.7em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+#btn-interact {
+  position: absolute;
+  right: 110px;
+  bottom: 10px;
+  width: 50px;
+  height: 50px;
+  border: 2px solid rgba(100,200,100,0.3);
+  border-radius: 50%;
+  background: rgba(100,200,100,0.1);
+  color: #8c8;
+  font-size: 0.7em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+/* 小地图 */
+#minimap {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  border: 1px solid #444;
+  z-index: 10;
+  opacity: 0.8;
+}
+</style>
+</head>
+<body>
+
+<!-- 启动界面 -->
+<div id="start-screen">
+  <h1>公 寓</h1>
+  <p>你醒来了。你不记得自己是谁。</p>
+  <p class="subtitle">WASD / 方向键移动 · 空格攻击 · Shift闪避 · E互动/拾取</p>
+  <button id="start-btn">开 始</button>
+</div>
+
+<!-- 游戏画布 -->
+<canvas id="game"></canvas>
+
+<!-- HUD -->
+<div id="hud">
+  <div id="hp-bar"><div id="hp-fill"></div></div>
+  <div id="hp-text">HP 100/100</div>
+  <div id="weapon-display"></div>
+</div>
+
+<!-- 胜利文字 -->
+<div id="victory-text">
+  <h1>胜 利</h1>
+  <p>自由活动</p>
+</div>
+
+<!-- 叙事弹窗 -->
+<div id="narrative-popup">
+  <div class="title"></div>
+  <div class="content"></div>
+  <div class="hint">按任意键关闭</div>
+</div>
+
+<!-- 小地图 -->
+<canvas id="minimap" width="120" height="120"></canvas>
+
+<!-- 手机控制 -->
+<div id="mobile-controls">
+  <div id="joystick"><div id="joystick-knob"></div></div>
+  <div id="btn-attack">攻击</div>
+  <div id="btn-dodge">闪避</div>
+  <div id="btn-interact">互动</div>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>

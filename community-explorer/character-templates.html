@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>社区探索家 · 人物小传模板合集</title>
+<style>
+  /* ===== 全局基础 ===== */
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    background: #f5f0eb;
+    color: #333;
+    line-height: 1.6;
+  }
+
+  /* ===== 模板页通用 ===== */
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 20px auto;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+    page-break-inside: avoid;
+  }
+
+  .page-header {
+    text-align: center;
+    padding: 8px 0 4px;
+    font-size: 10pt;
+    letter-spacing: 2px;
+    opacity: 0.5;
+  }
+
+  .page-footer {
+    position: absolute;
+    bottom: 8mm;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 8pt;
+    opacity: 0.45;
+    letter-spacing: 1px;
+  }
+
+  .page-content {
+    padding: 5mm 12mm 15mm;
+  }
+
+  /* ===== 横线输入区 ===== */
+  .blank-line {
+    border-bottom: 1.5px solid #bbb;
+    min-height: 1.8em;
+    margin: 4px 0;
+  }
+
+  .blank-line-thick {
+    border-bottom: 2px solid #999;
+    min-height: 2em;
+    margin: 6px 0;
+    font-size: 12pt;
+  }
+
+  .dashed-box {
+    border: 2px dashed #bbb;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 9pt;
+    text-align: center;
+  }
+
+  /* ===== 模板1：经典档案卡 ===== */
+  .t1 { background: linear-gradient(135deg, #fff8f0 0%, #fff 100%); }
+  .t1 .page-header { color: #c0713a; }
+  .t1 .page-footer { color: #c0713a; }
+
+  .t1 .title {
+    text-align: center;
+    font-size: 22pt;
+    font-weight: bold;
+    color: #c0713a;
+    padding: 6px 0 10px;
+    border-bottom: 3px double #c0713a;
+    margin-bottom: 10px;
+  }
+
+  .t1 .top-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .t1 .photo-box {
+    width: 100px;
+    height: 120px;
+    flex-shrink: 0;
+  }
+
+  .t1 .info-lines {
+    flex: 1;
+    font-size: 11pt;
+  }
+
+  .t1 .info-lines .row {
+    display: flex;
+    gap: 6px;
+    margin: 5px 0;
+    align-items: baseline;
+  }
+
+  .t1 .info-lines .label {
+    font-weight: bold;
+    white-space: nowrap;
+    color: #8b5e3c;
+  }
+
+  .t1 .section-title {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #c0713a;
+    margin: 10px 0 4px;
+    padding-left: 2px;
+  }
+
+  .t1 .big-line {
+    border-bottom: 2.5px solid #c0713a;
+    min-height: 2em;
+    margin: 6px 0;
+    font-size: 14pt;
+    font-weight: bold;
+    color: #8b5e3c;
+  }
+
+  .t1 .draw-area {
+    margin-top: 10px;
+    height: 140px;
+  }
+
+  /* ===== 模板2：对话气泡 ===== */
+  .t2 { background: #fafcff; }
+  .t2 .page-header { color: #5a7fa5; }
+  .t2 .page-footer { color: #5a7fa5; }
+
+  .t2 .title {
+    text-align: center;
+    font-size: 20pt;
+    font-weight: bold;
+    color: #5a7fa5;
+    padding: 6px 0 8px;
+    margin-bottom: 6px;
+  }
+
+  .t2 .bubble-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+
+  .t2 .bubble-row.left { justify-content: flex-start; }
+  .t2 .bubble-row.right { justify-content: flex-end; }
+
+  .t2 .bubble {
+    max-width: 42%;
+    padding: 8px 12px;
+    border-radius: 14px;
+    font-size: 10pt;
+    position: relative;
+    min-height: 50px;
+  }
+
+  .t2 .bubble.me {
+    background: #d6eaf8;
+    border: 2px solid #a9cce3;
+    border-bottom-left-radius: 4px;
+  }
+
+  .t2 .bubble.them {
+    background: #fdebd0;
+    border: 2px solid #f5cba7;
+    border-bottom-right-radius: 4px;
+  }
+
+  .t2 .bubble-label {
+    font-size: 8pt;
+    font-weight: bold;
+    margin-bottom: 3px;
+  }
+
+  .t2 .bubble.me .bubble-label { color: #2e86c1; }
+  .t2 .bubble.them .bubble-label { color: #d35400; }
+
+  .t2 .arrow-row {
+    text-align: center;
+    font-size: 14pt;
+    color: #ccc;
+    margin: 2px 0;
+  }
+
+  .t2 .surprise-box {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: #fef9e7;
+    border: 2px dashed #f4d03f;
+    border-radius: 10px;
+  }
+
+  .t2 .surprise-box .label {
+    font-weight: bold;
+    color: #d4ac0d;
+    font-size: 11pt;
+  }
+
+  .t2 .page-bottom-note {
+    text-align: center;
+    margin-top: 8px;
+    font-size: 8pt;
+    color: #999;
+  }
+
+  /* ===== 模板3：人物素描 ===== */
+  .t3 { background: #fffaf5; }
+  .t3 .page-header { color: #8e6f47; }
+  .t3 .page-footer { color: #8e6f47; }
+
+  .t3 .title {
+    text-align: center;
+    font-size: 20pt;
+    font-weight: bold;
+    color: #8e6f47;
+    padding: 6px 0;
+    margin-bottom: 8px;
+  }
+
+  .t3 .main-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .t3 .draw-col {
+    width: 40%;
+  }
+
+  .t3 .draw-box {
+    height: 260px;
+  }
+
+  .t3 .text-col {
+    width: 60%;
+    font-size: 10.5pt;
+  }
+
+  .t3 .text-col .field {
+    margin: 6px 0;
+  }
+
+  .t3 .text-col .field-label {
+    font-weight: bold;
+    color: #8e6f47;
+  }
+
+  .t3 .faces-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .t3 .face-box {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+  }
+
+  .t3 .faces-label {
+    text-align: center;
+    font-size: 10pt;
+    font-weight: bold;
+    color: #8e6f47;
+    margin-bottom: 6px;
+  }
+
+  /* ===== 模板4：时间轴 ===== */
+  .t4 { background: #f8faf8; }
+  .t4 .page-header { color: #5a8a5e; }
+  .t4 .page-footer { color: #5a8a5e; }
+
+  .t4 .title {
+    text-align: center;
+    font-size: 20pt;
+    font-weight: bold;
+    color: #5a8a5e;
+    padding: 6px 0;
+    margin-bottom: 10px;
+  }
+
+  .t4 .timeline {
+    position: relative;
+    padding-left: 80px;
+  }
+
+  .t4 .timeline::before {
+    content: "";
+    position: absolute;
+    left: 68px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, #a8d8a8, #5a8a5e);
+    border-radius: 2px;
+  }
+
+  .t4 .tl-item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+
+  .t4 .tl-time {
+    position: absolute;
+    left: -80px;
+    top: 4px;
+    width: 64px;
+    text-align: right;
+    font-size: 9.5pt;
+    font-weight: bold;
+    color: #5a8a5e;
+  }
+
+  .t4 .tl-dot {
+    position: absolute;
+    left: -14px;
+    top: 7px;
+    width: 10px;
+    height: 10px;
+    background: #5a8a5e;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #5a8a5e;
+  }
+
+  .t4 .tl-content {
+    flex: 1;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    background: #eaf5ea;
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-left: 6px;
+  }
+
+  .t4 .tl-text {
+    flex: 1;
+    font-size: 10pt;
+  }
+
+  .t4 .tl-icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+  }
+
+  .t4 .compare-q {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: #fef9e7;
+    border: 2px dashed #5a8a5e;
+    border-radius: 10px;
+    font-weight: bold;
+    color: #5a8a5e;
+    font-size: 11pt;
+    text-align: center;
+  }
+
+  /* ===== 模板5：故事绘本页 ===== */
+  .t5 { background: #fff9f0; }
+  .t5 .page-header { color: #c97b3b; }
+  .t5 .page-footer { color: #c97b3b; }
+
+  .t5 .title {
+    text-align: center;
+    font-size: 20pt;
+    font-weight: bold;
+    color: #c97b3b;
+    padding: 6px 0;
+    margin-bottom: 8px;
+  }
+
+  .t5 .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .t5 .panel {
+    border: 2.5px solid #e8c99b;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .t5 .panel-header {
+    background: #f5deb3;
+    text-align: center;
+    font-weight: bold;
+    font-size: 10.5pt;
+    color: #8b5e3c;
+    padding: 4px 0;
+  }
+
+  .t5 .panel-draw {
+    flex: 1;
+    min-height: 90px;
+  }
+
+  .t5 .panel-text {
+    border-top: 1.5px dashed #ddd;
+    padding: 4px 8px;
+    min-height: 30px;
+    font-size: 9pt;
+    color: #888;
+  }
+
+  .t5 .page-bottom-note {
+    text-align: center;
+    font-size: 8.5pt;
+    color: #c97b3b;
+    font-style: italic;
+  }
+
+  /* ===== 模板6：问答卡片组 ===== */
+  .t6 { background: #f5f8fc; }
+  .t6 .page-header { color: #4a7fb5; }
+  .t6 .page-footer { color: #4a7fb5; }
+
+  .t6 .title {
+    text-align: center;
+    font-size: 18pt;
+    font-weight: bold;
+    color: #4a7fb5;
+    padding: 6px 0;
+    margin-bottom: 8px;
+  }
+
+  .t6 .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .t6 .card {
+    border: 2px solid #b0c4de;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 120px;
+  }
+
+  .t6 .card-top {
+    background: #d6e5f5;
+    padding: 5px 8px;
+    font-size: 10pt;
+    font-weight: bold;
+    color: #2c5f8a;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .t6 .card-top .num {
+    background: #4a7fb5;
+    color: #fff;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9pt;
+    flex-shrink: 0;
+  }
+
+  .t6 .card-body {
+    flex: 1;
+    padding: 6px 8px;
+  }
+
+  .t6 .card-cut {
+    border-top: 2px dashed #ccc;
+    text-align: center;
+    font-size: 7pt;
+    color: #ccc;
+    padding: 2px 0;
+    letter-spacing: 2px;
+  }
+
+  /* ===== 模板7：社区英雄榜 ===== */
+  .t7 { background: linear-gradient(180deg, #fff8e1 0%, #fff 30%); }
+  .t7 .page-header { color: #d4a017; }
+  .t7 .page-footer { color: #d4a017; }
+
+  .t7 .title {
+    text-align: center;
+    font-size: 22pt;
+    font-weight: bold;
+    color: #d4a017;
+    padding: 6px 0;
+    margin-bottom: 10px;
+  }
+
+  .t7 .hero-top {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 10px;
+  }
+
+  .t7 .medal-box {
+    width: 110px;
+    height: 110px;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .t7 .medal-shape {
+    width: 100%;
+    height: 100%;
+    clip-path: polygon(50% 0%, 63% 25%, 100% 25%, 73% 47%, 82% 80%, 50% 62%, 18% 80%, 27% 47%, 0% 25%, 37% 25%);
+    background: #fef3c7;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .t7 .medal-inner {
+    width: 80px;
+    height: 80px;
+    clip-path: polygon(50% 0%, 63% 25%, 100% 25%, 73% 47%, 82% 80%, 50% 62%, 18% 80%, 27% 47%, 0% 25%, 37% 25%);
+    background: #fef9e7;
+    border: 2px dashed #d4a017;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8pt;
+    color: #d4a017;
+  }
+
+  .t7 .hero-info {
+    flex: 1;
+  }
+
+  .t7 .hero-name {
+    font-size: 18pt;
+    font-weight: bold;
+    color: #8b6914;
+    border-bottom: 2px solid #d4a017;
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+  }
+
+  .t7 .hero-title-input {
+    font-size: 12pt;
+    color: #d4a017;
+    font-weight: bold;
+    margin-bottom: 6px;
+  }
+
+  .t7 .section-label {
+    font-size: 10pt;
+    font-weight: bold;
+    color: #8b6914;
+    margin: 6px 0 2px;
+  }
+
+  .t7 .hero-deeds {
+    min-height: 48px;
+  }
+
+  .t7 .hero-quote {
+    border-bottom: 2.5px solid #d4a017;
+    min-height: 1.8em;
+    margin: 4px 0;
+    font-size: 13pt;
+    font-weight: bold;
+    color: #8b6914;
+  }
+
+  .t7 .reason-box {
+    margin-top: 8px;
+    padding: 10px 14px;
+    background: #fef9e7;
+    border: 2px dashed #d4a017;
+    border-radius: 10px;
+    font-size: 11pt;
+  }
+
+  .t7 .reason-box .label {
+    font-weight: bold;
+    color: #8b6914;
+  }
+
+  /* ===== 模板8：对比图 ===== */
+  .t8 { background: #fafafa; }
+  .t8 .page-header { color: #6c5b7b; }
+  .t8 .page-footer { color: #6c5b7b; }
+
+  .t8 .title {
+    text-align: center;
+    font-size: 18pt;
+    font-weight: bold;
+    color: #6c5b7b;
+    padding: 6px 0;
+    margin-bottom: 8px;
+  }
+
+  .t8 .vs-header {
+    display: flex;
+    margin-bottom: 8px;
+  }
+
+  .t8 .vs-label {
+    flex: 1;
+    text-align: center;
+    padding: 6px;
+    font-weight: bold;
+    font-size: 13pt;
+    border-radius: 8px;
+  }
+
+  .t8 .vs-label.past {
+    background: #fdebd0;
+    color: #ca6702;
+    margin-right: 4px;
+  }
+
+  .t8 .vs-label.now {
+    background: #d6eaf8;
+    color: #2471a3;
+    margin-left: 4px;
+  }
+
+  .t8 .vs-group {
+    margin-bottom: 10px;
+  }
+
+  .t8 .vs-group-title {
+    text-align: center;
+    font-size: 10pt;
+    font-weight: bold;
+    color: #6c5b7b;
+    margin-bottom: 4px;
+    background: #ede7f6;
+    border-radius: 6px;
+    padding: 3px 0;
+  }
+
+  .t8 .vs-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .t8 .vs-side {
+    flex: 1;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    min-height: 80px;
+    padding: 6px 8px;
+  }
+
+  .t8 .vs-side.past { border-color: #f0c987; }
+  .t8 .vs-side.now { border-color: #a9cce3; }
+
+  .t8 .vs-side .side-label {
+    font-size: 8.5pt;
+    font-weight: bold;
+    margin-bottom: 2px;
+  }
+
+  .t8 .vs-side.past .side-label { color: #ca6702; }
+  .t8 .vs-side.now .side-label { color: #2471a3; }
+
+  .t8 .bottom-quote {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #f5eef8;
+    border: 2px dashed #8e44ad;
+    border-radius: 10px;
+    font-weight: bold;
+    color: #6c3483;
+    text-align: center;
+  }
+
+  /* ===== 模板9：五感卡片 ===== */
+  .t9 { background: #fff8f8; }
+  .t9 .page-header { color: #c0392b; }
+  .t9 .page-footer { color: #c0392b; }
+
+  .t9 .title {
+    text-align: center;
+    font-size: 18pt;
+    font-weight: bold;
+    color: #c0392b;
+    padding: 6px 0;
+    margin-bottom: 8px;
+  }
+
+  .t9 .senses {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .t9 .sense-card {
+    border: 2px solid #f1948a;
+    border-radius: 10px;
+    overflow: hidden;
+    min-height: 95px;
+  }
+
+  .t9 .sense-card:nth-child(5) {
+    grid-column: 1 / -1;
+  }
+
+  .t9 .sense-header {
+    background: #fadbd8;
+    padding: 4px 8px;
+    font-weight: bold;
+    font-size: 10.5pt;
+    color: #922b21;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .t9 .sense-body {
+    padding: 6px 8px;
+    min-height: 60px;
+    font-size: 9pt;
+    color: #888;
+  }
+
+  .t9 .bottom-question {
+    margin-top: 10px;
+    text-align: center;
+    padding: 8px 12px;
+    background: #fef9e7;
+    border: 2px dashed #c0392b;
+    border-radius: 10px;
+    font-weight: bold;
+    color: #922b21;
+    font-size: 11pt;
+  }
+
+  /* ===== 模板10：一封信 ===== */
+  .t10 { background: #fffef8; }
+  .t10 .page-header { color: #6b8e4e; }
+  .t10 .page-footer { color: #6b8e4e; }
+
+  .t10 .title {
+    text-align: center;
+    font-size: 18pt;
+    font-weight: bold;
+    color: #6b8e4e;
+    padding: 6px 0;
+    margin-bottom: 8px;
+  }
+
+  .t10 .letter {
+    border: 2px solid #b5d89a;
+    border-radius: 12px;
+    padding: 14px 18px;
+    position: relative;
+    background: linear-gradient(135deg, #fefff5, #fff);
+    min-height: 420px;
+  }
+
+  .t10 .letter .greeting {
+    font-size: 13pt;
+    font-weight: bold;
+    color: #6b8e4e;
+    margin-bottom: 10px;
+  }
+
+  .t10 .letter .body-lines .blank-line {
+    height: 28px;
+  }
+
+  .t10 .letter .pre-fill {
+    font-size: 11pt;
+    color: #6b8e4e;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+
+  .t10 .letter .think-line {
+    font-size: 11pt;
+    margin: 6px 0;
+    color: #6b8e4e;
+  }
+
+  .t10 .letter .signature-area {
+    text-align: right;
+    margin-top: 12px;
+    font-size: 10.5pt;
+    color: #6b8e4e;
+  }
+
+  .t10 .letter .date-line {
+    text-align: right;
+    margin-top: 4px;
+    font-size: 10pt;
+    color: #888;
+  }
+
+  .t10 .decorations {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .t10 .deco {
+    position: absolute;
+    font-size: 14pt;
+    opacity: 0.25;
+    color: #6b8e4e;
+  }
+
+  .t10 .draw-gift {
+    position: absolute;
+    right: 14px;
+    bottom: 10px;
+    width: 90px;
+    height: 90px;
+    border: 2px dashed #b5d89a;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8pt;
+    color: #b5d89a;
+    text-align: center;
+    background: rgba(255,255,255,0.8);
+  }
+
+  /* ===== 打印优化 ===== */
+  @media print {
+    body { background: #fff; }
+
+    .page {
+      margin: 0;
+      box-shadow: none;
+      width: 210mm;
+      min-height: 297mm;
+      page-break-after: always;
+      page-break-inside: avoid;
+    }
+
+    .page:last-child { page-break-after: auto; }
+  }
+
+  /* ===== 屏幕预览优化 ===== */
+  @media screen {
+    .page {
+      box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+    }
+  }
+
+  /* ===== 辅助类 ===== */
+  .flex-row { display: flex; gap: 8px; }
+  .flex-1 { flex: 1; }
+  .text-center { text-align: center; }
+  .mt-4 { margin-top: 4px; }
+  .mt-8 { margin-top: 8px; }
+  .mb-4 { margin-bottom: 4px; }
+  .mb-8 { margin-bottom: 8px; }
+  .fs-9 { font-size: 9pt; }
+  .fs-10 { font-size: 10pt; }
+  .fs-11 { font-size: 11pt; }
+  .fw-bold { font-weight: bold; }
+  .color-sub { color: #999; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- 模板1：经典档案卡 -->
+<!-- ============================================================ -->
+<div class="page t1">
+  <div class="page-header">社区探索家 · 人物小传</div>
+  <div class="page-content">
+    <div class="title">人物档案</div>
+
+    <div class="top-row">
+      <div class="dashed-box photo-box">贴照片或<br>画头像</div>
+      <div class="info-lines">
+        <div class="row">
+          <span class="label">姓名：</span>
+          <span class="blank-line" style="flex:1"></span>
+        </div>
+        <div class="row">
+          <span class="label">年龄：</span>
+          <span class="blank-line" style="flex:1"></span>
+        </div>
+        <div class="row">
+          <span class="label">职业：</span>
+          <span class="blank-line" style="flex:1"></span>
+        </div>
+        <div class="row">
+          <span class="label">在这个社区住了：</span>
+          <span class="blank-line" style="flex:1"></span>
+          <span class="label">年</span>
+        </div>
+        <div class="row" style="margin-top:8px">
+          <span class="label">用三个词形容这个人：</span>
+        </div>
+        <div class="row" style="gap:12px; margin-top:2px">
+          <span class="blank-line" style="flex:1"></span>
+          <span class="blank-line" style="flex:1"></span>
+          <span class="blank-line" style="flex:1"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">我问了他/她什么：</div>
+    <div class="blank-line"></div>
+    <div class="blank-line"></div>
+    <div class="blank-line"></div>
+
+    <div class="section-title">他/她怎么回答的：</div>
+    <div class="blank-line"></div>
+    <div class="blank-line"></div>
+    <div class="blank-line"></div>
+    <div class="blank-line"></div>
+
+    <div class="section-title">最打动我的一句话：</div>
+    <div class="big-line"></div>
+
+    <div class="section-title">我画了一个他/她说的画面：</div>
+    <div class="dashed-box draw-area">在这里画画</div>
+  </div>
+  <div class="page-footer">模板 1 / 10 · 经典档案卡</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模板2：对话气泡 -->
+<!-- ============================================================ -->
+<div class="page t2">
+  <div class="page-header">社区探索家 · 人物小传</div>
+  <div class="page-content">
+    <div class="title">我和 <span class="blank-line" style="display:inline-block;width:100px;border-bottom-width:2px"></span> 的对话</div>
+
+    <!-- 第1组 -->
+    <div class="bubble-row left">
+      <div class="bubble me">
+        <div class="bubble-label">我问：</div>
+        <div class="blank-line"></div>
+        <div class="blank-line"></div>
+      </div>
+    </div>
+    <div class="arrow-row">↓</div>
+    <div class="bubble-row right">
+      <div class="bubble them">
+        <div class="bubble-label">他/她说：</div>
+        <div class="blank-line"></div>
+        <div class="blank-line"></div>
+      </div>
+    </div>
+
+    <!-- 第2组 -->
+    <div class="bubble-row left">
+      <div class="bubble me">
+        <div class="bubble-label">我问：</div>
+        <div class="blank-line"></div>
+        <div class="blank-line"></div>
+      </div>
+    </div>
+    <div class="arrow-row">↓</div>
+    <div class="bubble-row right">
+      <div class="bubble them">
+        <div class="bubble-label">他/她说：</div>
+        <div class="blank-line"></div>
+        <div class="blank-line"></div>
+      </div>
+    </div>
+
+    <!-- 第3组 -->
+    <div class="bubble-row left">
+      <div class="bubble me">
+        <div class="bubble-label">我问：</div>
+        <div class="blank-line"></div>
+        <div class="blank-line"></div>
+      </div>
+    </div>
+    <div class="arrow-row">↓</div>
+    <div class="bubble-row right">
+      <div class="bubble them">
+        <div class="bubble-label">他/她说：</div>
+        <div class="blank-line"></div>
+        <div class="blank-line"></div>
+      </div>
+    </div>
+
+    <div class="surprise-box">
+      <span class="label">他说的最让我意外的是：</span>
+      <div class="blank-line" style="margin-top:4px"></div>
+    </div>
+
+    <div class="page-bottom-note">社区探索家 · 人物访谈</div>
+  </div>
+  <div class="page-footer">模板 2 / 10 · 对话气泡</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模板3：人物素描 -->
+<!-- ============================================================ -->
+<div class="page t3">
+  <div class="page-header">社区探索家 · 人物小传</div>
+  <div class="page-content">
+    <div class="title">我眼中的 <span class="blank-line" style="display:inline-block;width:120px;border-bottom-color:#8e6f47"></span></div>
+
+    <div class="main-row">
+      <div class="draw-col">
+        <div class="dashed-box draw-box" style="height:260px">画出你心中的<br>他/她</div>
+      </div>
+      <div class="text-col">
+        <div class="field">
+          <span class="field-label">他/她的名字：</span>
+          <span class="blank-line"></span>
+        </div>
+        <div class="field">
+          <span class="field-label">每天的一天是怎么过的：</span>
+          <div class="blank-line"></div>
+          <div class="blank-line"></div>
+          <div class="blank-line"></div>
+        </div>
+        <div class="field">
+          <span class="field-label">他/她最喜欢做的事：</span>
+          <span class="blank-line"></span>
+        </div>
+        <div class="field">
+          <span class="field-label">他/她最常说的一句话：</span>
+          <span class="blank-line"></span>
+        </div>
+        <div class="field" style="margin-top:10px">
+          <span class="field-label">如果他/她是一种动物/颜色/天气，他/她是：</span>
+          <div class="blank-line" style="margin-top:4px"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="faces-label">他/她的三个表情</div>
+    <div class="faces-row">
+      <div class="dashed-box face-box" style="border-radius:50%;width:70px;height:70px"></div>
+      <div class="dashed-box face-box" style="border-radius:50%;width:70px;height:70px"></div>
+      <div class="dashed-box face-box" style="border-radius:50%;width:70px;height:70px"></div>
+    </div>
+  </div>
+  <div class="page-footer">模板 3 / 10 · 人物素描</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模板4：一天的时间轴 -->
+<!-- ============================================================ -->
+<div class="page t4">
+  <div class="page-header">社区探索家 · 人物小传</div>
+  <div class="page-content">
+    <div class="title"><span class="blank-line" style="display:inline-block;width:120px;border-bottom-color:#5a8a5e;border-bottom-width:2px"></span> 的一天</div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-time">6:00-7:00</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-text">他/她可能在：</div>
+          <div class="dashed-box tl-icon" style="font-size:8pt">画图</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-time">7:00-8:00</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-text"></div>
+          <div class="dashed-box tl-icon" style="font-size:8pt">画图</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-time">8:00-9:00</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-text"></div>
+          <div class="dashed-box tl-icon" style="font-size:8pt">画图</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-time">9:00-12:00</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-text"></div>
+          <div class="dashed-box tl-icon" style="font-size:8pt">画图</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-time">12:00-14:00</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-text"></div>
+          <div class="dashed-box tl-icon" style="font-size:8pt">画图</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-time">14:00-17:00</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-text"></div>
+          <div class="dashed-box tl-icon" style="font-size:8pt">画图</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-time">17:00-19:00</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-text"></div>
+          <div class="dashed-box tl-icon" style="font-size:8pt">画图</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-time">19:00-21:00</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-text"></div>
+          <div class="dashed-box tl-icon" style="font-size:8pt">画图</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="compare-q">他/她的一天和我的一天有什么不一样？</div>
+  </div>
+  <div class="page-footer">模板 4 / 10 · 一天的时间轴</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模板5：故事绘本页 -->
+<!-- ============================================================ -->
+<div class="page t5">
+  <div class="page-header">社区探索家 · 人物小传</div>
+  <div class="page-content">
+    <div class="title"><span class="blank-line" style="display:inline-block;width:120px;border-bottom-color:#c97b3b;border-bottom-width:2px"></span> 的故事</div>
+
+    <div class="grid">
+      <div class="panel">
+        <div class="panel-header">格1：他/她小时候</div>
+        <div class="dashed-box panel-draw" style="flex:1">在这里画画</div>
+        <div class="panel-text">旁白：</div>
+      </div>
+      <div class="panel">
+        <div class="panel-header">格2：他/她是怎么来到我们社区的</div>
+        <div class="dashed-box panel-draw" style="flex:1">在这里画画</div>
+        <div class="panel-text">旁白：</div>
+      </div>
+      <div class="panel">
+        <div class="panel-header">格3：他/她现在每天在做什么</div>
+        <div class="dashed-box panel-draw" style="flex:1">在这里画画</div>
+        <div class="panel-text">旁白：</div>
+      </div>
+      <div class="panel">
+        <div class="panel-header">格4：他/她最想告诉大家的一件事</div>
+        <div class="dashed-box panel-draw" style="flex:1">在这里画画</div>
+        <div class="panel-text">旁白：</div>
+      </div>
+    </div>
+
+    <div class="page-bottom-note">像讲故事一样，把这个人的一生画出来</div>
+  </div>
+  <div class="page-footer">模板 5 / 10 · 故事绘本页</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模板6：问答卡片组 -->
+<!-- ============================================================ -->
+<div class="page t6">
+  <div class="page-header">社区探索家 · 人物小传</div>
+  <div class="page-content">
+    <div class="title">问答卡片组</div>
+
+    <div class="cards">
+      <!-- 卡片1 -->
+      <div class="card">
+        <div class="card-top"><span class="num">1</span> 你是做什么工作的？</div>
+        <div class="card-body">
+          <div class="blank-line"></div>
+          <div class="blank-line"></div>
+          <div class="blank-line"></div>
+        </div>
+        <div class="card-cut">✂ - - - - - - - - - - - - - - -</div>
+      </div>
+      <!-- 卡片2 -->
+      <div class="card">
+        <div class="card-top"><span class="num">2</span> 你在我们社区住了多久了？</div>
+        <div class="card-body">
+          <div class="blank-line"></div>
+          <div class="blank-line"></div>
+          <div class="blank-line"></div>
+        </div>
+        <div class="card-cut">✂ - - - - - - - - - - - - - - -</div>
+      </div>
+      <!-- 卡片3 -->
+      <div class="card">
+        <div class="card-top"><span class="num">3</span> 你最喜欢这个社区的什么？</div>
+        <div class="card-body">
+          <div class="blank-line"></div>
+          <div class="blank-line"></div>
+          <div class="blank-line"></div>
+        </div>
+        <div class="card-cut">✂ - - - - - - - - - - - - - - -</div>
+      </div>
+      <!-- 卡片4 -->
+      <div class="card">
+        <div class="card-top"><span class="num">4</span> 你小时候这个社区是什么样的？</div>
+        <div class="card-body">
+          <div class="blank-line"></div>
+          <div class="blank-line"></div>
+          <div class="blank-line"></div>
+        </div>
+        <div class="card-cut">✂ - - - - - - - - - - - - - - -</div>
+      </div>
+      <!-- 卡片5 -->
+      <div class="card">
+        <div class="card-top"><span class="num">5</span> 你觉得这个社区有什么可以变得更好的？</div>
+        <div class="card-body">
+          <div class="blank-line"></div>
+          <div class="blank-line"></div>
+          <div class="blank-line"></div>
+        </div>
+        <div class="card-cut">✂ - - - - - - - - - - - - - - -</div>
+      </div>
+      <!-- 卡片6 -->
+      <div class="card">
+        <div class="card-top"><span class="num">6</span> 你最想对社区里的孩子们说什么？</div>
+        <div class="card-body">
+          <div class="blank-line"></div>
+          <div class="blank-line"></div>
+          <div class="blank-line"></div>
+        </div>
+        <div class="card-cut">✂ - - - - - - - - - - - - - - -</div>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer">模板 6 / 10 · 问答卡片组</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模板7：社区英雄榜 -->
+<!-- ============================================================ -->
+<div class="page t7">
+  <div class="page-header">社区探索家 · 人物小传</div>
+  <div class="page-content">
+    <div class="title">社区英雄榜</div>
+
+    <div class="hero-top">
+      <div class="medal-box">
+        <div class="medal-shape">
+          <div class="medal-inner">画出他/她的<br>标志性动作<br>或物品</div>
+        </div>
+      </div>
+      <div class="hero-info">
+        <div class="hero-name"><span class="blank-line" style="border-bottom-color:#d4a017;display:inline-block;width:200px"></span></div>
+        <div class="hero-title-input">"英雄称号"（如"修鞋达人""种花奶奶"）：<span class="blank-line" style="display:inline-block;width:220px;border-bottom-color:#d4a017"></span></div>
+        <div class="section-label">英雄事迹：</div>
+        <div class="hero-deeds">
+          <div class="blank-line"></div>
+          <div class="blank-line"></div>
+          <div class="blank-line"></div>
+        </div>
+        <div class="section-label">英雄语录：</div>
+        <div class="hero-quote"></div>
+      </div>
+    </div>
+
+    <div class="reason-box">
+      <span class="label">致敬理由：</span>
+      <div class="blank-line" style="margin-top:4px"></div>
+      <div class="blank-line"></div>
+    </div>
+  </div>
+  <div class="page-footer">模板 7 / 10 · 社区英雄榜</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模板8：对比图 -->
+<!-- ============================================================ -->
+<div class="page t8">
+  <div class="page-header">社区探索家 · 人物小传</div>
+  <div class="page-content">
+    <div class="title"><span class="blank-line" style="display:inline-block;width:100px;border-bottom-color:#6c5b7b;border-bottom-width:2px"></span> 眼中的社区 · 过去 vs 现在</div>
+
+    <div class="vs-header">
+      <div class="vs-label past">过去</div>
+      <div class="vs-label now">现在</div>
+    </div>
+
+    <!-- 对比1：街道/建筑 -->
+    <div class="vs-group">
+      <div class="vs-group-title">街道 / 建筑</div>
+      <div class="vs-row">
+        <div class="vs-side past">
+          <div class="side-label">画过去的样子：</div>
+          <div class="dashed-box" style="height:60px;margin-top:2px">画图</div>
+        </div>
+        <div class="vs-side now">
+          <div class="side-label">画现在的样子：</div>
+          <div class="dashed-box" style="height:60px;margin-top:2px">画图</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 对比2：人/生活 -->
+    <div class="vs-group">
+      <div class="vs-group-title">人 / 生活</div>
+      <div class="vs-row">
+        <div class="vs-side past">
+          <div class="side-label">过去：</div>
+          <div class="blank-line" style="margin-top:4px"></div>
+          <div class="blank-line"></div>
+          <div class="blank-line"></div>
+        </div>
+        <div class="vs-side now">
+          <div class="side-label">现在：</div>
+          <div class="blank-line" style="margin-top:4px"></div>
+          <div class="blank-line"></div>
+          <div class="blank-line"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 对比3：最怀念/最喜欢 -->
+    <div class="vs-group">
+      <div class="vs-group-title">最怀念 / 最喜欢</div>
+      <div class="vs-row">
+        <div class="vs-side past">
+          <div class="side-label">最怀念过去的___：</div>
+          <div class="blank-line" style="margin-top:4px"></div>
+          <div class="blank-line"></div>
+        </div>
+        <div class="vs-side now">
+          <div class="side-label">最喜欢现在的___：</div>
+          <div class="blank-line" style="margin-top:4px"></div>
+          <div class="blank-line"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-quote">他/她说：___________</div>
+  </div>
+  <div class="page-footer">模板 8 / 10 · 对比图</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模板9：五感卡片 -->
+<!-- ============================================================ -->
+<div class="page t9">
+  <div class="page-header">社区探索家 · 人物小传</div>
+  <div class="page-content">
+    <div class="title">用五种感觉认识 <span class="blank-line" style="display:inline-block;width:100px;border-bottom-color:#c0392b;border-bottom-width:2px"></span></div>
+
+    <div class="senses">
+      <!-- 看 -->
+      <div class="sense-card">
+        <div class="sense-header">👀 看到他/她</div>
+        <div class="sense-body">
+          他/她长什么样？穿什么？<br>
+          <div class="blank-line" style="margin-top:4px"></div>
+          <div class="blank-line"></div>
+          <div style="text-align:center;margin-top:2px;color:#ccc">（画或写）</div>
+        </div>
+      </div>
+      <!-- 听 -->
+      <div class="sense-card">
+        <div class="sense-header">👂 听到他/她</div>
+        <div class="sense-body">
+          他/她说话是什么声音？说什么口头禅？<br>
+          <div class="blank-line" style="margin-top:4px"></div>
+          <div class="blank-line"></div>
+        </div>
+      </div>
+      <!-- 闻 -->
+      <div class="sense-card">
+        <div class="sense-header">👃 闻到他/她</div>
+        <div class="sense-body">
+          他/她身边有什么味道？（如面包店的香味）<br>
+          <div class="blank-line" style="margin-top:4px"></div>
+          <div class="blank-line"></div>
+        </div>
+      </div>
+      <!-- 触摸 -->
+      <div class="sense-card">
+        <div class="sense-header">✋ 触摸到他/她</div>
+        <div class="sense-body">
+          他/她做的东西摸起来是什么感觉？<br>
+          <div class="blank-line" style="margin-top:4px"></div>
+          <div class="blank-line"></div>
+        </div>
+      </div>
+      <!-- 感觉 -->
+      <div class="sense-card">
+        <div class="sense-header">❤️ 感觉到他/她</div>
+        <div class="sense-body">
+          他/她给你什么感觉？温暖？厉害？亲切？<br>
+          <div class="blank-line" style="margin-top:4px"></div>
+          <div class="blank-line"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-question">如果用一种味道/声音/颜色形容他/她，我觉得是：___________</div>
+  </div>
+  <div class="page-footer">模板 9 / 10 · 五感卡片</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模板10：一封信 -->
+<!-- ============================================================ -->
+<div class="page t10">
+  <div class="page-header">社区探索家 · 人物小传</div>
+  <div class="page-content">
+    <div class="title">写给 <span class="blank-line" style="display:inline-block;width:100px;border-bottom-color:#6b8e4e;border-bottom-width:2px"></span> 的一封信</div>
+
+    <div class="letter">
+      <div class="decorations">
+        <span class="deco" style="top:10px;left:12px;font-size:16pt">&#127803;</span>
+        <span class="deco" style="top:30px;right:18px;font-size:12pt">&#11088;</span>
+        <span class="deco" style="top:80px;left:8px;font-size:10pt">&#127804;</span>
+        <span class="deco" style="bottom:120px;right:10px;font-size:14pt">&#127800;</span>
+        <span class="deco" style="bottom:60px;left:15px;font-size:11pt">&#11088;</span>
+        <span class="deco" style="top:150px;right:14px;font-size:9pt">&#127803;</span>
+        <span class="deco" style="top:200px;left:10px;font-size:13pt">&#127804;</span>
+      </div>
+
+      <div class="greeting">亲爱的 <span class="blank-line" style="display:inline-block;width:100px;border-bottom-color:#6b8e4e"></span> ：</div>
+
+      <div class="body-lines">
+        <div class="blank-line"></div>
+        <div class="blank-line"></div>
+        <div class="blank-line"></div>
+        <div class="blank-line"></div>
+        <div class="blank-line"></div>
+        <div class="blank-line"></div>
+        <div class="blank-line"></div>
+        <div class="blank-line"></div>
+        <div class="blank-line"></div>
+        <div class="blank-line"></div>
+        <div class="blank-line"></div>
+        <div class="blank-line"></div>
+      </div>
+
+      <div class="pre-fill">谢谢你做的事情。</div>
+
+      <div class="think-line">我想对你说：<span class="blank-line" style="display:inline-block;width:280px;border-bottom-color:#6b8e4e"></span></div>
+
+      <div class="signature-area">
+        你的小朋友 <span class="blank-line" style="display:inline-block;width:100px;border-bottom-color:#6b8e4e"></span>
+      </div>
+      <div class="date-line">
+        2026年<span class="blank-line" style="display:inline-block;width:40px;border-bottom-color:#ccc"></span>月<span class="blank-line" style="display:inline-block;width:40px;border-bottom-color:#ccc"></span>日
+      </div>
+
+      <div class="draw-gift">画一幅画<br>送给他/她</div>
+    </div>
+  </div>
+  <div class="page-footer">模板 10 / 10 · 一封信</div>
+</div>
+
+</body>
+</html>

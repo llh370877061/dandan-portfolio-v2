@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三种侦察方法 - 汇总卡片</title>
+<style>
+  @page {
+    size: A4;
+    margin: 12mm 15mm 15mm 15mm;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    background: #f5f0e8;
+    color: #333;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    background: #fffbf5;
+    padding: 28mm 18mm 20mm 18mm;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Decorative top border */
+  .page::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #f4845f, #4a9bd9, #4caf7c, #f4845f);
+  }
+
+  /* Title area */
+  .title-area {
+    text-align: center;
+    margin-bottom: 18px;
+  }
+
+  .main-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #2c2c2c;
+    letter-spacing: 4px;
+    margin-bottom: 6px;
+  }
+
+  .sub-title {
+    font-size: 15px;
+    color: #888;
+    letter-spacing: 2px;
+    font-weight: 400;
+  }
+
+  /* Three cards container */
+  .cards-container {
+    display: flex;
+    gap: 14px;
+    margin-top: 16px;
+  }
+
+  /* Individual card */
+  .card {
+    flex: 1;
+    border-radius: 16px;
+    padding: 18px 16px 16px 16px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+  }
+
+  /* Orange card */
+  .card-orange {
+    background: linear-gradient(180deg, #fff7f0 0%, #ffffff 30%);
+    border: 2px solid #f4a574;
+  }
+  .card-orange::before { background: #f4845f; }
+  .card-orange .card-number { color: #f4845f; }
+  .card-orange .card-icon { background: #fff0e8; color: #f4845f; }
+  .card-orange .card-tag { background: #f4845f; color: #fff; }
+
+  /* Blue card */
+  .card-blue {
+    background: linear-gradient(180deg, #f0f6ff 0%, #ffffff 30%);
+    border: 2px solid #7bb8e0;
+  }
+  .card-blue::before { background: #4a9bd9; }
+  .card-blue .card-number { color: #4a9bd9; }
+  .card-blue .card-icon { background: #e8f2fc; color: #4a9bd9; }
+  .card-blue .card-tag { background: #4a9bd9; color: #fff; }
+
+  /* Green card */
+  .card-green {
+    background: linear-gradient(180deg, #f0faf4 0%, #ffffff 30%);
+    border: 2px solid #7bc49a;
+  }
+  .card-green::before { background: #4caf7c; }
+  .card-green .card-number { color: #4caf7c; }
+  .card-green .card-icon { background: #e8f8ee; color: #4caf7c; }
+  .card-green .card-tag { background: #4caf7c; color: #fff; }
+
+  /* Card header */
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+
+  .card-title-group {
+    flex: 1;
+  }
+
+  .card-number {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 1px;
+  }
+
+  .card-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: #2c2c2c;
+    line-height: 1.3;
+  }
+
+  /* Card content sections */
+  .card-section {
+    margin-bottom: 10px;
+  }
+
+  .card-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .card-section-label::before {
+    content: "";
+    width: 3px;
+    height: 10px;
+    border-radius: 2px;
+    display: inline-block;
+  }
+
+  .card-orange .card-section-label::before { background: #f4845f; }
+  .card-blue .card-section-label::before { background: #4a9bd9; }
+  .card-green .card-section-label::before { background: #4caf7c; }
+
+  .card-core {
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+    line-height: 1.5;
+    padding: 8px 10px;
+    border-radius: 8px;
+  }
+
+  .card-orange .card-core { background: #fff5ed; }
+  .card-blue .card-core { background: #edf5fd; }
+  .card-green .card-core { background: #edf8f2; }
+
+  .card-body-text {
+    font-size: 11.5px;
+    line-height: 1.6;
+    color: #555;
+  }
+
+  .card-body-text ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .card-body-text li {
+    padding: 2px 0;
+    padding-left: 14px;
+    position: relative;
+  }
+
+  .card-body-text li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .card-orange .card-body-text li::before { background: #f4845f; }
+  .card-blue .card-body-text li::before { background: #4a9bd9; }
+  .card-green .card-body-text li::before { background: #4caf7c; }
+
+  /* Tags for marker suggestions */
+  .marker-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  .marker-tag {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .card-blue .marker-tag {
+    background: #e8f2fc;
+    color: #3a7bb8;
+  }
+
+  /* Feeling grid for green card */
+  .feeling-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  .feeling-item {
+    font-size: 10.5px;
+    padding: 4px 6px;
+    border-radius: 6px;
+    background: #f6fbf8;
+    border: 1px solid #d4edda;
+    line-height: 1.4;
+  }
+
+  .feeling-item span.emoji {
+    font-size: 13px;
+  }
+
+  /* Tips section */
+  .card-tip {
+    margin-top: auto;
+    padding-top: 8px;
+    border-top: 1px dashed #ddd;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .tip-icon {
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .tip-text {
+    font-size: 10.5px;
+    color: #888;
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  /* Footer */
+  .footer {
+    position: absolute;
+    bottom: 14mm;
+    left: 18mm;
+    right: 18mm;
+    text-align: center;
+    font-size: 10px;
+    color: #bbb;
+    letter-spacing: 2px;
+  }
+
+  /* Print optimization */
+  @media print {
+    body {
+      background: white;
+    }
+
+    .page {
+      width: 100%;
+      min-height: auto;
+      margin: 0;
+      padding: 15mm 15mm 18mm 15mm;
+      box-shadow: none;
+      page-break-after: always;
+    }
+
+    .page::before {
+      height: 4px;
+    }
+
+    .cards-container {
+      gap: 10px;
+    }
+
+    .card {
+      padding: 14px 12px 12px 12px;
+    }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      font-size: 22px;
+    }
+
+    .card-name {
+      font-size: 15px;
+    }
+
+    .footer {
+      bottom: 10mm;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Title -->
+  <div class="title-area">
+    <div class="main-title">三种侦察方法</div>
+    <div class="sub-title">小小侦察兵必备技能</div>
+  </div>
+
+  <!-- Three Cards -->
+  <div class="cards-container">
+
+    <!-- Card 1: Orange - Telescope -->
+    <div class="card card-orange">
+      <div class="card-header">
+        <div class="card-icon">🔭</div>
+        <div class="card-title-group">
+          <div class="card-number">方法 ①</div>
+          <div class="card-name">望远镜观察法</div>
+        </div>
+      </div>
+
+      <div class="card-section">
+        <div class="card-section-label">核心</div>
+        <div class="card-core">选一个地方，安静观察3分钟</div>
+      </div>
+
+      <div class="card-section">
+        <div class="card-section-label">怎么做</div>
+        <div class="card-body-text">
+          找一个你觉得有意思的地方，站定不动，用3分钟时间，把看到、听到、闻到的一切都记下来。
+        </div>
+      </div>
+
+      <div class="card-section">
+        <div class="card-section-label">记什么</div>
+        <div class="card-body-text">
+          <ul>
+            <li>人物</li>
+            <li>动作</li>
+            <li>颜色</li>
+            <li>声音</li>
+            <li>气味</li>
+            <li>细节</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card-tip">
+        <span class="tip-icon">💡</span>
+        <span class="tip-text">越安静越好，眼睛像望远镜一样慢慢扫描</span>
+      </div>
+    </div>
+
+    <!-- Card 2: Blue - Treasure Map -->
+    <div class="card card-blue">
+      <div class="card-header">
+        <div class="card-icon">🗺️</div>
+        <div class="card-title-group">
+          <div class="card-number">方法 ②</div>
+          <div class="card-name">宝藏地图法</div>
+        </div>
+      </div>
+
+      <div class="card-section">
+        <div class="card-section-label">核心</div>
+        <div class="card-core">在地图上标出你觉得重要的地方</div>
+      </div>
+
+      <div class="card-section">
+        <div class="card-section-label">怎么做</div>
+        <div class="card-body-text">
+          画一张简单的社区地图，用不同颜色和符号标出你发现的重要地点。
+        </div>
+      </div>
+
+      <div class="card-section">
+        <div class="card-section-label">标记建议</div>
+        <div class="marker-tags">
+          <span class="marker-tag">🏠 建筑</span>
+          <span class="marker-tag">👤 有趣的人</span>
+          <span class="marker-tag">🌳 自然</span>
+          <span class="marker-tag">🏪 商店</span>
+          <span class="marker-tag">❓ 问题</span>
+          <span class="marker-tag">⭐ 最喜欢的地方</span>
+        </div>
+      </div>
+
+      <div class="card-tip">
+        <span class="tip-icon">💡</span>
+        <span class="tip-text">不用画得像真地图，位置差不多就行，重要的是标出你发现的东西</span>
+      </div>
+    </div>
+
+    <!-- Card 3: Green - Emotion Map -->
+    <div class="card card-green">
+      <div class="card-header">
+        <div class="card-icon">😊😢🤔</div>
+        <div class="card-title-group">
+          <div class="card-number">方法 ③</div>
+          <div class="card-name">表情图法</div>
+        </div>
+      </div>
+
+      <div class="card-section">
+        <div class="card-section-label">核心</div>
+        <div class="card-core">用表情标注社区里不同地方给你的感受</div>
+      </div>
+
+      <div class="card-section">
+        <div class="card-section-label">怎么做</div>
+        <div class="card-body-text">
+          画4个格子，分别代表"开心的地方""普通的地方""难过的地方""好奇的地方"，把你看到的场景画在对应的格子里。
+        </div>
+      </div>
+
+      <div class="card-section">
+        <div class="card-section-label">4个格子</div>
+        <div class="feeling-grid">
+          <div class="feeling-item"><span class="emoji">😊</span> 开心的地方：让你觉得舒服、快乐的</div>
+          <div class="feeling-item"><span class="emoji">😐</span> 普通的地方：没什么特别的</div>
+          <div class="feeling-item"><span class="emoji">😢</span> 难过/担心的地方：你觉得需要改变的</div>
+          <div class="feeling-item"><span class="emoji">🤔</span> 好奇的地方：你特别想知道更多的</div>
+        </div>
+      </div>
+
+      <div class="card-tip">
+        <span class="tip-icon">💡</span>
+        <span class="tip-text">没有标准答案，你的感受就是最好的答案</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">社区探索家 · 小小侦察兵培训手册</div>
+
+</div>
+
+</body>
+</html>

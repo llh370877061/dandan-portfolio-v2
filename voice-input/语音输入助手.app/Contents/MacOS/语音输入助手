@@ -1,0 +1,53 @@
+#!/bin/bash
+# 语音输入助手 — 启动脚本
+# 启动本地 HTTP server，用 Chrome --app 模式打开
+
+PORT=18925
+APP_NAME="VoiceInputAssistant"
+
+# 定位 HTML 目录（app 同级的"语音输入助手"文件夹）
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+HTML_DIR="$SCRIPT_DIR/../语音输入助手"
+
+# 如果直接在语音输入助手目录下运行
+if [ -f "$SCRIPT_DIR/index.html" ]; then
+    HTML_DIR="$SCRIPT_DIR"
+fi
+
+# 检查文件
+if [ ! -f "$HTML_DIR/index.html" ]; then
+    # 尝试绝对路径
+    HTML_DIR="$HOME/Her工作间/语音输入助手"
+    if [ ! -f "$HTML_DIR/index.html" ]; then
+        osascript -e 'display dialog "找不到语音输入页面" buttons {"好"} default button 1 with icon stop'
+        exit 1
+    fi
+fi
+
+# 检查端口是否已被占用（之前的实例还在运行）
+if lsof -i :$PORT -t &>/dev/null; then
+    # 已有实例，直接用 AppleScript 打开
+    osascript -e "tell application \"Google Chrome\" to activate" \
+              -e "tell application \"Google Chrome\" to open location \"http://localhost:$PORT/index.html\""
+    exit 0
+fi
+
+# 启动 Python HTTP server
+cd "$HTML_DIR"
+python3 -m http.server $PORT --bind 127.0.0.1 &>/dev/null &
+SERVER_PID=$!
+
+# 等待 server 启动
+for i in 1 2 3 4 5; do
+    if curl -s "http://localhost:$PORT/index.html" >/dev/null 2>&1; then
+        break
+    fi
+    sleep 0.5
+done
+
+# 用 AppleScript 打开 Chrome（更可靠）
+osascript -e "tell application \"Google Chrome\" to activate" \
+          -e "tell application \"Google Chrome\" to open location \"http://localhost:$PORT/index.html\""
+
+# 保持运行，等待 server 进程结束
+wait $SERVER_PID 2>/dev/null

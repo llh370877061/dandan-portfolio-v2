@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>社区探索实施计划 | 和孩子们一起发现社区的秘密</title>
+<style>
+  :root {
+    --warm-bg: #FFF8F0;
+    --card-bg: #FFFFFF;
+    --primary: #E8734A;
+    --primary-light: #FDEEE8;
+    --secondary: #5B9E4F;
+    --secondary-light: #EDF6EB;
+    --accent-yellow: #F5C842;
+    --accent-yellow-light: #FFF8E1;
+    --accent-purple: #8B6DB5;
+    --accent-purple-light: #F3EEF8;
+    --accent-blue: #4A90C4;
+    --accent-blue-light: #E8F2FA;
+    --text-dark: #3D3229;
+    --text-medium: #6B5E52;
+    --text-light: #9B8E82;
+    --border: #E8DDD4;
+    --shadow: 0 2px 12px rgba(61,50,41,0.08);
+    --shadow-hover: 0 4px 20px rgba(61,50,41,0.14);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--warm-bg);
+    color: var(--text-dark);
+    line-height: 1.7;
+    padding-bottom: 80px;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, #E8734A 0%, #F5C842 50%, #5B9E4F 100%);
+    padding: 48px 24px 56px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 32px;
+    background: var(--warm-bg);
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  }
+  .header h1 {
+    font-size: 2rem;
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    margin-bottom: 8px;
+    letter-spacing: 2px;
+  }
+  .header .subtitle {
+    color: rgba(255,255,255,0.92);
+    font-size: 1.05rem;
+    margin-bottom: 20px;
+  }
+  .header .meta-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+  .meta-tag {
+    background: rgba(255,255,255,0.28);
+    backdrop-filter: blur(4px);
+    color: #fff;
+    padding: 5px 16px;
+    border-radius: 20px;
+    font-size: 0.88rem;
+  }
+
+  /* ===== CONTAINER ===== */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* ===== SECTION TITLES ===== */
+  .section-title {
+    font-size: 1.25rem;
+    color: var(--primary);
+    margin: 40px 0 16px;
+    padding-left: 14px;
+    border-left: 4px solid var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ===== OVERVIEW CARDS ===== */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .overview-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+  }
+  .overview-card h3 {
+    font-size: 0.92rem;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .overview-card p, .overview-card ul {
+    font-size: 0.95rem;
+    color: var(--text-medium);
+  }
+  .overview-card ul {
+    list-style: none;
+    padding: 0;
+  }
+  .overview-card ul li::before {
+    content: '\1F331 ';
+  }
+  .overview-card.full-width {
+    grid-column: 1 / -1;
+  }
+
+  /* ===== TIMELINE ===== */
+  .timeline {
+    display: flex;
+    gap: 0;
+    margin: 20px 0 32px;
+    overflow-x: auto;
+    padding: 8px 0 16px;
+  }
+  .timeline-item {
+    flex: 1;
+    min-width: 130px;
+    text-align: center;
+    position: relative;
+    padding: 0 6px;
+  }
+  .timeline-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    margin: 0 auto 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #fff;
+    position: relative;
+    z-index: 2;
+  }
+  .timeline-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 18px;
+    left: calc(50% + 18px);
+    right: calc(-50% + 18px);
+    height: 3px;
+    background: var(--border);
+    z-index: 1;
+  }
+  .timeline-label {
+    font-size: 0.8rem;
+    color: var(--text-medium);
+    line-height: 1.4;
+  }
+  .timeline-title {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-top: 4px;
+  }
+
+  .phase-1 .timeline-dot { background: var(--primary); }
+  .phase-2 .timeline-dot { background: var(--accent-purple); }
+  .phase-3 .timeline-dot { background: var(--secondary); }
+
+  /* ===== PHASE LABEL ===== */
+  .phase-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .phase-label.p1 { background: var(--primary-light); color: var(--primary); }
+  .phase-label.p2 { background: var(--accent-purple-light); color: var(--accent-purple); }
+  .phase-label.p3 { background: var(--secondary-light); color: var(--secondary); }
+
+  /* ===== ACTIVITY CARDS ===== */
+  .activity-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  .activity-card:hover { box-shadow: var(--shadow-hover); }
+
+  .card-header {
+    padding: 20px 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    user-select: none;
+    border-bottom: 1px solid transparent;
+    transition: background 0.15s;
+  }
+  .card-header:hover { background: rgba(0,0,0,0.015); }
+
+  .card-number {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .card-header-text { flex: 1; }
+  .card-header-text h3 {
+    font-size: 1.1rem;
+    margin-bottom: 2px;
+  }
+  .card-header-text .card-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-light);
+  }
+  .card-toggle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--warm-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: var(--text-light);
+    transition: transform 0.25s;
+    flex-shrink: 0;
+  }
+  .activity-card.open .card-toggle { transform: rotate(180deg); }
+  .activity-card.open .card-header { border-bottom-color: var(--border); }
+
+  .card-body {
+    display: none;
+    padding: 24px;
+  }
+  .activity-card.open .card-body { display: block; }
+
+  /* Card color themes */
+  .card-theme-1 .card-number { background: var(--primary); }
+  .card-theme-1 .card-header-text h3 { color: var(--primary); }
+  .card-theme-2 .card-number { background: #E08B3A; }
+  .card-theme-2 .card-header-text h3 { color: #E08B3A; }
+  .card-theme-3 .card-number { background: var(--accent-purple); }
+  .card-theme-3 .card-header-text h3 { color: var(--accent-purple); }
+  .card-theme-4 .card-number { background: #6A5DAC; }
+  .card-theme-4 .card-header-text h3 { color: #6A5DAC; }
+  .card-theme-5 .card-number { background: var(--secondary); }
+  .card-theme-5 .card-header-text h3 { color: var(--secondary); }
+  .card-theme-6 .card-number { background: #3D8B37; }
+  .card-theme-6 .card-header-text h3 { color: #3D8B37; }
+
+  /* ===== INNER SECTIONS ===== */
+  .inner-section {
+    margin-bottom: 24px;
+  }
+  .inner-section:last-child { margin-bottom: 0; }
+
+  .inner-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .inner-title .icon {
+    font-size: 1.1rem;
+  }
+
+  /* ===== GOALS ===== */
+  .goals {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .goal-tag {
+    background: var(--accent-yellow-light);
+    color: #8B7A3A;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 0.85rem;
+    border: 1px solid #F0E4B8;
+  }
+
+  /* ===== FLOW TABLE ===== */
+  .flow-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+  .flow-table thead th {
+    background: #F8F3EE;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-medium);
+    border-bottom: 1px solid var(--border);
+  }
+  .flow-table tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #F3EDE6;
+    vertical-align: top;
+  }
+  .flow-table tbody tr:last-child td { border-bottom: none; }
+  .flow-table .time-col {
+    white-space: nowrap;
+    font-weight: 600;
+    color: var(--text-light);
+    width: 100px;
+  }
+  .flow-table .note {
+    font-size: 0.82rem;
+    color: var(--text-light);
+    margin-top: 4px;
+  }
+
+  /* ===== LEARNING SHEET ===== */
+  .sheet-preview {
+    background: #FFFDF7;
+    border: 2px dashed #E8DDD4;
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    position: relative;
+  }
+  .sheet-preview::before {
+    content: '\1F4CB 学习单预览';
+    position: absolute;
+    top: -12px;
+    left: 16px;
+    background: #FFFDF7;
+    padding: 0 8px;
+    font-size: 0.8rem;
+    color: var(--text-light);
+    font-weight: 600;
+  }
+  .sheet-field {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+  }
+  .sheet-field:last-child { margin-bottom: 0; }
+  .sheet-label {
+    font-weight: 600;
+    color: var(--text-medium);
+    min-width: 120px;
+    flex-shrink: 0;
+  }
+  .sheet-value {
+    color: var(--text-dark);
+    flex: 1;
+  }
+  .sheet-line {
+    border-bottom: 1px solid #E0D8CE;
+    flex: 1;
+    height: 1.2em;
+    margin-left: 8px;
+  }
+  .sheet-draw-box {
+    border: 1px solid #D8D0C6;
+    border-radius: 8px;
+    height: 80px;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-light);
+    font-size: 0.82rem;
+    background: rgba(255,255,255,0.6);
+  }
+  .sheet-hint {
+    font-size: 0.82rem;
+    color: var(--text-light);
+    font-style: italic;
+    margin-top: 4px;
+  }
+
+  /* ===== PARENT GUIDE ===== */
+  .parent-guide {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .guide-do, .guide-dont {
+    border-radius: var(--radius-sm);
+    padding: 16px;
+  }
+  .guide-do {
+    background: var(--secondary-light);
+    border: 1px solid #C8E8C2;
+  }
+  .guide-dont {
+    background: #FFF0EC;
+    border: 1px solid #F0D0C8;
+  }
+  .guide-do h4, .guide-dont h4 {
+    font-size: 0.88rem;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .guide-do h4 { color: var(--secondary); }
+  .guide-dont h4 { color: #D46A5A; }
+  .guide-do ul, .guide-dont ul {
+    list-style: none;
+    padding: 0;
+    font-size: 0.86rem;
+    line-height: 1.8;
+  }
+  .guide-do li::before { content: '\2705 '; }
+  .guide-dont li::before { content: '\274C '; }
+
+  /* ===== MATERIALS SECTION ===== */
+  .materials-section {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-top: 16px;
+  }
+  .materials-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .material-group {
+    background: var(--warm-bg);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+  }
+  .material-group h4 {
+    font-size: 0.88rem;
+    color: var(--primary);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .material-group ul {
+    list-style: none;
+    padding: 0;
+    font-size: 0.86rem;
+    line-height: 2;
+  }
+  .material-group ul li::before {
+    content: '\2610 ';
+    color: var(--text-light);
+  }
+  .material-group .qty {
+    color: var(--text-light);
+    font-size: 0.8rem;
+  }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-light);
+    font-size: 0.85rem;
+  }
+  .footer .heart { color: var(--primary); }
+
+  /* ===== PRINT ===== */
+  @media print {
+    body { background: #fff; padding-bottom: 0; }
+    .header { padding: 32px 24px 40px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .activity-card { break-inside: avoid; box-shadow: none; border: 1px solid #eee; }
+    .card-body { display: block !important; }
+    .card-toggle { display: none; }
+    .card-header { cursor: default; }
+    .sheet-preview { border-style: solid; }
+    .materials-section { break-inside: avoid; }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 700px) {
+    .overview-grid { grid-template-columns: 1fr; }
+    .parent-guide { grid-template-columns: 1fr; }
+    .materials-grid { grid-template-columns: 1fr; }
+    .header h1 { font-size: 1.5rem; }
+    .timeline { flex-wrap: wrap; gap: 8px; }
+    .timeline-item:not(:last-child)::after { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <h1>🏘️ 社区探索实施计划</h1>
+  <p class="subtitle">和孩子们一起，发现社区的秘密花园</p>
+  <div class="meta-tags">
+    <span class="meta-tag">📅 6次系列活动</span>
+    <span class="meta-tag">👨‍👩‍👧‍👦 4-5个家庭</span>
+    <span class="meta-tag">🧒 6-8个孩子 + 4-5个家长</span>
+    <span class="meta-tag">⏱️ 每次2-2.5小时</span>
+    <span class="meta-tag">📖 绘本线索贯穿</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ===== 总览 ===== -->
+  <h2 class="section-title">📋 活动总览</h2>
+
+  <div class="overview-grid">
+    <div class="overview-card">
+      <h3>🎯 系列目标</h3>
+      <p>通过6次渐进式社区探索活动，带领孩子从<strong>亲近社区</strong>走向<strong>探究理解</strong>，再到<strong>表达与行动</strong>，培养儿童的公共意识与社区参与能力。</p>
+    </div>
+    <div class="overview-card">
+      <h3>👥 参与者</h3>
+      <ul>
+        <li>丹丹（领队，女儿11岁、儿子9岁）+ 4个家庭</li>
+        <li>预计：6-8个孩子 + 4-5个家长</li>
+      </ul>
+    </div>
+    <div class="overview-card full-width">
+      <h3>🧭 设计依据</h3>
+      <p style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;">
+        <span class="goal-tag">哆悉哒"阅见希望"初阶+进阶培训</span>
+        <span class="goal-tag">人·文·地·产·景 五维观察</span>
+        <span class="goal-tag">体验圈课程设计</span>
+        <span class="goal-tag">公共性三层：观察→表达→行动</span>
+        <span class="goal-tag">儿童参与阶梯（赋权与自主）</span>
+        <span class="goal-tag">项目式学习 PBL</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- ===== TIMELINE ===== -->
+  <h2 class="section-title">🗺️ 活动时间线</h2>
+  <div class="timeline">
+    <div class="timeline-item phase-1">
+      <div class="timeline-dot">1</div>
+      <div class="timeline-label">第1周</div>
+      <div class="timeline-title">出发！走进我们的社区</div>
+    </div>
+    <div class="timeline-item phase-1">
+      <div class="timeline-dot">2</div>
+      <div class="timeline-label">第2周</div>
+      <div class="timeline-title">小小侦察兵</div>
+    </div>
+    <div class="timeline-item phase-2">
+      <div class="timeline-dot">3</div>
+      <div class="timeline-label">第3周</div>
+      <div class="timeline-title">社区里的人和故事</div>
+    </div>
+    <div class="timeline-item phase-2">
+      <div class="timeline-dot">4</div>
+      <div class="timeline-label">第4周</div>
+      <div class="timeline-title">画一张社区地图</div>
+    </div>
+    <div class="timeline-item phase-3">
+      <div class="timeline-dot">5</div>
+      <div class="timeline-label">第5周</div>
+      <div class="timeline-title">我们的改变计划</div>
+    </div>
+    <div class="timeline-item phase-3">
+      <div class="timeline-dot">6</div>
+      <div class="timeline-label">第6周</div>
+      <div class="timeline-title">社区展览 &amp; 庆祝</div>
+    </div>
+  </div>
+
+  <!-- ===== 三次阶段说明 ===== -->
+  <div class="overview-grid" style="margin-bottom:12px;">
+    <div class="overview-card">
+      <h3>🌅 第一阶段：亲近社区 + 观察方法（第1-2次）</h3>
+      <p>通过绘本引入和实地探索，让孩子们用五官感受社区，学习"人·文·地·产·景"五维观察法，激发好奇心。</p>
+    </div>
+    <div class="overview-card">
+      <h3>🔍 第二阶段：深度探究 + 表达（第3-4次）</h3>
+      <p>学习访谈和记录方法，走进社区与人对话，发现问题，用地图和图画表达自己的理解。</p>
+    </div>
+  </div>
+  <div class="overview-grid" style="margin-bottom:32px;">
+    <div class="overview-card full-width">
+      <h3>🌱 第三阶段：行动 + 展示（第5-6次）</h3>
+      <p>从发现问题到提出改变方案，动手实施一个小改变，最后举办社区展览，让改变被看见。</p>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- ===== ACTIVITY 1 ===== -->
+  <!-- ========================================== -->
+  <h2 class="section-title">🌈 活动详情</h2>
+
+  <div class="activity-card card-theme-1" id="card1">
+    <div class="card-header" onclick="toggleCard('card1')">
+      <div class="card-number">1</div>
+      <div class="card-header-text">
+        <h3>出发！走进我们的社区</h3>
+        <div class="card-subtitle">第一周 · 亲近社区 · 公共性观察（接触）</div>
+      </div>
+      <div class="card-toggle">▼</div>
+    </div>
+    <div class="card-body">
+
+      <div class="inner-section">
+        <span class="phase-label p1">🌅 第一阶段：亲近社区</span>
+        <div class="goals">
+          <span class="goal-tag">认识社区探索活动的意义</span>
+          <span class="goal-tag">用五官初步感受社区</span>
+          <span class="goal-tag">了解"人·文·地·产·景"五维观察</span>
+          <span class="goal-tag">建立团队归属感</span>
+        </div>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">📖</span> 绘本线索</div>
+        <p style="font-size:0.92rem;color:var(--text-medium);background:var(--accent-yellow-light);padding:12px 16px;border-radius:var(--radius-sm);border-left:3px solid var(--accent-yellow);">
+          本次共读《街道是大家的》——巴西贫民窟的孩子们自己动手改变社区。讨论：你觉得我们的社区有哪些特别的地方？如果你是故事里的孩子，你想改变什么？
+        </p>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">⏰</span> 活动流程</div>
+        <table class="flow-table">
+          <thead>
+            <tr><th>时间</th><th>内容</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="time-col">0:00-0:20<br>破冰</td>
+              <td>
+                <strong>🤝 相识游戏"社区接龙"</strong><br>
+                每人说一个自己知道的社区里的地方，后面的人重复前面的再说新的，形成记忆链条。最终看看大家一共知道社区里多少个地方。
+                <div class="note">💡 如果有新家庭加入，让老成员主动打招呼，营造欢迎氛围</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">0:20-0:50<br>绘本共读</td>
+              <td>
+                <strong>📖 共读《街道是大家的》</strong><br>
+                分段朗读+看图讨论。读完后引导讨论：<br>
+                · 故事里的孩子们做了什么？<br>
+                · 他们遇到了什么困难？<br>
+                · 如果你住在那里，你想做什么？
+                <div class="note">💡 不要急于总结"道理"，让孩子自由表达。可以用"你觉得……"开头提问</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">0:50-1:10<br>引入框架</td>
+              <td>
+                <strong>🔍 介绍"五维观察法"</strong><br>
+                用一张大卡片展示五个维度：<br>
+                👤 <strong>人</strong>——社区里有什么人？<br>
+                📜 <strong>文</strong>——有什么历史和文化？<br>
+                🗺️ <strong>地</strong>——地理和环境是怎样的？<br>
+                🏪 <strong>产</strong>——有什么产业和生意？<br>
+                🌳 <strong>景</strong>——有什么好看的景色？
+                <div class="note">💡 用卡片让每个孩子抽一个维度，今天探索时重点观察自己抽到的那个</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">1:10-1:50<br>户外探索</td>
+              <td>
+                <strong>🚶 初次社区漫步（30-40分钟）</strong><br>
+                分2-3组（每组1-2个大人+3-4个孩子），在社区周边步行探索。每组重点观察自己抽到的维度，但也要留意其他维度。用手机拍照、在学习单上简单记录。
+                <div class="note">💡 路线不要超过1公里，确保安全。大人走在队伍两侧，但不要替孩子"发现"</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">1:50-2:10<br>分享反思</td>
+              <td>
+                <strong>💬 回来围坐分享</strong><br>
+                每组用2-3分钟分享"我发现了……"。领队用大白纸把大家的发现按"人·文·地·产·景"分类记录。引导发现：同一个地方，不同人看到的东西不一样！
+                <div class="note">💡 每个孩子都要有机会说，哪怕只说一个词也行</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">2:10-2:20<br>收尾</td>
+              <td>
+                <strong>📝 预告+布置</strong><br>
+                发放学习单，预告下次要做"小小侦察兵"。告诉孩子们：下次我们要带着本子和笔去发现更多秘密！
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">📋</span> 学习单：我的第一次社区发现</div>
+        <div class="sheet-preview">
+          <div class="sheet-field">
+            <span class="sheet-label">探索者名字：</span>
+            <div class="sheet-line"></div>
+          </div>
+          <div class="sheet-field">
+            <span class="sheet-label">探索日期：</span>
+            <div class="sheet-line"></div>
+          </div>
+          <div class="sheet-field">
+            <span class="sheet-label">我的观察维度：</span>
+            <div class="sheet-value" style="font-size:0.85rem;color:var(--text-light);">（人 / 文 / 地 / 产 / 景，圈出你抽到的）</div>
+          </div>
+          <hr style="border:none;border-top:1px dashed #E0D8CE;margin:12px 0;">
+          <div class="sheet-field">
+            <span class="sheet-label">👀 我看到的：</span>
+          </div>
+          <div class="sheet-draw-box">（画一画或写一写你看到的）</div>
+          <div class="sheet-field" style="margin-top:10px;">
+            <span class="sheet-label">👂 我听到的：</span>
+          </div>
+          <div class="sheet-line"></div>
+          <div class="sheet-field" style="margin-top:10px;">
+            <span class="sheet-label">👃 我闻到的：</span>
+          </div>
+          <div class="sheet-line"></div>
+          <div class="sheet-field" style="margin-top:10px;">
+            <span class="sheet-label">❓ 我最好奇的事情：</span>
+          </div>
+          <div class="sheet-line"></div>
+          <div class="sheet-field" style="margin-top:10px;">
+            <span class="sheet-label">⭐ 今天最开心的发现：</span>
+          </div>
+          <div class="sheet-line"></div>
+        </div>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">👨‍👩‍👧</span> 家长指引</div>
+        <div class="parent-guide">
+          <div class="guide-do">
+            <h4>✅ 做什么</h4>
+            <ul>
+              <li>跟在孩子后面，让他们带路</li>
+              <li>用好奇的语气问"你发现了什么？"</li>
+              <li>帮孩子拍照记录他们感兴趣的东西</li>
+              <li>自己也参与观察，做孩子的榜样</li>
+              <li>允许孩子走慢、走神、重复看一个东西</li>
+            </ul>
+          </div>
+          <div class="guide-dont">
+            <h4>❌ 不做什么</h4>
+            <ul>
+              <li>不要说"这有什么好看的"</li>
+              <li>不要替孩子决定看什么</li>
+              <li>不要催促"快点走"</li>
+              <li>不要代替孩子回答问题</li>
+              <li>不要纠正孩子的"错误"观察</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- ===== ACTIVITY 2 ===== -->
+  <!-- ========================================== -->
+  <div class="activity-card card-theme-2" id="card2">
+    <div class="card-header" onclick="toggleCard('card2')">
+      <div class="card-number">2</div>
+      <div class="card-header-text">
+        <h3>小小侦察兵</h3>
+        <div class="card-subtitle">第二周 · 探究方法 · 公共性观察（了解）</div>
+      </div>
+      <div class="card-toggle">▼</div>
+    </div>
+    <div class="card-body">
+
+      <div class="inner-section">
+        <span class="phase-label p1">🌅 第一阶段：亲近社区</span>
+        <div class="goals">
+          <span class="goal-tag">学习观察法和记录方法</span>
+          <span class="goal-tag">发现社区中值得探究的问题</span>
+          <span class="goal-tag">练习用文字和图画记录</span>
+          <span class="goal-tag">培养问题意识</span>
+        </div>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">📖</span> 绘本线索</div>
+        <p style="font-size:0.92rem;color:var(--text-medium);background:var(--accent-yellow-light);padding:12px 16px;border-radius:var(--radius-sm);border-left:3px solid var(--accent-yellow);">
+          回顾《街道是大家的》中孩子们"调查"社区的做法。今天我们也要像侦探一样去侦察！发给每个孩子一个"侦察兵证"（提前制作的小卡片），让他们带上"侦察装备"出发。
+        </p>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">⏰</span> 活动流程</div>
+        <table class="flow-table">
+          <thead>
+            <tr><th>时间</th><th>内容</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="time-col">0:00-0:15<br>回顾</td>
+              <td>
+                <strong>🔄 上次探索回顾</strong><br>
+                围坐分享：上次探索后，你有没有在日常生活里又注意到什么？用"我上次回去以后发现……"来分享。发"侦察兵证"，介绍今天要完成的侦察任务。
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">0:15-0:35<br>方法教学</td>
+              <td>
+                <strong>📓 学习三种侦察方法</strong><br>
+                ① <strong>望远镜观察法</strong>：选一个地方，安静观察3分钟，写下/画下看到的一切（人物、动作、颜色、声音）<br>
+                ② <strong>宝藏地图法</strong>：在地图上标出你觉得重要的地方，用不同颜色标注<br>
+                ③ <strong>表情图法</strong>：在学习单上用不同表情标注社区里让你开心/无聊/难过/好奇的地方
+                <div class="note">💡 可以在纸上先示范一次，让孩子们理解怎么操作</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">0:35-1:25<br>实地侦察</td>
+              <td>
+                <strong>🕵️ 分组侦察任务（50分钟）</strong><br>
+                2-3组出发，每组完成：选一个"侦察点"做3分钟望远镜观察、画一段社区地图、标注表情图。大人负责安全和时间提醒，不干涉观察内容。
+                <div class="note">💡 建议选3-4个固定侦察点，让不同组轮流去，回来后可以对比发现</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">1:25-1:55<br>汇报</td>
+              <td>
+                <strong>📢 侦察汇报会</strong><br>
+                每组派代表汇报侦察成果。重点引导发现"问题"：你觉得社区里有什么可以变得更好的地方？把孩子们提到的问题记录在"问题墙"大纸上。
+                <div class="note">💡 这个环节非常重要——这些问题将成为后续活动的驱动力</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">1:55-2:10<br>反思</td>
+              <td>
+                <strong>💭 体验圈反思</strong><br>
+                引导三个层次的反思：<br>
+                · 体验：今天最有趣/最难的是什么？<br>
+                · 归纳：你发现了什么规律？<br>
+                · 应用：如果下次再去，你会怎么做？
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">📋</span> 学习单：侦察报告</div>
+        <div class="sheet-preview">
+          <div class="sheet-field">
+            <span class="sheet-label">侦察兵代号：</span>
+            <div class="sheet-line"></div>
+          </div>
+          <div class="sheet-field">
+            <span class="sheet-label">侦察日期：</span>
+            <div class="sheet-line"></div>
+          </div>
+          <hr style="border:none;border-top:1px dashed #E0D8CE;margin:12px 0;">
+          <div class="sheet-field">
+            <span class="sheet-label">🔍 侦察点：</span>
+            <div class="sheet-line"></div>
+          </div>
+          <div class="sheet-field" style="margin-top:8px;">
+            <span class="sheet-label">⏱️ 3分钟观察记录：</span>
+          </div>
+          <div class="sheet-draw-box">（安静观察，画下或写下你注意到的细节）</div>
+          <div class="sheet-field" style="margin-top:10px;">
+            <span class="sheet-label">🗺️ 我画的地图（一段路或一个小区域）：</span>
+          </div>
+          <div class="sheet-draw-box" style="height:120px;">（画出你走过的路线和重要地标）</div>
+          <div class="sheet-field" style="margin-top:10px;">
+            <span class="sheet-label">😊 表情标注：</span>
+          </div>
+          <div style="display:flex;gap:16px;font-size:0.88rem;margin-top:4px;flex-wrap:wrap;">
+            <span>😊 开心的地方：___________</span>
+            <span>😐 无聊的地方：___________</span>
+            <span>😟 难过的地方：___________</span>
+            <span>🤔 好奇的地方：___________</span>
+          </div>
+          <div class="sheet-field" style="margin-top:12px;">
+            <span class="sheet-label">💡 我发现的问题：</span>
+          </div>
+          <div class="sheet-line"></div>
+          <div class="sheet-hint">（这个问题可以是"为什么……"或"我觉得可以……"）</div>
+        </div>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">👨‍👩‍👧</span> 家长指引</div>
+        <div class="parent-guide">
+          <div class="guide-do">
+            <h4>✅ 做什么</h4>
+            <ul>
+              <li>帮孩子计时3分钟观察</li>
+              <li>提醒孩子"慢慢看，不着急"</li>
+              <li>记录孩子口述的发现</li>
+              <li>对孩子的"问题"表示好奇</li>
+              <li>自己也写一份侦察报告</li>
+            </ul>
+          </div>
+          <div class="guide-dont">
+            <h4>❌ 不做什么</h4>
+            <ul>
+              <li>不要帮孩子画或写</li>
+              <li>不要说"这个问题太简单了"</li>
+              <li>不要引导孩子关注你认为重要的</li>
+              <li>不要比较不同孩子的记录</li>
+              <li>不要替孩子解释他们不懂的</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- ===== ACTIVITY 3 ===== -->
+  <!-- ========================================== -->
+  <div class="activity-card card-theme-3" id="card3">
+    <div class="card-header" onclick="toggleCard('card3')">
+      <div class="card-number">3</div>
+      <div class="card-header-text">
+        <h3>社区里的人和故事</h3>
+        <div class="card-subtitle">第三周 · 深度探究 · 公共性观察（感知）</div>
+      </div>
+      <div class="card-toggle">▼</div>
+    </div>
+    <div class="card-body">
+
+      <div class="inner-section">
+        <span class="phase-label p2">🔍 第二阶段：深度探究</span>
+        <div class="goals">
+          <span class="goal-tag">学习访谈方法</span>
+          <span class="goal-tag">与社区人物对话</span>
+          <span class="goal-tag">倾听和记录社区故事</span>
+          <span class="goal-tag">理解社区中的人与人的关系</span>
+        </div>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">📖</span> 绘本线索</div>
+        <p style="font-size:0.92rem;color:var(--text-medium);background:var(--accent-yellow-light);padding:12px 16px;border-radius:var(--radius-sm);border-left:3px solid var(--accent-yellow);">
+          可选引入绘本《市场街最后一站》或其他关于社区人物的绘本。讨论：故事里有哪些人？他们和社区有什么关系？我们社区里也有这样有故事的人吗？
+        </p>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">⏰</span> 活动流程</div>
+        <table class="flow-table">
+          <thead>
+            <tr><th>时间</th><th>内容</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="time-col">0:00-0:20<br>绘本引入</td>
+              <td>
+                <strong>📖 绘本共读+讨论</strong><br>
+                共读选定绘本，聚焦"人物"维度。讨论：故事里谁最有意思？为什么？引导孩子想到：我们社区里也有很多有故事的人。
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">0:20-0:40<br>方法学习</td>
+              <td>
+                <strong>🎤 学习"友善访谈"</strong><br>
+                角色扮演示范：怎么礼貌地开始一段对话？<br>
+                · 开头："您好，我们在做一个社区探索活动……"<br>
+                · 提问：准备3-5个简单问题<br>
+                · 倾听：认真听，不打断<br>
+                · 结束：说谢谢<br>
+                <strong>提前确认今天可以采访的社区人物</strong>（如小店老板、保安、清洁工、邻居老人等）。
+                <div class="note">💡 如果有不方便采访的情况，可以改为采访自己的家长——"你在这个社区住了多久？最喜欢这里什么？"</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">0:40-1:20<br>访谈实践</td>
+              <td>
+                <strong>🤝 分组访谈（40分钟）</strong><br>
+                2-3组，每组1-2个大人陪同。每组选一个采访对象，带上学习单和笔。大人可以在旁边但不要代替孩子提问。如果采访对象不接受，要教孩子礼貌地说"谢谢，打扰了"。
+                <div class="note">💡 安全第一：不进入私人空间，不去偏僻的地方，大人全程陪同</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">1:20-1:50<br>故事整理</td>
+              <td>
+                <strong>📝 整理"社区人物故事"</strong><br>
+                回来后，每组把访谈内容整理成一个"人物小传"：他是谁？他做什么？他喜欢这个社区吗？他有什么故事？可以在大纸上画画写写。
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">1:50-2:10<br>分享</td>
+              <td>
+                <strong>💬 故事分享会</strong><br>
+                每组分享自己的"人物故事"。引导思考：这些人和我们的社区有什么关系？如果他们不在了，社区会怎样？（引出"社区里的连接"概念）
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">📋</span> 学习单：社区人物访谈卡</div>
+        <div class="sheet-preview">
+          <div class="sheet-field">
+            <span class="sheet-label">访谈者：</span>
+            <div class="sheet-line"></div>
+          </div>
+          <div class="sheet-field">
+            <span class="sheet-label">访谈日期：</span>
+            <div class="sheet-line"></div>
+          </div>
+          <hr style="border:none;border-top:1px dashed #E0D8CE;margin:12px 0;">
+          <div class="sheet-field">
+            <span class="sheet-label">🧑 被访者姓名/称呼：</span>
+            <div class="sheet-line"></div>
+          </div>
+          <div class="sheet-field">
+            <span class="sheet-label">🏠 他在社区里做什么：</span>
+            <div class="sheet-line"></div>
+          </div>
+          <div class="sheet-field" style="margin-top:8px;">
+            <span class="sheet-label">💬 我问的问题和回答：</span>
+          </div>
+          <div style="margin-left:12px;">
+            <div class="sheet-field"><span style="min-width:30px;">Q1:</span><div class="sheet-line"></div></div>
+            <div class="sheet-field"><span style="min-width:30px;">A1:</span><div class="sheet-line"></div></div>
+            <div class="sheet-field"><span style="min-width:30px;">Q2:</span><div class="sheet-line"></div></div>
+            <div class="sheet-field"><span style="min-width:30px;">A2:</span><div class="sheet-line"></div></div>
+            <div class="sheet-field"><span style="min-width:30px;">Q3:</span><div class="sheet-line"></div></div>
+            <div class="sheet-field"><span style="min-width:30px;">A3:</span><div class="sheet-line"></div></div>
+          </div>
+          <div class="sheet-field" style="margin-top:10px;">
+            <span class="sheet-label">🖼️ 画一画这个人：</span>
+          </div>
+          <div class="sheet-draw-box" style="height:100px;"></div>
+          <div class="sheet-field" style="margin-top:10px;">
+            <span class="sheet-label">❤️ 我的感受：</span>
+          </div>
+          <div class="sheet-line"></div>
+        </div>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">👨‍👩‍👧</span> 家长指引</div>
+        <div class="parent-guide">
+          <div class="guide-do">
+            <h4>✅ 做什么</h4>
+            <ul>
+              <li>陪同但让孩子主导提问</li>
+              <li>帮孩子记录他们听到的内容</li>
+              <li>在孩子紧张时给个鼓励的眼神</li>
+              <li>示范如何礼貌地开始和结束对话</li>
+              <li>帮孩子拍照（经对方同意）</li>
+            </ul>
+          </div>
+          <div class="guide-dont">
+            <h4>❌ 不做什么</h4>
+            <ul>
+              <li>不要代替孩子提问</li>
+              <li>不要纠正孩子的提问方式</li>
+              <li>不要在旁边和被访者聊起来</li>
+              <li>不要催促孩子"快问快结束"</li>
+              <li>不要评价"问得不好"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- ===== ACTIVITY 4 ===== -->
+  <!-- ========================================== -->
+  <div class="activity-card card-theme-4" id="card4">
+    <div class="card-header" onclick="toggleCard('card4')">
+      <div class="card-number">4</div>
+      <div class="card-header-text">
+        <h3>画一张社区地图</h3>
+        <div class="card-subtitle">第四周 · 整合表达 · 公共性表达（说）</div>
+      </div>
+      <div class="card-toggle">▼</div>
+    </div>
+    <div class="card-body">
+
+      <div class="inner-section">
+        <span class="phase-label p2">🔍 第二阶段：深度探究</span>
+        <div class="goals">
+          <span class="goal-tag">整合前几次的发现</span>
+          <span class="goal-tag">用地图表达对社区的理解</span>
+          <span class="goal-tag">练习公开表达和展示</span>
+          <span class="goal-tag">发现社区的优势和问题</span>
+        </div>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">📖</span> 绘本线索</div>
+        <p style="font-size:0.92rem;color:var(--text-medium);background:var(--accent-yellow-light);padding:12px 16px;border-radius:var(--radius-sm);border-left:3px solid var(--accent-yellow)">
+          回顾《街道是大家的》中孩子们画社区地图的情节。今天我们也要画一张属于我们自己的社区地图！看看孩子们笔下的地图和真实地图有什么不同——那些"不同"就是孩子们眼中最重要的东西。
+        </p>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">⏰</span> 活动流程</div>
+        <table class="flow-table">
+          <thead>
+            <tr><th>时间</th><th>内容</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="time-col">0:00-0:15<br>热身</td>
+              <td>
+                <strong>🧠 "社区记忆接龙"</strong><br>
+                不看任何材料，大家一起回忆：我们这三周探索了哪些地方？看到了什么？听到了什么故事？把提到的内容写在白板上，按人·文·地·产·景分类。
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">0:15-0:30<br>方法示范</td>
+              <td>
+                <strong>🗺️ 地图绘制示范</strong><br>
+                展示几种不同风格的社区地图（手绘地图、地图标注、漫画地图），讨论：地图不一定要精确！重要的是表达你认为重要的东西。介绍可以用的符号：⭐代表最喜欢的地方，❓代表有疑问的地方，❗代表需要改变的地方。
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">0:30-1:20<br>地图创作</td>
+              <td>
+                <strong>🎨 分组绘制社区地图（50分钟）</strong><br>
+                2-3组，每组用一张大白纸（A2或更大），用彩色笔、贴纸、照片等创作社区地图。要求标注：至少5个地点、至少3个"人"、用不同符号标注"喜欢/疑问/需要改变"的地方。大人帮忙写字（如果孩子需要），但布局和内容由孩子决定。
+                <div class="note">💡 可以参考之前的侦察报告和照片，但鼓励画出新的发现</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">1:20-1:50<br>展示讲解</td>
+              <td>
+                <strong>🎤 地图展示会</strong><br>
+                每组展示自己的地图，讲解3-5分钟：我们画了什么？为什么这样画？我们发现了什么？其他组可以提问。
+                <div class="note">💡 这是"公共性表达"的关键环节——让孩子学会说、学会辩</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">1:50-2:10<br>发现问题</td>
+              <td>
+                <strong>💡 聚焦讨论"我们可以改变什么"</strong><br>
+                对比各组地图上标注"需要改变"的地方，投票选出1-2个大家最想改变的问题，作为下一步行动的方向。记录在"行动议题"大纸上。
+                <div class="note">💡 让孩子自己选择，不要大人替他们决定</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">📋</span> 学习单：我的社区地图（模板）</div>
+        <div class="sheet-preview">
+          <div class="sheet-field">
+            <span class="sheet-label">地图绘制者：</span>
+            <div class="sheet-line"></div>
+          </div>
+          <hr style="border:none;border-top:1px dashed #E0D8CE;margin:12px 0;">
+          <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:0.86rem;margin-bottom:12px;">
+            <span>⭐ = 最喜欢的地方</span>
+            <span>❓ = 有疑问的地方</span>
+            <span>❗ = 需要改变的地方</span>
+            <span>👤 = 重要的人</span>
+          </div>
+          <div class="sheet-draw-box" style="height:180px;">
+            （在这里画你的社区地图——画出街道、建筑、树木、人……<br>用符号标注重要地方）
+          </div>
+          <div class="sheet-field" style="margin-top:12px;">
+            <span class="sheet-label">地图说明（3句话介绍你的地图）：</span>
+          </div>
+          <div class="sheet-line"></div>
+          <div class="sheet-line"></div>
+          <div class="sheet-line"></div>
+        </div>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">👨‍👩‍👧</span> 家长指引</div>
+        <div class="parent-guide">
+          <div class="guide-do">
+            <h4>✅ 做什么</h4>
+            <ul>
+              <li>帮孩子在大纸上画格子或打底稿</li>
+              <li>如果孩子需要帮忙写字就写</li>
+              <li>鼓励孩子大胆画，不需要画得像</li>
+              <li>在展示环节做观众，认真听</li>
+              <li>对孩子的观点表示尊重</li>
+            </ul>
+          </div>
+          <div class="guide-dont">
+            <h4>❌ 不做什么</h4>
+            <ul>
+              <li>不要画"正确"的地图让孩子照抄</li>
+              <li>不要说"这里画得不对"</li>
+              <li>不要替孩子做展示讲解</li>
+              <li>不要替孩子选择"要改变什么"</li>
+              <li>不要比较各组地图的"好坏"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- ===== ACTIVITY 5 ===== -->
+  <!-- ========================================== -->
+  <div class="activity-card card-theme-5" id="card5">
+    <div class="card-header" onclick="toggleCard('card5')">
+      <div class="card-number">5</div>
+      <div class="card-header-text">
+        <h3>我们的改变计划</h3>
+        <div class="card-subtitle">第五周 · 行动设计 · 公共性表达（辩）+ 公共性行动（连接）</div>
+      </div>
+      <div class="card-toggle">▼</div>
+    </div>
+    <div class="card-body">
+
+      <div class="inner-section">
+        <span class="phase-label p3">🌱 第三阶段：行动</span>
+        <div class="goals">
+          <span class="goal-tag">从问题到行动方案</span>
+          <span class="goal-tag">集体讨论和决策</span>
+          <span class="goal-tag">学习分工合作</span>
+          <span class="goal-tag">确定一个可实施的小改变</span>
+        </div>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">📖</span> 绘本线索</div>
+        <p style="font-size:0.92rem;color:var(--text-medium);background:var(--accent-yellow-light);padding:12px 16px;border-radius:var(--radius-sm);border-left:3px solid var(--accent-yellow)">
+          回到《街道是大家的》——故事里的孩子们遇到困难时是怎么做的？他们有没有放弃？我们也可以像他们一样，从一件小事开始改变！也可以引入绘本《小黑鱼》讨论合作的力量。
+        </p>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">⏰</span> 活动流程</div>
+        <table class="flow-table">
+          <thead>
+            <tr><th>时间</th><th>内容</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="time-col">0:00-0:20<br>回顾与聚焦</td>
+              <td>
+                <strong>📌 回顾"行动议题"</strong><br>
+                展示上周选出的1-2个改变议题，一起讨论：这个问题具体是什么？影响了谁？我们能做什么？用"头脑风暴"法，每个人说出自己的想法，不做评判，全部记录。
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">0:20-0:40<br>方案讨论</td>
+              <td>
+                <strong>🗳️ 集体决策</strong><br>
+                从头脑风暴中选出最可行的1-2个行动方案。引导思考：<br>
+                · 我们能做到吗？<br>
+                · 需要什么材料和帮助？<br>
+                · 可能遇到什么困难？<br>
+                投票决定最终方案。
+                <div class="note">💡 这是"赋权"的关键时刻——让孩子真正参与决策，即使方案不完美</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">0:40-1:30<br>制定计划</td>
+              <td>
+                <strong>📋 细化行动计划</strong><br>
+                确定方案后，一起制定具体的行动计划：<br>
+                · 分工：谁负责什么？<br>
+                · 材料：需要准备什么？<br>
+                · 时间：什么时候动手？<br>
+                · 安全：需要注意什么？<br>
+                每个孩子至少认领一个任务，画在行动计划纸上。
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">1:30-2:10<br>准备与预告</td>
+              <td>
+                <strong>🔧 材料准备+预习</strong><br>
+                如果条件允许，可以先去"实地考察"一下要改变的地方，拍照记录"改变前"的样子。列出需要家长帮忙准备的材料清单，分配下去。预告下次就是"动手日"！
+                <div class="note">💡 让孩子对下次活动充满期待——"我们真的要去改变了！"</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">📋</span> 学习单：我们的行动计划</div>
+        <div class="sheet-preview">
+          <div class="sheet-field">
+            <span class="sheet-label">行动小组：</span>
+            <div class="sheet-line"></div>
+          </div>
+          <div class="sheet-field">
+            <span class="sheet-label">行动日期：</span>
+            <div class="sheet-line"></div>
+          </div>
+          <hr style="border:none;border-top:1px dashed #E0D8CE;margin:12px 0;">
+          <div class="sheet-field">
+            <span class="sheet-label">🎯 我们要改变的问题：</span>
+          </div>
+          <div class="sheet-line"></div>
+          <div class="sheet-field" style="margin-top:8px;">
+            <span class="sheet-label">💡 我们的想法：</span>
+          </div>
+          <div class="sheet-line"></div>
+          <div class="sheet-field" style="margin-top:8px;">
+            <span class="sheet-label">📋 我们的分工：</span>
+          </div>
+          <div style="margin-left:12px;">
+            <div class="sheet-field"><span style="min-width:50px;">谁做什么：</span><div class="sheet-line"></div></div>
+            <div class="sheet-field"><span style="min-width:50px;"></span><div class="sheet-line"></div></div>
+            <div class="sheet-field"><span style="min-width:50px;"></span><div class="sheet-line"></div></div>
+          </div>
+          <div class="sheet-field" style="margin-top:8px;">
+            <span class="sheet-label">🔨 需要的材料：</span>
+          </div>
+          <div class="sheet-line"></div>
+          <div class="sheet-field" style="margin-top:10px;">
+            <span class="sheet-label">📸 行动前的样子（照片粘贴处）：</span>
+          </div>
+          <div class="sheet-draw-box" style="height:80px;">（贴照片或画下来）</div>
+          <div class="sheet-field" style="margin-top:10px;">
+            <span class="sheet-label">😊 我的感受和期待：</span>
+          </div>
+          <div class="sheet-line"></div>
+          <div class="sheet-line"></div>
+        </div>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">👨‍👩‍👧</span> 家长指引</div>
+        <div class="parent-guide">
+          <div class="guide-do">
+            <h4>✅ 做什么</h4>
+            <ul>
+              <li>帮助准备材料和保障安全</li>
+              <li>在孩子需要时提供技术支持</li>
+              <li>记录行动过程（拍照、录像）</li>
+              <li>在困难时鼓励"我们一起想办法"</li>
+              <li>尊重孩子选择的行动方向</li>
+            </ul>
+          </div>
+          <div class="guide-dont">
+            <h4>❌ 不做什么</h4>
+            <ul>
+              <li>不要代替孩子动手</li>
+              <li>不要说"这样不好看，重来"</li>
+              <li>不要主导创意和设计</li>
+              <li>不要催促赶进度</li>
+              <li>不要替孩子解决所有困难</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- ===== ACTIVITY 6 ===== -->
+  <!-- ========================================== -->
+  <div class="activity-card card-theme-6" id="card6">
+    <div class="card-header" onclick="toggleCard('card6')">
+      <div class="card-number">6</div>
+      <div class="card-header-text">
+        <h3>社区展览 &amp; 庆祝</h3>
+        <div class="card-subtitle">第六周 · 展示分享 · 公共性行动（协作+改变）</div>
+      </div>
+      <div class="card-toggle">▼</div>
+    </div>
+    <div class="card-body">
+
+      <div class="inner-section">
+        <span class="phase-label p3">🌱 第三阶段：行动</span>
+        <div class="goals">
+          <span class="goal-tag">展示社区探索成果</span>
+          <span class="goal-tag">展示"小改变"前后的对比</span>
+          <span class="goal-tag">回顾6次旅程</span>
+          <span class="goal-tag">庆祝和展望</span>
+        </div>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">📖</span> 绘本线索</div>
+        <p style="font-size:0.92rem;color:var(--text-medium);background:var(--accent-yellow-light);padding:12px 16px;border-radius:var(--radius-sm);border-left:3px solid var(--accent-yellow)">
+          再次翻开《街道是大家的》最后一页——故事里的街道变了，因为我们看到了改变的力量。今天我们自己也做到了！可以引入绘本《花婆婆》作为结尾线索——"做一件让世界变得更美好的事"。
+        </p>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">⏰</span> 活动流程</div>
+        <table class="flow-table">
+          <thead>
+            <tr><th>时间</th><th>内容</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="time-col">0:00-0:30<br>布展</td>
+              <td>
+                <strong>🎪 一起布置展览</strong><br>
+                在社区的公共空间（如小广场、树荫下、社区活动室）布置展览。展品包括：社区地图、侦察报告、人物访谈卡、行动计划书、"我们的小改变"前后对比照片等。每个孩子负责自己最得意的作品。
+                <div class="note">💡 提前确认展览场地，准备好展示架/绳子/夹子等固定材料</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">0:30-1:00<br>导览</td>
+              <td>
+                <strong>🗣️ 小小导览员</strong><br>
+                邀请社区居民来参观（可以提前发邀请）。每个孩子做自己作品的"导览员"，向参观者介绍：这是什么？我们怎么做的？我们发现了什么？特别展示"我们的小改变"的前后对比照片，讲述改变的过程。家长在旁边辅助但不代替。
+                <div class="note">💡 如果没有外部参观者，就在家庭之间互相导览——这也是很好的公共性表达练习</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">1:00-1:30<br>回顾</td>
+              <td>
+                <strong>🔄 体验圈大回顾</strong><br>
+                全体围坐，用完整体验圈回顾整个6次旅程：<br>
+                · <strong>体验</strong>：这6次活动，你印象最深的是什么？<br>
+                · <strong>反思</strong>：你学到了什么？改变了什么想法？<br>
+                · <strong>归纳</strong>：用一个词/一句话形容你的社区<br>
+                · <strong>应用</strong>：以后你会怎么和社区相处？
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">1:30-1:50<br>表达</td>
+              <td>
+                <strong>✍️ 写/画"给社区的一封信"</strong><br>
+                每个孩子用自己的方式给社区写一封信或画一幅画，表达自己对社区的感受和期望。可以贴在展览上，也可以带回家。
+              </td>
+            </tr>
+            <tr>
+              <td class="time-col">1:50-2:10<br>庆祝</td>
+              <td>
+                <strong>🎉 庆祝仪式</strong><br>
+                为每个孩子颁发"社区探索家"证书（提前制作）。一起合影留念。分享小点心。预告后续可能的继续探索方向。
+                <div class="note">💡 仪式感很重要——让孩子觉得自己的努力被看见和肯定</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">📋</span> 学习单：给社区的一封信</div>
+        <div class="sheet-preview">
+          <div class="sheet-field">
+            <span class="sheet-label">写信人：</span>
+            <div class="sheet-line"></div>
+          </div>
+          <hr style="border:none;border-top:1px dashed #E0D8CE;margin:12px 0;">
+          <div style="text-align:center;font-size:1.1rem;font-weight:600;color:var(--text-medium);margin-bottom:12px;">
+            亲爱的社区：
+          </div>
+          <div class="sheet-line"></div>
+          <div class="sheet-line"></div>
+          <div class="sheet-line"></div>
+          <div class="sheet-line"></div>
+          <div class="sheet-line"></div>
+          <div class="sheet-line"></div>
+          <div style="text-align:right;margin-top:12px;">
+            <span style="font-size:0.92rem;color:var(--text-medium);">爱你的 ________</span>
+          </div>
+          <div style="text-align:right;font-size:0.85rem;color:var(--text-light);">2026年____月____日</div>
+          <div class="sheet-hint" style="margin-top:12px;text-align:center;">
+            （可以写文字，也可以画画，或者又写又画——随便你！）
+          </div>
+        </div>
+      </div>
+
+      <div class="inner-section">
+        <div class="inner-title"><span class="icon">👨‍👩‍👧</span> 家长指引</div>
+        <div class="parent-guide">
+          <div class="guide-do">
+            <h4>✅ 做什么</h4>
+            <ul>
+              <li>帮孩子布置展览区域</li>
+              <li>邀请邻居朋友来参观</li>
+              <li>当孩子的热情观众</li>
+              <li>认真听孩子的导览讲解</li>
+              <li>肯定孩子的每一份努力</li>
+            </ul>
+          </div>
+          <div class="guide-dont">
+            <h4>❌ 不做什么</h4>
+            <ul>
+              <li>不要代替孩子讲解</li>
+              <li>不要说"你看人家做得多好"</li>
+              <li>不要催促流程</li>
+              <li>不要自己聊起来忘了关注孩子</li>
+              <li>不要淡化孩子的成果</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- ===== 材料清单汇总 ===== -->
+  <!-- ========================================== -->
+  <h2 class="section-title">🛒 材料清单汇总</h2>
+  <div class="materials-section">
+    <p style="font-size:0.9rem;color:var(--text-medium);margin-bottom:4px;">以下为6次活动所需材料汇总，建议一次性采购基础材料，活动专属材料按需准备。</p>
+
+    <div class="materials-grid">
+
+      <div class="material-group">
+        <h4>📝 纸张和书写</h4>
+        <ul>
+          <li>A4打印纸 <span class="qty">(2包)</span></li>
+          <li>A2/8开大白纸 <span class="qty">(6-8张)</span></li>
+          <li>彩色卡纸 <span class="qty">(2包)</span></li>
+          <li>学习单（提前打印）<span class="qty">(每种12份)</span></li>
+          <li>铅笔+橡皮 <span class="qty">(每人一套)</span></li>
+          <li>彩色笔/马克笔 <span class="qty">(2-3套共用)</span></li>
+          <li>蜡笔/油画棒 <span class="qty">(2套)</span></li>
+          <li>大号白板笔 <span class="qty">(6支)</span></li>
+        </ul>
+      </div>
+
+      <div class="material-group">
+        <h4>🎨 展示和装饰</h4>
+        <ul>
+          <li>双面胶/胶棒 <span class="qty">(各6个)</span></li>
+          <li>透明胶带 <span class="qty">(3卷)</span></li>
+          <li>彩色贴纸 <span class="qty">(3-4种)</span></li>
+          <li>麻绳/棉绳 <span class="qty">(1卷)</span></li>
+          <li>长尾夹/木夹 <span class="qty">(20个)</span></li>
+          <li>展示架/画架 <span class="qty">(可借用)</span></li>
+          <li>便利贴 <span class="qty">(3色各1包)</span></li>
+          <li>小旗帜/横幅 <span class="qty">(1-2条)</span></li>
+        </ul>
+      </div>
+
+      <div class="material-group">
+        <h4>🔧 工具和安全</h4>
+        <ul>
+          <li>儿童安全剪刀 <span class="qty">(6把)</span></li>
+          <li>手机/相机 <span class="qty">(家长自带)</span></li>
+          <li>急救小包 <span class="qty">(1个)</span></li>
+          <li>饮用水 <span class="qty">(每次活动)</span></li>
+          <li>湿巾/纸巾 <span class="qty">(2包)</span></li>
+          <li>小马扎/坐垫 <span class="qty">(若干)</span></li>
+          <li>侦察兵证（自制）<span class="qty">(12个)</span></li>
+          <li>探索家证书（自制）<span class="qty">(12个)</span></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div style="margin-top:20px;padding:16px;background:var(--accent-yellow-light);border-radius:var(--radius-sm);font-size:0.9rem;color:#8B7A3A;">
+      <strong>📌 需要提前准备/确认的事项：</strong>
+      <ul style="margin-top:8px;padding-left:20px;line-height:2;">
+        <li>确认第1次活动场地和社区探索路线（确保安全）</li>
+        <li>确认第3次可采访的社区人物（提前沟通）</li>
+        <li>确认第5次行动方向和所需特殊材料</li>
+        <li>确认第6次展览场地</li>
+        <li>购买/借阅绘本（《街道是大家的》必选，其他可选）</li>
+        <li>制作"侦察兵证"和"社区探索家证书"</li>
+        <li>打印6次活动的学习单（每次12份）</li>
+        <li>建立家长联络群，提前通知每次活动安排</li>
+      </ul>
+    </div>
+
+    <div style="margin-top:16px;padding:16px;background:var(--primary-light);border-radius:var(--radius-sm);font-size:0.9rem;color:var(--primary);">
+      <strong>💡 可选绘本清单（按活动顺序）：</strong>
+      <ul style="margin-top:8px;padding-left:20px;line-height:2;">
+        <li>第1次：《街道是大家的》（必选，引入）</li>
+        <li>第2次：可不引入绘本，或用《寻宝记》系列</li>
+        <li>第3次：《市场街最后一站》或《外婆住在香水村》</li>
+        <li>第4次：可不引入绘本，回顾《街道是大家的》地图情节</li>
+        <li>第5次：《小黑鱼》或《团结的力量》</li>
+        <li>第6次：《花婆婆》或《市场街最后一站》</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <div class="footer">
+    <p>社区探索实施计划 · 丹丹制作</p>
+    <p style="margin-top:4px;">基于哆悉哒"阅见希望"社区探索课程共创计划培训内容</p>
+    <p style="margin-top:4px;">用<span class="heart"> ❤ </span>和好奇心，和孩子们一起探索世界</p>
+  </div>
+
+</div>
+
+<script>
+function toggleCard(id) {
+  const card = document.getElementById(id);
+  card.classList.toggle('open');
+}
+
+// 默认展开第一个卡片
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('card1').classList.add('open');
+});
+</script>
+
+</body>
+</html>

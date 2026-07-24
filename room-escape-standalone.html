@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>密室逃脱</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+KuaiLe&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a0806;font-family:'ZCOOL KuaiLe',cursive;color:#d4c5a9;user-select:none;-webkit-user-select:none}
+canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1}
+.grain{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-events:none;opacity:.12;mix-blend-mode:overlay}
+.sanity-bar{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:10;display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.6);border:1px solid rgba(180,60,60,.4);border-radius:20px;padding:6px 16px;backdrop-filter:blur(4px)}
+.sanity-bar .label{font-size:13px;color:#c4a882;letter-spacing:2px}
+.sanity-bar .bar{width:120px;height:6px;background:rgba(80,30,30,.5);border-radius:3px;overflow:hidden}
+.sanity-bar .fill{height:100%;background:linear-gradient(90deg,#8b2020,#c44040);border-radius:3px;transition:width .8s ease,background .8s ease}
+.sanity-bar .pct{font-size:12px;color:#a08060;min-width:30px;text-align:right}
+.inventory{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:10px;background:rgba(0,0,0,.5);border:1px solid rgba(120,90,60,.3);border-radius:12px;padding:8px 14px;backdrop-filter:blur(4px);opacity:0;transition:opacity .5s ease}
+.inventory.show{opacity:1}
+.inv-slot{width:48px;height:48px;border:1px solid rgba(150,120,80,.3);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px;background:rgba(30,20,10,.6);transition:all .3s ease;cursor:pointer}
+.inv-slot.filled{border-color:rgba(200,160,80,.5);background:rgba(50,35,15,.8)}
+.inv-slot:hover{transform:scale(1.1);border-color:rgba(220,180,100,.6)}
+.dialogue{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:20;max-width:520px;width:90%;background:rgba(10,8,6,.92);border:1px solid rgba(160,120,80,.25);border-radius:16px;padding:30px 28px;backdrop-filter:blur(12px);text-align:center;opacity:0;pointer-events:none;transition:opacity .4s ease}
+.dialogue.show{opacity:1;pointer-events:auto}
+.dialogue .text{font-size:17px;line-height:1.8;color:#d4c5a9;margin-bottom:20px;letter-spacing:.5px}
+.dialogue .text em{color:#c44040;font-style:normal;font-weight:bold}
+.dialogue .click-hint{font-size:12px;color:#806840;letter-spacing:1px;animation:pulse 2s ease-in-out infinite}
+.choices{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:25;max-width:460px;width:88%;background:rgba(10,8,6,.94);border:1px solid rgba(160,120,80,.25);border-radius:16px;padding:28px 24px;backdrop-filter:blur(12px);opacity:0;pointer-events:none;transition:opacity .4s ease}
+.choices.show{opacity:1;pointer-events:auto}
+.choices .title{font-size:15px;color:#a08060;margin-bottom:16px;letter-spacing:2px}
+.choice-btn{display:block;width:100%;padding:14px 18px;margin-bottom:10px;background:rgba(40,25,15,.7);border:1px solid rgba(140,100,60,.25);border-radius:10px;color:#d4c5a9;font-size:15px;font-family:'ZCOOL KuaiLe',cursive;cursor:pointer;transition:all .25s ease;text-align:left;letter-spacing:.5px;line-height:1.5}
+.choice-btn:last-child{margin-bottom:0}
+.choice-btn:hover{background:rgba(80,45,20,.8);border-color:rgba(200,150,80,.4);transform:translateX(4px)}
+.ending{position:fixed;top:0;left:0;width:100%;height:100%;z-index:30;background:#0a0806;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 1.5s ease}
+.ending.show{opacity:1;pointer-events:auto}
+.ending .title{font-size:28px;color:#c44040;letter-spacing:4px;margin-bottom:20px;font-family:'Ma Shan Zheng',cursive;opacity:0;animation:fadeUp 2s ease .5s forwards}
+.ending .desc{font-size:16px;color:#a08060;max-width:400px;text-align:center;line-height:2;letter-spacing:1px;opacity:0;animation:fadeUp 2s ease 1.5s forwards}
+.ending .restart{margin-top:40px;padding:12px 28px;background:rgba(100,50,30,.3);border:1px solid rgba(160,100,60,.3);border-radius:8px;color:#c4a882;font-size:14px;font-family:'ZCOOL KuaiLe',cursive;cursor:pointer;opacity:0;animation:fadeUp 2s ease 3s forwards;transition:all .3s ease;letter-spacing:2px}
+.ending .restart:hover{background:rgba(140,70,35,.4);border-color:rgba(200,130,70,.4)}
+.hint{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:15;font-size:13px;color:#806840;letter-spacing:1px;opacity:0;transition:opacity .6s ease;text-align:center;pointer-events:none}
+.hint.show{opacity:1}
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes screenShake{0%,100%{transform:translate(0,0)}10%{transform:translate(-3px,2px)}20%{transform:translate(4px,-1px)}30%{transform:translate(-2px,3px)}40%{transform:translate(3px,-3px)}50%{transform:translate(-4px,1px)}60%{transform:translate(2px,-2px)}70%{transform:translate(-1px,4px)}80%{transform:translate(4px,-4px)}90%{transform:translate(-3px,2px)}}
+.shake{animation:screenShake .4s ease-in-out}
+</style>
+</head>
+<body>
+
+<canvas id="scene"></canvas>
+<canvas id="grain" class="grain"></canvas>
+
+<div class="sanity-bar">
+  <span class="label">理智</span>
+  <div class="bar"><div class="fill" id="sanityFill"></div></div>
+  <span class="pct" id="sanityPct">100</span>
+</div>
+
+<div class="inventory" id="inventory">
+  <div class="inv-slot" id="slot0" data-item="scissors"></div>
+  <div class="inv-slot" id="slot1" data-item="note"></div>
+  <div class="inv-slot" id="slot2" data-item="box"></div>
+  <div class="inv-slot" id="slot3" data-item="key"></div>
+  <div class="inv-slot" id="slot4" data-item="key4"></div>
+</div>
+
+<div class="dialogue" id="dialogue">
+  <div class="text" id="dialogueText"></div>
+  <div class="click-hint">点击任意处继续</div>
+</div>
+
+<div class="choices" id="choices">
+  <div class="title" id="choicesTitle"></div>
+  <div id="choicesBtns"></div>
+</div>
+
+<div class="hint" id="hint"></div>
+
+<div class="ending" id="ending">
+  <div class="title" id="endingTitle"></div>
+  <div class="desc" id="endingDesc"></div>
+  <button class="restart" id="restartBtn">再来一次</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// AUDIO ENGINE — Web Audio procedural sounds
+// ═══════════════════════════════════════════
+const Audio = (() => {
+  let ctx, master;
+  function init() {
+    if (ctx) return;
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    master = ctx.createGain();
+    master.gain.value = 0.3;
+    master.connect(ctx.destination);
+  }
+  function noise(duration, type='white') {
+    const sr = ctx.sampleRate;
+    const buf = ctx.createBuffer(1, sr * duration, sr);
+    const d = buf.getChannelData(0);
+    let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+    for (let i = 0; i < d.length; i++) {
+      const w = Math.random() * 2 - 1;
+      if (type==='pink') {
+        b0=0.99886*b0+w*0.0555179;
+        b1=0.99332*b1+w*0.0750759;
+        b2=0.969*b2+w*0.153852;
+        b3=0.8665*b3+w*0.3104856;
+        b4=0.55*b4+w*0.5329522;
+        b5=-0.7616*b5-w*0.016898;
+        d[i]=(b0+b1+b2+b3+b4+b5+b6+w*0.5362)*0.11;
+        b6=w*0.115926;
+      } else {
+        d[i]=w;
+      }
+    }
+    return buf;
+  }
+  function drip() {
+    init();
+    const t = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    const f = ctx.createBiquadFilter();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(800+Math.random()*600, t);
+    osc.frequency.exponentialRampToValueAtTime(200, t+0.08);
+    f.type = 'bandpass';
+    f.frequency.value = 600;
+    f.Q.value = 2;
+    g.gain.setValueAtTime(0.15, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t+0.15);
+    osc.connect(f); f.connect(g); g.connect(master);
+    osc.start(t); osc.stop(t+0.15);
+  }
+  function footstep() {
+    init();
+    const t = ctx.currentTime;
+    const buf = noise(0.12, 'pink');
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    const g = ctx.createGain();
+    const f = ctx.createBiquadFilter();
+    f.type = 'lowpass';
+    f.frequency.value = 300;
+    g.gain.setValueAtTime(0.12, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t+0.12);
+    src.connect(f); f.connect(g); g.connect(master);
+    src.start(t);
+  }
+  function creak() {
+    init();
+    const t = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(80, t);
+    osc.frequency.linearRampToValueAtTime(120, t+0.3);
+    osc.frequency.linearRampToValueAtTime(60, t+0.6);
+    g.gain.setValueAtTime(0.06, t);
+    g.gain.linearRampToValueAtTime(0.08, t+0.2);
+    g.gain.exponentialRampToValueAtTime(0.001, t+0.6);
+    osc.connect(g); g.connect(master);
+    osc.start(t); osc.stop(t+0.6);
+  }
+  function heartbeat(bpm=70) {
+    init();
+    const t = ctx.currentTime;
+    const interval = 60/bpm;
+    for (let i=0;i<4;i++) {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = 50;
+      const s = t + i*interval;
+      g.gain.setValueAtTime(0, s);
+      g.gain.linearRampToValueAtTime(0.15, s+0.05);
+      g.gain.exponentialRampToValueAtTime(0.001, s+0.15);
+      g.gain.setValueAtTime(0, s+0.18);
+      g.gain.linearRampToValueAtTime(0.12, s+0.23);
+      g.gain.exponentialRampToValueAtTime(0.001, s+0.35);
+      osc.connect(g); g.connect(master);
+      osc.start(s); osc.stop(s+0.4);
+    }
+  }
+  function ambient() {
+    init();
+    const buf = noise(8, 'pink');
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.loop = true;
+    const g = ctx.createGain();
+    const f = ctx.createBiquadFilter();
+    f.type = 'lowpass';
+    f.frequency.value = 150;
+    g.gain.value = 0.04;
+    src.connect(f); f.connect(g); g.connect(master);
+    src.start();
+    return src;
+  }
+  function scare() {
+    init();
+    const t = ctx.currentTime;
+    const buf = noise(0.3, 'white');
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.25, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t+0.3);
+    const f = ctx.createBiquadFilter();
+    f.type = 'highpass';
+    f.frequency.value = 2000;
+    src.connect(f); f.connect(g); g.connect(master);
+    src.start(t);
+  }
+  function whisper() {
+    init();
+    const t = ctx.currentTime;
+    const buf = noise(2, 'pink');
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    const g = ctx.createGain();
+    const f = ctx.createBiquadFilter();
+    f.type = 'bandpass';
+    f.frequency.value = 800;
+    f.Q.value = 5;
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(0.06, t+0.5);
+    g.gain.linearRampToValueAtTime(0.06, t+1.2);
+    g.gain.exponentialRampToValueAtTime(0.001, t+2);
+    src.connect(f); f.connect(g); g.connect(master);
+    src.start(t);
+  }
+  return { init, drip, footstep, creak, heartbeat, ambient, scare, whisper };
+})();
+
+// ═══════════════════════════════════════════
+// PARTICLE SYSTEM
+// ═══════════════════════════════════════════
+class Particle {
+  constructor(x,y,vx,vy,size,color,life,type='dust') {
+    this.x=x; this.y=y; this.vx=vx; this.vy=vy;
+    this.size=size; this.color=color; this.life=life; this.maxLife=life;
+    this.type=type; this.alpha=1;
+  }
+  update(dt) {
+    this.x+=this.vx*dt; this.y+=this.vy*dt;
+    this.life-=dt;
+    this.alpha=Math.max(0,this.life/this.maxLife);
+    if(this.type==='drip'){this.vy+=400*dt;}
+  }
+}
+
+const particles = [];
+
+function spawnDust(W,H) {
+  if (particles.length > 80) return;
+  const x = Math.random()*W;
+  const y = Math.random()*H;
+  particles.push(new Particle(x,y,(Math.random()-0.5)*8,Math.random()*-5-2,Math.random()*2+0.5,'rgba(180,160,130,0.3)',4+Math.random()*6,'dust'));
+}
+
+function spawnDrip(x,y) {
+  particles.push(new Particle(x,y,(Math.random()-0.5)*10,0,2,'rgba(120,160,180,0.5)',1.5,'drip'));
+}
+
+function updateParticles(dt,W,H) {
+  for (let i=particles.length-1;i>=0;i--) {
+    particles[i].update(dt);
+    if(particles[i].life<=0) particles.splice(i,1);
+  }
+  if (Math.random()<0.3) spawnDust(W,H);
+}
+
+// ═══════════════════════════════════════════
+// GAME STATE
+// ═══════════════════════════════════════════
+const G = {
+  phase: 'intro',
+  sanity: 100,
+  items: { scissors:false, note:false, box:false, key:false, key4:false },
+  tied: true,
+  boxOpen: false,
+  doorOpen: false,
+  hasKey: false,
+  doorUnlocked: false,
+  dialogueQueue: [],
+  currentDialogue: null,
+  currentChoices: null,
+  lightFlicker: 0,
+  shadowPhase: 0,
+  ambientSrc: null,
+  started: false,
+  fearEvents: 0,
+  seenMirror: false,
+  tunnelFound: false,
+  shadowNear: false,
+  doorShadowY: 0,
+};
+
+// ═══════════════════════════════════════════
+// CANVAS RENDERER
+// ═══════════════════════════════════════════
+const canvas = document.getElementById('scene');
+const c = canvas.getContext('2d');
+const grainCanvas = document.getElementById('grain');
+const gc = grainCanvas.getContext('2d');
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  grainCanvas.width = window.innerWidth;
+  grainCanvas.height = window.innerHeight;
+  generateGrain();
+}
+window.addEventListener('resize', resize);
+
+let brickPattern = null;
+function generateBrickPattern() {
+  const bc = document.createElement('canvas');
+  bc.width = 64; bc.height = 32;
+  const bx = bc.getContext('2d');
+  bx.fillStyle = '#2a1f18';
+  bx.fillRect(0,0,64,32);
+  bx.strokeStyle = 'rgba(15,10,8,0.6)';
+  bx.lineWidth = 1.5;
+  bx.strokeRect(1,1,30,14);
+  bx.strokeRect(33,1,30,14);
+  bx.strokeRect(17,17,30,14);
+  bx.strokeRect(-15,17,30,14);
+  bx.strokeRect(49,17,30,14);
+  for(let i=0;i<60;i++){
+    bx.fillStyle=`rgba(${Math.random()>0.5?40:15},${Math.random()>0.5?25:8},${Math.random()>0.5?18:5},${Math.random()*0.3})`;
+    bx.fillRect(Math.random()*64,Math.random()*32,2+Math.random()*3,1+Math.random()*2);
+  }
+  brickPattern = c.createPattern(bc, 'repeat');
+}
+
+function generateGrain() {
+  const w = grainCanvas.width, h = grainCanvas.height;
+  const gd = gc.createImageData(w,h);
+  const d = gd.data;
+  for(let i=0;i<d.length;i+=4){
+    const v=Math.random()*40;
+    d[i]=v; d[i+1]=v; d[i+2]=v; d[i+3]=255;
+  }
+  gc.putImageData(gd,0,0);
+}
+
+function drawScene(t) {
+  const W = canvas.width, H = canvas.height;
+  const sanity = G.sanity / 100;
+  const shake = (1 - sanity) * 3;
+  const sx = Math.sin(t*7)*shake, sy = Math.cos(t*5.3)*shake;
+
+  c.save();
+  c.translate(sx, sy);
+
+  // Background
+  c.fillStyle = '#0a0806';
+  c.fillRect(0,0,W,H);
+
+  // Floor
+  const floorY = H * 0.62;
+  const floorGrad = c.createLinearGradient(0,floorY,0,H);
+  floorGrad.addColorStop(0, '#1a1410');
+  floorGrad.addColorStop(1, '#0d0a07');
+  c.fillStyle = floorGrad;
+  c.fillRect(0,floorY,W,H-floorY);
+
+  // Floor boards
+  c.strokeStyle = 'rgba(30,22,15,0.5)';
+  c.lineWidth = 1;
+  for(let i=0;i<W;i+=80+Math.sin(i)*10){
+    c.beginPath();
+    c.moveTo(i,floorY);
+    c.lineTo(i,H);
+    c.stroke();
+  }
+
+  // Back wall with brick texture
+  if(brickPattern){
+    c.save();
+    c.fillStyle = brickPattern;
+    c.globalAlpha = 0.7;
+    c.fillRect(0,0,W,floorY);
+    c.restore();
+  }
+
+  // Wall darkness gradient
+  const wallGrad = c.createRadialGradient(W/2,floorY*0.5,W*0.15,W/2,floorY*0.5,W*0.7);
+  wallGrad.addColorStop(0,'rgba(10,8,6,0)');
+  wallGrad.addColorStop(1,'rgba(10,8,6,0.85)');
+  c.fillStyle = wallGrad;
+  c.fillRect(0,0,W,floorY);
+
+  // Light source
+  const lampX = W*0.5, lampY = H*0.08;
+  const flicker = 0.7 + Math.sin(t*3.7)*0.08 + Math.sin(t*11.3)*0.05 + Math.sin(t*23.1)*0.03;
+  G.lightFlicker = flicker;
+
+  // Light cone
+  c.save();
+  const coneGrad = c.createRadialGradient(lampX,lampY+10,5,lampX,floorY,W*0.45);
+  coneGrad.addColorStop(0,`rgba(255,220,160,${0.12*flicker})`);
+  coneGrad.addColorStop(0.5,`rgba(255,200,140,${0.06*flicker})`);
+  coneGrad.addColorStop(1,'rgba(255,180,120,0)');
+  c.fillStyle = coneGrad;
+  c.beginPath();
+  c.moveTo(lampX-20,lampY+10);
+  c.lineTo(lampX-W*0.35,floorY);
+  c.lineTo(lampX+W*0.35,floorY);
+  c.lineTo(lampX+20,lampY+10);
+  c.fill();
+  c.restore();
+
+  // Lamp fixture
+  c.fillStyle = '#3a2a1a';
+  c.fillRect(lampX-3,lampY-15,6,20);
+  c.fillStyle = `rgba(255,220,160,${0.8*flicker})`;
+  c.beginPath();
+  c.arc(lampX,lampY+8,8,0,Math.PI*2);
+  c.fill();
+  c.fillStyle = `rgba(255,240,200,${flicker})`;
+  c.beginPath();
+  c.arc(lampX,lampY+8,3,0,Math.PI*2);
+  c.fill();
+
+  // Pipe on left wall
+  c.fillStyle = '#2a2018';
+  c.fillRect(W*0.12, H*0.05, 12, floorY-H*0.05);
+  c.strokeStyle = 'rgba(60,50,35,0.4)';
+  c.lineWidth = 2;
+  c.strokeRect(W*0.12, H*0.05, 12, floorY-H*0.05);
+  for(let py=H*0.2;py<floorY;py+=H*0.25){
+    c.fillStyle='#3a2a1a';
+    c.fillRect(W*0.12-2,py,16,6);
+  }
+  // Drip from pipe
+  if(G.started && Math.sin(t*2.3)>0.97){
+    spawnDrip(W*0.12+6, floorY-10);
+  }
+
+  // Door (right side)
+  const doorX = W*0.72, doorW = W*0.14, doorH = floorY*0.78;
+  const doorY = floorY - doorH;
+  // Door frame
+  c.fillStyle = '#1e150f';
+  c.fillRect(doorX-6, doorY-4, doorW+12, doorH+4);
+  // Door body
+  const doorGrad = c.createLinearGradient(doorX,0,doorX+doorW,0);
+  doorGrad.addColorStop(0,'#2a1f15');
+  doorGrad.addColorStop(0.5,'#352818');
+  doorGrad.addColorStop(1,'#221a10');
+  c.fillStyle = doorGrad;
+  c.fillRect(doorX, doorY, doorW, doorH);
+  // Door panels
+  c.strokeStyle = 'rgba(80,60,40,0.3)';
+  c.lineWidth = 1;
+  c.strokeRect(doorX+12, doorY+15, doorW-24, doorH*0.35);
+  c.strokeRect(doorX+12, doorY+15+doorH*0.4, doorW-24, doorH*0.45);
+  // Door handle
+  c.fillStyle = '#8a7050';
+  c.beginPath();
+  c.arc(doorX+doorW-18, doorY+doorH*0.5, 5, 0, Math.PI*2);
+  c.fill();
+  c.fillStyle = '#6a5540';
+  c.fillRect(doorX+doorW-16, doorY+doorH*0.5-1, 8, 2);
+
+  // Shadow under door
+  const shadowAlpha = (1-sanity)*0.3 + 0.1;
+  c.fillStyle = `rgba(0,0,0,${shadowAlpha})`;
+  c.fillRect(doorX, floorY-3, doorW, 6);
+
+  // Shadow figure behind door
+  if(sanity < 0.7 && G.started) {
+    G.shadowPhase += 0.015;
+    const shadowH = doorH * 0.6 * (1-sanity);
+    const swayX = Math.sin(G.shadowPhase) * 8;
+    G.doorShadowY = doorY + doorH*0.4;
+    c.save();
+    c.globalAlpha = (0.7-sanity)*0.5;
+    c.fillStyle = '#000';
+    c.beginPath();
+    c.ellipse(doorX+doorW*0.5+swayX, G.doorShadowY, doorW*0.2, shadowH*0.5, 0, 0, Math.PI*2);
+    c.fill();
+    c.beginPath();
+    c.ellipse(doorX+doorW*0.5+swayX, G.doorShadowY-shadowH*0.5, doorW*0.12, shadowH*0.2, 0, 0, Math.PI*2);
+    c.fill();
+    c.restore();
+  }
+
+  // Table
+  const tableX = W*0.28, tableY = floorY-8, tableW = W*0.3, tableH = 14;
+  c.fillStyle = '#2a1f15';
+  c.fillRect(tableX+10, tableY+tableH, 8, 50);
+  c.fillRect(tableX+tableW-18, tableY+tableH, 8, 50);
+  c.fillStyle = '#3a2a1a';
+  c.fillRect(tableX, tableY, tableW, tableH);
+  c.strokeStyle = 'rgba(80,60,40,0.3)';
+  c.strokeRect(tableX, tableY, tableW, tableH);
+
+  // Items on table
+  if(!G.items.scissors) {
+    const scX = tableX+tableW*0.3, scY = tableY-4;
+    c.fillStyle = '#8a7050';
+    c.save();
+    c.translate(scX, scY);
+    c.rotate(-0.3);
+    c.beginPath();
+    c.arc(-6, 0, 5, 0, Math.PI*2);
+    c.fill();
+    c.beginPath();
+    c.arc(6, 0, 5, 0, Math.PI*2);
+    c.fill();
+    c.fillStyle = '#aaa';
+    c.fillRect(-2, -12, 2, 12);
+    c.fillRect(0, -12, 2, 12);
+    c.restore();
+  }
+  if(!G.items.note) {
+    const nX = tableX+tableW*0.55, nY = tableY-3;
+    c.fillStyle = '#d4c5a0';
+    c.save();
+    c.translate(nX, nY);
+    c.rotate(0.1);
+    c.fillRect(-12,-8,24,16);
+    c.fillStyle = '#6a5a40';
+    c.fillRect(-9,-5,18,1.5);
+    c.fillRect(-9,-2,14,1.5);
+    c.fillRect(-9,1,16,1.5);
+    c.fillRect(-9,4,10,1.5);
+    c.restore();
+  }
+  if(!G.items.box || !G.boxOpen) {
+    const bX = tableX+tableW*0.8, bY = tableY-10;
+    c.fillStyle = '#4a3a28';
+    c.fillRect(bX-12, bY, 24, 14);
+    c.fillStyle = '#3a2a18';
+    c.fillRect(bX-12, bY-4, 24, 6);
+    if(!G.boxOpen) {
+      c.fillStyle = '#8a7050';
+      c.beginPath();
+      c.arc(bX, bY+3, 3, 0, Math.PI*2);
+      c.fill();
+    }
+  }
+
+  // Key on table
+  if(G.boxOpen && !G.items.key4) {
+    const kx = tableX+tableW*0.8, ky = tableY-6;
+    c.fillStyle = '#c4a060';
+    c.save();
+    c.translate(kx, ky);
+    c.rotate(0.2);
+    c.beginPath();
+    c.arc(0,0,4,0,Math.PI*2);
+    c.fill();
+    c.fillRect(4,-1.5,10,3);
+    c.fillRect(11,1.5,2,3);
+    c.fillRect(8,1.5,2,2);
+    c.fillStyle = '#3a2a18';
+    c.font = '5px sans-serif';
+    c.fillText('4', -2, 2);
+    c.restore();
+  }
+
+  // Rope on player
+  if(G.tied) {
+    const ropeX = W*0.48, ropeY = floorY-35;
+    c.strokeStyle = '#6a5030';
+    c.lineWidth = 3;
+    c.beginPath();
+    c.moveTo(ropeX-10, ropeY-20);
+    c.quadraticCurveTo(ropeX, ropeY+5, ropeX+10, ropeY-20);
+    c.stroke();
+    c.beginPath();
+    c.moveTo(ropeX-15, ropeY);
+    c.quadraticCurveTo(ropeX, ropeY+25, ropeX+15, ropeY);
+    c.stroke();
+  }
+
+  // Player silhouette
+  if(G.tied) {
+    const px = W*0.48, py = floorY-35;
+    c.fillStyle = '#1a1410';
+    c.beginPath();
+    c.ellipse(px, py-10, 10, 15, 0, 0, Math.PI*2);
+    c.fill();
+    c.fillRect(px-8, py+5, 16, 30);
+  }
+
+  // Vignette
+  const vigGrad = c.createRadialGradient(W/2,H/2,W*0.2,W/2,H/2,W*0.75);
+  vigGrad.addColorStop(0,'rgba(0,0,0,0)');
+  vigGrad.addColorStop(1,`rgba(0,0,0,${0.7+sanity*0.15})`);
+  c.fillStyle = vigGrad;
+  c.fillRect(0,0,W,H);
+
+  // Sanity color overlay
+  if(sanity < 0.6) {
+    const tintColor = `rgba(${120-sanity*80},${20},${20},${(0.6-sanity)*0.2})`;
+    c.fillStyle = tintColor;
+    c.fillRect(0,0,W,H);
+  }
+
+  // Chromatic aberration
+  if(sanity < 0.4) {
+    c.save();
+    c.globalCompositeOperation = 'screen';
+    c.globalAlpha = (0.4-sanity)*0.15;
+    c.drawImage(canvas, 3, 0);
+    c.drawImage(canvas, -3, 0);
+    c.restore();
+  }
+
+  c.restore();
+
+  // Particles
+  for(const p of particles) {
+    c.save();
+    c.globalAlpha = p.alpha;
+    if(p.type==='drip') {
+      c.fillStyle = 'rgba(150,190,210,0.6)';
+      c.beginPath();
+      c.ellipse(p.x,p.y,p.size*0.6,p.size,0,0,Math.PI*2);
+      c.fill();
+    } else {
+      c.fillStyle = p.color;
+      c.beginPath();
+      c.arc(p.x,p.y,p.size,0,Math.PI*2);
+      c.fill();
+    }
+    c.restore();
+  }
+
+  // Scanlines
+  if(sanity < 0.5) {
+    c.save();
+    c.globalAlpha = (0.5-sanity)*0.15;
+    for(let y=0;y<H;y+=3){
+      c.fillStyle = y%6===0?'rgba(0,0,0,0.3)':'rgba(0,0,0,0.1)';
+      c.fillRect(0,y,W,1);
+    }
+    c.restore();
+  }
+
+  // Screen flash
+  if(sanity < 0.15 && Math.random()<0.02) {
+    c.fillStyle = `rgba(180,40,40,${Math.random()*0.15})`;
+    c.fillRect(0,0,W,H);
+  }
+}
+
+// ═══════════════════════════════════════════
+// SANITY SYSTEM
+// ═══════════════════════════════════════════
+function updateSanity(amount) {
+  G.sanity = Math.max(0, Math.min(100, G.sanity + amount));
+  document.getElementById('sanityFill').style.width = G.sanity + '%';
+  document.getElementById('sanityPct').textContent = Math.round(G.sanity);
+  if(G.sanity < 30) {
+    document.getElementById('sanityFill').style.background = 'linear-gradient(90deg,#5a1010,#8b2020)';
+  } else {
+    document.getElementById('sanityFill').style.background = 'linear-gradient(90deg,#8b2020,#c44040)';
+  }
+  if(amount < 0) {
+    document.querySelector('.sanity-bar').classList.add('shake');
+    setTimeout(()=>document.querySelector('.sanity-bar').classList.remove('shake'),400);
+    Audio.scare();
+  }
+}
+
+// ═══════════════════════════════════════════
+// UI HELPERS
+// ═══════════════════════════════════════════
+function showDialogue(text, cb) {
+  const el = document.getElementById('dialogue');
+  document.getElementById('dialogueText').innerHTML = text;
+  el.classList.add('show');
+  G.currentDialogue = cb || null;
+}
+
+function hideDialogue() {
+  document.getElementById('dialogue').classList.remove('show');
+}
+
+function showChoices(title, choices) {
+  const el = document.getElementById('choices');
+  document.getElementById('choicesTitle').textContent = title;
+  const btns = document.getElementById('choicesBtns');
+  btns.innerHTML = '';
+  choices.forEach(ch => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = ch.text;
+    btn.onclick = () => {
+      el.classList.remove('show');
+      G.currentChoices = null;
+      ch.action();
+    };
+    btns.appendChild(btn);
+  });
+  el.classList.add('show');
+  G.currentChoices = true;
+}
+
+function hideChoices() {
+  document.getElementById('choices').classList.remove('show');
+  G.currentChoices = null;
+}
+
+function showHint(text, duration=3000) {
+  const el = document.getElementById('hint');
+  el.textContent = text;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), duration);
+}
+
+function updateInventory() {
+  const inv = document.getElementById('inventory');
+  const slots = ['scissors','note','box','key4'];
+  let hasAny = false;
+  slots.forEach((item, i) => {
+    const slot = document.getElementById('slot'+i);
+    if(G.items[item]) {
+      slot.classList.add('filled');
+      hasAny = true;
+      if(item==='scissors') slot.textContent = '✂';
+      if(item==='note') slot.textContent = '📄';
+      if(item==='box') slot.textContent = '📦';
+      if(item==='key4') slot.textContent = '🔑';
+    }
+  });
+  if(hasAny) inv.classList.add('show');
+}
+
+function showEnding(title, desc) {
+  document.getElementById('endingTitle').textContent = title;
+  document.getElementById('endingDesc').innerHTML = desc;
+  setTimeout(()=>{
+    document.getElementById('ending').classList.add('show');
+  }, 500);
+}
+
+// ═══════════════════════════════════════════
+// GAME LOGIC
+// ═══════════════════════════════════════════
+function startGame() {
+  Audio.init();
+  Audio.ambient();
+  G.started = true;
+  showDialogue('你醒来。头疼得厉害。<br><br>周围一片漆黑，你被绑在椅子上。<br>空气里有铁锈和潮湿的气味。', () => {
+    hideDialogue();
+    setTimeout(()=>{
+      showDialogue('门外传来<em>低沉的呼吸声</em>。<br>有什么东西在那里。', () => {
+        hideDialogue();
+        setTimeout(()=>{
+          updateSanity(-15);
+          showDialogue('你需要<em>挣脱绳子</em>。<br>桌上好像有什么东西……', () => {
+            hideDialogue();
+            G.phase = 'free';
+            showHint('点击桌上的物品试试');
+          });
+        }, 800);
+      });
+    }, 600);
+  });
+}
+
+function handleSceneClick(x, y) {
+  const W = canvas.width, H = canvas.height;
+  const floorY = H*0.62;
+  const tableX = W*0.28, tableY = floorY-8, tableW = W*0.3;
+  const doorX = W*0.72, doorW = W*0.14;
+
+  // Table area
+  if(x > tableX && x < tableX+tableW && y > tableY-30 && y < tableY+20) {
+    handleTableClick(x, tableX, tableW, tableY);
+    return;
+  }
+
+  // Door area
+  if(x > doorX-10 && x < doorX+doorW+10 && y > floorY-250 && y < floorY) {
+    handleDoorClick();
+    return;
+  }
+}
+
+function handleTableClick(x, tableX, tableW, tableY) {
+  const scX = tableX+tableW*0.3;
+  const nX = tableX+tableW*0.55;
+  const bX = tableX+tableW*0.8;
+
+  if(G.phase === 'free' && Math.abs(x-scX) < 30) {
+    showDialogue('一把生锈的<em>剪刀</em>。<br>刀刃还算锋利。', () => {
+      hideDialogue();
+      G.items.scissors = true;
+      updateInventory();
+      showHint('剪刀已获得');
+      Audio.footstep();
+      setTimeout(()=>{
+        showDialogue('你用剪刀割断了绳子。<br><br>终于自由了。但门外的呼吸声<em>停了</em>。', () => {
+          hideDialogue();
+          G.tied = false;
+          G.phase = 'explore';
+          updateSanity(-5);
+          showHint('探索桌子上的其他物品');
+        });
+      }, 500);
+    });
+    return;
+  }
+
+  if(!G.tied && Math.abs(x-nX) < 30 && !G.items.note) {
+    showDialogue('一张泛黄的纸条，字迹潦草：<br><br><em>"别相信你看到的任何一扇门。"</em><br><br>背面还有一行小字：<br><em>"密码是她离开的那天。"</em>', () => {
+      hideDialogue();
+      G.items.note = true;
+      updateInventory();
+      showHint('纸条已获得');
+      Audio.whisper();
+      updateSanity(-8);
+    });
+    return;
+  }
+
+  if(!G.tied && Math.abs(x-bX) < 30 && !G.boxOpen) {
+    Audio.creak();
+    showChoices('铁盒子 — 输入密码', [
+      { text: '输入 03-17', action: () => {
+        Audio.creak();
+        showDialogue('锁"咔嗒"一声打开了。<br><br>里面躺着一把<em>铜钥匙</em>，上面刻着数字 <em>4</em>。', () => {
+          hideDialogue();
+          G.boxOpen = true;
+          G.items.key4 = true;
+          updateInventory();
+          updateSanity(-5);
+          showHint('4号钥匙已获得');
+        });
+      }},
+      { text: '输入其他密码', action: () => {
+        showDialogue('密码错误。锁纹丝不动。', () => {
+          hideDialogue();
+          updateSanity(-3);
+        });
+      }},
+      { text: '暂时不打开', action: () => {
+        hideDialogue();
+      }}
+    ]);
+    return;
+  }
+
+  if(G.boxOpen && !G.items.key4 && Math.abs(x-bX) < 30) {
+    showDialogue('铁盒子里空空如也。', () => { hideDialogue(); });
+  }
+}
+
+function handleDoorClick() {
+  if(G.phase === 'free' || G.tied) {
+    showDialogue('你被绑着，<em>动弹不得</em>。<br>门外的呼吸声更近了。', () => {
+      hideDialogue();
+      updateSanity(-10);
+    });
+    return;
+  }
+
+  if(!G.items.key4) {
+    showDialogue('门是锁着的。<br><br>你需要一把<em>钥匙</em>。', () => { hideDialogue(); });
+    return;
+  }
+
+  G.phase = 'choice';
+  Audio.heartbeat(90);
+  updateSanity(-10);
+
+  showChoices('门后传来低语……你要怎么做？', [
+    { text: '🔑 用4号钥匙开门', action: () => {
+      G.doorUnlocked = true;
+      Audio.creak();
+      Audio.whisper();
+      updateSanity(-15);
+      setTimeout(()=>{
+        handleDoorOpen();
+      }, 800);
+    }},
+    { text: '🔍 检查门框周围', action: () => {
+      showDialogue('你仔细检查门框。<br><br>在右侧墙壁上，你发现了一道<em>细微的裂缝</em>。<br>裂缝后面似乎有微弱的<em>光</em>。', () => {
+        hideDialogue();
+        G.tunnelFound = true;
+        updateSanity(5);
+        showChoices('你发现了什么', [
+          { text: '🕳️ 探索裂缝', action: () => {
+            handleTunnel();
+          }},
+          { text: '🚪 还是回到门前', action: () => {
+            G.phase = 'choice';
+            handleDoorClick();
+          }}
+        ]);
+      });
+    }},
+    { text: '💭 对着门说话', action: () => {
+      showDialogue('你对着门说：<br><em>"你是谁？"</em><br><br>门外沉默了很久。<br><br>然后，一个和你<em>一模一样的声音</em>说：<br><em>"我就是你。你就是我。"</em>', () => {
+        hideDialogue();
+        Audio.scare();
+        updateSanity(-20);
+        G.shadowNear = true;
+        showChoices('那个声音继续说', [
+          { text: '"你准备好面对我了吗？"', action: () => {
+            handleMirrorConfrontation();
+          }},
+          { text: '🚪 打开门看个究竟', action: () => {
+            G.doorUnlocked = true;
+            handleDoorOpen();
+          }}
+        ]);
+      });
+    }}
+  ]);
+}
+
+function handleDoorOpen() {
+  G.doorOpen = true;
+  Audio.creak();
+
+  showDialogue('门缓缓打开。<br><br>走廊的尽头是一面<em>巨大的镜子</em>。<br><br>镜子里站着另一个人——<em>长得和你一模一样</em>。<br><br>但ta在<em>哭</em>。', () => {
+    hideDialogue();
+    G.seenMirror = true;
+    Audio.whisper();
+    updateSanity(-15);
+
+    showChoices('镜中的你', [
+      { text: '🪞 走近镜子', action: () => {
+        handleMirrorEndings();
+      }},
+      { text: '🚶 转身不看', action: () => {
+        showDialogue('你转身。<br><br>身后不再是地下室。<br><br>是一条<em>无尽的走廊</em>。<br>墙上挂满了<em>你的照片</em>——每一个表情都是你不敢承认的自己。', () => {
+          hideDialogue();
+          updateSanity(-25);
+          showChoices('走廊尽头', [
+            { text: '🏃 往前跑', action: () => {
+              showEnding('你从来没有真正醒来', '你跑了很久很久。<br><br>走廊消失了，你回到了地下室。<br>一切重新开始。<br><br>你从来没有真正醒来。');
+            }},
+            { text: '🛑 停下来面对', action: () => {
+              showEnding('你面对了自己', '你停下来。<br><br>走廊里的一切——黑暗、恐惧、那些照片——<br>都是你自己的倒影。<br><br>你一直害怕的，不是门外的东西。<br>是你自己。');
+            }}
+          ]);
+        });
+      }}
+    ]);
+  });
+}
+
+function handleMirrorEndings() {
+  showChoices('你走近镜子，伸出手', [
+    { text: '🪞 触碰镜面', action: () => {
+      showDialogue('你的手指穿过镜面。<br><br>镜中的你<em>停止了哭泣</em>。<br><br>ta握住了你的手。', () => {
+        hideDialogue();
+        updateSanity(30);
+        setTimeout(()=>{
+          showEnding('你带回了自己', '镜中的你慢慢走进你的身体。<br><br>那些你不敢面对的——恐惧、脆弱、孤独——<br>不再是需要逃避的东西。<br><br>你带回了自己。<br>完整的自己。');
+        }, 1000);
+      });
+    }},
+    { text: '🗣️ 问ta为什么哭', action: () => {
+      showDialogue('镜中的你轻声说：<br><br><em>"因为你好久没有看过我了。"</em><br><br><em>"你总是跑，总是躲。"</em><br><br><em>"但我一直在这里。"</em>', () => {
+        hideDialogue();
+        updateSanity(20);
+        Audio.whisper();
+        showEnding('你带回了自己', '你看着镜中的自己，<br>这一次，你没有逃。<br><br>你伸出手，<br>把ta带回了这个世界。<br><br>恐惧还在，但你不再是一个人面对了。');
+      });
+    }},
+    { text: '🔑 用4号钥匙触碰镜子', action: () => {
+      showDialogue('钥匙触碰镜面的瞬间，<br>镜子碎裂了。<br><br>碎片中映出无数个你——<br>小时候的你、长大后的你、<br>快乐的你、悲伤的你。<br><br>一切<em>倒转</em>。', () => {
+        hideDialogue();
+        Audio.scare();
+        setTimeout(()=>{
+          showEnding('生日快乐', '你睁开眼。<br><br>阳光从窗帘缝隙照进来。<br>日历上写着：3月17日。<br><br>你的生日。<br><br>你回到了一切开始的那一天。<br><br>这一次，你会做出不同的选择吗？');
+        }, 1500);
+      });
+    }}
+  ]);
+}
+
+function handleMirrorConfrontation() {
+  showDialogue('你深吸一口气，走向门。<br><br>门后不是走廊——是一面<em>镜子</em>。<br><br>镜中的你不再哭了。<br>ta只是<em>静静地看着你</em>。', () => {
+    hideDialogue();
+    Audio.heartbeat(100);
+    updateSanity(-10);
+    showChoices('你准备好了', [
+      { text: '"我面对你。"', action: () => {
+        showDialogue('你说出这句话的瞬间，<br>镜子<em>碎了</em>。<br><br>碎片落地，化作光点消散。<br><br>走廊里的黑暗——<br>那些你一直害怕的东西——<br>都只是<em>你自己的倒影</em>。', () => {
+          hideDialogue();
+          updateSanity(40);
+          setTimeout(()=>{
+            showEnding('你醒了', '阳光照进来。<br><br>地下室的墙壁消失了。<br>你站在一片<em>开阔的草地</em>上。<br><br>风很轻，天很蓝。<br><br>你醒了。');
+          }, 1500);
+        });
+      }},
+      { text: '"我还没准备好。"', action: () => {
+        showDialogue('镜中的你点了点头。<br><br><em>"没关系。我等你。"</em><br><br>门缓缓关上。', () => {
+          hideDialogue();
+          G.phase = 'choice';
+          showHint('你还有很多选择……');
+        });
+      }}
+    ]);
+  });
+}
+
+function handleTunnel() {
+  showDialogue('你用力推开裂缝。<br><br>墙后是一条狭窄的通道。<br>尽头有微弱的<em>阳光</em>。', () => {
+    hideDialogue();
+    Audio.creak();
+    updateSanity(10);
+    showChoices('通道很窄，只容一人通过', [
+      { text: '☀️ 走向阳光', action: () => {
+        showDialogue('你挤过通道。<br><br>光线越来越强。<br><br>你闻到了<em>青草和泥土</em>的味道。', () => {
+          hideDialogue();
+          updateSanity(30);
+          setTimeout(()=>{
+            showEnding('你醒了', '你从草地上站起来。<br><br>天空很蓝，风吹过树梢。<br>远处有鸟叫声。<br><br>地下室、黑暗、恐惧——<br>都像是很久以前的梦。<br><br>你醒了。');
+          }, 1200);
+        });
+      }},
+      { text: '🔙 回去看看门前', action: () => {
+        showDialogue('你回到门前。<br><br>门外的呼吸声……变成了<em>你的呼吸声</em>。', () => {
+          hideDialogue();
+          G.phase = 'choice';
+          handleDoorClick();
+        });
+      }}
+    ]);
+  });
+}
+
+// ═══════════════════════════════════════════
+// INPUT
+// ═══════════════════════════════════════════
+function getEventPos(e) {
+  if(e.touches) {
+    return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }
+  return { x: e.clientX, y: e.clientY };
+}
+
+let gameStarted = false;
+function handleFirstClick() {
+  if(!gameStarted) {
+    gameStarted = true;
+    hideDialogue();
+    startGame();
+  }
+}
+
+canvas.addEventListener('click', (e) => {
+  if(!G.started) {
+    handleFirstClick();
+    return;
+  }
+  if(G.currentDialogue || G.currentChoices) return;
+  const {x,y} = getEventPos(e);
+  handleSceneClick(x, y);
+});
+
+canvas.addEventListener('touchstart', (e) => {
+  if(!G.started) {
+    handleFirstClick();
+    return;
+  }
+  if(G.currentDialogue || G.currentChoices) return;
+  const {x,y} = getEventPos(e);
+  handleSceneClick(x, y);
+}, {passive:true});
+
+document.getElementById('dialogue').addEventListener('click', () => {
+  if(G.currentDialogue) {
+    const cb = G.currentDialogue;
+    G.currentDialogue = null;
+    cb();
+  }
+});
+
+document.getElementById('restartBtn').addEventListener('click', () => {
+  location.reload();
+});
+
+// ═══════════════════════════════════════════
+// GAME LOOP
+// ═══════════════════════════════════════════
+let lastTime = 0;
+function gameLoop(timestamp) {
+  const dt = Math.min((timestamp - lastTime)/1000, 0.05);
+  lastTime = timestamp;
+
+  drawScene(timestamp/1000);
+  updateParticles(dt, canvas.width, canvas.height);
+
+  if(G.started && Math.random() < 0.003) Audio.drip();
+  if(G.started && G.sanity < 50 && Math.random() < 0.005) Audio.footstep();
+  if(G.started && G.sanity < 30 && Math.random() < 0.002) Audio.whisper();
+
+  if(Math.random()<0.05) generateGrain();
+
+  requestAnimationFrame(gameLoop);
+}
+
+// Init
+resize();
+generateBrickPattern();
+requestAnimationFrame(gameLoop);
+
+// Show start prompt
+showDialogue('点击屏幕开始', null);
+</script>
+</body>
+</html>

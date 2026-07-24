@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLaVA 暑假计划 - 三年级升四年级</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h2 .emoji {
+            font-size: 1.2em;
+        }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .time-block {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            border-left: 5px solid #667eea;
+        }
+
+        .time-block h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .time-block ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .time-block li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #ddd;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .time-block li:last-child {
+            border-bottom: none;
+        }
+
+        .time-block li .icon {
+            font-size: 1.2em;
+        }
+
+        .weekly-plan {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .day-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .day-card h4 {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .day-card ul {
+            list-style: none;
+            padding: 0;
+            font-size: 0.9em;
+        }
+
+        .day-card li {
+            padding: 5px 0;
+        }
+
+        .nutrition-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .nutrition-item {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .nutrition-item h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .nutrition-item p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .learning-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .learning-card {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .learning-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .learning-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .learning-card li {
+            padding: 8px 0;
+            border-bottom: 1px dashed rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .learning-card li:last-child {
+            border-bottom: none;
+        }
+
+        .fun-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .fun-card {
+            background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+        }
+
+        .fun-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .fun-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .fun-card li {
+            padding: 8px 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .fun-card li:last-child {
+            border-bottom: none;
+        }
+
+        .rest-section {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .rest-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            text-align: center;
+        }
+
+        .rest-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .rest-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .rest-item .icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .rest-item h4 {
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .rest-item p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .tips-section {
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .tips-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            text-align: center;
+        }
+
+        .tips-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .tip-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .tip-item .number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .tip-item p {
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            padding: 20px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .weekly-plan {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>LLaVA 暑假计划</h1>
+            <p>三年级升四年级 | 7月11日开始</p>
+        </div>
+
+        <div class="card">
+            <h2><span class="emoji">⏰</span> 每日作息时间表</h2>
+            <div class="schedule-grid">
+                <div class="time-block">
+                    <h3>🌅 早晨时段 (7:00-12:00)</h3>
+                    <ul>
+                        <li><span class="icon">7:00</span> 起床、洗漱、整理床铺</li>
+                        <li><span class="icon">7:30</span> 营养早餐（牛奶+鸡蛋+全麦面包）</li>
+                        <li><span class="icon">8:00</span> 晨读30分钟（语文课文或英语绘本）</li>
+                        <li><span class="icon">8:30</span> 数学作业/练习（45分钟）</li>
+                        <li><span class="icon">9:15</span> 休息15分钟（喝水、吃水果）</li>
+                        <li><span class="icon">9:30</span> 科学探索时间（实验或阅读科学书籍）</li>
+                        <li><span class="icon">10:30</span> 自由活动（电脑学习或阅读）</li>
+                        <li><span class="icon">11:30</span> 帮忙准备午餐/做简单家务</li>
+                    </ul>
+                </div>
+
+                <div class="time-block">
+                    <h3>🌞 下午时段 (12:00-18:00)</h3>
+                    <ul>
+                        <li><span class="icon">12:00</span> 营养午餐（荤素搭配+主食）</li>
+                        <li><span class="icon">12:30</span> 午休1小时（很重要！）</li>
+                        <li><span class="icon">13:30</span> 阅读时间（1小时自由阅读）</li>
+                        <li><span class="icon">14:30</span> 户外运动（骑车、游泳、球类）</li>
+                        <li><span class="icon">16:00</span> 科学实验或手工制作</li>
+                        <li><span class="icon">17:00</span> 电脑学习时间（编程或科普视频）</li>
+                        <li><span class="icon">17:30</span> 准备晚餐/帮忙做饭</li>
+                    </ul>
+                </div>
+
+                <div class="time-block">
+                    <h3>🌙 晚间时段 (18:00-21:30)</h3>
+                    <ul>
+                        <li><span class="icon">18:00</span> 营养晚餐（清淡为主）</li>
+                        <li><span class="icon">18:30</span> 家庭时光（和家人视频/聊天）</li>
+                        <li><span class="icon">19:00</span> 轻松阅读或听音乐</li>
+                        <li><span class="icon">20:00</span> 洗漱、准备睡觉</li>
+                        <li><span class="icon">20:30</span> 睡前阅读（20分钟）</li>
+                        <li><span class="icon">21:00</span> 关灯睡觉</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2><span class="emoji">📅</span> 每周计划安排</h2>
+            <div class="weekly-plan">
+                <div class="day-card">
+                    <h4>周一</h4>
+                    <ul>
+                        <li>📚 语文阅读</li>
+                        <li>🔬 科学实验</li>
+                        <li>🏃 运动日</li>
+                    </ul>
+                </div>
+
+                <div class="day-card">
+                    <h4>周二</h4>
+                    <ul>
+                        <li>🔢 数学练习</li>
+                        <li>🎨 绘画创作</li>
+                        <li>💻 编程学习</li>
+                    </ul>
+                </div>
+
+                <div class="day-card">
+                    <h4>周三</h4>
+                    <ul>
+                        <li>📖 英语学习</li>
+                        <li>🧪 科学探索</li>
+                        <li>🏊 游泳时间</li>
+                    </ul>
+                </div>
+
+                <div class="day-card">
+                    <h4>周四</h4>
+                    <ul>
+                        <li>📝 作业日</li>
+                        <li>🎵 音乐欣赏</li>
+                        <li>🚴 骑行活动</li>
+                    </ul>
+                </div>
+
+                <div class="day-card">
+                    <h4>周五</h4>
+                    <ul>
+                        <li>📚 自由阅读</li>
+                        <li>🤖 科技探索</li>
+                        <li>⚽ 球类运动</li>
+                    </ul>
+                </div>
+
+                <div class="day-card">
+                    <h4>周六</h4>
+                    <ul>
+                        <li>🎮 娱乐放松</li>
+                        <li>👨‍👩‍👧 家庭活动</li>
+                        <li>🌳 户外探险</li>
+                    </ul>
+                </div>
+
+                <div class="day-card">
+                    <h4>周日</h4>
+                    <ul>
+                        <li>📋 周末总结</li>
+                        <li>📚 预习新课</li>
+                        <li>🎬 电影时光</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2><span class="emoji">📚</span> 学习计划</h2>
+            <div class="learning-section">
+                <div class="learning-card">
+                    <h3>📖 语文学习</h3>
+                    <ul>
+                        <li><span class="icon">1.</span> 每天晨读30分钟，朗读课文或经典文章</li>
+                        <li><span class="icon">2.</span> 每周阅读2本课外书，做好读书笔记</li>
+                        <li><span class="icon">3.</span> 练习写日记或小作文，每周3篇</li>
+                        <li><span class="icon">4.</span> 预习四年级上册语文课本</li>
+                        <li><span class="icon">5.</span> 学习10个成语故事，理解意思并造句</li>
+                    </ul>
+                </div>
+
+                <div class="learning-card">
+                    <h3>🔢 数学学习</h3>
+                    <ul>
+                        <li><span class="icon">1.</span> 每天做15分钟口算练习，提高计算速度</li>
+                        <li><span class="icon">2.</span> 预习四年级上册数学，重点学习大数认识</li>
+                        <li><span class="icon">3.</span> 每周做2-3道趣味数学题</li>
+                        <li><span class="icon">4.</span> 学习简单的几何图形知识</li>
+                        <li><span class="icon">5.</span> 用数学解决生活中的问题（购物、测量等）</li>
+                    </ul>
+                </div>
+
+                <div class="learning-card">
+                    <h3>🔬 科学探索</h3>
+                    <ul>
+                        <li><span class="icon">1.</span> 每周做2个简单的科学实验</li>
+                        <li><span class="icon">2.</span> 阅读《十万个为什么》等科普书籍</li>
+                        <li><span class="icon">3.</span> 观察自然现象，记录在科学日记中</li>
+                        <li><span class="icon">4.</span> 学习使用放大镜、温度计等简单工具</li>
+                        <li><span class="icon">5.</span> 探索身边的科学：光影、磁铁、植物生长</li>
+                    </ul>
+                </div>
+
+                <div class="learning-card">
+                    <h3>💻 电脑学习</h3>
+                    <ul>
+                        <li><span class="icon">1.</span> 学习基础编程（Scratch或Python入门）</li>
+                        <li><span class="icon">2.</span> 观看科普视频（TED-Ed、国家地理）</li>
+                        <li><span class="icon">3.</span> 学习制作简单的PPT或电子相册</li>
+                        <li><span class="icon">4.</span> 玩益智类电脑游戏（锻炼思维）</li>
+                        <li><span class="icon">5.</span> 学习安全上网知识，保护个人隐私</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2><span class="emoji">🎮</span> 娱乐放松</h2>
+            <div class="fun-section">
+                <div class="fun-card">
+                    <h3>户外活动</h3>
+                    <ul>
+                        <li><span class="icon">🚴</span> 骑自行车探索社区</li>
+                        <li><span class="icon">🏊</span> 游泳馆游泳（每周2-3次）</li>
+                        <li><span class="icon">⚽</span> 和朋友踢足球</li>
+                        <li><span class="icon">🏸</span> 打羽毛球或乒乓球</li>
+                        <li><span class="icon">🌳</span> 公园探险和自然观察</li>
+                    </ul>
+                </div>
+
+                <div class="fun-card">
+                    <h3>室内活动</h3>
+                    <ul>
+                        <li><span class="icon">🎲</span> 桌游和益智游戏</li>
+                        <li><span class="icon">🧩</span> 拼图和积木搭建</li>
+                        <li><span class="icon">🎨</span> 绘画和手工制作</li>
+                        <li><span class="icon">🎵</span> 学习乐器或唱歌</li>
+                        <li><span class="icon">🎬</span> 看电影和纪录片</li>
+                    </ul>
+                </div>
+
+                <div class="fun-card">
+                    <h3>创意活动</h3>
+                    <ul>
+                        <li><span class="icon">📝</span> 写暑假日记或故事</li>
+                        <li><span class="icon">📸</span> 拍摄暑假照片集</li>
+                        <li><span class="icon">🎭</span> 表演家庭小剧场</li>
+                        <li><span class="icon">🍳</span> 学做简单美食</li>
+                        <li><span class="icon">📦</span> 制作暑假纪念册</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2><span class="emoji">🍎</span> 营养饮食计划</h2>
+            <div class="nutrition-grid">
+                <div class="nutrition-item">
+                    <h4>早餐营养</h4>
+                    <p>牛奶/豆浆 + 鸡蛋 + 全麦面包/燕麦 + 水果<br>提供上午学习的能量</p>
+                </div>
+
+                <div class="nutrition-item">
+                    <h4>午餐搭配</h4>
+                    <p>米饭/面条 + 瘦肉/鱼/蛋 + 两种蔬菜 + 汤<br>荤素搭配，营养全面</p>
+                </div>
+
+                <div class="nutrition-item">
+                    <h4>下午加餐</h4>
+                    <p>酸奶 + 坚果（核桃、杏仁）+ 水果<br>补充能量，健康零食</p>
+                </div>
+
+                <div class="nutrition-item">
+                    <h4>晚餐原则</h4>
+                    <p>清淡为主，多吃蔬菜，适量主食<br>睡前2小时不吃东西</p>
+                </div>
+
+                <div class="nutrition-item">
+                    <h4>每日饮水</h4>
+                    <p>每天喝6-8杯水，约1500ml<br>运动后及时补充水分</p>
+                </div>
+
+                <div class="nutrition-item">
+                    <h4>健康零食</h4>
+                    <p>水果、酸奶、坚果、全麦饼干<br>避免油炸食品和过多糖果</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="rest-section">
+            <h3>😴 休息与睡眠</h3>
+            <div class="rest-grid">
+                <div class="rest-item">
+                    <div class="icon">🌙</div>
+                    <h4>充足睡眠</h4>
+                    <p>每天睡足10小时<br>晚上9点前睡觉</p>
+                </div>
+
+                <div class="rest-item">
+                    <div class="icon">😴</div>
+                    <h4>午休习惯</h4>
+                    <p>每天午休1小时<br>下午更有精神</p>
+                </div>
+
+                <div class="rest-item">
+                    <div class="icon">👀</div>
+                    <h4>眼睛休息</h4>
+                    <p>每学习40分钟<br>远眺5分钟</p>
+                </div>
+
+                <div class="rest-item">
+                    <div class="icon">🧘</div>
+                    <h4>放松时间</h4>
+                    <p>每天留出自由时间<br>做自己喜欢的事</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tips-section">
+            <h3>💡 暑假小贴士</h3>
+            <div class="tips-list">
+                <div class="tip-item">
+                    <div class="number">1</div>
+                    <p><strong>制定计划表：</strong>把每天要做的事情写下来，完成一项就打勾，这样会很有成就感！</p>
+                </div>
+
+                <div class="tip-item">
+                    <div class="number">2</div>
+                    <p><strong>保持规律：</strong>每天尽量在同一时间起床和睡觉，让身体养成好习惯。</p>
+                </div>
+
+                <div class="tip-item">
+                    <div class="number">3</div>
+                    <p><strong>学习要专注：</strong>学习的时候认真学，玩的时候尽情玩，不要三心二意。</p>
+                </div>
+
+                <div class="tip-item">
+                    <div class="number">4</div>
+                    <p><strong>多喝水：</strong>夏天容易出汗，记得随时补充水分，不要等到口渴才喝。</p>
+                </div>
+
+                <div class="tip-item">
+                    <div class="number">5</div>
+                    <p><strong>安全第一：</strong>一个人在家要注意安全，不给陌生人开门，用电用火要小心。</p>
+                </div>
+
+                <div class="tip-item">
+                    <div class="number">6</div>
+                    <p><strong>记录美好：</strong>用日记、照片或绘画记录暑假的精彩瞬间。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>LLaVA 暑假计划 | 祝你度过一个充实快乐的暑假！</p>
+            <p>制定日期：2026年7月4日</p>
+        </div>
+    </div>
+</body>
+</html>

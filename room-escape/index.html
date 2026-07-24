@@ -1,0 +1,2123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>地下室</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0a;
+    color: #c8b8a0;
+    font-family: 'Noto Serif SC', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* flickering overlay */
+  .flicker {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 100;
+    background: transparent;
+    animation: flicker 4s infinite;
+  }
+  @keyframes flicker {
+    0%, 96%, 100% { opacity: 0; }
+    97% { opacity: 0.03; background: #fff; }
+    98% { opacity: 0; }
+    99% { opacity: 0.015; background: #fff; }
+  }
+
+  /* vignette */
+  .vignette {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 99;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.8) 100%);
+  }
+
+  /* grain */
+  .grain {
+    position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+    pointer-events: none; z-index: 98; opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    animation: grain 0.5s steps(1) infinite;
+  }
+  @keyframes grain {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-2%, 3%); }
+    50% { transform: translate(1%, -1%); }
+    75% { transform: translate(-1%, 2%); }
+    100% { transform: translate(2%, -2%); }
+  }
+
+  #game {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 60px 30px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* scene image area */
+  #scene-visual {
+    width: 100%;
+    height: 220px;
+    margin-bottom: 30px;
+    border: 1px solid #2a2218;
+    position: relative;
+    overflow: hidden;
+    background: #0d0b08;
+  }
+  #scene-visual canvas { width: 100%; height: 100%; display: block; }
+
+  /* narrative text */
+  #narrative {
+    line-height: 2;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    min-height: 200px;
+    margin-bottom: 30px;
+  }
+  #narrative p {
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeIn 0.8s forwards;
+  }
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  .highlight {
+    color: #e8c170;
+    text-shadow: 0 0 8px rgba(232,193,112,0.3);
+  }
+  .danger {
+    color: #c44;
+    text-shadow: 0 0 8px rgba(204,68,68,0.3);
+  }
+  .whisper {
+    color: #776;
+    font-style: italic;
+  }
+  .sound {
+    color: #8899aa;
+    font-family: monospace;
+    letter-spacing: 3px;
+    text-align: center;
+    display: block;
+    margin: 20px 0;
+    opacity: 0.7;
+  }
+
+  /* choices */
+  #choices {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 30px;
+  }
+  .choice-btn {
+    background: rgba(30, 25, 18, 0.8);
+    border: 1px solid #3a3020;
+    color: #c8b8a0;
+    padding: 16px 20px;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 15px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.3s;
+    line-height: 1.6;
+    position: relative;
+    overflow: hidden;
+  }
+  .choice-btn::before {
+    content: '';
+    position: absolute; left: 0; top: 0; width: 3px; height: 100%;
+    background: #c44;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .choice-btn:hover {
+    background: rgba(45, 35, 20, 0.9);
+    border-color: #5a4a30;
+    padding-left: 26px;
+  }
+  .choice-btn:hover::before { opacity: 1; }
+  .choice-btn .num {
+    color: #665;
+    margin-right: 8px;
+    font-size: 13px;
+  }
+
+  /* title screen */
+  #title-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+  }
+  #title-screen h1 {
+    font-size: 48px;
+    color: #8b0000;
+    text-shadow: 0 0 30px rgba(139,0,0,0.5), 0 0 60px rgba(139,0,0,0.2);
+    letter-spacing: 12px;
+    margin-bottom: 10px;
+    animation: breathe 4s ease-in-out infinite;
+  }
+  @keyframes breathe {
+    0%, 100% { opacity: 0.7; text-shadow: 0 0 30px rgba(139,0,0,0.3); }
+    50% { opacity: 1; text-shadow: 0 0 40px rgba(139,0,0,0.6), 0 0 80px rgba(139,0,0,0.2); }
+  }
+  #title-screen .subtitle {
+    color: #554;
+    font-size: 14px;
+    letter-spacing: 4px;
+    margin-bottom: 60px;
+  }
+  #start-btn {
+    background: transparent;
+    border: 1px solid #5a3020;
+    color: #8b4030;
+    padding: 14px 40px;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16px;
+    cursor: pointer;
+    letter-spacing: 6px;
+    transition: all 0.5s;
+  }
+  #start-btn:hover {
+    background: rgba(139, 0, 0, 0.1);
+    border-color: #8b4030;
+    color: #c44;
+    text-shadow: 0 0 10px rgba(204,68,68,0.3);
+  }
+
+  /* ending screen */
+  #ending {
+    display: none;
+    text-align: center;
+    padding-top: 120px;
+  }
+  #ending h2 {
+    font-size: 28px;
+    color: #8b0000;
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+  }
+  #ending p {
+    color: #665;
+    line-height: 2;
+    margin-bottom: 30px;
+  }
+  #ending .restart-btn {
+    background: transparent;
+    border: 1px solid #3a3020;
+    color: #8b4030;
+    padding: 12px 30px;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 14px;
+    cursor: pointer;
+    letter-spacing: 3px;
+  }
+  #ending .restart-btn:hover {
+    border-color: #8b4030;
+    background: rgba(139,0,0,0.1);
+  }
+
+  /* heartbeat pulse on body */
+  .heartbeat {
+    animation: heartbeat 0.8s ease-in-out;
+  }
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    15% { transform: scale(1.015); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.01); }
+  }
+
+  /* blood drip */
+  .blood-drip {
+    position: fixed; top: -20px; width: 2px; height: 0;
+    background: #8b0000; z-index: 101; pointer-events: none;
+    animation: drip 3s ease-in forwards;
+  }
+  @keyframes drip {
+    0% { height: 0; top: -20px; opacity: 1; }
+    80% { height: 60vh; top: 60vh; opacity: 0.8; }
+    100% { height: 60vh; top: 100vh; opacity: 0; }
+  }
+
+  /* status bar */
+  #status {
+    position: fixed; bottom: 0; left: 0; width: 100%;
+    padding: 12px 30px;
+    background: rgba(10,10,10,0.95);
+    border-top: 1px solid #1a1510;
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: #443;
+    z-index: 50;
+    letter-spacing: 1px;
+  }
+  #status .sanity-bar {
+    width: 120px; height: 6px;
+    background: #1a1510;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+  #status .sanity-fill {
+    height: 100%;
+    background: #8b4030;
+    width: 100%;
+    transition: width 0.8s;
+  }
+
+  .hidden { display: none !important; }
+
+  /* screen shake */
+  .shake {
+    animation: shake 0.4s ease-in-out;
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-6px) rotate(-0.5deg); }
+    40% { transform: translateX(5px) rotate(0.3deg); }
+    60% { transform: translateX(-3px) rotate(-0.2deg); }
+    80% { transform: translateX(2px); }
+  }
+
+  @media (max-width: 480px) {
+    #game { padding: 40px 18px 70px; }
+    #narrative { font-size: 15px; }
+    #title-screen h1 { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="flicker"></div>
+<div class="vignette"></div>
+<div class="grain"></div>
+
+<div id="title-screen">
+  <h1>地 下 室</h1>
+  <div class="subtitle">你 不 记 得 怎 么 到 的 这 里</div>
+  <button id="start-btn" onclick="startGame()">进 入</button>
+</div>
+
+<div id="game" class="hidden">
+  <div id="scene-visual"><canvas id="canvas"></canvas></div>
+  <div id="narrative"></div>
+  <div id="choices"></div>
+</div>
+
+<div id="ending">
+  <h2 id="ending-title"></h2>
+  <p id="ending-text"></p>
+  <button class="restart-btn" onclick="location.reload()">再 来 一 次</button>
+</div>
+
+<div id="status" class="hidden">
+  <span>理智</span>
+  <span>
+    <span class="sanity-bar"><span class="sanity-fill" id="sanity-fill"></span></span>
+    <span id="sanity-num">100</span>
+  </span>
+</div>
+
+<script>
+// ===== Audio Engine =====
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx;
+function ensureAudio() { if (!audioCtx) audioCtx = new AudioCtx(); }
+
+function playTone(freq, dur, type='sine', vol=0.08) {
+  ensureAudio();
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = type;
+  o.frequency.value = freq;
+  g.gain.setValueAtTime(vol, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(); o.stop(audioCtx.currentTime + dur);
+}
+
+function playDrip() {
+  playTone(800 + Math.random()*400, 0.15, 'sine', 0.03);
+  setTimeout(() => playTone(600, 0.08, 'sine', 0.02), 100);
+}
+
+function playFootstep() {
+  playTone(80 + Math.random()*40, 0.2, 'triangle', 0.06);
+  setTimeout(() => playTone(60, 0.15, 'triangle', 0.04), 100);
+}
+
+function playScrape() {
+  ensureAudio();
+  const bufSize = audioCtx.sampleRate * 0.8;
+  const buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
+  const data = buf.getChannelData(0);
+  for (let i = 0; i < bufSize; i++) {
+    data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufSize * 0.3));
+  }
+  const src = audioCtx.createBufferSource();
+  const g = audioCtx.createGain();
+  const filt = audioCtx.createBiquadFilter();
+  filt.type = 'bandpass'; filt.frequency.value = 2000; filt.Q.value = 3;
+  src.buffer = buf;
+  g.gain.value = 0.04;
+  src.connect(filt); filt.connect(g); g.connect(audioCtx.destination);
+  src.start();
+}
+
+function playHeartbeat() {
+  playTone(50, 0.15, 'sine', 0.12);
+  setTimeout(() => playTone(55, 0.12, 'sine', 0.1), 180);
+}
+
+function playAmbient() {
+  ensureAudio();
+  const o1 = audioCtx.createOscillator();
+  const o2 = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o1.type = 'sine'; o1.frequency.value = 55;
+  o2.type = 'sine'; o2.frequency.value = 55.5; // slight detune for unease
+  g.gain.value = 0.015;
+  o1.connect(g); o2.connect(g); g.connect(audioCtx.destination);
+  o1.start(); o2.start();
+  return { o1, o2, g, stop: () => { g.gain.value = 0; o1.stop(); o2.stop(); } };
+}
+
+function playDoorCreak() {
+  ensureAudio();
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = 'sawtooth';
+  o.frequency.setValueAtTime(100, audioCtx.currentTime);
+  o.frequency.linearRampToValueAtTime(300, audioCtx.currentTime + 0.3);
+  o.frequency.linearRampToValueAtTime(80, audioCtx.currentTime + 0.6);
+  g.gain.setValueAtTime(0.03, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(); o.stop(audioCtx.currentTime + 0.7);
+}
+
+function playDistantWhisper() {
+  ensureAudio();
+  for (let i = 0; i < 3; i++) {
+    setTimeout(() => {
+      playTone(300 + Math.random()*200, 0.3, 'sine', 0.015);
+    }, i * 200 + Math.random() * 100);
+  }
+}
+
+// ===== Canvas Scene Renderer =====
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let animFrame;
+
+function resizeCanvas() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * 2;
+  canvas.height = rect.height * 2;
+}
+window.addEventListener('resize', resizeCanvas);
+
+let particles = [];
+let flickerIntensity = 0;
+
+function drawBasementScene(time) {
+  resizeCanvas();
+  const w = canvas.width, h = canvas.height;
+  ctx.fillStyle = '#0d0b08';
+  ctx.fillRect(0, 0, w, h);
+
+  // walls
+  const grd = ctx.createLinearGradient(0, 0, 0, h);
+  grd.addColorStop(0, '#1a1510');
+  grd.addColorStop(0.6, '#12100c');
+  grd.addColorStop(1, '#0a0808');
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, 0, w, h);
+
+  // brick pattern
+  ctx.strokeStyle = 'rgba(40,30,20,0.3)';
+  ctx.lineWidth = 1;
+  for (let y = 0; y < h; y += 30) {
+    const offset = (Math.floor(y / 30) % 2) * 30;
+    for (let x = offset; x < w; x += 60) {
+      ctx.strokeRect(x, y, 60, 30);
+    }
+  }
+
+  // water stain on floor
+  ctx.fillStyle = 'rgba(20,25,30,0.4)';
+  ctx.beginPath();
+  ctx.ellipse(w * 0.5, h * 0.85, w * 0.3, h * 0.08, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // pipe
+  ctx.fillStyle = '#2a2820';
+  ctx.fillRect(w * 0.35, 0, 8, h * 0.3);
+  // drip
+  const dripY = (time * 0.0003 % 1) * h * 0.4 + h * 0.3;
+  ctx.fillStyle = `rgba(100,120,130,${0.6 - (dripY - h*0.3) / (h*0.5)})`;
+  ctx.beginPath();
+  ctx.ellipse(w * 0.354, dripY, 3, 4, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // table
+  ctx.fillStyle = '#1e1a12';
+  ctx.fillRect(w * 0.3, h * 0.5, w * 0.4, 6);
+  ctx.fillStyle = '#161210';
+  ctx.fillRect(w * 0.35, h * 0.5 + 6, 6, h * 0.25);
+  ctx.fillRect(w * 0.6, h * 0.5 + 6, 6, h * 0.25);
+
+  // items on table
+  // scissors
+  ctx.strokeStyle = '#6a5a30';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(w*0.42, h*0.48);
+  ctx.lineTo(w*0.46, h*0.52);
+  ctx.moveTo(w*0.44, h*0.48);
+  ctx.lineTo(w*0.42, h*0.52);
+  ctx.stroke();
+
+  // box
+  ctx.fillStyle = '#2a2218';
+  ctx.fillRect(w * 0.52, h * 0.46, w * 0.08, h * 0.06);
+  ctx.strokeStyle = '#4a3a20';
+  ctx.strokeRect(w * 0.52, h * 0.46, w * 0.08, h * 0.06);
+
+  // door light crack
+  ctx.fillStyle = 'rgba(180,140,60,0.15)';
+  ctx.fillRect(w - 6, h * 0.2, 3, h * 0.6);
+
+  // glow from door
+  const glowGrd = ctx.createRadialGradient(w, h * 0.5, 0, w, h * 0.5, w * 0.3);
+  glowGrd.addColorStop(0, 'rgba(180,140,60,0.06)');
+  glowGrd.addColorStop(1, 'transparent');
+  ctx.fillStyle = glowGrd;
+  ctx.fillRect(w * 0.7, 0, w * 0.3, h);
+
+  // dust particles
+  if (particles.length < 20) {
+    particles.push({
+      x: Math.random() * w, y: Math.random() * h,
+      vx: (Math.random()-0.5)*0.3, vy: -Math.random()*0.2 - 0.1,
+      size: Math.random()*2+0.5, alpha: Math.random()*0.3
+    });
+  }
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.y < -10) { p.y = h + 10; p.x = Math.random() * w; }
+    if (p.x < -10 || p.x > w + 10) { p.x = Math.random() * w; }
+    ctx.fillStyle = `rgba(200,180,150,${p.alpha})`;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // occasional flicker
+  if (Math.random() < 0.005) flickerIntensity = 0.08;
+  if (flickerIntensity > 0) {
+    ctx.fillStyle = `rgba(255,255,240,${flickerIntensity})`;
+    ctx.fillRect(0, 0, w, h);
+    flickerIntensity *= 0.85;
+  }
+}
+
+function drawSilhouetteScene(time) {
+  resizeCanvas();
+  const w = canvas.width, h = canvas.height;
+  ctx.fillStyle = '#0d0b08';
+  ctx.fillRect(0, 0, w, h);
+
+  // corridor walls
+  ctx.fillStyle = '#151210';
+  ctx.beginPath();
+  ctx.moveTo(0, 0); ctx.lineTo(w*0.15, h*0.15);
+  ctx.lineTo(w*0.15, h*0.85); ctx.lineTo(0, h);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(w, 0); ctx.lineTo(w*0.85, h*0.15);
+  ctx.lineTo(w*0.85, h*0.85); ctx.lineTo(w, h);
+  ctx.fill();
+
+  // floor tiles
+  ctx.strokeStyle = 'rgba(30,25,18,0.3)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 8; i++) {
+    const y = h * 0.2 + i * (h * 0.08);
+    ctx.beginPath();
+    ctx.moveTo(w*0.15 + i*10, y);
+    ctx.lineTo(w*0.85 - i*10, y);
+    ctx.stroke();
+  }
+
+  // light source at end
+  const grd = ctx.createRadialGradient(w*0.5, h*0.4, 0, w*0.5, h*0.4, w*0.3);
+  grd.addColorStop(0, 'rgba(180,140,60,0.12)');
+  grd.addColorStop(1, 'transparent');
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, 0, w, h);
+
+  // figure silhouette
+  const sway = Math.sin(time * 0.001) * 3;
+  ctx.fillStyle = '#0a0808';
+  // head
+  ctx.beginPath();
+  ctx.ellipse(w*0.5 + sway, h*0.28, w*0.04, h*0.06, 0, 0, Math.PI*2);
+  ctx.fill();
+  // body
+  ctx.fillRect(w*0.47 + sway, h*0.34, w*0.06, h*0.35);
+  // arms
+  ctx.save();
+  ctx.translate(w*0.47 + sway, h*0.4);
+  ctx.rotate(-0.2 + Math.sin(time*0.0008)*0.1);
+  ctx.fillRect(0, 0, w*0.04, h*0.2);
+  ctx.restore();
+  ctx.save();
+  ctx.translate(w*0.53 + sway, h*0.4);
+  ctx.rotate(0.2 - Math.sin(time*0.0008)*0.1);
+  ctx.fillRect(-w*0.04, 0, w*0.04, h*0.2);
+  ctx.restore();
+
+  // floor moisture
+  ctx.fillStyle = 'rgba(30,35,40,0.3)';
+  ctx.beginPath();
+  ctx.ellipse(w*0.5, h*0.85, w*0.15, h*0.05, 0, 0, Math.PI*2);
+  ctx.fill();
+
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.y < -10) { p.y = h+10; p.x = Math.random()*w; }
+    ctx.fillStyle = `rgba(200,180,150,${p.alpha})`;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+    ctx.fill();
+  });
+}
+
+function drawDarkScene(time) {
+  resizeCanvas();
+  const w = canvas.width, h = canvas.height;
+  ctx.fillStyle = '#060505';
+  ctx.fillRect(0, 0, w, h);
+
+  // barely visible walls
+  ctx.strokeStyle = 'rgba(25,20,15,0.3)';
+  ctx.strokeRect(w*0.1, h*0.1, w*0.8, h*0.8);
+
+  // single faint light
+  const grd = ctx.createRadialGradient(w*0.5, h*0.3, 0, w*0.5, h*0.3, w*0.15);
+  grd.addColorStop(0, 'rgba(100,80,40,0.08)');
+  grd.addColorStop(1, 'transparent');
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, 0, w, h);
+}
+
+let currentScene = 'basement';
+let sceneTime = 0;
+
+function renderScene() {
+  sceneTime += 16;
+  switch(currentScene) {
+    case 'basement': drawBasementScene(sceneTime); break;
+    case 'silhouette': drawSilhouetteScene(sceneTime); break;
+    case 'dark': drawDarkScene(sceneTime); break;
+  }
+  animFrame = requestAnimationFrame(renderScene);
+}
+
+// ===== Game State =====
+let sanity = 100;
+let inventory = [];
+let flags = {};
+let currentSceneId = '';
+
+function updateSanity(val) {
+  sanity = Math.max(0, Math.min(100, sanity + val));
+  document.getElementById('sanity-fill').style.width = sanity + '%';
+  document.getElementById('sanity-num').textContent = sanity;
+  if (val < 0) {
+    document.getElementById('game').classList.add('heartbeat');
+    setTimeout(() => document.getElementById('game').classList.remove('heartbeat'), 800);
+    playHeartbeat();
+  }
+}
+
+function typeText(el, html, callback) {
+  el.innerHTML = '';
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  const fullText = tmp.textContent;
+  const fullHTML = tmp.innerHTML;
+
+  let i = 0;
+  let inTag = false;
+  const span = document.createElement('span');
+  el.appendChild(span);
+
+  function type() {
+    if (i < fullText.length) {
+      span.textContent = fullText.substring(0, i + 1);
+      i++;
+      const speed = fullText[i-1] === '。' || fullText[i-1] === '……' ? 80 :
+                     fullText[i-1] === '，' ? 40 :
+                     fullText[i-1] === '\n' ? 60 : 28;
+      setTimeout(type, speed);
+    } else {
+      // now set full HTML with formatting
+      el.innerHTML = html;
+      if (callback) callback();
+    }
+  }
+  type();
+}
+
+function showChoices(choices) {
+  const container = document.getElementById('choices');
+  container.innerHTML = '';
+  choices.forEach((c, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.innerHTML = `<span class="num">[${String.fromCharCode(65+idx)}]</span>${c.text}`;
+    btn.onclick = () => {
+      container.innerHTML = '';
+      if (c.sanity) updateSanity(c.sanity);
+      if (c.item) inventory.push(c.item);
+      if (c.flag) flags[c.flag] = true;
+      if (c.sound) c.sound();
+      if (c.scene) currentScene = c.scene;
+      setTimeout(() => scenes[c.next](), 300);
+    };
+    btn.style.animationDelay = (idx * 0.15) + 's';
+    btn.style.opacity = '0';
+    btn.style.animation = `fadeIn 0.6s ${idx * 0.15}s forwards`;
+    container.appendChild(btn);
+  });
+}
+
+function playDripLoop() {
+  setInterval(() => {
+    if (Math.random() < 0.3) playDrip();
+  }, 2000);
+}
+
+function addBloodDrip() {
+  const drip = document.createElement('div');
+  drip.className = 'blood-drip';
+  drip.style.left = (Math.random() * 100) + '%';
+  document.body.appendChild(drip);
+  setTimeout(() => drip.remove(), 3500);
+}
+
+// ===== Scenes =====
+const scenes = {};
+
+scenes.intro = () => {
+  currentSceneId = 'intro';
+  currentScene = 'basement';
+  const nar = document.getElementById('narrative');
+  const ch = document.getElementById('choices');
+
+  playDripLoop();
+
+  typeText(nar, `
+    <p>你睁开眼。</p>
+    <p>后脑勺很疼，像被人用什么东西砸过。空气里有一股<span class="highlight">铁锈和霉味</span>混在一起的气息，你的鼻腔发紧。</p>
+    <p>你试着动了动——手腕被粗糙的绳子绑在一把木椅上，绳结在椅背后面。绳子已经旧了，边缘有些毛糙，但绑得不算太紧。</p>
+    <p>你环顾四周。</p>
+    <p>这是一间地下室。头顶有一根裸露的水管，每隔几秒就滴下一滴水，砸在水泥地上，声音在空荡的房间里放大了好几倍。身后是一面砖墙，墙皮剥落得厉害，露出里面暗红色的砖。</p>
+    <p>你面前有一张桌子。桌上放着三样东西——</p>
+    <p>一把生锈的<span class="highlight">剪刀</span>。一张对折的<span class="highlight">纸条</span>。一个上锁的<span class="highlight">铁盒子</span>，锁孔旁边刻着一行小字，但你目前的角度看不清。</p>
+    <p>房间唯一的出口是一扇铁门，从外面反锁着。门缝底部透进来一丝走廊昏黄的光。</p>
+    <p>你听到门外隐约有脚步声。很慢，很规律。</p>
+    <p class="sound">哒。哒。哒。</p>
+    <p>你低头看了一眼——地板上有一滩水渍，从铁门的方向延伸到你椅子底下，像有人拖着什么<span class="danger">湿漉漉的东西</span>走过来的痕迹。</p>
+  `, () => {
+    showChoices([
+      { text: '用力扭动手腕，试图磨开绳子', next: 'try_rope', scene: 'basement' },
+      { text: '用脚把桌子勾过来，够桌上的剪刀', next: 'reach_scissors', scene: 'basement', sound: () => playScrape() },
+      { text: '仔细看铁盒子锁孔旁边的小字', next: 'read_lock', scene: 'basement' },
+      { text: '对着门外轻声说："有人吗？"', next: 'call_out', scene: 'basement', sanity: -5, sound: () => playDistantWhisper() }
+    ]);
+  });
+};
+
+scenes.try_rope = () => {
+  currentSceneId = 'try_rope';
+  const nar = document.getElementById('narrative');
+
+  typeText(nar, `
+    <p>你用力扭动手腕。绳子粗糙的纤维刮过皮肤，又疼又痒。你感觉到右手指尖开始发麻。</p>
+    <p>你试了几分钟，右手腕的绳结确实松了一点——大概能抽出两根手指的缝隙。但还不够。</p>
+    <p>就在这时，门外的脚步声<span class="danger">停了</span>。</p>
+    <p class="sound">……</p>
+    <p>沉默。</p>
+    <p>一秒。两秒。三秒。你的心跳声在耳朵里变得很响。</p>
+    <p>然后你听到铁门上的锁——<span class="danger">咔嗒</span>一声。有人在转动钥匙。</p>
+    <p>不，不是钥匙。是更慢的声音，像是有人在门外用指甲一点一点刮着锁孔，发出令人牙酸的金属摩擦声。</p>
+    <p class="sound">吱——吱——吱——</p>
+    <p style="animation-delay: 1s;">你的后颈汗毛一根一根竖了起来。</p>
+  `, () => {
+    showChoices([
+      { text: '趁现在——拼命挣脱绳子', next: 'break_free', scene: 'basement', sound: () => { playScrape(); playHeartbeat(); } },
+      { text: '不动，屏住呼吸，假装还没醒', next: 'play_dead', scene: 'basement', sanity: -10 },
+      { text: '用力把椅子倒向桌子那边，制造声响', next: 'knock_table', scene: 'basement', sound: () => { playFootstep(); playFootstep(); } }
+    ]);
+  });
+};
+
+scenes.reach_scissors = () => {
+  currentSceneId = 'reach_scissors';
+  const nar = document.getElementById('narrative');
+
+  typeText(nar, `
+    <p>你用脚尖勾住椅子腿，一点一点把椅子往桌子方向挪。木头在水泥地上发出沉闷的摩擦声，你的额头开始冒汗。</p>
+    <p>终于，你的右手够到了剪刀。</p>
+    <p>你把剪刀夹在手指之间，费力地翻转，用刀刃去割手腕上的绳子。锈迹斑斑的刀刃不太锋利，但绳子已经旧了——</p>
+    <p class="sound">嘶——</p>
+    <p>绳子断了。你自由了。</p>
+    <p>你迅速解开脚踝上的绳子，站起来。膝盖一软差点摔倒，扶住了桌子。</p>
+    <p>这时候你才注意到桌上那张纸条。刚才角度看不清，现在你拿起来——</p>
+    <p>纸条上只有一行字，像是用什么尖锐的东西刻上去的，字迹歪歪扭扭：</p>
+    <p class="highlight" style="text-align:center; font-size:17px; margin: 20px 0;">"别相信你看到的任何一扇门。"</p>
+    <p>门外的脚步声突然停了。</p>
+    <p>然后，锁孔的刮擦声又响了一下——<span class="danger">停了</span>。</p>
+    <p>又沉默了几秒。然后你听到门外传来一个声音。很低，很哑，像是很久没有说过话的人在努力让声带振动：</p>
+    <p class="whisper" style="text-align:center;">"你……看到了？"</p>
+  `, () => {
+    inventory.push('剪刀');
+    inventory.push('纸条');
+    showChoices([
+      { text: '不回答。沉默。', next: 'silence', scene: 'basement' },
+      { text: '回答："看到了什么？"', next: 'respond', scene: 'basement', sanity: -5, sound: () => playDistantWhisper() },
+      { text: '拿着剪刀，悄悄走向铁门，从门缝往外看', next: 'peek_door', scene: 'silhouette', sound: () => playScrape() }
+    ]);
+  });
+};
+
+scenes.read_lock = () => {
+  currentSceneId = 'read_lock';
+  const nar = document.getElementById('narrative');
+
+  typeText(nar, `
+    <p>你努力把身体前倾，凑近铁盒子。绳子勒得你胸口发疼。</p>
+    <p>锁孔旁边刻着一行小字，非常浅，像是用指甲一点一点刮出来的：</p>
+    <p class="highlight" style="text-align:center; margin: 16px 0;">"我的生日。"</p>
+    <p>就三个字。</p>
+    <p>你翻过铁盒子——底面刻着另一行字：</p>
+    <p style="text-align:center; color:#665; margin: 16px 0;">"03-17"</p>
+    <p>三月十七日。是你的生日？还是……</p>
+    <p>你突然想起——你完全不记得自己是怎么来到这里的。你不记得这间地下室，不记得这张桌子，不记得绑你的绳子。</p>
+    <p>你的记忆从今天早上开始就是一片空白。</p>
+    <p>门外的脚步声停了。</p>
+    <p>然后——<span class="danger">咔嗒</span>。锁在转动。</p>
+    <p>更准确地说，是指甲在刮锁孔。</p>
+  `, () => {
+    flags.know_date = true;
+    showChoices([
+      { text: '试一下：03-17', next: 'try_code', scene: 'basement' },
+      { text: '不管盒子了，先看能不能挣脱绳子', next: 'try_rope', scene: 'basement' },
+      { text: '对着门外说："我的生日？你在说什么？"', next: 'respond_date', scene: 'basement', sanity: -8 }
+    ]);
+  });
+};
+
+scenes.call_out = () => {
+  currentSceneId = 'call_out';
+  const nar = document.getElementById('narrative');
+
+  // trigger blood drip
+  addBloodDrip();
+
+  typeText(nar, `
+    <p>你压低声音："有人吗？"</p>
+    <p>门外的脚步声——</p>
+    <p><span class="danger">停了</span>。</p>
+    <p>完全停了。</p>
+    <p>你甚至觉得整个房间都安静了一瞬——连水管的滴水声都没了。</p>
+    <p>然后，门缝底下透进来的光……变了。</p>
+    <p>从昏黄变成了<span class="danger">暗红色</span>。</p>
+    <p>你听到了一个声音。很低，很哑，像是很久没有说过话的人在努力让声带振动：</p>
+    <p class="whisper" style="text-align:center; margin: 16px 0;">"你……看到了？"</p>
+    <p>声音很近。就贴在门的另一边。</p>
+    <p>你后颈的汗毛一根一根竖了起来。</p>
+    <p>然后你看到——门缝底下，伸进来一根<span class="danger">手指</span>。</p>
+    <p>惨白的，指节发青，指甲又长又黑。它在地面上慢慢摸索着，像在找什么东西。</p>
+    <p>它朝你的方向爬过来了。</p>
+  `, () => {
+    addBloodDrip();
+    setTimeout(addBloodDrip, 800);
+    showChoices([
+      { text: '拼命挣脱绳子！', next: 'panic_escape', scene: 'basement', sound: () => { playHeartbeat(); playScrape(); } },
+      { text: '把椅子往后挪，远离那根手指', next: 'retreat', scene: 'basement', sanity: -15 },
+      { text: '盯着它看……它好像在写字', next: 'finger_writing', scene: 'basement', sanity: -10 }
+    ]);
+  });
+};
+
+scenes.break_free = () => {
+  currentSceneId = 'break_free';
+  const nar = document.getElementById('narrative');
+
+  typeText(nar, `
+    <p>你不管了。你咬紧牙关，把所有力气集中在右手腕上，猛地一挣——</p>
+    <p class="sound">啪！</p>
+    <p>绳子断了。你摔在地上，膝盖撞在水泥地面上，疼得你倒吸一口冷气。</p>
+    <p>但你顾不上疼。你迅速解开脚踝上的绳子，站起来。</p>
+    <p>门外那个刮锁孔的声音停了。</p>
+    <p>沉默了几秒。</p>
+    <p>然后你听到门外传来一个声音，很低，很哑：</p>
+    <p class="whisper" style="text-align:center;">"你……看到了？"</p>
+    <p>你看到桌上还有那把剪刀和那个铁盒子。锁孔旁边刻着一行小字——你刚才角度看不清，现在你站起来看到了：</p>
+    <p class="highlight" style="text-align:center;">"我的生日。"</p>
+    <p>盒子底面刻着：03-17。</p>
+  `, () => {
+    inventory.push('自由');
+    flags.know_date = true;
+    showChoices([
+      { text: '拿起剪刀，走向铁门', next: 'approach_door', scene: 'basement' },
+      { text: '先试试 03-17 能不能开锁', next: 'try_code', scene: 'basement' },
+      { text: '检查房间里还有没有别的出口', next: 'search_room', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.play_dead = () => {
+  currentSceneId = 'play_dead';
+  const nar = document.getElementById('narrative');
+
+  typeText(nar, `
+    <p>你一动不动，控制呼吸，假装还没醒。</p>
+    <p>门外的刮擦声持续了很长时间。你数着心跳——一下，两下，三下……</p>
+    <p>五十下。</p>
+    <p>然后声音停了。</p>
+    <p>又过了很久。也许是一分钟，也许是十分钟。你不敢睁开眼。</p>
+    <p>直到你听到——<span class="danger">锁开了</span>。</p>
+    <p class="sound">咔嗒。</p>
+    <p>铁门发出沉重的吱呀声，缓缓打开。</p>
+    <p>你透过半闭的眼缝，看到一双<span class="danger">赤脚</span>走进来。惨白的脚趾微微蜷缩，指甲发青。</p>
+    <p>那双脚在你面前停下了。</p>
+    <p>你感觉到有什么东西凑近你的脸——一股冰冷的气息，带着……<span class="highlight">泥土</span>的味道。</p>
+    <p>然后那个声音，在你耳边说：</p>
+    <p class="whisper" style="text-align:center;">"我知道你醒着。"</p>
+    <p>你的心脏几乎停了一拍。</p>
+  `, () => {
+    addBloodDrip();
+    setTimeout(addBloodDrip, 500);
+    setTimeout(addBloodDrip, 1100);
+    updateSanity(-15);
+    showChoices([
+      { text: '猛地睁开眼！', next: 'face_it', scene: 'dark', sound: () => { playHeartbeat(); playHeartbeat(); } },
+      { text: '继续装，一动不动', next: 'keep_dead', scene: 'dark', sanity: -20 }
+    ]);
+  });
+};
+
+scenes.knock_table = () => {
+  currentSceneId = 'knock_table';
+  const nar = document.getElementById('narrative');
+
+  typeText(nar, `
+    <p>你把椅子猛地倒向桌子——</p>
+    <p class="sound">哐当！！</p>
+    <p>桌子被撞翻了。桌上的东西散落一地——你听到剪刀落地的声音，铁盒子在地上滚动。那张纸条飘到了角落里。</p>
+    <p>门外的脚步声——<span class="danger">突然加速</span>。</p>
+    <p class="sound">哒哒哒哒哒哒——</p>
+    <p>然后变成了<span class="danger">跑</span>。朝你的方向跑来。</p>
+    <p>铁门剧烈地晃动起来，门框发出金属变形的尖叫——</p>
+    <p class="sound">砰！砰！砰！</p>
+    <p>有什么东西在撞门。力气大到你感觉整面墙都在震动。</p>
+    <p>灰尘从天花板上簌簌地落下来。</p>
+  `, () => {
+    document.getElementById('game').classList.add('shake');
+    setTimeout(() => document.getElementById('game').classList.remove('shake'), 400);
+    updateSanity(-10);
+    showChoices([
+      { text: '赶紧去捡地上的剪刀', next: 'grab_scissors_floor', scene: 'basement', sound: () => playScrape() },
+      { text: '去找门旁边的暗门或通风口', next: 'search_room', scene: 'basement' },
+      { text: '缩在角落里，别动', next: 'corner', scene: 'basement', sanity: -15 }
+    ]);
+  });
+};
+
+scenes.peek_door = () => {
+  currentSceneId = 'peek_door';
+  const nar = document.getElementById('narrative');
+  currentScene = 'silhouette';
+
+  typeText(nar, `
+    <p>你握着剪刀，踮着脚走到铁门前。铁门很冷，你的手碰到门把手时打了个寒颤。</p>
+    <p>你慢慢蹲下来，把眼睛凑近门缝。</p>
+    <p>走廊很长，很暗。尽头有一盏快要熄灭的灯，发出昏黄的光。</p>
+    <p>你看到了一个人影。</p>
+    <p>ta站在走廊中间，背对着你。穿着一件白色的……不是衣服，像是医院的病号服，但已经脏得看不出原来的颜色了。</p>
+    <p>ta的头发很长，垂在背后，湿漉漉的。</p>
+    <p>你的目光往下移——ta的脚是光着的，踩在一滩水渍上。那滩水渍的形状，和你房间里地上的那滩几乎<span class="danger">一模一样</span>。</p>
+    <p>你正在想这意味着什么——</p>
+    <p>那个人影的头，<span class="danger">缓缓转了过来</span>。</p>
+    <p>不是整个身体转过来。只有头。慢慢转过来，像是脖子的关节可以旋转一百八十度。</p>
+    <p>你看到了一张脸。</p>
+    <p>惨白的，眼眶是两个黑洞。</p>
+    <p>ta的嘴角，向上弯着。在笑。</p>
+  `, () => {
+    addBloodDrip();
+    setTimeout(addBloodDrip, 300);
+    setTimeout(addBloodDrip, 600);
+    updateSanity(-20);
+    document.getElementById('game').classList.add('shake');
+    setTimeout(() => document.getElementById('game').classList.remove('shake'), 400);
+    showChoices([
+      { text: '猛地关上门缝的视线，退回房间中央', next: 'retreat_door', scene: 'basement', sanity: -5 },
+      { text: '和那双黑洞般的眼睛对视', next: 'stare_back', scene: 'dark', sanity: -25, sound: () => playHeartbeat() }
+    ]);
+  });
+};
+
+scenes.silence = () => {
+  currentSceneId = 'silence';
+  const nar = document.getElementById('narrative');
+
+  typeText(nar, `
+    <p>你选择了沉默。</p>
+    <p>门外那个声音也没有再说话。</p>
+    <p>你听到一阵极其轻微的声响——像是有人蹲了下来，把耳朵贴在门上，试图听你这边的动静。</p>
+    <p>你屏住呼吸。</p>
+    <p>水管滴水。滴。滴。滴。你不知道过了多久。</p>
+    <p>然后，锁孔那里传来一声极轻的叹息：</p>
+    <p class="whisper" style="text-align:center;">"……没关系。你会说话的。"</p>
+    <p>脚步声渐渐远去。哒。哒。哒。</p>
+    <p>走了。</p>
+    <p>你长出一口气。右手腕的绳子已经磨开了大半，你又花了五分钟，终于挣脱了。</p>
+    <p>你自由了。</p>
+    <p>房间里现在很安静。门还锁着。桌上还有铁盒子。地上散落着剪刀和那张纸条。</p>
+  `, () => {
+    inventory.push('自由');
+    showChoices([
+      { text: '捡起剪刀和纸条', next: 'collect_items', scene: 'basement' },
+      { text: '研究铁盒子——"我的生日"和03-17', next: 'try_code', scene: 'basement' },
+      { text: '检查铁门，看能不能撬开', next: 'pry_door', scene: 'basement', sound: () => playScrape() }
+    ]);
+  });
+};
+
+scenes.respond = () => {
+  currentSceneId = 'respond';
+  const nar = document.getElementById('narrative');
+  currentScene = 'silhouette';
+
+  typeText(nar, `
+    <p>你的声音在空荡的房间里回响："看到了什么？"</p>
+    <p>门外安静了很久。</p>
+    <p>久到你开始怀疑刚才那个声音是不是你的幻觉。</p>
+    <p>然后，那个声音又响了。这次比之前清楚一些，你甚至能分辨出——是个女人的声音。</p>
+    <p class="whisper" style="text-align:center;">"镜子。"</p>
+    <p>就一个字。</p>
+    <p>然后你听到门外传来一阵奇怪的声音——像是有人在墙上用指甲刮着什么，<span class="highlight">嚓嚓嚓嚓</span>，很快。</p>
+    <p>持续了大概十秒。</p>
+    <p>然后脚步声渐渐远去。</p>
+    <p>你环顾这间地下室——四面墙，一面铁门，一个天花板，一个水泥地面。</p>
+    <p>你突然意识到：这间房间里，<span class="danger">没有镜子</span>。</p>
+    <p>但那个声音说的是"镜子"。ta在墙上刮的……是什么？</p>
+    <p>你低头看自己——绳子磨得右手腕通红。右手的指甲缝里有一点……<span class="highlight">暗红色</span>的东西。</p>
+    <p>你完全不记得这是什么时候弄上去的。</p>
+  `, () => {
+    inventory.push('红色痕迹');
+    flags.heard_mirror = true;
+    showChoices([
+      { text: '挣脱绳子，检查ta在墙上刮了什么', next: 'check_wall', scene: 'basement' },
+      { text: '先不管，看看铁盒子里有什么', next: 'try_code', scene: 'basement' },
+      { text: '低头仔细看指甲缝里的东西……', next: 'examine_nails', scene: 'dark', sanity: -10 }
+    ]);
+  });
+};
+
+// === More scenes ===
+scenes.collect_items = () => {
+  currentSceneId = 'collect_items';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你把剪刀和纸条捡起来。纸条上写着：</p>
+    <p class="highlight" style="text-align:center; margin: 16px 0;">"别相信你看到的任何一扇门。"</p>
+    <p>你把纸条翻过来——背面还有一行小字，几乎看不清：</p>
+    <p style="text-align:center; color:#665; margin: 16px 0;">"墙上的字是给你的。"</p>
+    <p>墙上的字？这四面墙你都看过了，除了剥落的墙皮，什么都没有。</p>
+    <p>除非……你得从某个角度才能看到？</p>
+  `, () => {
+    inventory.push('剪刀'); inventory.push('纸条');
+    flags.heard_mirror = true;
+    showChoices([
+      { text: '举着剪刀的镜面反光去照墙壁', next: 'use_mirror', scene: 'basement' },
+      { text: '试试铁盒子 03-17', next: 'try_code', scene: 'basement' },
+      { text: '检查铁门能不能撬开', next: 'pry_door', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.try_code = () => {
+  currentSceneId = 'try_code';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你拿起铁盒子。锁是一个简单的四位数密码锁，拨轮式的。</p>
+    <p>"我的生日。03-17。"</p>
+    <p>你拨动拨轮——0 - 3 - 1 - 7。</p>
+    <p class="sound">咔。</p>
+    <p>锁开了。</p>
+    <p>铁盒子里只有一样东西：一把<span class="highlight">钥匙</span>。小小的，铜色的，上面刻着一个数字：</p>
+    <p style="text-align:center; font-size:20px; margin:16px 0;" class="highlight">4</p>
+    <p>就一把钥匙。号码是4。</p>
+    <p>你看了看铁门上的锁——不是这种钥匙能开的。那是从外面反锁的。</p>
+    <p>这把钥匙，是开什么的？</p>
+    <p>你环顾房间，突然注意到——桌腿旁边的地面上，有一个很不起眼的方形痕迹。像是什么东西嵌在水泥里，然后被水泥重新覆盖了。</p>
+    <p>方形的。大概手掌大小。像是一个盖板。</p>
+  `, () => {
+    inventory.push('4号钥匙');
+    showChoices([
+      { text: '用剪刀撬开那个方形盖板', next: 'open_hatch', scene: 'basement', sound: () => playScrape() },
+      { text: '先检查铁门能不能撬开', next: 'pry_door', scene: 'basement' },
+      { text: '再仔细看看房间还有什么', next: 'search_room', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.open_hatch = () => {
+  currentSceneId = 'open_hatch';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你用剪刀的尖端插进方形盖板的缝隙里，用力撬。</p>
+    <p class="sound">嘎——</p>
+    <p>盖板松动了。你把它掀开。</p>
+    <p>下面是一个小小的暗格。暗格里放着一样东西——</p>
+    <p>一面<span class="highlight">小镜子</span>。巴掌大小，铜框，已经很旧了，镜面有些模糊。</p>
+    <p>你拿起镜子。镜子里映出你的脸——</p>
+    <p>你的脸上有一道干涸的<span class="danger">血痕</span>，从额头一直延伸到左边的太阳穴。你之前居然没注意到。</p>
+    <p>你翻过镜子。背面刻着一行字：</p>
+    <p class="highlight" style="text-align:center; margin:16px 0;">"答案一直在你脸上。"</p>
+    <p>你的心跳漏了一拍。</p>
+    <p>镜子里，你的身后——</p>
+    <p>好像有什么东西动了一下。</p>
+  `, () => {
+    inventory.push('小镜子');
+    flags.has_mirror = true;
+    updateSanity(-10);
+    showChoices([
+      { text: '猛地转过身去看', next: 'turn_around', scene: 'dark', sanity: -15, sound: () => playHeartbeat() },
+      { text: '继续看镜子里的倒影，不动', next: 'watch_mirror', scene: 'basement', sanity: -8 },
+      { text: '把镜子放下，先用4号钥匙试试铁门', next: 'pry_door', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.search_room = () => {
+  currentSceneId = 'search_room';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你仔细检查这间地下室。</p>
+    <p>四面墙都是实心砖墙。天花板是水泥的，有一根水管从中间穿过。地面是普通的水泥地，除了那个方形盖板的痕迹，没有别的异常。</p>
+    <p>铁门——你用剪刀试了试门缝。太窄了，剪刀伸不进去。门是从外面用插销锁住的，不是锁芯。</p>
+    <p>你推了推门。很沉。纹丝不动。</p>
+    <p>除非你能从外面打开插销，否则这扇门打不开。</p>
+    <p>你又看了看水管。水管很粗，如果你站到椅子上，也许能沿着水管爬到天花板上面——但天花板上除了水管穿过的地方，全是实心的水泥。</p>
+    <p>你的目光回到桌腿旁边的那个方形痕迹上。</p>
+  `, () => {
+    showChoices([
+      { text: '撬开那个方形痕迹', next: 'open_hatch', scene: 'basement', sound: () => playScrape() },
+      { text: '对着门外大喊，看有没有人来', next: 'yell_help', scene: 'basement', sanity: -5 },
+      { text: '冷静下来，仔细想想"我的生日"和03-17', next: 'think', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.pry_door = () => {
+  currentSceneId = 'pry_door';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你把剪刀伸进门缝，试图撬开插销。</p>
+    <p>剪刀在金属门缝里发出刺耳的刮擦声。你费了很大力气——</p>
+    <p>插销纹丝不动。</p>
+    <p>门缝太窄了，剪刀的角度不够。你需要更细、更硬的东西。</p>
+    <p>你退后一步，喘着粗气。</p>
+    <p>这时候你注意到——铁门的表面，有什么东西。在昏暗的光线下，你之前没看到。</p>
+    <p>门的内侧，用某种红色的东西写着四个数字：</p>
+    <p class="danger" style="text-align:center; font-size:22px; margin:16px 0;">4 — 2 — 8 — 1</p>
+    <p>4281。这又是什么密码？</p>
+    <p>你看了看铁盒子——已经打开了。铁门上没有锁芯。这组数字的用处，你还想不出来。</p>
+  `, () => {
+    flags.know_code_4281 = true;
+    showChoices([
+      { text: '试一下 4-2-8-1 是不是暗格的密码', next: 'try_4281', scene: 'basement' },
+      { text: '仔细看看房间里有没有别的四位数密码锁', next: 'search_room', scene: 'basement' },
+      { text: '对着门外问："4281是什么意思？"', next: 'ask_4281', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.yell_help = () => {
+  currentSceneId = 'yell_help';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你对着铁门大喊："有没有人！救命！"</p>
+    <p>你的声音在房间里回荡，震得你自己耳朵疼。</p>
+    <p>门外——</p>
+    <p>没有脚步声。</p>
+    <p>没有刮擦声。</p>
+    <p>什么都没有。</p>
+    <p>安静得不正常。</p>
+    <p>你又喊了一次。"有人吗！！"</p>
+    <p>还是什么都没有。</p>
+    <p>你突然意识到一件事——</p>
+    <p>从你醒来到现在，你听到的所有声音——脚步声、刮擦声、那个声音——全部都是从门外传来的。</p>
+    <p>但你从来<strong>没有听到过</strong>走廊里有别的声音。没有别的脚步，没有别的对话，没有任何一个人类世界应该有的背景噪音。</p>
+    <p>就好像……门外的世界，只有那个东西。</p>
+  `, () => {
+    updateSanity(-10);
+    showChoices([
+      { text: '不想了，先想办法出去', next: 'search_room', scene: 'basement' },
+      { text: '从门缝底下再往外看一次', next: 'peek_door_2', scene: 'silhouette' }
+    ]);
+  });
+};
+
+scenes.peek_door_2 = () => {
+  currentSceneId = 'peek_door_2';
+  const nar = document.getElementById('narrative');
+  currentScene = 'silhouette';
+  typeText(nar, `
+    <p>你蹲下来，把眼睛凑近门缝。</p>
+    <p>走廊和之前一样——昏暗，空荡，尽头那盏快要熄灭的灯。</p>
+    <p>但这一次，走廊里没有人影。</p>
+    <p>你松了口气。</p>
+    <p>然后你注意到——走廊的墙壁上，有东西。</p>
+    <p>从你门前开始，一直延伸到走廊尽头，墙上密密麻麻地刻满了字。和你在铁盒子里看到的"我的生日"一样的刻痕——用指甲刮出来的。</p>
+    <p>你凑近看——那些字全部都是同一句话，重复了几十遍：</p>
+    <p class="danger" style="text-align:center; margin:16px 0;">"出去出去出去出去出去出去出去出去出去出去出去出去出去出去出去出去出去"</p>
+    <p>你正看着——</p>
+    <p>走廊尽头那盏灯，<span class="danger">灭了</span>。</p>
+    <p>整个走廊陷入了黑暗。</p>
+    <p>但你看到——黑暗中，有两个亮点。</p>
+    <p>很小，很亮，像是眼睛。</p>
+    <p>在走廊尽头，看着你。</p>
+  `, () => {
+    addBloodDrip();
+    addBloodDrip();
+    updateSanity(-15);
+    document.getElementById('game').classList.add('shake');
+    setTimeout(() => document.getElementById('game').classList.remove('shake'), 400);
+    showChoices([
+      { text: '猛地站起身来，不管了，撞门！', next: 'ram_door', scene: 'basement', sound: () => { playFootstep(); playFootstep(); playFootstep(); } },
+      { text: '退回房间，把桌子顶在门后面', next: 'barricade', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.barricade = () => {
+  currentSceneId = 'barricade';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你用尽全力把桌子拖到铁门后面。很重，你的手指关节磨出了血。</p>
+    <p>桌子顶住了门。你知道这挡不了多久——如果门外那个东西真的想进来的话。</p>
+    <p>你退到房间角落，握着剪刀。手在抖。</p>
+    <p>水管滴水。滴。滴。滴。</p>
+    <p>门外很安静。</p>
+    <p>你等了很久。也许五分钟，也许二十分钟。</p>
+    <p>什么都没有发生。</p>
+    <p>你开始怀疑——也许那个东西走了？也许走廊真的只是走廊？</p>
+    <p>就在这时——你听到了一个声音。不是从门外传来的。</p>
+    <p>是从<span class="danger">你身后</span>。</p>
+    <p>从墙壁里。</p>
+    <p>一种极其微弱的、像是有人在墙壁另一边说话的声音。你听不清内容，但你能分辨出——那是一个女人的声音，在重复着同一句话。</p>
+    <p>你把耳朵贴在墙上。</p>
+    <p>这一次你听清了：</p>
+    <p class="whisper" style="text-align:center;">"四。二。八。一。"</p>
+  `, () => {
+    inventory.push('桌子');
+    updateSanity(-10);
+    showChoices([
+      { text: '在墙上寻找声音的来源', next: 'find_source', scene: 'basement' },
+      { text: '记住4281，去检查铁门上的数字', next: 'pry_door', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.ram_door = () => {
+  currentSceneId = 'ram_door';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你退后几步，深吸一口气，然后朝铁门冲过去——</p>
+    <p class="sound">砰！！</p>
+    <p>肩膀撞在铁门上，疼得你半边身子发麻。铁门晃了一下，但没有开。</p>
+    <p>你又撞了一次。</p>
+    <p class="sound">砰！！</p>
+    <p>门框发出金属变形的声音。插销弯了一点。</p>
+    <p>你正要撞第三次——</p>
+    <p>门的另一边，有什么东西，<span class="danger">同时撞了一下</span>。</p>
+    <p>和你撞门的方向相反。从外向内。</p>
+    <p>像是在回应你。</p>
+    <p>你退后了一步。铁门在你面前微微晃动着。</p>
+    <p>然后你听到了那个声音，这次是贴着门板传来的，震动通过金属传到你的脊椎：</p>
+    <p class="whisper" style="text-align:center;">"一起。"</p>
+  `, () => {
+    document.getElementById('game').classList.add('shake');
+    setTimeout(() => document.getElementById('game').classList.remove('shake'), 400);
+    updateSanity(-10);
+    showChoices([
+      { text: '不管了，再撞！力气更大！', next: 'final_ram', scene: 'basement', sound: () => { playHeartbeat(); playFootstep(); } },
+      { text: '停下来，仔细听门外的动静', next: 'listen_outside', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.listen_outside = () => {
+  currentSceneId = 'listen_outside';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你贴着门板，屏住呼吸。</p>
+    <p>门外很安静。</p>
+    <p>然后你听到——极其微弱的——那个声音在说话。不是在对你说话。像是在自言自语，又像是在和某个不存在的人对话。</p>
+    <p class="whisper" style="text-align:center;">"……和上一次一样……又是这个房间……每次都到这个房间……"</p>
+    <p>你的血液冻住了。</p>
+    <p>"上一次"？"每次"？</p>
+    <p>这个声音……经历过很多次？</p>
+    <p>声音又响了：</p>
+    <p class="whisper" style="text-align:center;">"……第几次了……第七次……还是第八次……"</p>
+    <p>你突然意识到——你不知道这是你第几次醒来在这间地下室了。</p>
+    <p>你的记忆从今天早上开始就是空白。也许更早。</p>
+    <p>也许你已经在这里醒来过很多次了。</p>
+    <p>也许每次你都会忘记。</p>
+    <p>你的右手腕上那些磨痕——新的盖着旧的。</p>
+  `, () => {
+    flags.know_loop = true;
+    updateSanity(-15);
+    showChoices([
+      { text: '问："我来过几次？"', next: 'ask_count', scene: 'basement' },
+      { text: '低头看自己的手腕，确认那些磨痕', next: 'check_wrists', scene: 'dark', sanity: -10 }
+    ]);
+  });
+};
+
+scenes.ask_count = () => {
+  currentSceneId = 'ask_count';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你的声音有些发抖："我来过几次？"</p>
+    <p>门外安静了很久。</p>
+    <p>然后那个声音回答了。这次很清晰，像是隔着门板直接说进你的耳朵里：</p>
+    <p class="whisper" style="text-align:center;">"数不清了。你每次都问一样的问题。"</p>
+    <p>"每次你都打开那个盒子。每次你都看到那面镜子。每次你都走到门口。"</p>
+    <p>"然后你开门。然后你看到我。然后你就忘了。"</p>
+    <p>"然后——你又回到这里。"</p>
+    <p>你的大脑一片空白。</p>
+    <p>"但是这一次——" 那个声音顿了顿。</p>
+    <p>"你好像和以前不太一样。"</p>
+    <p>"你没有直接打开门。"</p>
+    <p>"也许……这一次你可以……"</p>
+    <p>声音突然断了。</p>
+    <p>门外又安静了。</p>
+  `, () => {
+    updateSanity(-10);
+    showChoices([
+      { text: '问："我可以什么？说完！"', next: 'demand_answer', scene: 'basement' },
+      { text: '不开门。去检查房间里还有没有别的线索', next: 'final_search', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.demand_answer = () => {
+  currentSceneId = 'demand_answer';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>"我可以什么？说完！"你贴着门板喊。</p>
+    <p>沉默。</p>
+    <p>你等了三十秒。一分钟。两分钟。</p>
+    <p>什么都没有。</p>
+    <p>那个声音走了。</p>
+    <p>或者——它从来不曾存在过。</p>
+    <p>你退后一步，靠在墙上。你的心跳慢慢平复下来。</p>
+    <p>你开始梳理你所知道的：</p>
+    <p>• 铁盒子。密码03-17。里面是4号钥匙。</p>
+    <p>• 铁门内侧写着4-2-8-1。</p>
+    <p>• 墙壁里有人在说4-2-8-1。</p>
+    <p>• "别相信你看到的任何一扇门。"</p>
+    <p>• "答案一直在你脸上。"——镜子。血痕。你的脸。</p>
+    <p>你拿起剪刀。剪刀的刀面虽然锈了，但还能模糊地映出倒影。</p>
+    <p>你看着剪刀里的自己——</p>
+    <p>那道从额头到太阳穴的血痕，在镜面反光里，看起来像一个数字。</p>
+    <p>你把剪刀转了转角度——</p>
+    <p class="highlight" style="text-align:center; font-size:20px; margin:16px 0;">8</p>
+  `, () => {
+    flags.know_face_8 = true;
+    updateSanity(-5);
+    showChoices([
+      { text: '血痕是8……4-2-8-1……门上的密码！', next: 'final_code', scene: 'basement' },
+      { text: '但门是插销锁，没有密码锁……那4281是开什么的？', next: 'think', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.think = () => {
+  currentSceneId = 'think';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你冷静下来。你坐回椅子上（或者地上——桌子倒了，你把椅子也扶起来了）。</p>
+    <p>你开始梳理你所知道的：</p>
+    <p>• 铁盒子。密码03-17。里面是4号钥匙。</p>
+    <p>• 铁门内侧写着4-2-8-1。</p>
+    <p>• "别相信你看到的任何一扇门。"</p>
+    <p>• "答案一直在你脸上。"</p>
+    <p>• 门外的声音说你来过很多次。每次都开门，看到它，然后忘记，然后回到这里。</p>
+    <p>• 这一次你没有直接开门。</p>
+    <p>你盯着4-2-8-1。</p>
+    <p>4号钥匙。4281的第一个数字是4。</p>
+    <p>03-17。3月17日。0317。</p>
+    <p>4281减去0317等于……不，这不是数学题。</p>
+    <p>你突然想到——4281，四个数字，四位数密码锁——</p>
+    <p>你的地下室里，已经有一个四位数密码锁了。就是铁盒子上的。</p>
+    <p>铁盒子已经被你打开了。但——</p>
+    <p>铁盒子<strong>底下</strong>，有没有什么？</p>
+    <p>你刚才只看了里面，没有看盒子底下。</p>
+  `, () => {
+    showChoices([
+      { text: '翻过铁盒子看底部', next: 'check_box_bottom', scene: 'basement' },
+      { text: '不是——再检查铁门', next: 'recheck_door', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.check_box_bottom = () => {
+  currentSceneId = 'check_box_bottom';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你翻过铁盒子。</p>
+    <p>底部刻着一行你之前没有注意到的字——它被一层薄薄的锈迹覆盖了，你用指甲刮开：</p>
+    <p class="highlight" style="text-align:center; margin:16px 0;">"输入真正的生日。"</p>
+    <p>真正的生日。</p>
+    <p>你输入了03-17。它打开了。但盒子只给了你一把钥匙，没有别的。</p>
+    <p>"真正的生日"——03-17不是"真正的"？</p>
+    <p>或者，你需要在别的地方再次输入这个密码？</p>
+    <p>你看着手中的4号钥匙。小小的，铜色的。</p>
+    <p>你突然注意到——铁盒子的内部，底部那层铁片，微微凸起了一块。像是可以按下去的。</p>
+    <p>你按了一下。</p>
+    <p class="sound">咔嗒。</p>
+    <p>铁片弹开了。下面还有一个暗格。</p>
+    <p>暗格里放着一张照片。泛黄的，边缘已经卷曲了。</p>
+    <p>照片上是一个女人。穿着白裙子，站在一棵树下。她在笑。</p>
+    <p>你看着她的脸——</p>
+    <p><span class="danger">那是你自己的脸</span>。</p>
+    <p>但又不完全是。更年轻。更瘦。眼神……不一样。你在照片里看到的那个人的眼睛，和你现在在剪刀反光里看到的完全不同。</p>
+    <p>照片背面写着一行字：</p>
+    <p style="text-align:center; color:#665; margin:16px 0;">"2019.03.17"</p>
+    <p>2019年3月17日。</p>
+    <p>那是七年前。</p>
+  `, () => {
+    inventory.push('照片');
+    flags.know_year = true;
+    updateSanity(-10);
+    addBloodDrip();
+    showChoices([
+      { text: '我需要出去。用力撞门。', next: 'final_ram', scene: 'basement', sound: () => playHeartbeat() },
+      { text: '外面的那个声音……是照片里的"我"吗？', next: 'question_identity', scene: 'dark', sanity: -15 }
+    ]);
+  });
+};
+
+scenes.question_identity = () => {
+  currentSceneId = 'question_identity';
+  const nar = document.getElementById('narrative');
+  currentScene = 'dark';
+  typeText(nar, `
+    <p>你盯着照片看了很久。</p>
+    <p>照片里的你——2019年的你——在笑。眼神明亮。背景是一棵树，阳光很好。</p>
+    <p>门外的那个声音说："每次都到这个房间。每次都开门。每次都看到我。然后你就忘了。"</p>
+    <p>如果你看到了它，就会忘记一切，然后重新回到这个房间——</p>
+    <p>那门外的那个东西，<span class="highlight">是不是也是你？</span></p>
+    <p>是另一个循环里的你？一个已经忘了自己是谁的你？</p>
+    <p>"别相信你看到的任何一扇门。"</p>
+    <p>也许——这句话的意思不是"门外有危险"。而是——</p>
+    <p><span class="highlight">门后面的东西，不是你以为的那个东西。</span></p>
+    <p>你看了看手中的4号钥匙。又看了看铁门上的4-2-8-1。</p>
+    <p>4。钥匙上的数字是4。密码的第一个数字也是4。</p>
+    <p>也许这把钥匙不是用来开门的。也许它是用来开<strong>你自己的</strong>。</p>
+    <p>你看着自己的手腕——那些旧的磨痕。也许有哪一次循环里的你，留下过什么线索。</p>
+    <p>你低头仔细看——</p>
+    <p>右手腕内侧，最旧的一道疤痕下面，有一个纹身。很小。被疤痕盖住了大半，但你还是能辨认出来：</p>
+    <p class="highlight" style="text-align:center; font-size:18px; margin:16px 0;">别开门。</p>
+    <p>两个字。是你自己的字迹。</p>
+    <p>你的心脏剧烈地跳动起来。</p>
+  `, () => {
+    flags.know_tattoo = true;
+    showChoices([
+      { text: '听从自己的忠告——不开门。找别的出路。', next: 'find_way_out', scene: 'basement' },
+      { text: '但那个声音说"也许这一次你可以"——也许这次不一样？', next: 'open_door_final', scene: 'dark', sound: () => playDoorCreak() }
+    ]);
+  });
+};
+
+scenes.final_ram = () => {
+  currentSceneId = 'final_ram';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你退后几步，用尽全身力气朝铁门冲去——</p>
+    <p class="sound">砰！！！</p>
+    <p>肩膀传来剧痛。铁门猛烈震动。插销发出尖叫般的金属声——</p>
+    <p>弯了。但没断。</p>
+    <p>你又撞了一次。又一次。</p>
+    <p class="sound">砰！砰！砰！</p>
+    <p>第四次——</p>
+    <p class="sound">嘎！！</p>
+    <p>插销断了。铁门猛地弹开。</p>
+    <p>你冲了出去。</p>
+    <p>走廊。昏暗的走廊。那盏灯又亮了，发出微弱的光。</p>
+    <p>你往左看——走廊延伸到黑暗中。</p>
+    <p>你往右看——走廊延伸到黑暗中。</p>
+    <p>你往前看——走廊尽头有一扇门。白色的门。和你身后的铁门完全不同。</p>
+    <p>你跑了过去。门是虚掩的。</p>
+    <p>你推开门——</p>
+    <p>里面是一间<span class="highlight">卧室</span>。</p>
+    <p>很小，很干净。一张床，一个书桌，一把椅子。窗帘拉上了，但有光透进来。</p>
+    <p>书桌上有一面镜子。镜子里映出你的脸——</p>
+    <p>那道血痕还在。但你的脸……不一样了。年轻了一些。像照片里的那个人。</p>
+    <p>你走到镜子前——</p>
+    <p>镜子里的你，<span class="danger">没有在动</span>。</p>
+    <p>你抬手。镜子里的你没有抬手。</p>
+    <p>镜子里的你在笑。和照片里一样的笑容。眼睛明亮。嘴唇弯着。</p>
+    <p>然后她开口了。声音从镜子里传出来——和门外那个声音一模一样：</p>
+    <p class="whisper" style="text-align:center; font-size:17px;">"你终于出来了。"</p>
+    <p>"但你忘了一件事。"</p>
+    <p>"你忘了——<span class="danger">你是怎么进来的</span>。"</p>
+    <p>你身后——卧室的门，自己关上了。</p>
+    <p class="sound">咔嗒。</p>
+    <p>你听到一个声音。从你身后。从床的方向。</p>
+    <p>你慢慢转过头——</p>
+    <p>床上，躺着另一个你。</p>
+    <p>闭着眼睛。一动不动。手腕上绑着绳子。</p>
+    <p><span class="danger">和你刚才在地下室里一模一样。</span></p>
+    <p>镜子的你开口了：</p>
+    <p class="whisper" style="text-align:center;">"现在你明白了？"</p>
+    <p>"你从来就没有离开过。"</p>
+    <p>"门不是出口。"</p>
+    <p class="danger" style="text-align:center; font-size:18px; margin: 16px 0;">"门是入口。"</p>
+    <p>你低头看自己的手腕——</p>
+    <p>绳子。又是绳子。什么时候绑上的？你什么时候躺下了？</p>
+    <p>你的视线开始模糊。</p>
+    <p>你听到最后的声音，是镜子的你轻轻地说：</p>
+    <p class="whisper" style="text-align:center;">"下次……别开门了。"</p>
+    <p>黑暗。</p>
+  `, () => {
+    currentScene = 'dark';
+    setTimeout(() => {
+      endGame(
+        '你从来没有真正醒来',
+        '你又一次回到了地下室。手腕上的绳子是新的。但下面的旧磨痕又多了一层。你永远困在这个循环里——开门，看到她，忘记一切，重新醒来。除非……你学会不开门。'
+      );
+    }, 3000);
+  });
+};
+
+scenes.find_way_out = () => {
+  currentSceneId = 'find_way_out';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你决定不开门。</p>
+    <p>你手腕上自己留下的字——"别开门"——是你自己在某一次循环里写给自己的警告。你必须听。</p>
+    <p>你开始认真检查这个房间。一定有别的出路。每一次你都直接开门，所以你从来没有认真看过这个房间。</p>
+    <p>你把砖墙一面一面敲过去。实心的。空心的。实心的。</p>
+    <p>直到你敲到——你身后那面墙的右下角。</p>
+    <p class="sound">咚。</p>
+    <p>空的。</p>
+    <p>你用剪刀撬开那块砖。后面是一条狭窄的通道。很黑，但你能感觉到空气在流动——有风。</p>
+    <p>你挤了进去。</p>
+    <p>通道很窄，你的肩膀两边都蹭着粗糙的石壁。你在黑暗中摸索着往前走。</p>
+    <p>走了大约三十步——前方出现了一点光。</p>
+    <p>你加快脚步。光越来越亮。</p>
+    <p>你走出了通道。</p>
+    <p>你站在一片<span class="highlight">阳光</span>下。</p>
+    <p>刺眼的光让你不得不用手挡住眼睛。当你慢慢适应——</p>
+    <p>你看到了一棵树。一棵很大的树。绿叶在阳光下闪着光。</p>
+    <p>树下有一把椅子。椅子上放着一样东西。</p>
+    <p>你走过去——是一面镜子。铜框的，和你在暗格里找到的那面一模一样。但更亮，更清晰。</p>
+    <p>你拿起镜子。镜子里映出你的脸——</p>
+    <p>没有血痕。没有伤疤。</p>
+    <p>就是你。普通的、完整的你。</p>
+    <p>你翻过镜子。背面刻着一行字：</p>
+    <p class="highlight" style="text-align:center; margin:16px 0;">"终于。"</p>
+    <p>你放下镜子。你看了看四周——</p>
+    <p>是一片草地。远处有房子。天空是蓝色的。</p>
+    <p>你听到了鸟叫声。</p>
+    <p>你深深地吸了一口气。空气里是青草和泥土的味道。没有铁锈。没有霉味。</p>
+    <p>你自由了。</p>
+  `, () => {
+    currentScene = 'basement';
+    setTimeout(() => {
+      endGame(
+        '你醒了',
+        '你打破了循环。不是通过暴力，不是通过逃跑，而是通过选择——选择不去做你一直在做的事。你的手腕上那两个字，是你给自己留下的最后一件礼物。你从那面镜子里走出来了，走向阳光。'
+      );
+    }, 3000);
+  });
+};
+
+scenes.open_door_final = () => {
+  currentSceneId = 'open_door_final';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你看着手中的钥匙，看着铁门，看着手腕上的字。</p>
+    <p>"别开门。"</p>
+    <p>"也许这一次你可以。"</p>
+    <p>你闭上眼睛。深吸一口气。</p>
+    <p>你走向铁门。</p>
+    <p>你把钥匙插进了锁孔。</p>
+    <p>你转动钥匙。</p>
+    <p class="sound">咔嗒。</p>
+    <p>门开了。</p>
+    <p>门外——</p>
+    <p>不是走廊。</p>
+    <p>是一面镜子。</p>
+    <p>巨大的，从地面到天花板的镜子。你站在镜子前，看到了完整的自己。</p>
+    <p>镜子里的你微笑着。</p>
+    <p>你也笑了。</p>
+    <p>你伸手触碰镜面——</p>
+    <p>镜面是温热的。像皮肤。</p>
+    <p>你的手指穿了过去。</p>
+    <p>你整个人穿了过去。</p>
+    <p>镜面的另一边，是阳光。</p>
+    <p>是树。是鸟叫。是风。</p>
+    <p>你站在一片绿色的草地上，背后是一面巨大的镜子，映出你的背影。</p>
+    <p>你自由了。</p>
+    <p>你在草地上走了很久。你没有回头。</p>
+    <p>直到你走到一条路上。路上有一个路牌。</p>
+    <p>路牌上写着：</p>
+    <p class="highlight" style="text-align:center; font-size:18px; margin:16px 0;">2019.03.17</p>
+    <p>你站在那里，看着那个日期。</p>
+    <p>今天是你的生日。</p>
+    <p>你回家了。</p>
+  `, () => {
+    currentScene = 'basement';
+    setTimeout(() => {
+      endGame(
+        '生日快乐',
+        '你选择了相信自己。你用自己留给自己的钥匙打开了门，穿过镜子，回到了2019年3月17日——一切开始的那一天。你打破了循环。你回家了。'
+      );
+    }, 3000);
+  });
+};
+
+// Filler scenes
+scenes.try_4281 = () => {
+  currentSceneId = 'try_4281';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你试了暗格——盖板没有密码锁，直接撬开的。不是四位数密码。</p>
+    <p>4-2-8-1。铁门上写着的。</p>
+    <p>铁盒子已经打开了。铁门是插销锁。</p>
+    <p>这组数字到底是什么的密码？</p>
+  `, () => {
+    showChoices([
+      { text: '再检查一下铁门', next: 'pry_door', scene: 'basement' },
+      { text: '先不管密码，试试撬开铁门', next: 'ram_door', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.ask_4281 = () => {
+  currentSceneId = 'ask_4281';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>"4281是什么意思？"你问。</p>
+    <p>门外那个声音又响了：</p>
+    <p class="whisper" style="text-align:center;">"……密码。"</p>
+    <p>"开门的密码。"</p>
+    <p>"但不是铁门的密码。"</p>
+    <p>"是你自己的密码。"</p>
+  `, () => {
+    updateSanity(-5);
+    showChoices([
+      { text: '什么叫"我自己的密码"？', next: 'ask_explain', scene: 'basement' },
+      { text: '不管了，先想办法离开这个房间', next: 'search_room', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.ask_explain = () => {
+  currentSceneId = 'ask_explain';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>"什么叫'我自己的密码'？"你追问。</p>
+    <p>门外安静了一会儿。</p>
+    <p>然后那个声音说：</p>
+    <p class="whisper" style="text-align:center;">"你忘了很多东西。"</p>
+    <p>"但有些东西，你自己写在了自己身上。"</p>
+    <p>"看你自己的脸。"</p>
+  `, () => {
+    flags.know_face_hint = true;
+    showChoices([
+      { text: '拿起镜子照自己的脸', next: 'check_box_bottom', scene: 'basement' },
+      { text: '不，先试试直接撞门出去', next: 'ram_door', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.find_source = () => {
+  currentSceneId = 'find_source';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你沿着墙壁，一寸一寸地摸过去。</p>
+    <p>声音从墙壁的右下角传来，越来越清晰。</p>
+    <p>你发现有一块砖可以按下去。</p>
+    <p>你按了一下——</p>
+    <p>砖块缩进去了。露出一个小小的暗格。里面是一面镜子。</p>
+    <p>巴掌大的，铜框的，很旧。</p>
+    <p>你拿起镜子——镜子里映出你的脸。你脸上有一道血痕。</p>
+    <p>你翻过镜子。背面刻着字：</p>
+    <p class="highlight" style="text-align:center;">"答案一直在你脸上。"</p>
+    <p>你的脸。血痕。你在镜子里看到了——</p>
+    <p>血痕的形状……像一个数字。</p>
+  `, () => {
+    inventory.push('小镜子');
+    flags.has_mirror = true;
+    showChoices([
+      { text: '像一个数字……是8？', next: 'face_number', scene: 'basement' },
+      { text: '是别的数字……', next: 'face_number_other', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.face_number = () => {
+  currentSceneId = 'face_number';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你把镜子转了几个角度，仔细看那道血痕——</p>
+    <p>是8。血痕弯曲的弧度，像一个潦草的"8"。</p>
+    <p>4-2-8-1。铁门上的密码。而你脸上的血痕是8。</p>
+    <p>"答案一直在你脸上。"</p>
+    <p>你的脸上有密码的一部分。那其他部分呢？</p>
+    <p>4、2、1——分别在什么"脸上"？</p>
+    <p>也许"脸"不是指你的脸。也许是指——<span class="highlight">这面墙的脸</span>，<span class="highlight">这张桌子的脸</span>。</p>
+    <p>你开始在房间里寻找其他数字。</p>
+    <p>桌子侧面——你之前没注意过的地方——有一道浅浅的刻痕：</p>
+    <p style="text-align:center; margin:12px 0;">2</p>
+    <p>铁盒子底部——你刮开锈迹后看到的字下面，铁片的纹路里藏着：</p>
+    <p style="text-align:center; margin:12px 0;">1</p>
+    <p>4在铁门上。2在桌子上。8在你的脸上。1在铁盒子里。</p>
+    <p>4-2-8-1。这是你——在某一次循环里——刻在这间房间里的密码。</p>
+    <p>你给自己留了一条路。每一次循环你都忘了，但每一次你都会重新发现。</p>
+    <p>现在你知道了所有数字的含义。</p>
+    <p>你需要找到密码锁来输入它。</p>
+  `, () => {
+    flags.know_all_numbers = true;
+    showChoices([
+      { text: '检查铁盒子内部——底部那层铁片可以按下去吗？', next: 'check_box_bottom', scene: 'basement' },
+      { text: '先试试直接撞门', next: 'ram_door', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.face_number_other = () => {
+  currentSceneId = 'face_number_other';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你觉得血痕的形状不太像8。更像是——</p>
+    <p>6？或者5？还是别的什么？</p>
+    <p>你不太确定。也许你想太多了。</p>
+    <p>但你确信血痕是有意义的。"答案一直在你脸上"——这不可能是巧合。</p>
+    <p>你先去检查铁盒子。也许盒子里有更多线索。</p>
+  `, () => {
+    showChoices([
+      { text: '翻过铁盒子看底部', next: 'check_box_bottom', scene: 'basement' },
+      { text: '还是先撞门出去', next: 'ram_door', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.check_wrists = () => {
+  currentSceneId = 'check_wrists';
+  const nar = document.getElementById('narrative');
+  currentScene = 'dark';
+  typeText(nar, `
+    <p>你把右手腕举到眼前。</p>
+    <p>绳子磨出来的痕迹——新的，红肿的。</p>
+    <p>但在下面，旧的痕迹。很多层。有些已经变成了白色的疤痕，有些还留着淡淡的粉色。</p>
+    <p>你数了数——</p>
+    <p>至少……十几道。</p>
+    <p>每一层都是一次循环。每一次你都被绑在这里，每一次你都挣扎着逃脱，每一次你都走向铁门——</p>
+    <p>然后你忘记了一切。</p>
+    <p>你低头看自己的另一只手腕——</p>
+    <p>左手腕内侧，有一行字。很小。是你自己的笔迹。已经很旧了，墨迹模糊了大半：</p>
+    <p class="highlight" style="text-align:center; font-size:18px; margin:16px 0;">别开门</p>
+    <p>两个字。</p>
+    <p>你在某一次循环里——在你还有记忆的时候——在自己身上留下了这条信息。</p>
+    <p>你看着这两个字，眼泪突然涌了上来。不是因为害怕。是因为——</p>
+    <p>你很抱歉。你又忘了。</p>
+  `, () => {
+    flags.know_tattoo = true;
+    updateSanity(-10);
+    addBloodDrip();
+    showChoices([
+      { text: '听自己的话。不开门。找别的出路。', next: 'find_way_out', scene: 'basement' },
+      { text: '但也许这次不一样……也许开门才是答案', next: 'open_door_final', scene: 'dark', sound: () => playDoorCreak() }
+    ]);
+  });
+};
+
+scenes.turn_around = () => {
+  currentSceneId = 'turn_around';
+  const nar = document.getElementById('narrative');
+  currentScene = 'dark';
+  typeText(nar, `
+    <p>你猛地转过身——</p>
+    <p>什么都没有。</p>
+    <p>房间还是那个房间。砖墙，水管，桌子，铁门。</p>
+    <p>你松了口气。也许是你太紧张了。</p>
+    <p>你低头看手中的镜子——镜面朝上。</p>
+    <p>镜子里映出的是天花板。</p>
+    <p>天花板上什么都没有。</p>
+    <p>但你注意到——水管在滴水。滴水的频率变了。不再是几秒一滴。</p>
+    <p class="danger" style="text-align:center;">啪。啪。啪。啪。啪。</p>
+    <p>越来越快。</p>
+    <p>滴下来的水——颜色不对。你伸出手接了一滴——</p>
+    <p><span class="danger">是红色的。</span></p>
+    <p>水管在滴血。</p>
+  `, () => {
+    updateSanity(-15);
+    addBloodDrip();
+    setTimeout(addBloodDrip, 400);
+    setTimeout(addBloodDrip, 800);
+    setTimeout(addBloodDrip, 1200);
+    showChoices([
+      { text: '不管它，先找到出路', next: 'find_way_out', scene: 'basement' },
+      { text: '抬头仔细看水管', next: 'look_pipe', scene: 'dark', sanity: -10 }
+    ]);
+  });
+};
+
+scenes.watch_mirror = () => {
+  currentSceneId = 'watch_mirror';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你没有转身。你继续看着镜子。</p>
+    <p>镜子里——你的身后——</p>
+    <p>有什么东西，慢慢地，从墙壁的阴影里浮现出来。</p>
+    <p>不是一个人。更像是……一团黑色的雾。没有形状，但你能感觉到——它在看着你。</p>
+    <p>你的心跳快得几乎要从胸腔里蹦出来。你的手在抖。镜子在你手里微微晃动。</p>
+    <p>那团黑雾离你越来越近。镜子里，它已经快要碰到你的后背了。</p>
+    <p>就在这时——你看到了黑雾里有一张脸。</p>
+    <p>一张你的脸。</p>
+    <p>但那张脸在哭。无声地，眼泪从黑洞般的眼眶里流出来。</p>
+  `, () => {
+    updateSanity(-15);
+    addBloodDrip();
+    showChoices([
+      { text: '对镜子里的那张脸说："你是谁？"', next: 'ask_mirror_face', scene: 'dark', sanity: -10 },
+      { text: '放下镜子，走到房间另一边', next: 'retreat_mirror', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.ask_mirror_face = () => {
+  currentSceneId = 'ask_mirror_face';
+  const nar = document.getElementById('narrative');
+  currentScene = 'dark';
+  typeText(nar, `
+    <p>你对着镜子里那张哭泣的脸，轻声问："你是谁？"</p>
+    <p>那张脸的嘴唇动了。你听到了声音——不是从镜子外面，是从你自己的嘴里传出来的：</p>
+    <p class="whisper" style="text-align:center;">"我是你留在这里的那部分。"</p>
+    <p>"你每次走的时候，都会留下一点。一点点记忆，一点点恐惧，一点点悲伤。"</p>
+    <p>"我是这些碎片。我一直在等你。"</p>
+    <p>"你终于看到我了。"</p>
+    <p>你的眼泪流了下来。你不知道为什么。</p>
+    <p>镜子里的你伸出手——你的手也伸了出去——</p>
+    <p>你的指尖碰到了镜面。</p>
+    <p>镜面是温热的。像皮肤。</p>
+    <p>你的手指穿了过去。</p>
+  `, () => {
+    setTimeout(() => {
+      endGame(
+        '你带回了自己',
+        '你穿过镜子，带走了一直被你留在这里的那个自己。你终于完整了。你从镜面的另一边走出来，站在阳光下。你是完整的你。你自由了。'
+      );
+    }, 2000);
+  });
+};
+
+scenes.retreat_mirror = () => {
+  currentSceneId = 'retreat_mirror';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你放下镜子，退到房间另一边。</p>
+    <p>你深呼吸。几次。</p>
+    <p>恐惧慢慢退去。你知道你需要冷静。你需要找到出路。</p>
+    <p>你开始系统地检查房间。</p>
+  `, () => {
+    showChoices([
+      { text: '检查墙壁', next: 'search_room', scene: 'basement' },
+      { text: '检查铁盒子', next: 'try_code', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.retreat_door = () => {
+  currentSceneId = 'retreat_door';
+  const nar = document.getElementById('narrative');
+  currentScene = 'basement';
+  typeText(nar, `
+    <p>你猛地把眼睛从门缝上移开，站起身来，退到房间中央。</p>
+    <p>你的心跳快得像要爆炸。</p>
+    <p>那张脸。那个笑容。那双黑洞般的眼睛。</p>
+    <p>你靠着墙壁，慢慢滑坐到地上。手里的剪刀还在——你握得太紧了，手指关节发白。</p>
+    <p>门外的脚步声又响了。哒。哒。哒。慢慢远去。</p>
+    <p>走了。</p>
+    <p>你看着手中的剪刀，又看了看纸条。</p>
+    <p>"别相信你看到的任何一扇门。"</p>
+    <p>现在你明白了——门外的不是安全。门外是另一个陷阱。</p>
+    <p>你需要从这间房间本身找到出路。</p>
+  `, () => {
+    showChoices([
+      { text: '检查墙壁', next: 'search_room', scene: 'basement' },
+      { text: '研究铁盒子', next: 'try_code', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.stare_back = () => {
+  currentSceneId = 'stare_back';
+  const nar = document.getElementById('narrative');
+  currentScene = 'dark';
+  typeText(nar, `
+    <p>你没有逃。你盯着那双黑洞般的眼睛。</p>
+    <p>那两个亮点在黑暗中看着你。</p>
+    <p>你看着看着——</p>
+    <p>你发现那不是两个亮点。那是两个倒影。</p>
+    <p>是你自己的倒影。</p>
+    <p>那双"眼睛"——是你映在走廊黑暗中的影子。</p>
+    <p>走廊尽头什么都没有。</p>
+    <p>从来没有过。</p>
+    <p>所有你听到的声音，所有你看到的东西——</p>
+    <p>也许有一半是你自己制造的。</p>
+    <p>也许更多。</p>
+    <p>你闭上眼睛。</p>
+    <p>你对自己说："我不怕。"</p>
+    <p>"这是我的房间。这是我的循环。这是我的选择。"</p>
+    <p>你睁开眼。</p>
+    <p>走廊的灯——亮了。</p>
+    <p>走廊尽头的门——打开了。</p>
+    <p>门外是阳光。</p>
+  `, () => {
+    setTimeout(() => {
+      endGame(
+        '你面对了自己',
+        '你明白了——恐惧来自你自己。走廊里的那个"东西"，其实是你自己在黑暗中的倒影。当你不再害怕，当你直面自己，门自然就开了。你从走廊尽头走向阳光。你自由了。'
+      );
+    }, 2000);
+  });
+};
+
+scenes.examine_nails = () => {
+  currentSceneId = 'examine_nails';
+  const nar = document.getElementById('narrative');
+  currentScene = 'dark';
+  typeText(nar, `
+    <p>你低头，把右手凑近眼前。</p>
+    <p>指甲缝里的暗红色——不是铁锈。不是颜料。</p>
+    <p>是血。</p>
+    <p>干涸的血。你的指甲缝里塞满了干涸的血。</p>
+    <p>但你完全不记得自己受过伤。除了手腕上的绳痕，你没有其他伤口。</p>
+    <p>这些血……是你的吗？</p>
+    <p>还是……别人的？</p>
+    <p>你用拇指蹭了一下——血迹很厚。很多层。新血盖着旧血。</p>
+    <p>你的胃里翻涌了一下。</p>
+    <p>你完全不知道自己在上一次循环里做了什么。</p>
+  `, () => {
+    updateSanity(-10);
+    showChoices([
+      { text: '不想了。先想办法离开', next: 'search_room', scene: 'basement' },
+      { text: '继续检查自己的身体——还有没有别的痕迹', next: 'examine_body', scene: 'dark', sanity: -10 }
+    ]);
+  });
+};
+
+scenes.examine_body = () => {
+  currentSceneId = 'examine_body';
+  const nar = document.getElementById('narrative');
+  currentScene = 'dark';
+  typeText(nar, `
+    <p>你检查自己的身体。</p>
+    <p>手腕——绳痕，多层。</p>
+    <p>指甲——干涸的血迹，多层。</p>
+    <p>额头——有一道干涸的血痕，从额角延伸到太阳穴。你之前没注意到。</p>
+    <p>膝盖——有擦伤。可能是摔倒时磕的。</p>
+    <p>右脚踝——</p>
+    <p>你看到了一样东西。</p>
+    <p>右脚踝内侧，有一个很小的纹身。很旧，墨迹已经很淡了。你凑近看——</p>
+    <p>是一个数字。</p>
+    <p class="highlight" style="text-align:center; font-size:18px; margin:16px 0;">4</p>
+    <p>4。和钥匙上的数字一样。</p>
+    <p>你在自己的身体上刻下了密码。</p>
+    <p>你把自己变成了线索的一部分。</p>
+  `, () => {
+    flags.know_body_4 = true;
+    showChoices([
+      { text: '我是谁？我到底经历了什么？', next: 'question_identity', scene: 'dark', sanity: -15 },
+      { text: '不管了，先出去再说', next: 'find_way_out', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.look_pipe = () => {
+  currentSceneId = 'look_pipe';
+  const nar = document.getElementById('narrative');
+  currentScene = 'dark';
+  typeText(nar, `
+    <p>你抬头看着水管。</p>
+    <p>水管很粗，铁锈斑斑。滴下来的液体……在昏暗的光线下，看起来确实是深色的。不一定就是血。也可能是铁锈水。</p>
+    <p>你告诉自己那只是铁锈水。</p>
+    <p>然后你看到——水管的上方，天花板上，有什么东西。</p>
+    <p>你把桌子推到水管正下方，站上去，踮起脚——</p>
+    <p>天花板上有一个小孔。水管穿过的地方。但孔的旁边，还有一样东西。</p>
+    <p>一张纸条。用胶带粘在天花板上。</p>
+    <p>你撕下来。纸条上写着：</p>
+    <p class="highlight" style="text-align:center;">"如果你能看到这张纸条，说明你终于抬头看了。"</p>
+    <p>"出口不在门。不在墙。在你来的地方。"</p>
+    <p>"低头。"</p>
+    <p>你从桌子上下来。低头看——</p>
+    <p>脚下的水泥地面。你刚才挪桌子的时候，注意到桌子底下有一块地砖和别的不太一样。接缝更大。像是被掀起来过。</p>
+  `, () => {
+    flags.found_hatch_hint = true;
+    showChoices([
+      { text: '掀开那块地砖', next: 'open_hatch', scene: 'basement', sound: () => playScrape() },
+      { text: '不确定……先去别处看看', next: 'search_room', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.corner = () => {
+  currentSceneId = 'corner';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你缩在墙角。抱着膝盖。手里紧紧握着剪刀。</p>
+    <p>门外的撞击声持续了很久。砰。砰。砰。每一次整面墙都在震动。</p>
+    <p>然后——停了。</p>
+    <p>安静了。</p>
+    <p>你等了五分钟。十分钟。</p>
+    <p>什么都没有发生。</p>
+    <p>你慢慢站起来。腿在发抖。</p>
+    <p>房间很安静。水管滴水。一切恢复正常。</p>
+    <p>但你知道——它还在门外。只是不撞了。也许它在等。也许它在听。</p>
+  `, () => {
+    showChoices([
+      { text: '检查桌子底下有没有暗门', next: 'open_hatch', scene: 'basement' },
+      { text: '检查铁盒子', next: 'try_code', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.grab_scissors_floor = () => {
+  currentSceneId = 'grab_scissors_floor';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你扑过去捡起地上的剪刀。</p>
+    <p>门外的撞击声又停了。安静。</p>
+    <p>你手里有了武器，安全感回来了一点。</p>
+    <p>你注意到——剪刀在地上滑过的地方，水泥地面上有一道浅浅的划痕。</p>
+    <p>划痕的形状……像是一个箭头。指向墙角。</p>
+    <p>你走过去——墙角的地面上有一块砖，和别的砖不一样。边缘有缝隙。</p>
+  `, () => {
+    inventory.push('剪刀');
+    showChoices([
+      { text: '撬开那块砖', next: 'open_hatch', scene: 'basement', sound: () => playScrape() },
+      { text: '先去研究铁盒子', next: 'try_code', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.recheck_door = () => {
+  currentSceneId = 'recheck_door';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你再仔细检查铁门。</p>
+    <p>从外面反锁的插销。门缝很窄。门板很厚。</p>
+    <p>铁门内侧——你之前注意到的4-2-8-1。</p>
+    <p>你看着这四个数字，突然发现——数字的下面，还有一行很小的字。之前被灰尘盖住了。</p>
+    <p>你用袖子擦了擦：</p>
+    <p style="text-align:center; color:#665; margin:12px 0;">"看脸。"</p>
+    <p>又是脸。你的脸。你的血痕。</p>
+  `, () => {
+    flags.know_face_hint = true;
+    showChoices([
+      { text: '拿起镜子照自己的脸', next: 'face_number', scene: 'basement' },
+      { text: '先试试直接撞门', next: 'ram_door', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.check_wall = () => {
+  currentSceneId = 'check_wall';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你挣脱绳子，走到门外声音刮过墙壁的位置。</p>
+    <p>墙上——你凑近看——确实有痕迹。不是用指甲刮的。更像是用什么东西印上去的。</p>
+    <p>你看出来了——是数字。</p>
+    <p class="highlight" style="text-align:center; margin:12px 0;">4 - 2 - 8 - 1</p>
+    <p>和铁门内侧刻的一模一样。</p>
+    <p>这组数字在这个房间里出现了两次。它一定很重要。</p>
+  `, () => {
+    flags.know_code_4281 = true;
+    inventory.push('自由');
+    showChoices([
+      { text: '去找铁盒子，试试密码', next: 'try_code', scene: 'basement' },
+      { text: '检查铁门', next: 'pry_door', scene: 'basement' }
+    ]);
+  });
+};
+
+scenes.use_mirror = () => {
+  currentSceneId = 'use_mirror';
+  const nar = document.getElementById('narrative');
+  typeText(nar, `
+    <p>你举着剪刀，调整角度，用锈迹斑斑的刀面去照墙壁。</p>
+    <p>剪刀的反光很模糊，但足够你看到——</p>
+    <p>墙壁的右下角，有刻痕。非常浅。你之前没看到是因为角度不对。</p>
+    <p>你凑近去看——</p>
+    <p>是一行字：</p>
+    <p class="highlight" style="text-align:center;">"低头。"</p>
+    <p>你低头——脚下的水泥地面上，桌子原来的位置底下，有一块砖和别的不一样。边缘有缝隙。</p>
+  `, () => {
+    flags.found_hatch_hint = true;
+    showChoices([
+      { text: '撬开那块砖', next: 'open_hatch', scene: 'basement', sound: () => playScrape() },
+      { text: '先检查别的', next: 'search_room', scene: 'basement' }
+    ]);
+  });
+};
+
+// === Ending ===
+function endGame(title, text) {
+  document.getElementById('game').classList.add('hidden');
+  document.getElementById('status').classList.add('hidden');
+  const end = document.getElementById('ending');
+  end.style.display = 'block';
+  document.getElementById('ending-title').textContent = title;
+  document.getElementById('ending-text').textContent = text;
+}
+
+// === Start ===
+function startGame() {
+  ensureAudio();
+  document.getElementById('title-screen').style.display = 'none';
+  document.getElementById('game').classList.remove('hidden');
+  document.getElementById('status').classList.remove('hidden');
+  renderScene();
+  setTimeout(() => scenes.intro(), 500);
+}
+
+</script>
+</body>
+</html>

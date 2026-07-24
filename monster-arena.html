@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>怪兽擂台</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #1a1a2e; font-family: 'Microsoft YaHei', sans-serif; overflow: hidden; height: 100vh; }
+canvas { display: block; }
+
+#startScreen {
+  position: fixed; inset: 0;
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 100;
+}
+#startScreen h1 {
+  font-size: 72px; color: #e94560;
+  text-shadow: 0 0 20px #e94560, 0 0 40px #e94560, 4px 4px 0 #000;
+  margin-bottom: 20px; animation: pulse 1.5s ease-in-out infinite;
+}
+#startScreen .subtitle { color: #aaa; font-size: 20px; margin-bottom: 60px; }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+.start-btn {
+  padding: 18px 80px; font-size: 28px; font-weight: bold;
+  background: linear-gradient(45deg, #e94560, #c23152); color: #fff;
+  border: none; border-radius: 12px; cursor: pointer;
+  transition: all 0.3s; letter-spacing: 4px;
+}
+.start-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(233,69,96,0.5); }
+
+#selectScreen {
+  position: fixed; inset: 0;
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  display: none; flex-direction: column; align-items: center; padding-top: 40px;
+  z-index: 100; overflow-y: auto;
+}
+#selectScreen h2 { color: #e94560; font-size: 36px; margin-bottom: 30px; text-shadow: 0 0 10px #e94560; }
+.char-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 1200px; padding: 0 20px 40px; }
+.char-card {
+  width: 200px; padding: 20px; border-radius: 16px;
+  background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.1);
+  cursor: pointer; transition: all 0.3s; text-align: center;
+}
+.char-card:hover { border-color: #e94560; transform: translateY(-5px); box-shadow: 0 10px 30px rgba(233,69,96,0.3); }
+.char-card.selected { border-color: #e94560; background: rgba(233,69,96,0.15); box-shadow: 0 0 20px rgba(233,69,96,0.4); }
+.char-icon { font-size: 64px; margin-bottom: 12px; }
+.char-name { color: #fff; font-size: 22px; font-weight: bold; margin-bottom: 8px; }
+.char-skill { color: #ccc; font-size: 13px; line-height: 1.5; }
+.char-stats { margin-top: 10px; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+.stat-tag { padding: 2px 8px; border-radius: 8px; font-size: 11px; background: rgba(255,255,255,0.1); color: #aaa; }
+.confirm-btn {
+  margin-top: 20px; padding: 14px 60px; font-size: 22px;
+  background: linear-gradient(45deg, #e94560, #c23152); color: #fff;
+  border: none; border-radius: 10px; cursor: pointer; font-weight: bold;
+  transition: all 0.3s; letter-spacing: 2px;
+}
+.confirm-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(233,69,96,0.4); }
+
+.hud {
+  position: fixed; top: 0; left: 0; right: 0;
+  padding: 15px 30px; display: flex; justify-content: space-between;
+  z-index: 10; pointer-events: none;
+}
+.player-hud { display: flex; align-items: center; gap: 12px; }
+.hud-avatar {
+  width: 50px; height: 50px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; border: 3px solid #e94560; background: rgba(0,0,0,0.5);
+}
+.hud-info { display: flex; flex-direction: column; gap: 4px; }
+.hud-name { color: #fff; font-size: 16px; font-weight: bold; }
+.health-bar {
+  width: 200px; height: 16px; background: rgba(0,0,0,0.5);
+  border-radius: 8px; overflow: hidden; border: 2px solid rgba(255,255,255,0.2);
+}
+.health-fill { height: 100%; background: linear-gradient(90deg, #e94560, #ff6b6b); border-radius: 6px; transition: width 0.3s; }
+.enemy-hud { flex-direction: row-reverse; }
+.enemy-hud .health-fill { background: linear-gradient(90deg, #4ecdc4, #44bd9e); }
+.enemy-hud .hud-avatar { border-color: #4ecdc4; }
+
+.skill-bar {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 15px; z-index: 10; pointer-events: none;
+}
+.skill-slot {
+  width: 64px; height: 64px; border-radius: 12px;
+  background: rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.3);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.skill-slot .skill-key { color: #fff; font-size: 12px; font-weight: bold; }
+.skill-slot .skill-icon { font-size: 24px; }
+.skill-slot .cooldown-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 18px; font-weight: bold;
+}
+.skill-slot .cooldown-overlay.hidden { display: none; }
+
+#battleMsg {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  color: #fff; font-size: 48px; font-weight: bold; z-index: 20;
+  text-shadow: 0 0 20px #e94560, 3px 3px 0 #000;
+  pointer-events: none; opacity: 0; transition: opacity 0.3s;
+}
+
+#resultScreen {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+  display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 50;
+}
+#resultScreen h2 { font-size: 56px; margin-bottom: 20px; }
+#resultScreen .result-sub { color: #aaa; font-size: 20px; margin-bottom: 40px; }
+#resultScreen .result-icons { font-size: 72px; margin-bottom: 30px; }
+.rematch-btn {
+  padding: 14px 50px; font-size: 20px; background: linear-gradient(45deg, #e94560, #c23152);
+  color: #fff; border: none; border-radius: 10px; cursor: pointer; font-weight: bold;
+  transition: all 0.3s; margin: 0 10px;
+}
+.rematch-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(233,69,96,0.4); }
+.rematch-btn.secondary { background: linear-gradient(45deg, #444, #555); }
+
+.controls-hint {
+  position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+  color: rgba(255,255,255,0.4); font-size: 13px; z-index: 10; pointer-events: none;
+  text-align: center; line-height: 1.6;
+}
+</style>
+</head>
+<body>
+
+<div id="startScreen">
+  <h1>怪兽擂台</h1>
+  <div class="subtitle">选择你的怪兽，击败对手！</div>
+  <button class="start-btn" onclick="showSelect()">开始游戏</button>
+</div>
+
+<div id="selectScreen">
+  <h2>选择你的战士</h2>
+  <div class="char-grid" id="charGrid"></div>
+  <button class="confirm-btn" onclick="startBattle()">确认出战</button>
+</div>
+
+<canvas id="gameCanvas"></canvas>
+
+<div class="hud" id="gameHud" style="display:none;">
+  <div class="player-hud">
+    <div class="hud-avatar" id="pAvatar"></div>
+    <div class="hud-info">
+      <div class="hud-name" id="pName"></div>
+      <div class="health-bar"><div class="health-fill" id="pHealth"></div></div>
+    </div>
+  </div>
+  <div class="player-hud enemy-hud">
+    <div class="hud-avatar" id="eAvatar"></div>
+    <div class="hud-info">
+      <div class="hud-name" id="eName"></div>
+      <div class="health-bar"><div class="health-fill" id="eHealth"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="skill-bar" id="skillBar" style="display:none;">
+  <div class="skill-slot">
+    <span class="skill-key">← →</span>
+    <span class="skill-icon">🏃</span>
+  </div>
+  <div class="skill-slot">
+    <span class="skill-key">↓</span>
+    <span class="skill-icon">起飞</span>
+  </div>
+  <div class="skill-slot">
+    <span class="skill-key">空格</span>
+    <span class="skill-icon">攻击</span>
+  </div>
+  <div class="skill-slot">
+    <span class="skill-key">J/K</span>
+    <span class="skill-icon">落地</span>
+  </div>
+</div>
+
+<div class="controls-hint" id="controlsHint" style="display:none;">
+  ← → 移动 · ↓ 起飞 · 空格 攻击 · J/K 落地
+</div>
+
+<div id="battleMsg"></div>
+
+<div id="resultScreen">
+  <div class="result-icons" id="resultIcons"></div>
+  <h2 id="resultTitle"></h2>
+  <div class="result-sub" id="resultSub"></div>
+  <div>
+    <button class="rematch-btn" onclick="startBattle()">再来一局</button>
+    <button class="rematch-btn secondary" onclick="backToSelect()">换角色</button>
+  </div>
+</div>
+
+<script>
+const CHARACTERS = [
+  {
+    id: 'trex', name: '霸王龙', icon: '🦖',
+    desc: '钢铁之躯，格挡一切伤害',
+    skill: '【怒吼】格挡一切伤害（按住空格持续生效）',
+    stats: ['无限防御', '近战'],
+    hp: 150, atk: 12, speed: 3, jumpPower: 12,
+    color: '#8B4513', color2: '#A0522D',
+    skillCD: 0, skillDur: 0,
+    specialDesc: '按住空格持续格挡'
+  },
+  {
+    id: 'raptor', name: '迅猛龙', icon: '🦕',
+    desc: '极速掠食者，冲刺无限使用',
+    skill: '【疾风】冲刺攻击，速度翻倍',
+    stats: ['极速', '无限冲刺'],
+    hp: 100, atk: 10, speed: 6, jumpPower: 18,
+    color: '#228B22', color2: '#32CD32',
+    skillCD: 0, skillDur: 2000,
+    specialDesc: '无限冲刺'
+  },
+  {
+    id: 'ptero', name: '翼龙', icon: '🦇',
+    desc: '天空霸主，飞行20秒并在空中打击',
+    skill: '【翱翔】飞行20秒，空中可攻击',
+    stats: ['飞行', '空中打击'],
+    hp: 90, atk: 11, speed: 4, jumpPower: 14,
+    color: '#4169E1', color2: '#6495ED',
+    skillCD: 15000, skillDur: 20000,
+    specialDesc: '飞行20秒'
+  },
+  {
+    id: 'dog', name: '狗狗', icon: '🐕',
+    desc: '刨土钻入地毯，获得保护并回复',
+    skill: '【刨土】钻入地下，回复生命',
+    stats: ['回复', '地下保护'],
+    hp: 110, atk: 8, speed: 4, jumpPower: 12,
+    color: '#D2691E', color2: '#DEB887',
+    skillCD: 30000, skillDur: 3000,
+    specialDesc: '刨土回复+保护'
+  },
+  {
+    id: 'cat', name: '猫咪', icon: '🐱',
+    desc: '召唤三只小猫围绕保护',
+    skill: '【召唤】召出3只猫护身',
+    stats: ['召唤', '护身'],
+    hp: 95, atk: 9, speed: 5, jumpPower: 14,
+    color: '#FF69B4', color2: '#FFB6C1',
+    skillCD: 12000, skillDur: 5000,
+    specialDesc: '召唤猫群护身'
+  }
+];
+
+let selectedChar = null;
+let gameState = 'start';
+let player, enemy, cats, particles;
+let keys = {};
+let gameLoop, lastTime;
+let skillReady = true, skillCooldown = 0;
+let flying = false, flyTimer = 0;
+let shieldActive = false, shieldTimer = 0;
+let digging = false, digTimer = 0;
+let stunTimer = 0;
+let round = 0;
+
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const GROUND_Y_RATIO = 0.78;
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+function showSelect() {
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('selectScreen').style.display = 'flex';
+  gameState = 'select';
+  renderCharGrid();
+}
+
+function renderCharGrid() {
+  const grid = document.getElementById('charGrid');
+  grid.innerHTML = '';
+  CHARACTERS.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'char-card' + (selectedChar?.id === c.id ? ' selected' : '');
+    card.onclick = () => selectChar(c);
+    card.innerHTML = `
+      <div class="char-icon">${c.icon}</div>
+      <div class="char-name">${c.name}</div>
+      <div class="char-skill">${c.skill}</div>
+      <div class="char-stats">
+        ${c.stats.map(s => `<span class="stat-tag">${s}</span>`).join('')}
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function selectChar(c) {
+  selectedChar = c;
+  renderCharGrid();
+}
+
+function startBattle() {
+  if (!selectedChar) return;
+  document.getElementById('selectScreen').style.display = 'none';
+  document.getElementById('resultScreen').style.display = 'none';
+  document.getElementById('startScreen').style.display = 'none';
+
+  round++;
+  const pool = CHARACTERS.filter(c => c.id !== selectedChar.id);
+  const enemyChar = pool[Math.floor(Math.random() * pool.length)];
+  const groundY = canvas.height * GROUND_Y_RATIO;
+
+  player = createFighter(selectedChar, 200, groundY, true);
+  enemy = createFighter(enemyChar, canvas.width - 200, groundY, false);
+  cats = [];
+  particles = [];
+  skillReady = true;
+  skillCooldown = 0;
+  flying = false;
+  flyTimer = 0;
+  shieldActive = false;
+  shieldTimer = 0;
+  digging = false;
+  digTimer = 0;
+  stunTimer = 0;
+
+  gameState = 'battle';
+  document.getElementById('gameHud').style.display = 'flex';
+  document.getElementById('skillBar').style.display = 'flex';
+  document.getElementById('controlsHint').style.display = 'block';
+
+  updateHUD();
+  showBattleMsg('战斗开始！', 1500);
+
+  lastTime = performance.now();
+  cancelAnimationFrame(gameLoop);
+  gameLoop = requestAnimationFrame(tick);
+}
+
+function createFighter(charData, x, groundY, isPlayer) {
+  return {
+    char: charData, isPlayer,
+    x, y: groundY,
+    w: 60, h: 80,
+    vx: 0, vy: 0,
+    hp: charData.hp, maxHp: charData.hp,
+    atk: charData.atk, speed: charData.speed,
+    jumpPower: charData.jumpPower,
+    grounded: true, facingRight: isPlayer,
+    attacking: false, attackTimer: 0, attackType: 0,
+    hitTimer: 0, blockTimer: 0,
+    invincible: 0,
+    walkFrame: 0
+  };
+}
+
+function updateHUD() {
+  document.getElementById('pAvatar').textContent = player.char.icon;
+  document.getElementById('pName').textContent = player.char.name + (round > 1 ? ` R${round}` : '');
+  document.getElementById('pHealth').style.width = Math.max(0, player.hp / player.maxHp * 100) + '%';
+  document.getElementById('eAvatar').textContent = enemy.char.icon;
+  document.getElementById('eName').textContent = enemy.char.name;
+  document.getElementById('eHealth').style.width = Math.max(0, enemy.hp / enemy.maxHp * 100) + '%';
+}
+
+function showBattleMsg(text, dur) {
+  const el = document.getElementById('battleMsg');
+  el.textContent = text;
+  el.style.opacity = 1;
+  setTimeout(() => el.style.opacity = 0, dur || 1200);
+}
+
+// === 输入 ===
+document.addEventListener('keydown', e => {
+  keys[e.key] = true;
+  if (gameState === 'battle') {
+    // 空格 = 攻击（所有角色通用）
+    if (e.key === ' ') {
+      e.preventDefault();
+      attack(player, 0);
+    }
+    // J = 重击
+    if (e.key.toLowerCase() === 'j') attack(player, 1);
+    // K = 技能
+    if (e.key.toLowerCase() === 'k') useSkill();
+    // ↓ = 起飞/上升
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (!flying && player.char.id === 'ptero') {
+        // 翼龙起飞
+        flying = true;
+        flyTimer = 20000;
+        player.vy = -10;
+        showBattleMsg('翱翔！20秒空中作战', 1000);
+      } else if (flying) {
+        // 飞行中继续上升
+        player.vy = -8;
+      }
+    }
+  }
+});
+document.addEventListener('keyup', e => { keys[e.key] = false; });
+
+function attack(fighter, type) {
+  if (fighter.attacking || fighter.blockTimer > 0 || (stunTimer > 0 && fighter.isPlayer)) return;
+  if (digging && fighter.isPlayer) return;
+  fighter.attacking = true;
+  fighter.attackType = type;
+  fighter.attackTimer = type === 0 ? 300 : 400;
+
+  const range = type === 0 ? 70 : 85;
+  const target = fighter.isPlayer ? enemy : player;
+  const dx = Math.abs(fighter.x - target.x);
+  const dy = Math.abs(fighter.y - target.y);
+  if (dx < range && dy < 70) {
+    let dmg = fighter.atk + (type === 1 ? 5 : 0);
+    dealDamage(target, dmg, fighter);
+  }
+
+  setTimeout(() => { fighter.attacking = false; }, fighter.attackTimer);
+}
+
+function dealDamage(target, dmg, attacker) {
+  if (target.invincible > 0) return;
+  if (target.char.id === 'trex' && target.blockTimer > 0) {
+    spawnParticles(target.x, target.y - 30, '#4ecdc4', 5);
+    return;
+  }
+  if (target.char.id === 'dog' && digging && target.isPlayer) {
+    dmg = 0;
+    spawnParticles(target.x, target.y - 30, '#D2691E', 3);
+    return;
+  }
+  if (target.char.id === 'cat' && shieldActive && target.isPlayer) {
+    dmg = Math.floor(dmg * 0.2);
+  }
+  target.hp -= dmg;
+  target.hitTimer = 200;
+  spawnParticles(target.x, target.y - 30, '#ff6b6b', 6);
+  updateHUD();
+  if (target.hp <= 0) endBattle(attacker.isPlayer);
+}
+
+function useSkill() {
+  if (!skillReady || gameState !== 'battle') return;
+  const c = player.char;
+
+  // 霸王龙不需要技能
+  if (c.id === 'trex') return;
+
+  // 迅猛龙冲刺无冷却
+  if (c.id === 'raptor') {
+    player.speed = c.speed * 2.5;
+    player.invincible = 500;
+    const dir = player.facingRight ? 1 : -1;
+    player.vx = dir * 18;
+    spawnParticles(player.x, player.y - 30, '#228B22', 8);
+    showBattleMsg('疾风冲刺！', 600);
+    setTimeout(() => { player.speed = c.speed; }, 1500);
+    return;
+  }
+
+  skillReady = false;
+  skillCooldown = c.skillCD;
+
+  switch (c.id) {
+    case 'ptero':
+      flying = true;
+      flyTimer = c.skillDur;
+      player.vy = -8;
+      showBattleMsg('翱翔！20秒空中作战', 1000);
+      break;
+    case 'dog':
+      digging = true;
+      digTimer = c.skillDur;
+      player.hp = Math.min(player.maxHp, player.hp + 40);
+      player.invincible = c.skillDur;
+      spawnParticles(player.x, player.y - 20, '#D2691E', 15);
+      showBattleMsg('刨土钻入！回复40HP', 800);
+      updateHUD();
+      break;
+    case 'cat':
+      cats = [];
+      for (let i = 0; i < 3; i++) {
+        cats.push({
+          x: player.x + (i - 1) * 40,
+          y: player.y - 20,
+          angle: (i / 3) * Math.PI * 2,
+          life: c.skillDur,
+          isPlayerCat: true
+        });
+      }
+      shieldActive = true;
+      shieldTimer = c.skillDur;
+      showBattleMsg('猫猫军团护身！', 800);
+      break;
+  }
+
+  if (c.skillCD > 0) {
+    const cdEl = document.getElementById('skillCD');
+    if (cdEl) {
+      cdEl.classList.remove('hidden');
+      cdEl.textContent = Math.ceil(c.skillCD / 1000);
+      const cdInterval = setInterval(() => {
+        skillCooldown -= 1000;
+        if (skillCooldown <= 0) {
+          skillReady = true;
+          cdEl.classList.add('hidden');
+          clearInterval(cdInterval);
+        } else {
+          cdEl.textContent = Math.ceil(skillCooldown / 1000);
+        }
+      }, 1000);
+    }
+  }
+}
+
+// === AI ===
+function aiTick(dt) {
+  const dx = player.x - enemy.x;
+  const dist = Math.abs(dx);
+  const dir = dx > 0 ? 1 : -1;
+
+  if (dist > 80) {
+    enemy.x += dir * enemy.speed * 0.7;
+    enemy.facingRight = dir > 0;
+  }
+
+  if (enemy.grounded && Math.random() < 0.02) {
+    enemy.vy = -enemy.jumpPower;
+    enemy.grounded = false;
+  }
+
+  if (dist < 80 && Math.random() < 0.06) {
+    attack(enemy, Math.random() < 0.5 ? 0 : 1);
+  }
+
+  if (Math.random() < 0.01) {
+    aiUseSkill();
+  }
+}
+
+function aiUseSkill() {
+  const c = enemy.char;
+  switch (c.id) {
+    case 'trex':
+      enemy.blockTimer = 2000;
+      break;
+    case 'raptor':
+      enemy.speed = c.speed * 2;
+      setTimeout(() => { enemy.speed = c.speed; }, 1500);
+      enemy.vx = player.x > enemy.x ? 12 : -12;
+      break;
+    case 'dog':
+      enemy.hp = Math.min(enemy.maxHp, enemy.hp + 25);
+      updateHUD();
+      break;
+    case 'cat':
+      for (let i = 0; i < 2; i++) {
+        setTimeout(() => {
+          cats.push({
+            x: enemy.x + (Math.random() - 0.5) * 60,
+            y: enemy.y - 20,
+            angle: Math.random() * Math.PI * 2,
+            life: 3000,
+            isPlayerCat: false
+          });
+        }, i * 300);
+      }
+      break;
+  }
+}
+
+function spawnParticles(x, y, color, count) {
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x, y,
+      vx: (Math.random() - 0.5) * 8,
+      vy: (Math.random() - 0.5) * 8 - 2,
+      life: 500 + Math.random() * 300,
+      color, size: 3 + Math.random() * 4
+    });
+  }
+}
+
+// === 主循环 ===
+function tick(now) {
+  const dt = Math.min(now - lastTime, 33);
+  lastTime = now;
+  if (gameState !== 'battle') return;
+
+  const groundY = canvas.height * GROUND_Y_RATIO;
+
+  // 物理
+  [player, enemy].forEach(f => {
+    if (digging && f.isPlayer) {
+      f.y = groundY + 20;
+      f.vy = 0;
+    } else {
+      // 飞行中的角色不受重力影响
+      if (flying && f.isPlayer) {
+        // 翼龙飞行：按住↑上升，按住↓下降，松开悬停
+        if (keys['ArrowUp']) f.vy = -6;
+        else if (keys['ArrowDown']) f.vy = 5;
+        else f.vy *= 0.9; // 悬停时减速
+      } else {
+        f.vy += 0.6; // 重力
+      }
+      f.x += f.vx;
+      f.y += f.vy;
+      if (f.y >= groundY) {
+        f.y = groundY;
+        f.vy = 0;
+        f.grounded = true;
+        if (f.isPlayer && flying) {
+          flying = false;
+          showBattleMsg('落地！', 600);
+        }
+      }
+    }
+    f.x = Math.max(40, Math.min(canvas.width - 40, f.x));
+    f.vx *= 0.85;
+    if (f.hitTimer > 0) f.hitTimer -= dt;
+    if (f.blockTimer > 0) f.blockTimer -= dt;
+    if (f.invincible > 0) f.invincible -= dt;
+    if (Math.abs(f.vx) > 0.5) f.walkFrame += dt * 0.01;
+  });
+
+  // 玩家输入
+  if (stunTimer > 0) stunTimer -= dt;
+  else if (!digging) {
+    let spd = player.speed;
+    if (flying) spd *= 1.3; // 飞行时加速
+    if (keys['ArrowLeft']) { player.x -= spd; player.facingRight = false; }
+    if (keys['ArrowRight']) { player.x += spd; player.facingRight = true; }
+    // ↑ 跳跃（地面上）或飞行中上升
+    if (keys['ArrowUp'] && player.grounded && !flying) {
+      player.vy = -player.jumpPower;
+      player.grounded = false;
+    }
+    // 霸王龙按住空格持续格挡
+    if (keys[' '] && player.char.id === 'trex') {
+      player.blockTimer = 100;
+    }
+  }
+
+  // 翼龙飞行计时
+  if (flying) {
+    flyTimer -= dt;
+    if (flyTimer <= 0) {
+      flying = false;
+      showBattleMsg('必须落地！', 800);
+      player.vy = 5;
+    }
+  }
+
+  // 狗狗刨土计时
+  if (digging) {
+    digTimer -= dt;
+    if (digTimer <= 0) {
+      digging = false;
+      player.y = groundY;
+    }
+  }
+
+  // 护盾计时
+  if (shieldActive) {
+    shieldTimer -= dt;
+    if (shieldTimer <= 0) {
+      shieldActive = false;
+      cats = cats.filter(c => c.isPlayerCat);
+    }
+  }
+
+  // 猫咪围绕运动
+  cats.forEach(cat => {
+    cat.angle += 0.05;
+    cat.life -= dt;
+    if (cat.isPlayerCat) {
+      cat.x = player.x + Math.cos(cat.angle) * 50;
+      cat.y = player.y - 30 + Math.sin(cat.angle) * 20;
+    } else {
+      cat.x = enemy.x + Math.cos(cat.angle) * 50;
+      cat.y = enemy.y - 30 + Math.sin(cat.angle) * 20;
+    }
+  });
+  cats = cats.filter(c => c.life > 0);
+
+  // 粒子
+  particles.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.2;
+    p.life -= dt;
+  });
+  particles = particles.filter(p => p.life > 0);
+
+  aiTick(dt);
+  draw();
+  updateHUD();
+
+  gameLoop = requestAnimationFrame(tick);
+}
+
+// === 绘制动物 ===
+function drawTrex(x, y, facing, colors, scale = 1) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(facing * scale, scale);
+
+  const [bodyColor, highlightColor] = colors;
+
+  // 尾巴
+  ctx.fillStyle = bodyColor;
+  ctx.beginPath();
+  ctx.moveTo(-30, -45);
+  ctx.quadraticCurveTo(-55, -40, -75, -25);
+  ctx.quadraticCurveTo(-60, -35, -40, -38);
+  ctx.fill();
+
+  // 身体
+  ctx.fillStyle = bodyColor;
+  ctx.beginPath();
+  ctx.ellipse(0, -40, 38, 48, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 身体高光
+  ctx.fillStyle = highlightColor;
+  ctx.beginPath();
+  ctx.ellipse(-5, -50, 20, 15, -0.2, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 头
+  ctx.fillStyle = bodyColor;
+  ctx.beginPath();
+  ctx.ellipse(35, -72, 30, 24, -0.2, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 头部高光
+  ctx.fillStyle = highlightColor;
+  ctx.beginPath();
+  ctx.ellipse(30, -80, 12, 8, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 嘴巴
+  ctx.fillStyle = '#8B0000';
+  ctx.beginPath();
+  ctx.ellipse(55, -68, 18, 10, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 牙齿
+  ctx.fillStyle = '#fff';
+  for (let i = 0; i < 5; i++) {
+    ctx.beginPath();
+    ctx.moveTo(42 + i * 5, -63);
+    ctx.lineTo(44 + i * 5, -57);
+    ctx.lineTo(46 + i * 5, -63);
+    ctx.fill();
+  }
+
+  // 眼睛
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.arc(42, -82, 8, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#000';
+  ctx.beginPath();
+  ctx.arc(44, -82, 4, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 小手
+  ctx.fillStyle = bodyColor;
+  ctx.beginPath();
+  ctx.ellipse(18, -30, 6, 12, -0.3, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 腿
+  const legAnim = Math.sin(Date.now() * 0.008) * 8;
+  ctx.fillStyle = bodyColor;
+  ctx.fillRect(-18, 0, 15, 28 + legAnim);
+  ctx.fillRect(5, 0, 15, 28 - legAnim);
+
+  // 肚皮
+  ctx.fillStyle = '#DEB887';
+  ctx.beginPath();
+  ctx.ellipse(5, -25, 18, 25, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.restore();
+}
+
+function drawRaptor(x, y, facing, colors, scale = 1) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(facing * scale, scale);
+
+  const [bodyColor, highlightColor] = colors;
+
+  // 尾巴
+  ctx.fillStyle = bodyColor;
+  ctx.beginPath();
+  ctx.moveTo(-20, -38);
+  ctx.quadraticCurveTo(-45, -32, -60, -18);
+  ctx.fill();
+
+  // 身体
+  ctx.fillStyle = bodyColor;
+  ctx.beginPath();
+  ctx.ellipse(0, -35, 28, 38, 0.1, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 身体高光
+  ctx.fillStyle = highlightColor;
+  ctx.beginPath();
+  ctx.ellipse(-3, -45, 15, 12, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 肚皮
+  ctx.fillStyle = '#90EE90';
+  ctx.beginPath();
+  ctx.ellipse(3, -20, 15, 20, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 头
+  ctx.fillStyle = bodyColor;
+  ctx.beginPath();
+  ctx.ellipse(25, -62, 22, 16, -0.3, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 嘴巴
+  ctx.fillStyle = '#006400';
+  ctx.beginPath();
+  ctx.ellipse(42, -58, 14, 6, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 牙齿
+  ctx.fillStyle = '#fff';
+  for (let i = 0; i < 4; i++) {
+    ctx.beginPath();
+    ctx.moveTo(32 + i * 4, -55);
+    ctx.lineTo(33 + i * 4, -51);
+    ctx.lineTo(34 + i * 4, -55);
+    ctx.fill();
+  }
+
+  // 眼睛
+  ctx.fillStyle = '#FFD700';
+  ctx.beginPath();
+  ctx.arc(32, -68, 5, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#000';
+  ctx.beginPath();
+  ctx.ellipse(33, -68, 2, 4, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 爪子
+  ctx.fillStyle = bodyColor;
+  ctx.beginPath();
+  ctx.moveTo(15, -25);
+  ctx.lineTo(25, -20);
+  ctx.lineTo(22, -30);
+  ctx.fill();
+
+  // 腿
+  const legAnim = Math.sin(Date.now() * 0.012) * 10;
+  ctx.fillStyle = bodyColor;
+  ctx.fillRect(-12, 0, 10, 30 + legAnim);
+  ctx.fillRect(5, 0, 10, 30 - legAnim);
+
+  ctx.restore();
+}
+
+function drawPtero(x, y, facing, colors, isFlying, scale = 1) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(facing * scale, scale);
+
+  const [bodyColor, highlightColor] = colors;
+  const wingAngle = isFlying ? Math.sin(Date.now() * 0.006) * 0.8 : Math.sin(Date.now() * 0.003) * 0.3;
+
+  // 翅膀
+  ctx.fillStyle = bodyColor;
+  ctx.save();
+  ctx.translate(0, -35);
+  ctx.rotate(wingAngle);
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.quadraticCurveTo(-35, -30, -70, -15);
+  ctx.quadraticCurveTo(-35, 5, 0, 0);
+  ctx.fill();
+  ctx.restore();
+
+  ctx.save();
+  ctx.translate(0, -35);
+  ctx.rotate(-wingAngle);
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.quadraticCurveTo(35, -30, 70, -15);
+  ctx.quadraticCurveTo(35, 5, 0, 0);
+  ctx.fill();
+  ctx.restore();
+
+  // 身体
+  ctx.fillStyle = bodyColor;
+  ctx.beginPath();
+  ctx.ellipse(0, -30, 15, 25, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 头
+  ctx.fillStyle = bodyColor;
+  ctx.beginPath();
+  ctx.ellipse(18, -52, 14, 11, -0.2, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 头冠
+  ctx.fillStyle = bodyColor;
+  ctx.beginPath();
+  ctx.moveTo(10, -60);
+  ctx.lineTo(5, -75);
+  ctx.lineTo(20, -62);
+  ctx.fill();
+
+  // 嘴
+  ctx.fillStyle = '#191970';
+  ctx.beginPath();
+  ctx.moveTo(28, -50);
+  ctx.lineTo(42, -48);
+  ctx.lineTo(28, -45);
+  ctx.fill();
+
+  // 眼睛
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.arc(22, -56, 4, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#000';
+  ctx.beginPath();
+  ctx.arc(23, -56, 2, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 腿
+  ctx.fillStyle = bodyColor;
+  ctx.fillRect(-6, -5, 4, 10);
+  ctx.fillRect(2, -5, 4, 10);
+
+  ctx.restore();
+}
+
+function drawDog(x, y, facing, colors, isDigging, scale = 1) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(facing * scale, scale);
+
+  const [bodyColor, highlightColor] = colors;
+
+  if (isDigging) {
+    // 钻入地下
+    ctx.fillStyle = bodyColor;
+    ctx.beginPath();
+    ctx.ellipse(0, -10, 28, 18, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 尾巴摇摆
+    ctx.strokeStyle = bodyColor;
+    ctx.lineWidth = 8;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(-22, -15);
+    ctx.quadraticCurveTo(-38, -30 + Math.sin(Date.now() * 0.01) * 12, -42, -25);
+    ctx.stroke();
+
+    // 尾巴尖白色
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(-42, -25, 6, 0, Math.PI * 2);
+    ctx.fill();
+  } else {
+    // 尾巴
+    ctx.strokeStyle = bodyColor;
+    ctx.lineWidth = 7;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(-25, -35);
+    ctx.quadraticCurveTo(-40, -45 + Math.sin(Date.now() * 0.008) * 8, -42, -38);
+    ctx.stroke();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(-42, -38, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 身体
+    ctx.fillStyle = bodyColor;
+    ctx.beginPath();
+    ctx.ellipse(0, -32, 30, 24, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 肚皮
+    ctx.fillStyle = '#FAEBD7';
+    ctx.beginPath();
+    ctx.ellipse(5, -20, 18, 14, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 头
+    ctx.fillStyle = bodyColor;
+    ctx.beginPath();
+    ctx.arc(28, -48, 20, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 耳朵
+    ctx.fillStyle = bodyColor;
+    ctx.beginPath();
+    ctx.ellipse(15, -65, 8, 18, -0.4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(40, -65, 8, 18, 0.4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 脸
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.ellipse(35, -45, 12, 10, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 眼睛
+    ctx.fillStyle = '#000';
+    ctx.beginPath();
+    ctx.arc(32, -52, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 鼻子
+    ctx.fillStyle = '#000';
+    ctx.beginPath();
+    ctx.ellipse(45, -45, 5, 4, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 腿
+    const legAnim = Math.sin(Date.now() * 0.01) * 6;
+    ctx.fillStyle = bodyColor;
+    ctx.fillRect(-15, -5, 10, 20 + legAnim);
+    ctx.fillRect(8, -5, 10, 20 - legAnim);
+  }
+
+  ctx.restore();
+}
+
+function drawCat(x, y, facing, colors, scale = 1) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(facing * scale, scale);
+
+  const [bodyColor, highlightColor] = colors;
+
+  // 尾巴
+  ctx.strokeStyle = bodyColor;
+  ctx.lineWidth = 7;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(-18, -32);
+  ctx.quadraticCurveTo(-35, -48, -32, -58);
+  ctx.stroke();
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.arc(-32, -58, 5, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 身体
+  ctx.fillStyle = bodyColor;
+  ctx.beginPath();
+  ctx.ellipse(0, -32, 24, 30, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 肚皮
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.ellipse(3, -18, 15, 16, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 头
+  ctx.fillStyle = bodyColor;
+  ctx.beginPath();
+  ctx.arc(18, -58, 20, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 耳朵
+  ctx.beginPath();
+  ctx.moveTo(5, -72);
+  ctx.lineTo(0, -92);
+  ctx.lineTo(18, -75);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(30, -72);
+  ctx.lineTo(35, -92);
+  ctx.lineTo(18, -75);
+  ctx.fill();
+
+  // 耳朵内侧
+  ctx.fillStyle = '#FFB6C1';
+  ctx.beginPath();
+  ctx.moveTo(8, -74);
+  ctx.lineTo(5, -88);
+  ctx.lineTo(16, -76);
+  ctx.fill();
+
+  // 脸
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.ellipse(22, -55, 12, 10, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 眼睛
+  ctx.fillStyle = '#00FF00';
+  ctx.beginPath();
+  ctx.ellipse(16, -60, 5, 6, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#000';
+  ctx.beginPath();
+  ctx.ellipse(16, -60, 2, 5, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 鼻子
+  ctx.fillStyle = '#FFB6C1';
+  ctx.beginPath();
+  ctx.moveTo(22, -52);
+  ctx.lineTo(19, -49);
+  ctx.lineTo(25, -49);
+  ctx.fill();
+
+  // 胡须
+  ctx.strokeStyle = '#000';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(30, -52);
+  ctx.lineTo(48, -54);
+  ctx.moveTo(30, -50);
+  ctx.lineTo(48, -50);
+  ctx.moveTo(30, -48);
+  ctx.lineTo(48, -46);
+  ctx.stroke();
+
+  // 腿
+  const legAnim = Math.sin(Date.now() * 0.01) * 5;
+  ctx.fillStyle = bodyColor;
+  ctx.fillRect(-12, -2, 8, 18 + legAnim);
+  ctx.fillRect(6, -2, 8, 18 - legAnim);
+
+  ctx.restore();
+}
+
+// === 渲染 ===
+function draw() {
+  const w = canvas.width, h = canvas.height;
+  const groundY = h * GROUND_Y_RATIO;
+
+  // 背景
+  ctx.fillStyle = '#1a1a2e';
+  ctx.fillRect(0, 0, w, h);
+
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, groundY);
+  skyGrad.addColorStop(0, '#16213e');
+  skyGrad.addColorStop(1, '#0f3460');
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, w, groundY);
+
+  // 星星
+  ctx.fillStyle = '#fff';
+  for (let i = 0; i < 50; i++) {
+    const sx = (i * 137.5 + 50) % w;
+    const sy = (i * 97.3 + 30) % (groundY * 0.6);
+    const ss = 1 + (i % 3);
+    ctx.globalAlpha = 0.3 + (Math.sin(Date.now() * 0.001 + i) + 1) * 0.3;
+    ctx.fillRect(sx, sy, ss, ss);
+  }
+  ctx.globalAlpha = 1;
+
+  // 地面
+  ctx.fillStyle = '#2d1b4e';
+  ctx.fillRect(0, groundY, w, h - groundY);
+  ctx.strokeStyle = '#e94560';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(0, groundY);
+  ctx.lineTo(w, groundY);
+  ctx.stroke();
+
+  // 围栏
+  ctx.fillStyle = '#444';
+  for (let i = 0; i < w; i += 150) {
+    ctx.fillRect(i, groundY - 30, 6, 30);
+    ctx.fillStyle = '#e94560';
+    ctx.beginPath();
+    ctx.arc(i + 3, groundY - 30, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#444';
+  }
+
+  // 画角色
+  drawCharacter(player);
+  drawCharacter(enemy);
+
+  // 画猫咪
+  cats.forEach(cat => {
+    const catColor = cat.isPlayerCat ? ['#FF69B4', '#FFB6C1'] : ['#FF6347', '#FFA07A'];
+    drawCat(cat.x, cat.y, cat.isPlayerCat ? player.facingRight : enemy.facingRight, catColor, 0.5);
+  });
+
+  // 粒子
+  particles.forEach(p => {
+    ctx.globalAlpha = p.life / 800;
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+
+  // 飞行指示
+  if (flying) {
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`🦅 飞行中... ${Math.ceil(flyTimer / 1000)}s`, player.x, player.y - 95);
+  }
+
+  // 格挡效果
+  if (player.char.id === 'trex' && keys[' ']) {
+    ctx.strokeStyle = '#4ecdc4';
+    ctx.lineWidth = 4;
+    ctx.globalAlpha = 0.6 + Math.sin(Date.now() * 0.005) * 0.3;
+    ctx.beginPath();
+    ctx.arc(player.x, player.y - 40, 55, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  // 护盾效果
+  if (shieldActive && player.isPlayer) {
+    ctx.strokeStyle = '#FF69B4';
+    ctx.lineWidth = 3;
+    ctx.globalAlpha = 0.4 + Math.sin(Date.now() * 0.005) * 0.2;
+    ctx.beginPath();
+    ctx.arc(player.x, player.y - 40, 60, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  ctx.textAlign = 'left';
+}
+
+function drawCharacter(f) {
+  const x = f.x, y = f.y;
+  const facing = f.facingRight ? 1 : -1;
+
+  ctx.save();
+
+  if (f.hitTimer > 0 && Math.floor(f.hitTimer / 50) % 2 === 0) {
+    ctx.globalAlpha = 0.5;
+  }
+  if (f.invincible > 0) {
+    ctx.globalAlpha = 0.6 + Math.sin(Date.now() * 0.01) * 0.3;
+  }
+
+  const scale = f === player ? 1.1 : 1.0;
+  const colors = [f.char.color, f.char.color2];
+
+  switch (f.char.id) {
+    case 'trex':
+      drawTrex(x, y, facing, colors, scale);
+      break;
+    case 'raptor':
+      drawRaptor(x, y, facing, colors, scale);
+      break;
+    case 'ptero':
+      drawPtero(x, y, facing, colors, flying && f.isPlayer, scale);
+      break;
+    case 'dog':
+      drawDog(x, y, facing, colors, digging && f.isPlayer, scale);
+      break;
+    case 'cat':
+      drawCat(x, y, facing, colors, scale);
+      break;
+  }
+
+  // 攻击效果
+  if (f.attacking) {
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 4;
+    const atkReach = f.attackType === 0 ? 45 : 60;
+    ctx.beginPath();
+    ctx.moveTo(x + facing * 35, y - 40);
+    ctx.lineTo(x + facing * (35 + atkReach), y - 40 + (f.attackType === 1 ? 25 : 0));
+    ctx.stroke();
+
+    ctx.fillStyle = '#fff';
+    ctx.globalAlpha = 0.8;
+    ctx.beginPath();
+    ctx.arc(x + facing * (35 + atkReach), y - 40 + (f.attackType === 1 ? 25 : 0), 8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+
+  // 名字
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(f.char.icon + f.char.name, x, y + 35);
+
+  ctx.restore();
+}
+
+// === 结果 ===
+function endBattle(playerWon) {
+  gameState = 'result';
+  cancelAnimationFrame(gameLoop);
+  document.getElementById('gameHud').style.display = 'none';
+  document.getElementById('skillBar').style.display = 'none';
+  document.getElementById('controlsHint').style.display = 'none';
+
+  document.getElementById('resultScreen').style.display = 'flex';
+
+  if (playerWon) {
+    document.getElementById('resultIcons').textContent = '🎉🏆🎉';
+    document.getElementById('resultTitle').textContent = '胜利！';
+    document.getElementById('resultTitle').style.color = '#e94560';
+    document.getElementById('resultSub').textContent = `${player.char.name} 击败了 ${enemy.char.name}！`;
+  } else {
+    document.getElementById('resultIcons').textContent = '😵💀😵';
+    document.getElementById('resultTitle').textContent = '败北...';
+    document.getElementById('resultTitle').style.color = '#4ecdc4';
+    document.getElementById('resultSub').textContent = `${enemy.char.name} 击败了 ${player.char.name}`;
+  }
+}
+
+function backToSelect() {
+  document.getElementById('resultScreen').style.display = 'none';
+  document.getElementById('gameHud').style.display = 'none';
+  document.getElementById('skillBar').style.display = 'none';
+  document.getElementById('controlsHint').style.display = 'none';
+  gameState = 'select';
+  document.getElementById('selectScreen').style.display = 'flex';
+}
+
+// 初始化
+ctx.fillStyle = '#1a1a2e';
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+</script>
+
+</body>
+</html>

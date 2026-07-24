@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>五维观察法 - 单页（5张）</title>
+<style>
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+    background: #f5f0eb;
+    color: #3a3a3a;
+  }
+
+  .a4-page {
+    width: 210mm;
+    height: 297mm;
+    margin: 20mm auto;
+    background: white;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+    border: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+  }
+
+  .a4-page:last-child {
+    page-break-after: auto;
+  }
+
+  /* 页眉 */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px;
+    font-size: 12px;
+    color: #aaa;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #eee;
+    flex-shrink: 0;
+  }
+
+  .page-header .brand {
+    font-weight: 500;
+  }
+
+  /* 右上颜色标签 */
+  .color-tag {
+    position: absolute;
+    top: 40px;
+    right: 28px;
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: white;
+    z-index: 5;
+  }
+
+  /* 大标题区 */
+  .dim-hero {
+    text-align: center;
+    padding: 24px 28px 16px;
+    flex-shrink: 0;
+  }
+
+  .dim-hero .hero-emoji {
+    font-size: 72px;
+    line-height: 1;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .dim-hero .hero-title {
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: 6px;
+    margin-bottom: 8px;
+  }
+
+  .dim-hero .hero-def {
+    font-size: 18px;
+    color: #888;
+    line-height: 1.6;
+  }
+
+  /* 分隔线 */
+  .hero-divider {
+    width: 80px;
+    height: 3px;
+    border-radius: 2px;
+    margin: 0 auto 20px;
+  }
+
+  /* 问题区域 */
+  .questions-area {
+    flex: 1;
+    padding: 0 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .question-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 20px;
+    border-radius: 12px;
+    background: #fafafa;
+    border: 1.5px solid #eee;
+    transition: border-color 0.2s;
+  }
+
+  .question-item:hover {
+    border-color: #ddd;
+  }
+
+  .q-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+    width: 30px;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .q-text {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #444;
+  }
+
+  /* 记录区 */
+  .record-area {
+    margin: 16px 36px 0;
+    border: 2px dashed #d0c8c0;
+    border-radius: 16px;
+    min-height: 150px;
+    padding: 16px 20px;
+    flex-shrink: 0;
+    position: relative;
+    background: #fefdfc;
+  }
+
+  .record-label {
+    font-size: 13px;
+    color: #c0b8b0;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .record-lines {
+    width: 100%;
+    height: 100px;
+  }
+
+  .record-lines line {
+    stroke: #e8e0d8;
+    stroke-width: 0.8;
+  }
+
+  /* 页脚 */
+  .page-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 28px;
+    font-size: 12px;
+    color: #bbb;
+    letter-spacing: 1px;
+    border-top: 1px solid #eee;
+    flex-shrink: 0;
+    margin-top: 12px;
+  }
+
+  /* ========== 各维度配色 ========== */
+  /* 人 - 橙色 */
+  .theme-ren .color-tag { background: #f0a060; }
+  .theme-ren .hero-title { color: #c06020; }
+  .theme-ren .hero-divider { background: #f0a060; }
+  .theme-ren .question-item { background: #fff8f2; border-color: #f5e8d8; }
+  .theme-ren .q-icon { color: #e08840; }
+
+  /* 文 - 紫色 */
+  .theme-wen .color-tag { background: #a070c0; }
+  .theme-wen .hero-title { color: #7040a0; }
+  .theme-wen .hero-divider { background: #a070c0; }
+  .theme-wen .question-item { background: #f8f4fa; border-color: #e8ddf0; }
+  .theme-wen .q-icon { color: #9060b0; }
+
+  /* 地 - 蓝色 */
+  .theme-di .color-tag { background: #6090d0; }
+  .theme-di .hero-title { color: #3060a0; }
+  .theme-di .hero-divider { background: #6090d0; }
+  .theme-di .question-item { background: #f4f7fc; border-color: #dde5f0; }
+  .theme-di .q-icon { color: #5080c0; }
+
+  /* 产 - 金色 */
+  .theme-chan .color-tag { background: #d0a040; }
+  .theme-chan .hero-title { color: #a07020; }
+  .theme-chan .hero-divider { background: #d0a040; }
+  .theme-chan .question-item { background: #fdf9f0; border-color: #f0e8d0; }
+  .theme-chan .q-icon { color: #c09030; }
+
+  /* 景 - 绿色 */
+  .theme-jing .color-tag { background: #60b060; }
+  .theme-jing .hero-title { color: #307030; }
+  .theme-jing .hero-divider { background: #60b060; }
+  .theme-jing .question-item { background: #f4faf4; border-color: #d8f0d8; }
+  .theme-jing .q-icon { color: #50a050; }
+
+  /* 打印优化 */
+  @media print {
+    body {
+      background: white;
+    }
+
+    .a4-page {
+      margin: 0;
+      border: none;
+      box-shadow: none;
+    }
+
+    .question-item {
+      background: white !important;
+      border-color: #ddd !important;
+    }
+
+    .record-area {
+      border-color: #ccc !important;
+      background: white !important;
+    }
+
+    /* 打印时颜色标签改用边框线 */
+    .theme-ren .color-tag { background: none !important; border: 2px solid #f0a060; color: #c06020; }
+    .theme-wen .color-tag { background: none !important; border: 2px solid #a070c0; color: #7040a0; }
+    .theme-di .color-tag { background: none !important; border: 2px solid #6090d0; color: #3060a0; }
+    .theme-chan .color-tag { background: none !important; border: 2px solid #d0a040; color: #a07020; }
+    .theme-jing .color-tag { background: none !important; border: 2px solid #60b060; color: #307030; }
+
+    .page-header {
+      color: #999 !important;
+    }
+
+    .page-footer {
+      color: #999 !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== 第1页：人 ==================== -->
+<div class="a4-page theme-ren">
+  <div class="page-header">
+    <span class="brand">社区探索家 · 五维观察法</span>
+    <span></span>
+  </div>
+
+  <div class="color-tag">👤 人</div>
+
+  <div class="dim-hero">
+    <span class="hero-emoji">👤</span>
+    <div class="hero-title">人</div>
+    <div class="hero-def">社区里有什么人？他们在做什么？</div>
+  </div>
+  <div class="hero-divider"></div>
+
+  <div class="questions-area">
+    <div class="question-item">
+      <div class="q-icon">👀</div>
+      <div class="q-text">这个社区里你看到了哪些人？</div>
+    </div>
+    <div class="question-item">
+      <div class="q-icon">🏃</div>
+      <div class="q-text">他们在做什么？</div>
+    </div>
+    <div class="question-item">
+      <div class="q-icon">💭</div>
+      <div class="q-text">你觉得他们每天的生活是什么样的？</div>
+    </div>
+    <div class="question-item">
+      <div class="q-icon">⭐</div>
+      <div class="q-text">有没有让你觉得特别的人？</div>
+    </div>
+    <div class="question-item">
+      <div class="q-icon">🗣️</div>
+      <div class="q-text">如果能跟一个人聊天，你想问什么？</div>
+    </div>
+  </div>
+
+  <div class="record-area">
+    <div class="record-label">我的记录 ✏️</div>
+    <svg class="record-lines" viewBox="0 0 500 100">
+      <line x1="0" y1="20" x2="500" y2="20" />
+      <line x1="0" y1="40" x2="500" y2="40" />
+      <line x1="0" y1="60" x2="500" y2="60" />
+      <line x1="0" y1="80" x2="500" y2="80" />
+    </svg>
+  </div>
+
+  <div class="page-footer">
+    <span>👤 人</span>
+    <span>1 / 5</span>
+  </div>
+</div>
+
+<!-- ==================== 第2页：文 ==================== -->
+<div class="a4-page theme-wen">
+  <div class="page-header">
+    <span class="brand">社区探索家 · 五维观察法</span>
+    <span></span>
+  </div>
+
+  <div class="color-tag">📖 文</div>
+
+  <div class="dim-hero">
+    <span class="hero-emoji">📖</span>
+    <div class="hero-title">文</div>
+    <div class="hero-def">文化、历史、传统是什么？</div>
+  </div>
+  <div class="hero-divider"></div>
+
+  <div class="questions-area">
+    <div class="question-item">
+      <div class="q-icon">📜</div>
+      <div class="q-text">这个社区有什么特别的历史或故事吗？</div>
+    </div>
+    <div class="question-item">
+      <div class="q-icon">🏚️</div>
+      <div class="q-text">有没有老建筑、老招牌、老物件？</div>
+    </div>
+    <div class="question-item">
+      <div class="q-icon">🎊</div>
+      <div class="q-text">有没有节日、习俗、传统活动？</div>
+    </div>
+    <div class="question-item">
+      <div class="q-icon">🔤</div>
+      <div class="q-text">墙上、地上有没有什么有趣的文字或符号？</div>
+    </div>
+    <div class="question-item">
+      <div class="q-icon">🤔</div>
+      <div class="q-text">这个社区跟别的社区有什么不一样？</div>
+    </div>
+  </div>
+
+  <div class="record-area">
+    <div class="record-label">我的记录 ✏️</div>
+    <svg class="record-lines" viewBox="0 0 500 100">
+      <line x1="0" y1="20" x2="500" y2="20" />
+      <line x1="0" y1="40" x2="500" y2="40" />
+      <line x1="0" y1="60" x2="500" y2="60" />
+      <line x1="0" y1="80" x2="500" y2="80" />
+    </svg>
+  </div>
+
+  <div class="page-footer">
+    <span>📖 文</span>
+    <span>2 / 5</span>
+  </div>
+</div>
+
+<!-- ==================== 第3页：地 ==================== -->
+<div class="a4-page theme-di">
+  <div class="page-header">
+    <span class="brand">社区探索家 · 五维观察法</span>
+    <span></span>
+  </div>
+
+  <div class="color-tag">🗺️ 地</div>
+
+  <div class="dim-hero">
+    <span class="hero-emoji">🗺️</span>
+    <div class="hero-title">地</div>
+    <div class="hero-def">地理、建筑、空间是什么样的？</div>
+  </div>
+  <div class="hero-divider"></div>
+
+  <div class="questions-area">
+    <div class="question-item">
+      <div class="q-icon">🛤️</div>
+      <div class="q-text">这个社区的路是怎么走的？</div>
+    </div>
+    <div class="question-item">
+      <div class="q-icon">🏛️</div>
+      <div class="q-text">有哪些重要的建筑或地点？</div>
+    </div>
+    <div class="question-item">
+      <div class="q-icon">✨</div>
+      <div class="q-text">有没有你觉得特别好看或特别奇怪的地方？</div>
+    </div>
+    <div class="question-item">
+      <div class="q-icon">🔧</div>
+      <div class="q-text">有没有不方便或可以改进的地方？</div>
+    </div>
+    <div class="question-item">
+      <div class="q-icon">🎨</div>
+      <div class="q-text">如果你来画地图，你会怎么画？</div>
+    </div>
+  </div>
+
+  <div class="record-area">
+    <div class="record-label">我的记录 ✏️</div>
+    <svg class="record-lines" viewBox="0 0 500 100">
+      <line x1="0" y1="20" x2="500" y2="20" />
+      <line x1="0" y1="40" x2="500" y2="40" />
+      <line x1="0" y1="60" x2="500" y2="60" />
+      <line x1="0" y1="80" x2="500" y2="80" />
+    </svg>
+  </div>
+
+  <div class="page-footer">
+    <span>🗺️ 地</span>
+    <span>3 / 5</span>
+  </div>
+</div>
+
+<!-- ==================== 第4页：产 ==================== -->
+<div class="a4-page theme-chan">
+  <div class="page-header">
+    <span class="brand">社区探索家 · 五维观察法</span>
+    <span></span>
+  </div>
+
+  <div class="color-tag">🏪 产</div>
+
+  <div class="dim-hero">
+    <span class="hero-emoji">🏪</span>
+    <div class="hero-title">产</div>
+    <div class="hero-def">有什么商店、工厂、手艺人？</div>
+  </div>
+  <div class="hero-divider"></div>
+
+  <div class="questions-area">
+    <div class="question-item">
+      <div class="q-icon">🏬</div>
+      <div class="q-text">这个社区有哪些商店或店铺？</div>
+    </div>
+    <div class="question-item">
+      <div class="q-icon">👩‍🍳</div>
+      <div class="q-text">有没有人在做手工、做吃的、做手艺？</div>
+    </div>
+    <div class="question-item">
+      <div class="q-icon">🎁</div>
+      <div class="q-text">你在这里能买到什么特别的东西？</div>
+    </div>
+    <div class="question-item">
+      <div class="q-icon">🥬</div>
+      <div class="q-text">有没有工厂、菜市场、摊位？</div>
+    </div>
+    <div class="question-item">
+      <div class="q-icon">💭</div>
+      <div class="q-text">如果你开一家店，你想开什么？</div>
+    </div>
+  </div>
+
+  <div class="record-area">
+    <div class="record-label">我的记录 ✏️</div>
+    <svg class="record-lines" viewBox="0 0 500 100">
+      <line x1="0" y1="20" x2="500" y2="20" />
+      <line x1="0" y1="40" x2="500" y2="40" />
+      <line x1="0" y1="60" x2="500" y2="60" />
+      <line x1="0" y1="80" x2="500" y2="80" />
+    </svg>
+  </div>
+
+  <div class="page-footer">
+    <span>🏪 产</span>
+    <span>4 / 5</span>
+  </div>
+</div>
+
+<!-- ==================== 第5页：景 ==================== -->
+<div class="a4-page theme-jing">
+  <div class="page-header">
+    <span class="brand">社区探索家 · 五维观察法</span>
+    <span></span>
+  </div>
+
+  <div class="color-tag">🌳 景</div>
+
+  <div class="dim-hero">
+    <span class="hero-emoji">🌳</span>
+    <div class="hero-title">景</div>
+    <div class="hero-def">自然景观、环境怎么样？</div>
+  </div>
+  <div class="hero-divider"></div>
+
+  <div class="questions-area">
+    <div class="question-item">
+      <div class="q-icon">🌿</div>
+      <div class="q-text">这个社区有什么树、花、草、动物？</div>
+    </div>
+    <div class="question-item">
+      <div class="q-icon">💧</div>
+      <div class="q-text">有没有河流、池塘、公园？</div>
+    </div>
+    <div class="question-item">
+      <div class="q-icon">☀️</div>
+      <div class="q-text">天气好的时候，社区看起来是什么样的？</div>
+    </div>
+    <div class="question-item">
+      <div class="q-icon">🛡️</div>
+      <div class="q-text">有没有你觉得特别美或特别需要保护的地方？</div>
+    </div>
+    <div class="question-item">
+      <div class="q-icon">📸</div>
+      <div class="q-text">如果给社区拍一张照片，你会拍哪里？</div>
+    </div>
+  </div>
+
+  <div class="record-area">
+    <div class="record-label">我的记录 ✏️</div>
+    <svg class="record-lines" viewBox="0 0 500 100">
+      <line x1="0" y1="20" x2="500" y2="20" />
+      <line x1="0" y1="40" x2="500" y2="40" />
+      <line x1="0" y1="60" x2="500" y2="60" />
+      <line x1="0" y1="80" x2="500" y2="80" />
+    </svg>
+  </div>
+
+  <div class="page-footer">
+    <span>🌳 景</span>
+    <span>5 / 5</span>
+  </div>
+</div>
+
+</body>
+</html>

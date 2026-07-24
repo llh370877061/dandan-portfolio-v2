@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>后室逃脱 · THE BACKROOMS ESCAPE</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans SC',sans-serif;background:#0a0a0a;color:#e0e0e0;overflow:hidden;height:100vh;display:flex;flex-direction:column;user-select:none;-webkit-user-select:none}
+#game{flex:1;display:flex;flex-direction:column;max-width:700px;margin:0 auto;width:100%}
+
+/* HUD */
+#hud{display:flex;justify-content:space-between;align-items:center;padding:8px 16px;background:rgba(0,0,0,.92);border-bottom:1px solid rgba(255,255,255,.06);font-size:13px;gap:8px}
+.hud-item{display:flex;align-items:center;gap:6px}
+.hud-bar{width:70px;height:5px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
+.hud-fill{height:100%;border-radius:3px;transition:width .5s}
+.hud-fill.hp{background:#c0392b}
+.hud-fill.hp.ok{background:#27ae60}
+.hud-fill.hp.warn{background:#e67e22}
+.hud-fill.san{background:#8e44ad}
+.hud-fill.san.ok{background:#2980b9}
+.hud-fill.san.warn{background:#e67e22}
+.hud-label{color:#666;font-size:11px}
+#level-badge{color:#c9a84c;font-size:11px;letter-spacing:.15em;border:1px solid rgba(201,168,76,.3);padding:2px 10px}
+
+/* Canvas */
+#canvas-wrap{flex:1;position:relative;overflow:hidden;min-height:0;background:#000}
+canvas{width:100%;height:100%;display:block}
+
+/* Controls */
+#controls{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:8px 16px;background:rgba(0,0,0,.95);border-top:1px solid rgba(255,255,255,.04)}
+.dir-btn{padding:16px;font-size:20px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02);color:#aaa;border-radius:8px;cursor:pointer;text-align:center;transition:all .12s;-webkit-tap-highlight-color:transparent}
+.dir-btn:active{background:rgba(201,168,76,.15);border-color:#c9a84c;color:#c9a84c;transform:scale(.93)}
+.dir-btn.empty{visibility:hidden}
+#btn-up{grid-column:2}
+
+/* Event Panel */
+#evt{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.88);flex-direction:column;justify-content:center;align-items:center;padding:20px}
+#evt.on{display:flex}
+#evt-box{background:#111;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:28px;max-width:440px;width:100%;text-align:center}
+#evt-icon{font-size:42px;margin-bottom:14px}
+#evt-text{font-size:15px;line-height:1.9;margin-bottom:22px;color:#ccc;white-space:pre-line}
+#evt-choices{display:flex;flex-direction:column;gap:10px}
+.evt-btn{padding:13px 18px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:#ddd;border-radius:8px;font-size:14px;cursor:pointer;transition:all .2s;font-family:inherit;text-align:left;line-height:1.6}
+.evt-btn:hover{border-color:#c9a84c;background:rgba(201,168,76,.08);color:#c9a84c}
+
+/* Start Screen */
+#start{position:fixed;inset:0;z-index:200;background:#0a0a0a;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:30px}
+#start h1{font-family:'Noto Serif SC',serif;font-size:2.4rem;color:#c9a84c;letter-spacing:.25em;margin-bottom:6px;text-shadow:0 0 40px rgba(201,168,76,.2)}
+#start .sub{color:#555;font-size:12px;letter-spacing:.5em;margin-bottom:50px}
+#start .desc{color:#777;font-size:14px;line-height:2;margin-bottom:40px;max-width:380px}
+.go-btn{padding:14px 50px;border:1px solid #c9a84c;background:transparent;color:#c9a84c;font-size:15px;letter-spacing:.2em;cursor:pointer;transition:all .3s;font-family:inherit}
+.go-btn:hover{background:#c9a84c;color:#0a0a0a}
+
+/* End Screen */
+#endscr{position:fixed;inset:0;z-index:200;background:#0a0a0a;display:none;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:30px}
+#endscr.on{display:flex}
+#endscr h2{font-family:'Noto Serif SC',serif;font-size:2rem;margin-bottom:24px;letter-spacing:.2em}
+#endscr .etext{color:#888;font-size:15px;line-height:2.2;margin-bottom:40px;max-width:400px}
+
+/* Toast */
+#toast{position:fixed;top:52px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.92);border:1px solid rgba(255,255,255,.1);padding:8px 18px;border-radius:20px;font-size:13px;z-index:50;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+#toast.on{opacity:1}
+
+/* Minimap */
+#minimap{position:absolute;top:8px;right:8px;z-index:10;opacity:.6}
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<div id="start">
+  <h1>后室逃脱</h1>
+  <div class="sub">THE BACKROOMS ESCAPE</div>
+  <div class="desc">
+    你在图书馆熬夜时打了个盹。<br>
+    醒来发现自己站在一条无限延伸的黄色走廊里。<br><br>
+    荧光灯嗡嗡作响。<br>
+    你需要穿过所有层级，找到出口。<br><br>
+    <span style="color:#c0392b">小心——有些东西也在找你。</span>
+  </div>
+  <button class="go-btn" onclick="startGame()">开始</button>
+</div>
+
+<div id="endscr">
+  <h2 id="end-title"></h2>
+  <div class="etext" id="end-text"></div>
+  <button class="go-btn" onclick="location.reload()">再来一次</button>
+</div>
+
+<div id="evt">
+  <div id="evt-box">
+    <div id="evt-icon"></div>
+    <div id="evt-text"></div>
+    <div id="evt-choices"></div>
+  </div>
+</div>
+
+<div id="game">
+  <div id="hud">
+    <div class="hud-item">
+      <span class="hud-label">体力</span>
+      <div class="hud-bar"><div class="hud-fill hp ok" id="hp-fill"></div></div>
+      <span id="hp-num">100</span>
+    </div>
+    <span id="level-badge">LEVEL 0</span>
+    <div class="hud-item">
+      <span class="hud-label">理智</span>
+      <div class="hud-bar"><div class="hud-fill san ok" id="san-fill"></div></div>
+      <span id="san-num">100</span>
+    </div>
+  </div>
+  <div id="canvas-wrap">
+    <canvas id="maze"></canvas>
+    <canvas id="minimap" width="100" height="100"></canvas>
+  </div>
+  <div id="controls">
+    <div class="dir-btn empty"></div>
+    <div class="dir-btn" id="btn-up" ontouchstart="go(0,-1);event.preventDefault()" onclick="go(0,-1)">▲</div>
+    <div class="dir-btn empty"></div>
+    <div class="dir-btn" ontouchstart="go(-1,0);event.preventDefault()" onclick="go(-1,0)">◀</div>
+    <div class="dir-btn" onclick="turnAround()">↻</div>
+    <div class="dir-btn" ontouchstart="go(1,0);event.preventDefault()" onclick="go(1,0)">▶</div>
+    <div class="dir-btn empty"></div>
+    <div class="dir-btn" ontouchstart="go(0,1);event.preventDefault()" onclick="go(0,1)">▼</div>
+    <div class="dir-btn empty"></div>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const C=$('maze'), X=C.getContext('2d');
+const MC=$('minimap'), MX=MC.getContext('2d');
+let W,H;
+
+function resize(){
+  const w=$('canvas-wrap');
+  W=C.width=w.clientWidth; H=C.height=w.clientHeight;
+  draw(); drawMinimap();
+}
+window.addEventListener('resize',resize);
+
+// ── 状态 ──
+const S={hp:100,san:100,lv:0,px:0,py:0,dir:0,flags:{},busy:false};
+const LVL_NAMES=['黄色走廊','废弃商场','地下管道','翻转图书馆','出口之门'];
+
+function updateHud(){
+  const hp=Math.max(0,S.hp),san=Math.max(0,S.san);
+  $('hp-fill').style.width=hp+'%';
+  $('san-fill').style.width=san+'%';
+  $('hp-num').textContent=hp; $('san-num').textContent=san;
+  const hb=$('hp-fill'); hb.className='hud-fill hp '+(hp>60?'ok':hp>30?'warn':'');
+  const sb=$('san-fill'); sb.className='hud-fill san '+(san>60?'ok':san>30?'warn':'');
+  $('level-badge').textContent='LEVEL '+S.lv+' — '+LVL_NAMES[S.lv];
+}
+function hurt(v){S.hp=Math.max(0,S.hp-v);updateHud();toast('-'+v+' 体力','danger');}
+function heal(v){S.hp=Math.min(100,S.hp+v);updateHud();toast('+'+v+' 体力','safe');}
+function loseSan(v){S.san=Math.max(0,S.san-v);updateHud();toast('-'+v+' 理智','danger');}
+function gainSan(v){S.san=Math.min(100,S.san+v);updateHud();}
+
+function toast(msg,type){
+  const t=$('toast'); t.textContent=msg;
+  t.style.borderColor=type==='danger'?'#c0392b':type==='safe'?'#27ae60':'rgba(255,255,255,.15)';
+  t.style.color=type==='danger'?'#e74c3c':type==='safe'?'#2ecc71':'#aaa';
+  t.classList.add('on'); setTimeout(()=>t.classList.remove('on'),1400);
+}
+
+function showEvt(icon,text,choices){
+  $('evt-icon').textContent=icon;
+  $('evt-text').innerHTML=text;
+  const cc=$('evt-choices'); cc.innerHTML='';
+  choices.forEach(c=>{
+    const b=document.createElement('button');
+    b.className='evt-btn'; b.textContent=c.text;
+    b.onclick=()=>{
+      $('evt').classList.remove('on');
+      if(c.effect)c.effect();
+      if(c.next)setTimeout(c.next,300);
+    };
+    cc.appendChild(b);
+  });
+  $('evt').classList.add('on');
+}
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+
+// ═══════════════════════════════════════
+//  地图数据
+// ═══════════════════════════════════════
+// 0=墙 1=路 2=起点 3=出口
+const LEVELS=[];
+
+LEVELS[0]={
+  wall:'#3d3520',floor:'#6b5d2c',ceil:'#2a2210',fog:'rgba(40,30,10,',
+  map:[
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,2,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0],
+    [0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0],
+    [0,0,0,0,0,0,1,1,1,1,0,0,0,0,1,0,0,1,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,1,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  events:{},
+  start:[1,1],exit:[20,13],
+  // 实体位置
+  monsters:[
+    {x:8,y:5,type:'wanderer',name:'游荡者'},
+    {x:16,y:7,type:'wanderer',name:'游荡者'},
+  ],
+  items:[
+    {x:6,y:5,type:'star',name:'旧报纸',icon:'📰'},
+  ],
+  npcs:[]
+};
+
+LEVELS[1]={
+  wall:'#1a2535',floor:'#1e2d3d',ceil:'#0d1520',fog:'rgba(10,20,35,',
+  map:[
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,2,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  events:{},
+  start:[1,1],exit:[16,11],
+  monsters:[
+    {x:10,y:3,type:'crier',name:'裂口女'},
+    {x:14,y:7,type:'shadow',name:'影子'},
+  ],
+  items:[
+    {x:5,y:3,type:'star',name:'杏仁水',icon:'💧'},
+    {x:15,y:9,type:'item',name:'磁卡',icon:'🔑'},
+  ],
+  npcs:[
+    {x:7,y:5,type:'merchant',name:'沉默商人'},
+  ]
+};
+
+LEVELS[2]={
+  wall:'#111',floor:'#1a1a1a',ceil:'#0a0a0a',fog:'rgba(5,5,5,',
+  map:[
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,0,0],
+    [0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0],
+    [0,0,0,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  events:{},
+  start:[1,1],exit:[18,11],
+  monsters:[
+    {x:7,y:5,type:'crawler',name:'管道爬行者'},
+    {x:15,y:5,type:'crawler',name:'管道爬行者'},
+    {x:18,y:9,type:'wanderer',name:'游荡者'},
+  ],
+  items:[
+    {x:4,y:3,type:'star',name:'手电筒电池',icon:'🔋'},
+  ],
+  npcs:[
+    {x:11,y:3,type:'voice',name:'管道之声'},
+  ]
+};
+
+LEVELS[3]={
+  wall:'#201530',floor:'#2a1a3a',ceil:'#100818',fog:'rgba(25,15,40,',
+  map:[
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,2,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  events:{},
+  start:[1,1],exit:[16,13],
+  monsters:[
+    {x:8,y:5,type:'devourer',name:'知识吞噬者'},
+    {x:14,y:9,type:'devourer',name:'知识吞噬者'},
+  ],
+  items:[
+    {x:6,y:3,type:'star',name:'层级钥匙碎片',icon:'🗝️'},
+  ],
+  npcs:[
+    {x:11,y:5,type:'scribe',name:'抄写员'},
+  ]
+};
+
+LEVELS[4]={
+  wall:'#ddd',floor:'#ccc',ceil:'#eee',fog:'rgba(240,240,240,',
+  map:[
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,2,1,1,1,1,1,1,1,1,1,0],
+    [0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0,0,0,3,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  events:{},
+  start:[1,1],exit:[10,7],
+  monsters:[],
+  items:[],
+  npcs:[
+    {x:10,y:1,type:'gatekeeper',name:'影子守门人'},
+  ]
+};
+
+// ═══════════════════════════════════════
+//  Canvas 渲染
+// ═══════════════════════════════════════
+function draw(){
+  if(!W||!H)return;
+  const L=LEVELS[S.lv]; if(!L)return;
+
+  // 天花板
+  const g1=X.createLinearGradient(0,0,0,H*.42);
+  g1.addColorStop(0,L.ceil); g1.addColorStop(1,L.fog+'0.2)');
+  X.fillStyle=g1; X.fillRect(0,0,W,H*.42);
+
+  // 地板
+  const g2=X.createLinearGradient(0,H*.58,0,H);
+  g2.addColorStop(0,L.fog+'0.3)'); g2.addColorStop(1,L.floor);
+  X.fillStyle=g2; X.fillRect(0,H*.58,W,H*.42);
+
+  // 地板透视线
+  X.strokeStyle='rgba(255,255,255,.04)'; X.lineWidth=1;
+  for(let i=1;i<10;i++){
+    const y=H*.58+(H*.42)*(i/10);
+    X.beginPath(); X.moveTo(0,y); X.lineTo(W,y); X.stroke();
+  }
+
+  drawScene(L);
+}
+
+function drawScene(L){
+  const map=L.map, px=S.px, py=S.py, dir=S.dir;
+  const dx=[0,1,0,-1][dir], dy=[-1,0,1,0][dir];
+  const rx=[1,0,-1,0][dir], ry=[0,1,0,-1][dir];
+
+  function blocked(x,y){return !inBounds(x,y,map)||map[y][x]===0;}
+
+  // 画4层深度
+  for(let d=3;d>=0;d--){
+    const fx=px+dx*d, fy=py+dy*d;
+    const sc=1/(d+1.2);
+    const wW=W*sc, wH=H*sc*.8;
+    const cx=W/2, cy=H/2;
+
+    // 左墙
+    if(blocked(fx+rx,fy+ry)){
+      const alpha=.3+.7*(1-d/4);
+      X.globalAlpha=alpha; X.fillStyle=L.wall;
+      const sw=W*(1-sc)/2+5;
+      X.fillRect(0,cy-wH/2,sw,wH);
+      X.strokeStyle='rgba(255,255,255,.03)'; X.strokeRect(2,cy-wH/2+4,sw-4,wH-8);
+    }
+    // 右墙
+    if(blocked(fx-rx,fy-ry)){
+      const alpha=.3+.7*(1-d/4);
+      X.globalAlpha=alpha; X.fillStyle=L.wall;
+      const sw=W*(1-sc)/2+5;
+      X.fillRect(W-sw,cy-wH/2,sw,wH);
+    }
+    // 前墙
+    if(blocked(fx+dx,fy+dy)){
+      const alpha=.25+.75*(1-d/4);
+      X.globalAlpha=alpha; X.fillStyle=L.wall;
+      X.fillRect(cx-wW/2,cy-wH/2,wW,wH);
+      // 墙上细节
+      if(d<=1){
+        X.fillStyle='rgba(255,255,255,.03)';
+        X.fillRect(cx-wW*.3,cy-wH*.3,wW*.6,wH*.3);
+      }
+    }
+    X.globalAlpha=1;
+  }
+
+  // 前方实体
+  const fx=px+dx, fy=py+dy;
+  drawEntity(fx,fy,L);
+  // 当前格子实体
+  drawEntity(px,py,L,true);
+}
+
+function inBounds(x,y,m){return y>=0&&y<m.length&&x>=0&&x<m[0].length;}
+
+function drawEntity(ex,ey,L,self){
+  const cx=W/2, cy=H*.42;
+  // 怪物
+  for(const m of L.monsters){
+    if(m.x===ex&&m.y===ey){
+      const sz=self?25:35;
+      if(m.type==='wanderer'){
+        X.fillStyle='rgba(20,10,10,.9)';
+        X.beginPath(); X.ellipse(cx,cy+8,sz*.7,sz*1.2,0,0,Math.PI*2); X.fill();
+        X.fillStyle='#c0392b';
+        X.beginPath(); X.arc(cx-8,cy-2,4,0,Math.PI*2); X.arc(cx+8,cy-2,4,0,Math.PI*2); X.fill();
+        X.fillStyle='#fff';
+        X.beginPath(); X.arc(cx-8,cy-3,1.5,0,Math.PI*2); X.arc(cx+8,cy-3,1.5,0,Math.PI*2); X.fill();
+      } else if(m.type==='crier'){
+        X.fillStyle='rgba(30,30,30,.9)';
+        X.beginPath(); X.ellipse(cx,cy+5,sz*.5,sz*1.1,0,0,Math.PI*2); X.fill();
+        X.strokeStyle='#c0392b'; X.lineWidth=2;
+        X.beginPath(); X.arc(cx,cy-8,sz*.35,0,Math.PI); X.stroke();
+        // 长发
+        X.fillStyle='#111';
+        for(let i=-2;i<=2;i++){
+          X.fillRect(cx+i*8-2,cy-20,4,40);
+        }
+      } else if(m.type==='crawler'){
+        X.fillStyle='rgba(10,10,10,.95)';
+        X.beginPath(); X.ellipse(cx,cy+5,sz*1.2,sz*.6,0,0,Math.PI*2); X.fill();
+        X.fillStyle='#c0392b';
+        for(let i=0;i<6;i++){
+          const a=i*Math.PI/3;
+          X.beginPath(); X.arc(cx+Math.cos(a)*sz*.8,cy+5+Math.sin(a)*sz*.4,3,0,Math.PI*2); X.fill();
+        }
+      } else if(m.type==='shadow'){
+        X.fillStyle='#000';
+        X.beginPath(); X.ellipse(cx,cy+5,sz*.5,sz*1.3,0,0,Math.PI*2); X.fill();
+      } else if(m.type==='devourer'){
+        // 书页风暴
+        X.strokeStyle='rgba(200,180,140,.6)'; X.lineWidth=1;
+        for(let i=0;i<12;i++){
+          const a=i*Math.PI/6+Date.now()*.001;
+          const r=sz*.5+Math.sin(a*3)*10;
+          X.beginPath();
+          X.ellipse(cx+Math.cos(a)*r,cy+Math.sin(a)*r,8,4,a,0,Math.PI*2);
+          X.stroke();
+        }
+      }
+      if(!self){
+        X.fillStyle='rgba(200,200,200,.5)'; X.font='11px sans-serif'; X.textAlign='center';
+        X.fillText(m.name,cx,cy+sz+18);
+      }
+      return;
+    }
+  }
+  // NPC
+  for(const n of L.npcs){
+    if(n.x===ex&&n.y===ey){
+      const sz=self?20:30;
+      if(n.type==='merchant'){
+        X.fillStyle='#2a3a2a';
+        X.beginPath(); X.arc(cx,cy,sz*.6,0,Math.PI*2); X.fill();
+        X.fillStyle='#c9a84c'; X.font='22px sans-serif'; X.textAlign='center';
+        X.fillText('🎭',cx,cy+8);
+      } else if(n.type==='voice'){
+        X.fillStyle='rgba(50,80,50,.4)';
+        X.beginPath(); X.arc(cx,cy,sz*.5,0,Math.PI*2); X.fill();
+        X.fillStyle='#5a8a5a'; X.font='11px sans-serif'; X.textAlign='center';
+        X.fillText('……',cx,cy+4);
+      } else if(n.type==='scribe'){
+        X.fillStyle='#3a2a4a';
+        X.beginPath(); X.arc(cx,cy,sz*.6,0,Math.PI*2); X.fill();
+        X.fillStyle='#fff'; X.font='22px sans-serif'; X.textAlign='center';
+        X.fillText('👴',cx,cy+8);
+      } else if(n.type==='gatekeeper'){
+        X.fillStyle='#000';
+        X.beginPath(); X.ellipse(cx,cy+5,sz*.5,sz*1.4,0,0,Math.PI*2); X.fill();
+        X.fillStyle='#8a2be2'; X.font='11px sans-serif'; X.textAlign='center';
+        X.fillText('影子守门人',cx,cy+sz+22);
+      }
+      if(!self){
+        X.fillStyle='rgba(200,200,200,.5)'; X.font='11px sans-serif'; X.textAlign='center';
+        X.fillText(n.name,cx,cy+sz+14);
+      }
+      return;
+    }
+  }
+  // 物品
+  for(const it of L.items){
+    if(it.x===ex&&it.y===ey){
+      const sz=self?12:18;
+      X.fillStyle='rgba(201,168,76,.15)';
+      X.beginPath(); X.arc(cx,cy,sz,0,Math.PI*2); X.fill();
+      X.font=(self?16:24)+'px sans-serif'; X.textAlign='center';
+      X.fillText(it.icon,cx,cy+8);
+      return;
+    }
+  }
+}
+
+// ── 小地图 ──
+function drawMinimap(){
+  const L=LEVELS[S.lv]; if(!L)return;
+  const map=L.map;
+  const rows=map.length, cols=map[0].length;
+  const s=Math.min(100/cols,100/rows);
+  MC.width=cols*s; MC.height=rows*s;
+  MX.clearRect(0,0,MC.width,MC.height);
+
+  for(let y=0;y<rows;y++){
+    for(let x=0;x<cols;x++){
+      if(map[y][x]===0){
+        MX.fillStyle='rgba(80,80,80,.6)';
+      } else if(x===L.exit[0]&&y===L.exit[1]){
+        MX.fillStyle='#27ae60';
+      } else {
+        MX.fillStyle='rgba(40,40,40,.8)';
+      }
+      MX.fillRect(x*s,y*s,s-1,s-1);
+    }
+  }
+  // 玩家
+  MX.fillStyle='#c9a84c';
+  MX.fillRect(S.px*s,S.py*s,s,s);
+  // 怪物红点
+  for(const m of L.monsters){
+    MX.fillStyle='rgba(192,57,43,.8)';
+    MX.fillRect(m.x*s,m.y*s,s,s);
+  }
+}
+
+// ═══════════════════════════════════════
+//  移动
+// ═══════════════════════════════════════
+function go(mx,my){
+  if(S.busy)return;
+  if($('evt').classList.contains('on'))return;
+  if($('start').style.display!=='none')return;
+
+  // 更新朝向
+  if(mx===0&&my===-1)S.dir=0;
+  else if(mx===1&&my===0)S.dir=1;
+  else if(mx===0&&my===1)S.dir=2;
+  else if(mx===-1&&my===0)S.dir=3;
+
+  const L=LEVELS[S.lv];
+  const nx=S.px+mx, ny=S.py+my;
+
+  if(!inBounds(nx,ny,L.map)||L.map[ny][nx]===0){
+    draw(); return;
+  }
+
+  S.px=nx; S.py=ny;
+  draw(); drawMinimap();
+
+  // 检查当前格子的实体
+  checkTile();
+}
+
+function turnAround(){
+  S.dir=(S.dir+2)%4;
+  draw(); drawMinimap();
+}
+
+function checkTile(){
+  const L=LEVELS[S.lv];
+
+  // 怪物
+  for(const m of L.monsters){
+    if(m.x===S.px&&m.y===S.py){
+      triggerMonster(m);
+      return;
+    }
+  }
+  // NPC
+  for(const n of L.npcs){
+    if(n.x===S.px&&n.y===S.py){
+      triggerNpc(n);
+      return;
+    }
+  }
+  // 物品
+  for(let i=L.items.length-1;i>=0;i--){
+    const it=L.items[i];
+    if(it.x===S.px&&it.y===S.py){
+      L.items.splice(i,1);
+      triggerItem(it);
+      return;
+    }
+  }
+  // 出口
+  if(S.px===L.exit[0]&&S.py===L.exit[1]){
+    if(S.lv<4) nextLevel();
+    else triggerFinalDoor();
+  }
+}
+
+// ═══════════════════════════════════════
+//  事件系统
+// ═══════════════════════════════════════
+function triggerMonster(m){
+  S.busy=true;
+  if(m.type==='wanderer'){
+    showEvt('👁️','一个模糊的人形轮廓出现在面前。它没有眼睛，但你能感觉到它在"看"你。\n\n湿漉漉的脚步声在走廊里回荡。',[
+      {text:'屏住呼吸，蹲下不动',effect:()=>{
+        if(Math.random()<.6){
+          wait(600).then(()=>toast('它走过去了……','safe'));
+        } else {
+          hurt(20);
+          wait(400).then(()=>toast('被发现了！','danger'));
+        }
+      }},
+      {text:'转身跑',effect:()=>{
+        hurt(15); loseSan(10);
+        wait(400).then(()=>toast('甩掉了，但体力消耗很大','danger'));
+      }},
+      {text:'用手电照它',effect:()=>{
+        loseSan(5);
+        wait(600).then(()=>toast('它在强光下扭曲消散了','safe'));
+      }}
+    ]);
+  } else if(m.type==='crier'){
+    showEvt('💋','一个长发女人挡在面前。她的嘴角撕裂到耳根，露出发黑的牙齿。\n\n她开口了：',[
+      {text:'"你很美"',effect:()=>{
+        gainSan(5);
+        wait(600).then(()=>showEvt('💋','她的嘴角抽动了一下，然后转身离开了。\n\n你有三十秒时间。',['继续']));
+      }},
+      {text:'"不美"',effect:()=>{ hurt(30); wait(400).then(()=>toast('她尖叫着扑过来！','danger')); }},
+      {text:'沉默不回答',effect:()=>{ hurt(25); loseSan(15); wait(400).then(()=>toast('她越来越近……','danger')); }}
+    ]);
+  } else if(m.type==='crawler'){
+    showEvt('🕸️','多肢节肢动物趴在管壁上。它的肢体在黑暗中缓缓移动。\n\n它发现了你。',[
+      {text:'用手电照射',effect:()=>{
+        wait(600).then(()=>toast('它怕光，退缩了','safe'));
+      }},
+      {text:'丢一个物品引开它',effect:()=>{
+        if(S.flags.hasStar){ S.flags.hasStar=false; wait(600).then(()=>toast('旧报纸吸引了它','safe')); }
+        else { hurt(20); wait(400).then(()=>toast('没有东西可丢！','danger')); }
+      }},
+      {text:'快速冲过去',effect:()=>{ hurt(25); loseSan(10); wait(400).then(()=>toast('被抓住了！','danger')); }}
+    ]);
+  } else if(m.type==='shadow'){
+    showEvt('◼','一个纯黑的人形轮廓挡住了路。它一动不动。\n\n你盯着它看——它也盯着你。\n\n当你背过身时，你能感觉到它在靠近。',[
+      {text:'直视它，慢慢后退',effect:()=>{ gainSan(15); wait(600).then(()=>toast('它不会攻击直视它的人','safe')); }},
+      {text:'转身跑',effect:()=>{ hurt(10); loseSan(20); wait(400).then(()=>toast('理智在急速下降……','danger')); }}
+    ]);
+  } else if(m.type==='devourer'){
+    showEvt('📖','书页在空中聚集旋转，形成一个风暴。\n\n知识吞噬者——被卷入其中会失去记忆。',[
+      {text:'用空白纸张引开',effect:()=>{ wait(600).then(()=>toast('它被空白纸吸引了','safe')); }},
+      {text:'闭眼冲过去',effect:()=>{ loseSan(25); wait(400).then(()=>toast('忘记了一些线索……','danger')); }}
+    ]);
+  }
+  setTimeout(()=>{S.busy=false;},600);
+}
+
+function triggerNpc(n){
+  S.busy=true;
+  if(n.type==='merchant'){
+    showEvt('🎭','一个戴面具的人形站在角落里。\n\n它不说话。你展示手中的物品，它也展示它的。\n\n双方同意就交换。',[
+      {text:'展示旧报纸',effect:()=>{
+        S.flags.hasStar=true;
+        wait(600).then(()=>showEvt('🎭','商人递给你一张纸条：\n\n"第三层的老人说的是真话。"',['收下']));
+      }},
+      {text:'不交换，离开',effect:()=>{ wait(300).then(()=>toast('离开了','')); }}
+    ]);
+  } else if(n.type==='voice'){
+    showEvt('🌊','管道里传来低沉的声音：\n\n"左边有危险……"\n"右边安全……"\n"直走最快……"',[
+      {text:'记住前两句',effect:()=>{ S.flags.trustVoice=true; gainSan(5); wait(400).then(()=>toast('记住了','safe')); }},
+      {text:'不信，直走',effect:()=>{ hurt(15); loseSan(10); wait(400).then(()=>toast('走进了死路！','danger')); }}
+    ]);
+  } else if(n.type==='scribe'){
+    showEvt('👴','一位戴眼镜的老者出现了。\n\n"你可以问我一个问题。"',[
+      {text:'后室是什么？',effect:()=>{
+        S.flags.knowTruth=true;
+        wait(600).then(()=>showEvt('👴','"后室不是空间，是意识的映射。每一层对应人的一个心理状态。"\n\n"迷失、探索、恐惧、知识——最后一层是你自己。"',['我明白了']));
+      }},
+      {text:'影子守门人是什么？',effect:()=>{
+        S.flags.knowGuardian=true;
+        wait(600).then(()=>showEvt('👴','"它不攻击人，它考验人。"\n\n"你必须理解自己才能通过。"',['谢谢']));
+      }}
+    ]);
+  } else if(n.type==='gatekeeper'){
+    S.busy=false;
+    // 不在这里触发，由出口触发
+    return;
+  }
+  setTimeout(()=>{S.busy=false;},600);
+}
+
+function triggerItem(it){
+  S.busy=true;
+  if(it.type==='star'){
+    S.flags.hasStar=true;
+    showEvt(it.icon,it.name+'！',[
+      {text:'收下',effect:()=>{ toast('获得 '+it.name,'safe'); }}
+    ]);
+  } else {
+    S.flags.hasKey=true;
+    showEvt(it.icon,it.name+'！',[
+      {text:'收下',effect:()=>{ toast('获得 '+it.name,'safe'); }}
+    ]);
+  }
+  setTimeout(()=>{S.busy=false;},500);
+}
+
+function triggerFinalDoor(){
+  S.busy=true;
+  if(S.flags.knowTruth||S.flags.knowGuardian){
+    showEvt('◼','影子守门人站在黑色大门前。\n\n"你是我自己的影子。我不怕你。"\n\n它颤抖了一下，然后缓缓后退，让出了路。\n\n门开了。三扇门。',[
+      {text:'🔵 蓝色 — 遗忘',effect:()=>showEnding('forget')},
+      {text:'⚪ 白色 — 守护',effect:()=>showEnding('guard')},
+      {text:'🔴 红色 — 铭记',effect:()=>showEnding('remember')}
+    ]);
+  } else {
+    showEvt('◼','影子守门人挡在门前。你冲过去——它瞬间出现在你面前。\n\n物理方法行不通。\n\n也许……需要理解什么。',[
+      {text:'回想一切',effect:()=>{
+        S.flags.knowTruth=true;
+        wait(800).then(()=>showEvt('◼','你回想起每一层……迷失、探索、恐惧、知识。\n\n"你是我自己的影子。我不怕你。"\n\n它后退了。门开了。',[
+          {text:'🔵 蓝色 — 遗忘',effect:()=>showEnding('forget')},
+          {text:'⚪ 白色 — 守护',effect:()=>showEnding('guard')},
+          {text:'🔴 红色 — 铭记',effect:()=>showEnding('remember')}
+        ]));
+      }}
+    ]);
+  }
+  setTimeout(()=>{S.busy=false;},800);
+}
+
+function showEnding(type){
+  $('evt').classList.remove('on');
+  const e=$('endscr'), t=$('end-title'), x=$('end-text');
+  if(type==='forget'){
+    t.textContent='遗忘'; t.style.color='#3498db';
+    x.innerHTML='白光吞没了一切。<br><br>醒来时，我趴在图书馆的桌子上。<br>论文文档还亮着，窗外是清晨的阳光。<br><br>"做了个奇怪的梦……"<br><br>但想不起来了。只有一种淡淡的感觉。<br><br>阳光照在桌上，很暖。';
+  } else if(type==='guard'){
+    t.textContent='守护'; t.style.color='#8e44ad';
+    x.innerHTML='我变成了纯黑的剪影，站在 Level 4 的门前。<br><br>会有新的幸存者来到这里。<br>他们会害怕，会迷茫。<br><br>然后他们会来到我面前。<br>我会成为他们的考验。<br><br>我接受了这个命运。';
+  } else {
+    t.textContent='铭记'; t.style.color='#e74c3c';
+    x.innerHTML='我醒来时，站在图书馆门口。<br>外面车水马龙，阳光刺眼。<br><br>我记得一切。<br><br>口袋里有一张纸条：<br>"后室的大门永远敞开——因为你选择记住了。"<br><br>我决定把故事告诉世界。<br>我走进了阳光里。';
+  }
+  e.classList.add('on');
+}
+
+function nextLevel(){
+  S.lv++;
+  if(S.lv>=LEVELS.length)return;
+  const L=LEVELS[S.lv];
+  S.px=L.start[0]; S.py=L.start[1]; S.dir=0;
+  updateHud(); resize();
+  showEvt('▸','进入 Level '+S.lv+'：'+LVL_NAMES[S.lv],[
+    {text:'继续',effect:()=>{}}
+  ]);
+}
+
+// ═══════════════════════════════════════
+//  启动
+// ═══════════════════════════════════════
+function startGame(){
+  $('start').style.display='none';
+  const L=LEVELS[0];
+  S.px=L.start[0]; S.py=L.start[1]; S.dir=0;
+  updateHud(); resize();
+  showEvt('📖','你趴在图书馆的桌子上闭了一会儿眼。\n\n醒来时，荧光灯嗡嗡作响。\n\n你站在一条无限延伸的黄色走廊里。\n\n墙壁贴着发霉的壁纸，地面是潮湿的棕色地毯。\n\n手机没有信号。口袋里只有一个手电筒。\n\n你需要找到出口。',[
+    {text:'开始探索',effect:()=>{}}
+  ]);
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowUp'||e.key==='w')go(0,-1);
+  if(e.key==='ArrowDown'||e.key==='s')go(0,1);
+  if(e.key==='ArrowLeft'||e.key==='a')go(-1,0);
+  if(e.key==='ArrowRight'||e.key==='d')go(1,0);
+});
+
+resize();
+</script>
+</body>
+</html>

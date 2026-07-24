@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>社区探索家 - 6周亲子行动营活动目录</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: #FFF8F0;
+    color: #3D2C1E;
+    line-height: 1.6;
+    padding: 0;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  /* ===== 顶部横幅 ===== */
+  .hero {
+    background: linear-gradient(135deg, #FF8C42 0%, #F4845F 40%, #E76F51 100%);
+    color: #fff;
+    padding: 36px 24px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 140px; height: 140px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; left: -30px;
+    width: 100px; height: 100px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+  }
+  .hero-icon {
+    font-size: 48px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .hero h1 {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  }
+  .hero .subtitle {
+    font-size: 15px;
+    opacity: 0.92;
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+  .hero .intro {
+    font-size: 13.5px;
+    line-height: 1.75;
+    opacity: 0.9;
+    max-width: 340px;
+    margin: 0 auto;
+    background: rgba(255,255,255,0.12);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+
+  /* ===== 卡片区域 ===== */
+  .cards {
+    padding: 20px 14px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 22px 20px 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    position: relative;
+    overflow: hidden;
+    border-left: 5px solid transparent;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+  }
+
+  /* 每周不同色调 */
+  .card:nth-child(1) { border-left-color: #FF8C42; }
+  .card:nth-child(1)::before { background: linear-gradient(90deg, #FF8C42, #FFB347); }
+
+  .card:nth-child(2) { border-left-color: #F4845F; }
+  .card:nth-child(2)::before { background: linear-gradient(90deg, #F4845F, #FF9A76); }
+
+  .card:nth-child(3) { border-left-color: #E76F51; }
+  .card:nth-child(3)::before { background: linear-gradient(90deg, #E76F51, #F4978E); }
+
+  .card:nth-child(4) { border-left-color: #E9C46A; }
+  .card:nth-child(4)::before { background: linear-gradient(90deg, #E9C46A, #F2D98D); }
+
+  .card:nth-child(5) { border-left-color: #2A9D8F; }
+  .card:nth-child(5)::before { background: linear-gradient(90deg, #2A9D8F, #56C4B6); }
+
+  .card:nth-child(6) { border-left-color: #264653; }
+  .card:nth-child(6)::before { background: linear-gradient(90deg, #264653, #4A7C8A); }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .week-badge {
+    flex-shrink: 0;
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.1;
+    text-align: center;
+    flex-direction: column;
+  }
+  .card:nth-child(1) .week-badge { background: linear-gradient(135deg, #FF8C42, #FFB347); }
+  .card:nth-child(2) .week-badge { background: linear-gradient(135deg, #F4845F, #FF9A76); }
+  .card:nth-child(3) .week-badge { background: linear-gradient(135deg, #E76F51, #F4978E); }
+  .card:nth-child(4) .week-badge { background: linear-gradient(135deg, #E9C46A, #F2D98D); color: #5D4E37; }
+  .card:nth-child(5) .week-badge { background: linear-gradient(135deg, #2A9D8F, #56C4B6); }
+  .card:nth-child(6) .week-badge { background: linear-gradient(135deg, #264653, #4A7C8A); }
+
+  .week-badge .week-num { font-size: 18px; font-weight: 800; }
+  .week-badge .week-label { font-size: 10px; font-weight: 500; }
+
+  .card-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #3D2C1E;
+    flex: 1;
+    padding-top: 2px;
+  }
+  .card-emoji {
+    font-size: 28px;
+    flex-shrink: 0;
+    margin-top: -2px;
+  }
+
+  .card-goal {
+    font-size: 13.5px;
+    color: #7A6052;
+    background: #FFF5EC;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    line-height: 1.6;
+  }
+  .card-goal strong {
+    color: #E76F51;
+    font-weight: 600;
+  }
+
+  .card-points {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 10px;
+  }
+  .card-points li {
+    font-size: 13.5px;
+    color: #5A4A3A;
+    padding: 4px 0 4px 22px;
+    position: relative;
+    line-height: 1.65;
+  }
+  .card-points li::before {
+    content: '';
+    position: absolute;
+    left: 2px; top: 11px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #FFD8BC;
+  }
+  .card:nth-child(4) .card-points li::before { background: #F2D98D; }
+  .card:nth-child(5) .card-points li::before { background: #A8E0D5; }
+  .card:nth-child(6) .card-points li::before { background: #8BB5C0; }
+
+  .card-meaning {
+    font-size: 12.5px;
+    color: #B08968;
+    border-top: 1px dashed #F0DDD0;
+    padding-top: 10px;
+    font-style: italic;
+  }
+
+  /* ===== 底部提示 ===== */
+  .tips-section {
+    margin: 10px 14px 24px;
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 20px 20px 22px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border-top: 4px solid #2A9D8F;
+  }
+  .tips-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #2A9D8F;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  .tips-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .tip-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+    color: #5A4A3A;
+    line-height: 1.55;
+  }
+  .tip-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ===== 底部署名 ===== */
+  .footer {
+    text-align: center;
+    padding: 8px 14px 32px;
+    font-size: 12px;
+    color: #C4A882;
+    line-height: 1.7;
+  }
+  .footer .heart { color: #E76F51; }
+
+  /* ===== 响应式 ===== */
+  @media (min-width: 420px) {
+    body { max-width: 420px; margin: 0 auto; }
+    .hero { padding: 40px 28px 36px; }
+    .hero h1 { font-size: 28px; }
+    .cards { padding: 24px 18px 10px; }
+    .card { padding: 24px 22px 22px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== 顶部横幅 ===== -->
+<div class="hero">
+  <span class="hero-icon">🏘️</span>
+  <h1>社区探索家</h1>
+  <div class="subtitle">6周亲子行动营 · 活动目录</div>
+  <div class="intro">
+    我们将用 6 周时间，带着好奇心一起走进社区、发现问题、动手改变。<br>
+    每一次活动都是一次冒险，让我们成为真正的<strong>社区探索家</strong>！
+  </div>
+</div>
+
+<!-- ===== 6张活动卡片 ===== -->
+<div class="cards">
+
+  <!-- 第1周 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="week-badge">
+        <span class="week-num">1</span>
+        <span class="week-label">WEEK</span>
+      </div>
+      <div class="card-title">出发！走进我们的社区</div>
+      <div class="card-emoji">🗺️</div>
+    </div>
+    <div class="card-goal">
+      <strong>目标：</strong>初次认识社区，用「人·文·地·产·景」五维观察法体验式认识我们生活的地方
+    </div>
+    <ul class="card-points">
+      <li>绘本《街道是大家的》趣味引入</li>
+      <li>学习五维观察法，分组社区漫步探索</li>
+      <li>分享发现，建立团队默契</li>
+    </ul>
+    <div class="card-meaning">✨ 激发好奇心，用全新的眼光看待每天经过的地方</div>
+  </div>
+
+  <!-- 第2周 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="week-badge">
+        <span class="week-num">2</span>
+        <span class="week-label">WEEK</span>
+      </div>
+      <div class="card-title">小小侦察兵</div>
+      <div class="card-emoji">🔍</div>
+    </div>
+    <div class="card-goal">
+      <strong>目标：</strong>学习观察和记录方法，发现社区中值得探究的问题
+    </div>
+    <ul class="card-points">
+      <li>解锁望远镜观察法、宝藏地图法、表情图法</li>
+      <li>分组实地侦察 + 侦察汇报</li>
+      <li>共同建立「问题墙」</li>
+    </ul>
+    <div class="card-meaning">✨ 培养问题意识，从"看到"到"发现问题"</div>
+  </div>
+
+  <!-- 第3周 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="week-badge">
+        <span class="week-num">3</span>
+        <span class="week-label">WEEK</span>
+      </div>
+      <div class="card-title">社区里的人和故事</div>
+      <div class="card-emoji">💬</div>
+    </div>
+    <div class="card-goal">
+      <strong>目标：</strong>学习友善访谈法，了解社区中每个人的故事
+    </div>
+    <ul class="card-points">
+      <li>学习采访技巧，勇敢开口问</li>
+      <li>实地采访社区人物</li>
+      <li>整理人物故事，分享"我采访的人"</li>
+    </ul>
+    <div class="card-meaning">✨ 学会与人交流，理解每个人对社区的贡献</div>
+  </div>
+
+  <!-- 第4周 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="week-badge">
+        <span class="week-num">4</span>
+        <span class="week-label">WEEK</span>
+      </div>
+      <div class="card-title">画一张社区地图</div>
+      <div class="card-emoji">🗺️</div>
+    </div>
+    <div class="card-goal">
+      <strong>目标：</strong>整合前期发现，绘制社区地图，投票选出行动方向
+    </div>
+    <ul class="card-points">
+      <li>回顾所有发现，形成全局视角</li>
+      <li>分组绘制创意社区地图</li>
+      <li>民主投票选出"最想改变的一件事"</li>
+    </ul>
+    <div class="card-meaning">✨ 从观察到全局，学习民主决策和集体讨论</div>
+  </div>
+
+  <!-- 第5周 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="week-badge">
+        <span class="week-num">5</span>
+        <span class="week-label">WEEK</span>
+      </div>
+      <div class="card-title">我们的改变计划</div>
+      <div class="card-emoji">💡</div>
+    </div>
+    <div class="card-goal">
+      <strong>目标：</strong>围绕选定议题，集体制定切实可行的行动方案
+    </div>
+    <ul class="card-points">
+      <li>头脑风暴：我们能做什么？</li>
+      <li>制定行动计划，合理分工</li>
+      <li>学习项目规划和团队协作</li>
+    </ul>
+    <div class="card-meaning">✨ 从发现问题到解决问题，迈出行动的第一步</div>
+  </div>
+
+  <!-- 第6周 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="week-badge">
+        <span class="week-num">6</span>
+        <span class="week-label">WEEK</span>
+      </div>
+      <div class="card-title">社区展览 &amp; 庆祝</div>
+      <div class="card-emoji">🎉</div>
+    </div>
+    <div class="card-goal">
+      <strong>目标：</strong>展示成果，庆祝成长，为整个探索旅程画上圆满句号
+    </div>
+    <ul class="card-points">
+      <li>布展 + 小小导览员讲解</li>
+      <li>前后对比照片展 + 体验圈大回顾</li>
+      <li>给社区写信 + 颁发"社区探索家"证书</li>
+    </ul>
+    <div class="card-meaning">✨ 用仪式感画上句号，看见自己的成长和改变</div>
+  </div>
+
+</div>
+
+<!-- ===== 温馨提示 ===== -->
+<div class="tips-section">
+  <div class="tips-title">📌 温馨提示</div>
+  <div class="tips-grid">
+    <div class="tip-item">
+      <span class="tip-icon">⏰</span>
+      <span>准时到达，不掉队哦</span>
+    </div>
+    <div class="tip-item">
+      <span class="tip-icon">👟</span>
+      <span>穿舒适的鞋子和衣服</span>
+    </div>
+    <div class="tip-item">
+      <span class="tip-icon">💧</span>
+      <span>带好水壶，及时补水</span>
+    </div>
+    <div class="tip-item">
+      <span class="tip-icon">🧠</span>
+      <span>带上好奇心和好心情</span>
+    </div>
+    <div class="tip-item">
+      <span class="tip-icon">☀️</span>
+      <span>注意防晒，户外活动多</span>
+    </div>
+    <div class="tip-item">
+      <span class="tip-icon">👫</span>
+      <span>鼓励孩子多尝试、多交流</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 底部署名 ===== -->
+<div class="footer">
+  社区探索家 · 6周亲子行动营<br>
+  <span class="heart">用脚步丈量社区，用行动创造改变</span>
+</div>
+
+</body>
+</html>

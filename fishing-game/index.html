@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>钓鱼大亨 - 疯狂点击钓鱼游戏</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #1a1a2e; overflow: hidden; font-family: 'Microsoft YaHei', sans-serif; }
+canvas { display: block; }
+#ui { position: absolute; top: 0; left: 0; width: 100%; pointer-events: none; }
+#topbar { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: rgba(0,0,0,0.5); color: #fff; font-size: 18px; }
+#topbar span { margin: 0 15px; }
+.gold { color: #FFD700; font-weight: bold; }
+.level { color: #00FFAA; }
+#upgrade-panel { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 15px; pointer-events: all; }
+.upgrade-btn {
+  background: linear-gradient(135deg, #2d5016, #4a7c23);
+  border: 2px solid #6aaa35;
+  color: #fff; padding: 12px 20px; border-radius: 10px; cursor: pointer;
+  font-size: 14px; text-align: center; transition: all 0.2s;
+  min-width: 120px; pointer-events: all;
+}
+.upgrade-btn:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(106,170,53,0.5); }
+.upgrade-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.upgrade-btn .cost { color: #FFD700; font-size: 12px; }
+.upgrade-btn .lvl { color: #00FFAA; font-size: 11px; }
+#sea-selector { position: absolute; top: 60px; right: 20px; pointer-events: all; }
+.sea-btn {
+  display: block; margin: 5px 0; padding: 8px 16px; border-radius: 8px;
+  border: 2px solid #555; background: rgba(0,0,0,0.6); color: #aaa;
+  cursor: pointer; font-size: 13px; transition: all 0.2s;
+}
+.sea-btn.active { border-color: #00BFFF; color: #00BFFF; background: rgba(0,191,255,0.15); }
+.sea-btn.locked { opacity: 0.4; cursor: not-allowed; }
+#catch-msg {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 48px; font-weight: bold; color: #FFD700; text-shadow: 0 0 20px rgba(255,215,0,0.8);
+  opacity: 0; transition: opacity 0.3s; pointer-events: none;
+}
+#boss-hp {
+  position: absolute; top: 50px; left: 50%; transform: translateX(-50%);
+  width: 300px; height: 20px; background: rgba(0,0,0,0.7); border-radius: 10px;
+  border: 2px solid #ff4444; display: none; pointer-events: none;
+}
+#boss-hp-fill { height: 100%; background: linear-gradient(90deg, #ff0000, #ff6600); border-radius: 8px; transition: width 0.1s; }
+#boss-name { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); color: #ff6600; font-size: 16px; font-weight: bold; display: none; pointer-events: none; text-shadow: 0 0 10px rgba(255,102,0,0.8); }
+#achievement {
+  position: absolute; top: 80px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, #FFD700, #FFA500); color: #000;
+  padding: 12px 30px; border-radius: 25px; font-size: 18px; font-weight: bold;
+  opacity: 0; transition: all 0.5s; pointer-events: none; white-space: nowrap;
+}
+#start-screen {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(180deg, #0a1628 0%, #0d2847 40%, #1a4a6e 70%, #2d6b8a 100%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 100;
+}
+#start-screen h1 { font-size: 64px; color: #FFD700; text-shadow: 0 0 30px rgba(255,215,0,0.6); margin-bottom: 20px; }
+#start-screen p { color: #88ccee; font-size: 18px; margin-bottom: 40px; }
+#start-btn {
+  padding: 15px 60px; font-size: 24px; background: linear-gradient(135deg, #FF6B35, #FF8C42);
+  border: none; border-radius: 30px; color: #fff; cursor: pointer;
+  transition: all 0.3s; font-weight: bold;
+}
+#start-btn:hover { transform: scale(1.1); box-shadow: 0 0 30px rgba(255,107,53,0.6); }
+</style>
+</head>
+<body>
+
+<div id="start-screen">
+  <h1>钓鱼大亨</h1>
+  <p>鱼来了就疯狂点击！升级装备，成为最强钓鱼王！</p>
+  <button id="start-btn">开始钓鱼</button>
+</div>
+
+<canvas id="game"></canvas>
+
+<div id="ui">
+  <div id="topbar">
+    <span>金币: <span class="gold" id="gold">0</span></span>
+    <span class="level" id="sea-name">浅海</span>
+    <span>已钓: <span id="count">0</span> 条</span>
+  </div>
+</div>
+
+<div id="sea-selector">
+  <button class="sea-btn active" data-sea="0">浅海</button>
+  <button class="sea-btn locked" data-sea="1">深海 🔒</button>
+  <button class="sea-btn locked" data-sea="2">远洋 🔒</button>
+  <button class="sea-btn locked" data-sea="3">未知海域 🔒</button>
+</div>
+
+<div id="upgrade-panel">
+  <div class="upgrade-btn" id="btn-rod" onclick="upgrade('rod')">
+    <div>鱼竿</div>
+    <div class="lvl" id="rod-lv">Lv.1</div>
+    <div class="cost" id="rod-cost">50 金</div>
+  </div>
+  <div class="upgrade-btn" id="btn-boat" onclick="upgrade('boat')">
+    <div>船</div>
+    <div class="lvl" id="boat-lv">Lv.1</div>
+    <div class="cost" id="boat-cost">100 金</div>
+  </div>
+  <div class="upgrade-btn" id="btn-bait" onclick="upgrade('bait')">
+    <div>鱼饵</div>
+    <div class="lvl" id="bait-lv">Lv.1</div>
+    <div class="cost" id="bait-cost">80 金</div>
+  </div>
+</div>
+
+<div id="catch-msg"></div>
+<div id="boss-name"></div>
+<div id="boss-hp"><div id="boss-hp-fill" style="width:100%"></div></div>
+<div id="achievement"></div>
+
+<script>
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+
+let W, H;
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// Game State
+const state = {
+  gold: 0,
+  totalCaught: 0,
+  rod: { level: 1, power: 1 },
+  boat: { level: 1, unlock: 0 },
+  bait: { level: 1, rareBonus: 0 },
+  currentSea: 0,
+  unlockedSeas: [true, false, false, false],
+  achievements: [],
+  fishing: false,
+  fishOnLine: null,
+  clickCount: 0,
+  bossMode: false,
+  bossHp: 0,
+  bossMaxHp: 0,
+};
+
+const COSTS = { rod: [50, 150, 400, 1000, 3000], boat: [100, 300, 800, 2500, 6000], bait: [80, 200, 500, 1500, 4000] };
+const SEA_NAMES = ['浅海', '深海', '远洋', '未知海域'];
+const SEA_COLORS = ['#1a4a6e', '#0a2847', '#051428', '#020a14'];
+const SEA_UNLOCK = [0, 500, 2000, 8000];
+
+// Fish types per sea
+const FISH_DATA = [
+  // 浅海
+  [
+    { name: '小鲫鱼', color: '#8BC34A', size: 15, gold: 5, clicks: 8, weight: 50 },
+    { name: '沙丁鱼', color: '#90A4AE', size: 12, gold: 3, clicks: 5, weight: 60 },
+    { name: '河豚', color: '#FFEB3B', size: 18, gold: 8, clicks: 12, weight: 30 },
+    { name: '蓝光鱼', color: '#00BFFF', size: 20, gold: 15, clicks: 15, weight: 8, rare: true },
+    { name: '金鲤', color: '#FFD700', size: 25, gold: 30, clicks: 25, weight: 3, legendary: true },
+  ],
+  // 深海
+  [
+    { name: '灯笼鱼', color: '#FF5722', size: 22, gold: 15, clicks: 15, weight: 45 },
+    { name: '章鱼', color: '#9C27B0', size: 28, gold: 20, clicks: 20, weight: 35 },
+    { name: '剑鱼', color: '#607D8B', size: 35, gold: 30, clicks: 25, weight: 20 },
+    { name: '幽灵水母', color: '#E0F7FA', size: 30, gold: 50, clicks: 30, weight: 8, rare: true },
+    { name: '深海龙鱼', color: '#FFD700', size: 40, gold: 80, clicks: 40, weight: 3, legendary: true },
+  ],
+  // 远洋
+  [
+    { name: '金枪鱼', color: '#2196F3', size: 35, gold: 40, clicks: 30, weight: 40 },
+    { name: '旗鱼', color: '#F44336', size: 45, gold: 55, clicks: 35, weight: 25 },
+    { name: '巨型乌贼', color: '#7B1FA2', size: 50, gold: 70, clicks: 40, weight: 15 },
+    { name: '星光鲸', color: '#00BCD4', size: 60, gold: 120, clicks: 50, weight: 8, rare: true },
+    { name: '远古海龙', color: '#FFD700', size: 70, gold: 200, clicks: 60, weight: 3, legendary: true },
+  ],
+  // 未知海域
+  [
+    { name: '虚空鳐', color: '#1A237E', size: 55, gold: 100, clicks: 45, weight: 35 },
+    { name: '时光鱼', color: '#E91E63', size: 45, gold: 150, clicks: 55, weight: 20 },
+    { name: '星尘鲸', color: '#CE93D8', size: 80, gold: 250, clicks: 70, weight: 10 },
+    { name: '创世之鱼', color: '#FFD700', size: 90, gold: 500, clicks: 100, weight: 3, legendary: true },
+  ],
+];
+
+// Boss data
+const BOSSES = [
+  { name: '巨型鲨鱼', color: '#546E7A', size: 100, hp: 150, gold: 200 },
+  { name: '深海巨蟒', color: '#2E7D32', size: 120, hp: 300, gold: 500 },
+  { name: '远古利维坦', color: '#B71C1C', size: 150, hp: 500, gold: 1000 },
+  { name: '虚空之主', color: '#4A148C', size: 180, hp: 800, gold: 2000 },
+];
+
+// Sea objects
+let fishes = [];
+let bubbles = [];
+let waves = [];
+let particles = [];
+let hookY = 0;
+let hookTargetY = 0;
+let hookX = 0;
+
+// Wave generation
+for (let i = 0; i < 5; i++) {
+  waves.push({ x: Math.random() * 2000, amp: 3 + Math.random() * 5, freq: 0.01 + Math.random() * 0.02, speed: 0.5 + Math.random() * 0.5 });
+}
+
+function spawnFish() {
+  const sea = FISH_DATA[state.currentSea];
+  // Weighted random
+  let totalW = 0;
+  let weights = sea.map(f => {
+    let w = f.weight;
+    if (f.rare) w += state.bait.level * 2;
+    if (f.legendary) w += state.bait.level;
+    totalW += w;
+    return w;
+  });
+  let r = Math.random() * totalW;
+  let fishType = sea[0];
+  for (let i = 0; i < sea.length; i++) {
+    r -= weights[i];
+    if (r <= 0) { fishType = sea[i]; break; }
+  }
+
+  const dir = Math.random() < 0.5 ? 1 : -1;
+  const waterTop = H * 0.35;
+  const waterBottom = H * 0.85;
+  const yPos = waterTop + Math.random() * (waterBottom - waterTop);
+
+  fishes.push({
+    ...fishType,
+    x: dir === 1 ? -50 : W + 50,
+    y: yPos,
+    dir: dir,
+    speed: 1 + Math.random() * 2,
+    wobble: Math.random() * Math.PI * 2,
+    hooked: false,
+    alive: true,
+  });
+}
+
+function spawnBoss() {
+  if (state.bossMode) return;
+  // 1% chance per spawn
+  if (Math.random() > 0.01) return;
+
+  const boss = BOSSES[state.currentSea];
+  state.bossMode = true;
+  state.fishOnLine = boss;
+  state.bossHp = boss.hp;
+  state.bossMaxHp = boss.hp;
+  state.fishing = true;
+  state.clickCount = 0;
+  hookTargetY = H * 0.6;
+
+  document.getElementById('boss-hp').style.display = 'block';
+  document.getElementById('boss-name').style.display = 'block';
+  document.getElementById('boss-name').textContent = boss.name;
+  document.getElementById('boss-hp-fill').style.width = '100%';
+
+  fishes = [];
+}
+
+function spawnBubble(x, y) {
+  bubbles.push({ x, y, r: 1 + Math.random() * 3, speed: 0.5 + Math.random(), alpha: 0.5 + Math.random() * 0.5 });
+}
+
+function addParticles(x, y, color, count) {
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x, y,
+      vx: (Math.random() - 0.5) * 8,
+      vy: (Math.random() - 0.5) * 8 - 2,
+      life: 30 + Math.random() * 20,
+      color,
+      r: 2 + Math.random() * 4,
+    });
+  }
+}
+
+function showCatchMsg(text, color) {
+  const el = document.getElementById('catch-msg');
+  el.textContent = text;
+  el.style.color = color || '#FFD700';
+  el.style.opacity = 1;
+  setTimeout(() => { el.style.opacity = 0; }, 1500);
+}
+
+function showAchievement(text) {
+  if (state.achievements.includes(text)) return;
+  state.achievements.push(text);
+  const el = document.getElementById('achievement');
+  el.textContent = '成就解锁: ' + text;
+  el.style.opacity = 1;
+  setTimeout(() => { el.style.opacity = 0; }, 3000);
+}
+
+function drawWater(time) {
+  const waterTop = H * 0.35;
+
+  // Water gradient
+  const grad = ctx.createLinearGradient(0, waterTop, 0, H);
+  grad.addColorStop(0, SEA_COLORS[state.currentSea]);
+  grad.addColorStop(1, '#000');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, waterTop, W, H - waterTop);
+
+  // Waves
+  ctx.beginPath();
+  ctx.moveTo(0, waterTop);
+  for (let x = 0; x <= W; x += 5) {
+    let y = waterTop;
+    for (const w of waves) {
+      y += Math.sin(x * w.freq + time * w.speed * 0.01) * w.amp;
+    }
+    ctx.lineTo(x, y);
+  }
+  ctx.lineTo(W, waterTop + 30);
+  ctx.lineTo(0, waterTop + 30);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(100,200,255,0.3)';
+  ctx.fill();
+}
+
+function drawSky(time) {
+  const waterTop = H * 0.35;
+  const grad = ctx.createLinearGradient(0, 0, 0, waterTop);
+  if (state.currentSea === 0) {
+    grad.addColorStop(0, '#87CEEB');
+    grad.addColorStop(1, '#B0E0E6');
+  } else if (state.currentSea === 1) {
+    grad.addColorStop(0, '#1a3a5c');
+    grad.addColorStop(1, '#0d2847');
+  } else if (state.currentSea === 2) {
+    grad.addColorStop(0, '#0a1628');
+    grad.addColorStop(1, '#051428');
+  } else {
+    grad.addColorStop(0, '#050a14');
+    grad.addColorStop(1, '#020508');
+  }
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, waterTop);
+}
+
+function drawBoat(time) {
+  const boatX = W * 0.5;
+  const boatY = H * 0.33 + Math.sin(time * 0.003) * 3;
+  const boatW = 80 + state.boat.level * 10;
+  const boatH = 20 + state.boat.level * 2;
+
+  // Boat body
+  ctx.fillStyle = '#8B4513';
+  ctx.beginPath();
+  ctx.moveTo(boatX - boatW / 2, boatY);
+  ctx.lineTo(boatX + boatW / 2, boatY);
+  ctx.lineTo(boatX + boatW / 2 - 10, boatY + boatH);
+  ctx.lineTo(boatX - boatW / 2 + 10, boatY + boatH);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = '#5D3A1A';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Mast
+  ctx.fillStyle = '#5D3A1A';
+  ctx.fillRect(boatX - 2, boatY - 40 - state.boat.level * 5, 4, 40 + state.boat.level * 5);
+
+  // Flag
+  ctx.fillStyle = '#FF4444';
+  ctx.beginPath();
+  ctx.moveTo(boatX + 2, boatY - 40 - state.boat.level * 5);
+  ctx.lineTo(boatX + 20, boatY - 35 - state.boat.level * 5);
+  ctx.lineTo(boatX + 2, boatY - 30 - state.boat.level * 5);
+  ctx.closePath();
+  ctx.fill();
+
+  hookX = boatX;
+
+  return { x: boatX, y: boatY };
+}
+
+function drawHook(time) {
+  if (!state.fishing) {
+    hookY += (H * 0.35 + 30 - hookY) * 0.05;
+  } else {
+    hookY += (hookTargetY - hookY) * 0.1;
+  }
+
+  // Line
+  const boatY = H * 0.33 + Math.sin(time * 0.003) * 3;
+  ctx.strokeStyle = '#ccc';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(hookX, boatY + 15);
+  ctx.lineTo(hookX, hookY);
+  ctx.stroke();
+
+  // Hook
+  const hookSize = 8 + state.rod.level * 2;
+  ctx.strokeStyle = '#silver';
+  ctx.lineWidth = 2 + state.rod.level * 0.5;
+  ctx.beginPath();
+  ctx.arc(hookX, hookY, hookSize, 0, Math.PI, false);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(hookX + hookSize, hookY);
+  ctx.lineTo(hookX + hookSize + 4, hookY - 6);
+  ctx.stroke();
+
+  // Glow when fish on line
+  if (state.fishing) {
+    ctx.shadowColor = state.fishOnLine.legendary ? '#FFD700' : state.fishOnLine.rare ? '#00BFFF' : '#00ff00';
+    ctx.shadowBlur = 15;
+    ctx.beginPath();
+    ctx.arc(hookX, hookY, hookSize + 5, 0, Math.PI * 2);
+    ctx.strokeStyle = state.fishOnLine.legendary ? '#FFD70088' : state.fishOnLine.rare ? '#00BFFF88' : '#00ff0088';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+  }
+}
+
+function drawFish(fish, time) {
+  if (!fish.alive) return;
+
+  const wobbleY = Math.sin(time * 0.005 + fish.wobble) * 5;
+
+  ctx.save();
+  ctx.translate(fish.x, fish.y + wobbleY);
+
+  // Glow for special fish
+  if (fish.rare || fish.legendary) {
+    ctx.shadowColor = fish.legendary ? '#FFD700' : '#00BFFF';
+    ctx.shadowBlur = fish.legendary ? 25 : 15;
+  }
+
+  // Body
+  ctx.fillStyle = fish.color;
+  ctx.beginPath();
+  ctx.ellipse(0, 0, fish.size, fish.size * 0.5, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Tail
+  ctx.beginPath();
+  ctx.moveTo(-fish.size * 0.8, 0);
+  ctx.lineTo(-fish.size * 1.3, -fish.size * 0.4);
+  ctx.lineTo(-fish.size * 1.3, fish.size * 0.4);
+  ctx.closePath();
+  ctx.fill();
+
+  // Eye
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.arc(fish.size * 0.4, -fish.size * 0.1, fish.size * 0.15, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#000';
+  ctx.beginPath();
+  ctx.arc(fish.size * 0.45, -fish.size * 0.1, fish.size * 0.08, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Rarity indicator
+  if (fish.legendary) {
+    ctx.fillStyle = '#FFD700';
+    ctx.font = `${fish.size * 0.4}px sans-serif`;
+    ctx.fillText('★', -fish.size * 0.2, -fish.size * 0.6);
+  } else if (fish.rare) {
+    ctx.fillStyle = '#00BFFF';
+    ctx.font = `${fish.size * 0.3}px sans-serif`;
+    ctx.fillText('◆', -fish.size * 0.1, -fish.size * 0.55);
+  }
+
+  ctx.shadowBlur = 0;
+  ctx.restore();
+}
+
+function drawBoss(boss, time) {
+  const x = W * 0.5;
+  const y = hookY;
+
+  ctx.save();
+  ctx.translate(x, y);
+
+  // Boss glow
+  ctx.shadowColor = boss.color;
+  ctx.shadowBlur = 30;
+
+  // Body
+  ctx.fillStyle = boss.color;
+  ctx.beginPath();
+  ctx.ellipse(0, 0, boss.size, boss.size * 0.4, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Teeth
+  ctx.fillStyle = '#fff';
+  for (let i = -3; i <= 3; i++) {
+    ctx.beginPath();
+    ctx.moveTo(boss.size * 0.5 + i * 8, -5);
+    ctx.lineTo(boss.size * 0.5 + i * 8 + 4, 5);
+    ctx.lineTo(boss.size * 0.5 + i * 8 - 4, 5);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // Eye
+  ctx.fillStyle = '#ff0000';
+  ctx.beginPath();
+  ctx.arc(boss.size * 0.3, -boss.size * 0.15, boss.size * 0.12, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.arc(boss.size * 0.32, -boss.size * 0.15, boss.size * 0.05, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.shadowBlur = 0;
+  ctx.restore();
+
+  // Boss HP bar
+  const hpPct = state.bossHp / state.bossMaxHp;
+  document.getElementById('boss-hp-fill').style.width = (hpPct * 100) + '%';
+}
+
+function drawParticles() {
+  for (const p of particles) {
+    ctx.globalAlpha = p.life / 50;
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawBubbles() {
+  for (const b of bubbles) {
+    ctx.globalAlpha = b.alpha;
+    ctx.strokeStyle = 'rgba(200,230,255,0.6)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawClickPrompt(time) {
+  if (!state.fishing || state.bossMode) return;
+
+  const pulse = Math.sin(time * 0.01) * 0.3 + 0.7;
+  ctx.save();
+  ctx.globalAlpha = pulse;
+  ctx.fillStyle = '#FF4444';
+  ctx.font = 'bold 24px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('点击拉上来!', hookX, hookY - 30);
+  ctx.restore();
+}
+
+function updateUI() {
+  document.getElementById('gold').textContent = state.gold;
+  document.getElementById('count').textContent = state.totalCaught;
+  document.getElementById('sea-name').textContent = SEA_NAMES[state.currentSea];
+
+  document.getElementById('rod-lv').textContent = 'Lv.' + state.rod.level;
+  document.getElementById('boat-lv').textContent = 'Lv.' + state.boat.level;
+  document.getElementById('bait-lv').textContent = 'Lv.' + state.bait.level;
+
+  const rodCost = COSTS.rod[state.rod.level - 1];
+  const boatCost = COSTS.boat[state.boat.level - 1];
+  const baitCost = COSTS.bait[state.bait.level - 1];
+
+  document.getElementById('rod-cost').textContent = rodCost ? rodCost + ' 金' : '已满级';
+  document.getElementById('boat-cost').textContent = boatCost ? boatCost + ' 金' : '已满级';
+  document.getElementById('bait-cost').textContent = baitCost ? baitCost + ' 金' : '已满级';
+
+  document.getElementById('btn-rod').disabled = !rodCost || state.gold < rodCost;
+  document.getElementById('btn-boat').disabled = !boatCost || state.gold < boatCost;
+  document.getElementById('btn-bait').disabled = !baitCost || state.gold < baitCost;
+
+  // Sea buttons
+  document.querySelectorAll('.sea-btn').forEach(btn => {
+    const seaIdx = parseInt(btn.dataset.sea);
+    if (state.unlockedSeas[seaIdx]) {
+      btn.classList.remove('locked');
+      btn.classList.toggle('active', seaIdx === state.currentSea);
+    }
+  });
+}
+
+// Main game loop
+let lastTime = 0;
+let fishTimer = 0;
+
+function gameLoop(time) {
+  const dt = time - lastTime;
+  lastTime = time;
+
+  ctx.clearRect(0, 0, W, H);
+
+  drawSky(time);
+  drawWater(time);
+
+  const boat = drawBoat(time);
+  drawHook(time);
+
+  // Spawn fish
+  fishTimer += dt;
+  if (fishTimer > 2000 && !state.fishing && !state.bossMode) {
+    fishTimer = 0;
+    if (fishes.length < 5) spawnFish();
+    spawnBoss();
+  }
+
+  // Update & draw fish
+  for (const fish of fishes) {
+    if (fish.alive) {
+      fish.x += fish.speed * fish.dir;
+      if ((fish.dir === 1 && fish.x > W + 100) || (fish.dir === -1 && fish.x < -100)) {
+        fish.alive = false;
+      }
+    }
+  }
+  fishes = fishes.filter(f => f.alive);
+
+  for (const fish of fishes) {
+    drawFish(fish, time);
+  }
+
+  if (state.bossMode && state.fishOnLine) {
+    drawBoss(state.fishOnLine, time);
+  }
+
+  drawBubbles();
+  drawParticles();
+  drawClickPrompt(time);
+
+  // Update particles
+  for (const p of particles) {
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.1;
+    p.life--;
+  }
+  particles = particles.filter(p => p.life > 0);
+
+  // Update bubbles
+  for (const b of bubbles) {
+    b.y -= b.speed;
+    b.alpha -= 0.005;
+  }
+  bubbles = bubbles.filter(b => b.alpha > 0 && b.y > 0);
+
+  // Random bubbles
+  if (Math.random() < 0.05) {
+    spawnBubble(Math.random() * W, H * 0.4 + Math.random() * H * 0.5);
+  }
+
+  updateUI();
+  requestAnimationFrame(gameLoop);
+}
+
+// Click handler
+canvas.addEventListener('click', (e) => {
+  if (!state.fishing) {
+    // Check if clicking near a fish
+    const waterTop = H * 0.35;
+    if (e.clientY < waterTop) return;
+
+    for (const fish of fishes) {
+      if (!fish.alive || fish.hooked) continue;
+      const dx = e.clientX - fish.x;
+      const dy = e.clientY - fish.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < fish.size + 30) {
+        // Hook the fish!
+        fish.hooked = true;
+        fish.alive = false;
+        state.fishing = true;
+        state.fishOnLine = fish;
+        state.clickCount = 0;
+        hookTargetY = fish.y;
+        addParticles(fish.x, fish.y, fish.color, 5);
+        break;
+      }
+    }
+  } else {
+    // Clicking to reel in
+    state.clickCount++;
+
+    if (state.bossMode && state.fishOnLine) {
+      const dmg = state.rod.level * 2 + 1;
+      state.bossHp -= dmg;
+      addParticles(hookX, hookY, '#ff4444', 3);
+
+      if (state.bossHp <= 0) {
+        // Boss defeated!
+        const boss = state.fishOnLine;
+        state.gold += boss.gold;
+        state.totalCaught++;
+        showCatchMsg(boss.name + ' 击败! +' + boss.gold + '金', '#FF4444');
+        showAchievement('Boss猎人');
+        state.bossMode = false;
+        state.fishing = false;
+        state.fishOnLine = null;
+        document.getElementById('boss-hp').style.display = 'none';
+        document.getElementById('boss-name').style.display = 'none';
+        addParticles(hookX, hookY, '#FFD700', 30);
+
+        if (state.currentSea === 3 && state.rod.level >= 5 && state.boat.level >= 5 && state.bait.level >= 5) {
+          showAchievement('最强钓鱼王');
+        }
+      }
+    } else if (state.fishOnLine) {
+      const fish = state.fishOnLine;
+      const progress = state.clickCount / fish.clicks;
+      addParticles(hookX, hookY, '#00ff88', 2);
+
+      if (progress >= 1) {
+        // Caught!
+        const bonus = fish.rare ? 3 : fish.legendary ? 10 : 1;
+        const gold = fish.gold * bonus;
+        state.gold += gold;
+        state.totalCaught++;
+        state.fishing = false;
+        state.fishOnLine = null;
+
+        let msg = fish.name + ' +' + gold + '金';
+        let color = '#FFD700';
+        if (fish.legendary) {
+          msg = '传说! ' + fish.name + ' +' + gold + '金';
+          color = '#FFD700';
+          showAchievement('传说猎手');
+          addParticles(hookX, hookY, '#FFD700', 20);
+        } else if (fish.rare) {
+          msg = '稀有! ' + fish.name + ' +' + gold + '金';
+          color = '#00BFFF';
+          addParticles(hookX, hookY, '#00BFFF', 15);
+        } else {
+          addParticles(hookX, hookY, fish.color, 8);
+        }
+        showCatchMsg(msg, color);
+      }
+    }
+  }
+});
+
+// Upgrade handler
+function upgrade(type) {
+  const costs = COSTS[type];
+  const level = state[type].level;
+  if (level > 5) return;
+  const cost = costs[level - 1];
+  if (!cost || state.gold < cost) return;
+
+  state.gold -= cost;
+  state[type].level++;
+
+  if (type === 'rod') state.rod.power = state[type].level;
+  if (type === 'bait') state.bait.rareBonus = state[type].level;
+
+  // Unlock seas
+  if (type === 'boat') {
+    for (let i = 1; i < 4; i++) {
+      if (!state.unlockedSeas[i] && state.boat.level >= i + 1) {
+        state.unlockedSeas[i] = true;
+        showCatchMsg(SEA_NAMES[i] + ' 已解锁!', '#00FFAA');
+      }
+    }
+  }
+
+  addParticles(W / 2, H - 100, '#FFD700', 15);
+  updateUI();
+}
+
+// Sea selector
+document.querySelectorAll('.sea-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const seaIdx = parseInt(btn.dataset.sea);
+    if (state.unlockedSeas[seaIdx]) {
+      state.currentSea = seaIdx;
+      fishes = [];
+      updateUI();
+    }
+  });
+});
+
+// Start game
+document.getElementById('start-btn').addEventListener('click', () => {
+  document.getElementById('start-screen').style.display = 'none';
+  requestAnimationFrame(gameLoop);
+});
+</script>
+
+</body>
+</html>

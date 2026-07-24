@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三年级下册语文闯关小游戏</title>
+<style>
+  :root {
+    --bg: #f7f7fb;
+    --card: #ffffff;
+    --primary: #4f46e5;
+    --primary-light: #e0e7ff;
+    --success: #16a34a;
+    --success-light: #dcfce7;
+    --error: #dc2626;
+    --error-light: #fee2e2;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+  }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  .game-wrap {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  .hero {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 {
+    font-size: 28px;
+    margin: 0 0 8px;
+  }
+
+  .hero p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 15px;
+  }
+
+  .stat-bar {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin: 16px 0 24px;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .level-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .level-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    user-select: none;
+  }
+
+  .level-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+
+  .level-card:active {
+    transform: translateY(-1px);
+  }
+
+  .level-card h3 {
+    margin: 0 0 6px;
+    font-size: 18px;
+  }
+
+  .level-card p {
+    margin: 0 0 14px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .level-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 18px;
+    border-radius: 12px;
+    border: none;
+    background: var(--primary);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .btn:hover { opacity: 0.9; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  .question-meta {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  .question-number {
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .question-text {
+    font-size: 18px;
+    line-height: 1.6;
+    margin: 0 0 18px;
+    white-space: pre-line;
+  }
+
+  .options {
+    display: grid;
+    gap: 10px;
+  }
+
+  .option {
+    width: 100%;
+    text-align: left;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: #fafafa;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .option:hover { border-color: var(--primary); background: var(--primary-light); }
+  .option.correct {
+    border-color: var(--success);
+    background: var(--success-light);
+    color: var(--success);
+    cursor: default;
+  }
+  .option.wrong {
+    border-color: var(--error);
+    background: var(--error-light);
+    color: var(--error);
+    cursor: default;
+  }
+
+  .fill-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .fill-input {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 16px;
+  }
+
+  .feedback {
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    font-size: 15px;
+    line-height: 1.6;
+    display: none;
+  }
+
+  .feedback.show { display: block; }
+  .feedback.correct { background: var(--success-light); color: #15803d; }
+  .feedback.wrong { background: var(--error-light); color: #b91c1c; }
+
+  .action-row {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .summary-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    text-align: center;
+  }
+
+  .summary-score {
+    font-size: 56px;
+    font-weight: 900;
+    margin: 0;
+    color: var(--primary);
+  }
+
+  .summary-text {
+    margin: 12px 0 24px;
+    color: var(--muted);
+  }
+
+  .progress {
+    height: 10px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--primary);
+    width: 0%;
+    transition: width 0.25s;
+  }
+</style>
+</head>
+<body>
+  <div class="game-wrap">
+    <div class="hero">
+      <h1>三年级下册语文闯关</h1>
+      <p>明天考试前，用游戏再过一遍核心考点</p>
+    </div>
+
+    <div class="stat-bar">
+      <div class="stat">得分：<span id="score">0</span></div>
+      <div class="stat">连对：<span id="streak">0</span></div>
+      <div class="stat">已答：<span id="answered">0</span> 题</div>
+    </div>
+
+    <div id="home" class="screen active">
+      <div class="level-grid">
+        <div class="level-card" data-level="poem">
+          <h3>第一关 古诗填空</h3>
+          <p>背诵默写是考试必拿分项，看看你记得牢不牢。</p>
+          <span class="level-tag">8题</span>
+        </div>
+        <div class="level-card" data-level="author">
+          <h3>第二关 课文配对</h3>
+          <p>作者、题目、名句、关键内容快速连线。</p>
+          <span class="level-tag">8题</span>
+        </div>
+        <div class="level-card" data-level="moral">
+          <h3>第三关 寓意判断</h3>
+          <p>守株待兔、陶罐和铁罐、鹿角和鹿腿……道理你会说吗？</p>
+          <span class="level-tag">8题</span>
+        </div>
+        <div class="level-card" data-level="word">
+          <h3>第四关 词语闯关</h3>
+          <p>易错词、形近词、课文词语理解，最后再巩固一轮。</p>
+          <span class="level-tag">8题</span>
+        </div>
+      </div>
+
+      <div style="text-align:center">
+        <button class="btn" id="startAllBtn">综合闯关（随机32题）</button>
+      </div>
+    </div>
+
+    <div id="play" class="screen">
+      <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+      <div id="questionArea"></div>
+      <div class="action-row">
+        <button class="btn btn-ghost" id="goHomeBtn">返回首页</button>
+        <button class="btn" id="nextBtn" style="display:none">下一题</button>
+      </div>
+    </div>
+
+    <div id="end" class="screen">
+      <div class="summary-card">
+        <h2 style="margin-top:0">闯关结束</h2>
+        <div class="summary-score" id="finalScore">0</div>
+        <div class="summary-text" id="finalText">继续加油！</div>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <button class="btn" id="goHomeBtn2">返回首页</button>
+          <button class="btn btn-ghost" id="replayBtn">再挑战一次</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const BANK = {
+  poem: [
+    {
+      type: "fill",
+      q: "请默写《绝句》第一句：\n迟日____丽，春风花草香。",
+      a: ["江山"],
+      hint: "注意是"江山"，不要写成"江上"或"江河"。"
+    },
+    {
+      type: "choice",
+      q: ""竹外桃花三两枝，春江水暖鸭先知"出自哪首诗？",
+      options: ["《惠崇春江晚景》","《绝句》","《山行》","《元日》"],
+      a: 0,
+      hint: "这是苏轼题画诗，写的是早春江边景色。"
+    },
+    {
+      type: "fill",
+      q: "请默写：\n停车坐爱枫林晚，____红于二月花。",
+      a: ["霜叶"],
+      hint: "是"霜叶"，不是"枫叶"。"
+    },
+    {
+      type: "choice",
+      q: "《九月九日忆山东兄弟》中，"九月九日"指的是哪个节日？",
+      options: ["重阳节","中秋节","端午节","元宵节"],
+      a: 0,
+      hint: "九月九日是重阳节，习俗有登高、插茱萸。"
+    },
+    {
+      type: "fill",
+      q: "请默写《元日》第一句：\n爆竹声中____除，春风送暖入屠苏。",
+      a: ["一岁"],
+      hint: "是"一岁除"，不是"新年除"。"
+    },
+    {
+      type: "choice",
+      q: ""独怜幽草涧边生，上有黄鹂深树鸣"出自哪首诗？",
+      options: ["《滁州西涧》","《大林寺桃花》","《山行》","《惠崇春江晚景》"],
+      a: 0,
+      hint: "作者是韦应物，写的是滁州西涧景色。"
+    },
+    {
+      type: "fill",
+      q: "请默写：\n人间四月芳菲尽，____始盛开。",
+      a: ["山寺桃花"],
+      hint: "白居易《大林寺桃花》，山上桃花开得晚。"
+    },
+    {
+      type: "choice",
+      q: "下面哪首诗不是杜牧写的？",
+      options: ["《绝句》（迟日江山丽）","《山行》","《清明》","《九月九日忆山东兄弟》"],
+      a: 3,
+      hint: "《九月九日忆山东兄弟》是王维的作品。"
+    }
+  ],
+
+  author: [
+    {
+      type: "choice",
+      q: "《燕子》这篇课文的作者是谁？",
+      options: ["郑振铎","叶圣陶","萧红","冰心"],
+      a: 0,
+      hint: "郑振铎写燕子的外形、飞行和停歇。"
+    },
+    {
+      type: "choice",
+      q: "《荷花》的作者是谁？",
+      options: ["叶圣陶","冰心","汪曾祺","秦文君"],
+      a: 0,
+      hint: "叶圣陶描写荷花非常生动，常考背诵段落。"
+    },
+    {
+      type: "choice",
+      q: "《火烧云》的作者是谁？",
+      options: ["萧红","彼得·西摩","冰心","张继楼"],
+      a: 0,
+      hint: "萧红笔下的火烧云颜色和形状变化很快。"
+    },
+    {
+      type: "choice",
+      q: ""爆竹声中一岁除"出自王安石的哪首诗？",
+      options: ["《元日》","《清明》","《绝句》","《山行》"],
+      a: 0,
+      hint: "《元日》写的是春节景象。"
+    },
+    {
+      type: "choice",
+      q: "《守株待兔》选自哪本书？",
+      options: ["《韩非子》","《伊索寓言》","《克雷洛夫寓言》","《左传》"],
+      a: 0,
+      hint: "这是一则中国古代寓言。"
+    },
+    {
+      type: "choice",
+      q: "《清明上河图》对应课文《一幅名扬中外的画》，它画的是哪个地方？",
+      options: ["汴京/开封","长安/西安","杭州","北京"],
+      a: 0,
+      hint: "画的是北宋都城汴京的热闹景象。"
+    },
+    {
+      type: "choice",
+      q: "《肥皂泡》的作者是谁？",
+      options: ["冰心","萧红","叶圣陶","张继楼"],
+      a: 0,
+      hint: "冰心描写了吹肥皂泡的乐趣和想象。"
+    },
+    {
+      type: "choice",
+      q: "《赵州桥》一课中，赵州桥的设计者是谁？",
+      options: ["李春","蔡伦","杜牧","王维"],
+      a: 0,
+      hint: "李春是设计赵州桥的石匠。"
+    }
+  ],
+
+  moral: [
+    {
+      type: "choice",
+      q: "《守株待兔》告诉我们什么道理？",
+      options: ["不能心存侥幸，不劳而获","要坚持到底","要爱护动物","要学会等待"],
+      a: 0,
+      hint: "那个农夫只等着兔子再次撞树，结果一无所获。"
+    },
+    {
+      type: "choice",
+      q: "《陶罐和铁罐》的道理是什么？",
+      options: ["每个人都有长处和短处","铁比陶罐更厉害","要谦虚不能骄傲","陶罐更容易破碎"],
+      a: 0,
+      hint: "不要拿自己的长处去比别人的短处。"
+    },
+    {
+      type: "choice",
+      q: "《鹿角和鹿腿》的道理是什么？",
+      options: ["事物各有价值，不能只看外表","漂亮的东西一定有用","腿比角重要","鹿不应该跑"],
+      a: 0,
+      hint: "鹿角虽然漂亮，但逃跑时反而是负担；鹿腿不好看，却能救命。"
+    },
+    {
+      type: "choice",
+      q: "《池子与河流》告诉我们什么？",
+      options: ["不能贪图安逸，要努力奋斗","水往低处流","池子比河流快乐","河流太辛苦了"],
+      a: 0,
+      hint: "池子贪图安逸，最后完全干枯；河流不停奔流，反而长久。"
+    },
+    {
+      type: "choice",
+      q: "《我不能失信》中，宋庆龄为什么不去伯伯家？",
+      options: ["她答应了朋友要等她","她生病了","她忘了这件事","她不想去"],
+      a: 0,
+      hint: "宋庆龄为了守信，放弃了去伯伯家看鸽子。"
+    },
+    {
+      type: "choice",
+      q: "《方帽子店》说明了什么道理？",
+      options: ["不能因循守旧，要勇于创新","帽子越贵越好","旧的东西都是坏的","方帽子最适合戴"],
+      a: 0,
+      hint: "一直沿用老办法，不去改变，最后会被淘汰。"
+    },
+    {
+      type: "choice",
+      q: "《慢性子裁缝和急性子顾客》主要写出了什么？",
+      options: ["人物性格的不同和有趣冲突","做衣服很难","裁缝技术不好","顾客不讲道理"],
+      a: 0,
+      hint: "故事的趣味来自两个人性格的强烈对比。"
+    },
+    {
+      type: "choice",
+      q: "读了《漏》这个故事，你觉得最有趣的是什么？",
+      options: [""漏"其实不是妖怪，是一场误会","老虎很聪明","驴子很勇敢","房子会走路"],
+      a: 0,
+      hint: "真正可怕的不是"漏"，而是大家自己吓自己。"
+    }
+  ],
+
+  word: [
+    {
+      type: "choice",
+      q: "下面哪个词语书写正确？",
+      options: ["翩翩起舞","偏偏起舞","扁扁起舞","篇篇起舞"],
+      a: 0,
+      hint: ""翩翩起舞"形容轻快地跳舞，常出现在《荷花》。"
+    },
+    {
+      type: "choice",
+      q: "下面哪个词语书写正确？",
+      options: ["守株待兔","守株待兔","守珠待兔","守株待免"],
+      a: 0,
+      hint: "株是树桩，不要写成"珠"；兔不要写成"免"。"
+    },
+    {
+      type: "choice",
+      q: ""骄傲"和"谦虚"是一对______词。",
+      options: ["反义","近义","同类","拟声"],
+      a: 0,
+      hint: "骄傲和谦虚意思相反，常出现在《陶罐和铁罐》。"
+    },
+    {
+      type: "choice",
+      q: "下面哪个词语的意思最接近"陆续"？",
+      options: ["先先后后、断断续续","一起","立刻","全部"],
+      a: 0,
+      hint: ""陆续"强调不是同一时间，而是一个接一个。"
+    },
+    {
+      type: "choice",
+      q: ""争奇斗艳"常用来形容什么？",
+      options: ["花朵竞相开放","比赛很激烈","动物打架","天气很热"],
+      a: 0,
+      hint: "这个词常出现在《花钟》里，形容花开放得很热闹。"
+    },
+    {
+      type: "choice",
+      q: "下面哪句话用了比喻？",
+      options: ["剪刀似的尾巴","小虾在缸里游来游去","风吹过来了","我很开心"],
+      a: 0,
+      hint: "把燕子尾巴比作剪刀，是比喻句。"
+    },
+    {
+      type: "choice",
+      q: ""他跑得真快"和"他跑得像风一样快"，哪句更有画面感？",
+      options: ["像风一样快","跑得真快","两句一样","都不好"],
+      a: 0,
+      hint: "有比喻或具体描写，通常比普通说法更生动。"
+    },
+    {
+      type: "fill",
+      q: "请写出一个和"骄傲"意思相反的词语：",
+      a: ["谦虚"],
+      hint: "《陶罐和铁罐》里常用这对反义词。"
+    }
+  ]
+};
+
+let state = {
+  level: "all",
+  questions: [],
+  current: 0,
+  score: 0,
+  streak: 0,
+  bestStreak: 0,
+  answered: 0
+};
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startLevel(level) {
+  let qs = [];
+  if (level === "all") {
+    qs = shuffle([...BANK.poem, ...BANK.author, ...BANK.moral, ...BANK.word]).slice(0, 32);
+  } else {
+    qs = shuffle([...BANK[level]]);
+  }
+
+  state = {
+    level,
+    questions: qs,
+    current: 0,
+    score: state.score,
+    streak: state.streak,
+    bestStreak: state.bestStreak,
+    answered: state.answered
+  };
+
+  showScreen("play");
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = state.questions[state.current];
+  const total = state.questions.length;
+  const idx = state.current + 1;
+
+  document.getElementById("progressFill").style.width = ((idx - 1) / total * 100) + "%";
+  document.getElementById("nextBtn").style.display = "none";
+
+  let html = `
+    <div class="question-card">
+      <div class="question-meta">
+        <span class="question-number">第 ${idx} / ${total} 题</span>
+      </div>
+      <div class="question-text">${escHtml(q.q)}</div>
+  `;
+
+  if (q.type === "choice") {
+    html += `<div class="options">`;
+    q.options.forEach((opt, i) => {
+      html += `<button class="option" data-i="${i}">${escHtml(opt)}</button>`;
+    });
+    html += `</div>`;
+  } else {
+    html += `
+      <div class="fill-row">
+        <input class="fill-input" id="fillInput" placeholder="请输入答案">
+        <button class="btn" id="fillSubmitBtn">确认</button>
+      </div>
+    `;
+  }
+
+  html += `
+      <div class="feedback" id="feedback"></div>
+    </div>
+  `;
+
+  document.getElementById("questionArea").innerHTML = html;
+  document.getElementById("questionArea").scrollIntoView({ behavior: "smooth", block: "start" });
+
+  // Bind events after DOM update
+  if (q.type === "choice") {
+    document.querySelectorAll(".option").forEach(btn => {
+      btn.addEventListener("click", function() {
+        const chosen = parseInt(this.getAttribute("data-i"));
+        answerChoice(this, chosen);
+      });
+    });
+  } else {
+    const fillInput = document.getElementById("fillInput");
+    const fillSubmitBtn = document.getElementById("fillSubmitBtn");
+    if (fillInput) {
+      fillInput.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") answerFill();
+      });
+    }
+    if (fillSubmitBtn) {
+      fillSubmitBtn.addEventListener("click", answerFill);
+    }
+  }
+}
+
+function answerChoice(el, chosen) {
+  const q = state.questions[state.current];
+  const btns = el.parentElement.querySelectorAll(".option");
+  btns.forEach(b => b.disabled = true);
+
+  if (chosen === q.a) {
+    el.classList.add("correct");
+    onCorrect(q.hint);
+  } else {
+    el.classList.add("wrong");
+    btns[q.a].classList.add("correct");
+    onWrong(q.hint);
+  }
+}
+
+function answerFill() {
+  const input = document.getElementById("fillInput");
+  if (!input) return;
+  const val = input.value.trim();
+  if (!val) return;
+
+  const q = state.questions[state.current];
+  const correct = q.a.some(ans => val.includes(ans));
+
+  input.disabled = true;
+  const submitBtn = document.getElementById("fillSubmitBtn");
+  if (submitBtn) submitBtn.disabled = true;
+
+  if (correct) {
+    input.style.borderColor = "var(--success)";
+    input.style.background = "var(--success-light)";
+    onCorrect(q.hint + " 你的答案：" + val);
+  } else {
+    input.style.borderColor = "var(--error)";
+    input.style.background = "var(--error-light)";
+    onWrong(q.hint + " 参考答案：" + q.a[0]);
+  }
+}
+
+function onCorrect(hint) {
+  state.score += 10;
+  state.streak += 1;
+  if (state.streak > state.bestStreak) state.bestStreak = state.streak;
+  state.answered += 1;
+  updateStats();
+
+  const fb = document.getElementById("feedback");
+  fb.className = "feedback show correct";
+  fb.innerHTML = "答对了！" + (state.streak >= 3 ? "（连对 " + state.streak + " 题！）" : "") + "<br>" + hint;
+  finishQuestion();
+}
+
+function onWrong(hint) {
+  state.streak = 0;
+  state.answered += 1;
+  updateStats();
+
+  const fb = document.getElementById("feedback");
+  fb.className = "feedback show wrong";
+  fb.innerHTML = "答错了。" + hint;
+  finishQuestion();
+}
+
+function finishQuestion() {
+  document.getElementById("progressFill").style.width = ((state.current + 1) / state.questions.length * 100) + "%";
+  document.getElementById("nextBtn").style.display = "inline-flex";
+  document.getElementById("nextBtn").textContent =
+    state.current + 1 >= state.questions.length ? "查看成绩" : "下一题";
+}
+
+function nextQuestion() {
+  state.current++;
+  if (state.current >= state.questions.length) {
+    showEnd();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showEnd() {
+  document.getElementById("finalScore").textContent = state.score;
+  const total = state.questions.length * 10;
+  const pct = state.score / total;
+
+  let msg = "";
+  if (pct >= 0.9) msg = "太厉害了！明天稳了！";
+  else if (pct >= 0.7) msg = "掌握得不错，再巩固一下薄弱点。";
+  else if (pct >= 0.5) msg = "还可以，建议把错题对应的知识点再看一遍。";
+  else msg = "今晚抓紧时间重点复习错题涉及的内容。";
+
+  msg += "<br>最佳连对：" + state.bestStreak + " 题";
+  document.getElementById("finalText").innerHTML = msg;
+  showScreen("end");
+}
+
+function goHome() { showScreen("home"); }
+
+function replay() {
+  startLevel(state.level);
+}
+
+function updateStats() {
+  document.getElementById("score").textContent = state.score;
+  document.getElementById("streak").textContent = state.streak;
+  document.getElementById("answered").textContent = state.answered;
+}
+
+function showScreen(id) {
+  ["home","play","end"].forEach(s => {
+    document.getElementById(s).classList.toggle("active", s === id);
+  });
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/\n/g, "<br>");
+}
+
+// Bind all static buttons after DOM ready
+document.addEventListener("DOMContentLoaded", function() {
+  // Level cards
+  document.querySelectorAll(".level-card").forEach(card => {
+    card.addEventListener("click", function() {
+      const level = this.getAttribute("data-level");
+      if (level) startLevel(level);
+    });
+  });
+
+  // Start all button
+  document.getElementById("startAllBtn").addEventListener("click", function() {
+    startLevel("all");
+  });
+
+  // Navigation buttons
+  document.getElementById("goHomeBtn").addEventListener("click", goHome);
+  document.getElementById("goHomeBtn2").addEventListener("click", goHome);
+  document.getElementById("replayBtn").addEventListener("click", replay);
+  document.getElementById("nextBtn").addEventListener("click", nextQuestion);
+});
+</script>
+</body>
+</html>

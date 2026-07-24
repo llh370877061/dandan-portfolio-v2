@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>洛克王国 - 家长全面指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: #f0f4f8;
+            color: #2d3748;
+            line-height: 1.7;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 80px 20px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        .hero h1 {
+            font-size: 2.8em;
+            margin-bottom: 12px;
+            position: relative;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .hero .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .hero .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 0.9em;
+            margin-top: 16px;
+            position: relative;
+        }
+
+        /* Navigation */
+        .nav {
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        .nav-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            overflow-x: auto;
+            gap: 4px;
+            padding: 8px 16px;
+            scrollbar-width: none;
+        }
+        .nav-inner::-webkit-scrollbar { display: none; }
+        .nav a {
+            text-decoration: none;
+            color: #4a5568;
+            padding: 8px 16px;
+            border-radius: 8px;
+            white-space: nowrap;
+            font-size: 0.92em;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .nav a:hover, .nav a.active {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Main */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 16px;
+        }
+
+        /* Section */
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 36px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+        }
+        .section-title {
+            font-size: 1.6em;
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title .icon {
+            font-size: 1.2em;
+        }
+
+        /* Quick Answer */
+        .quick-answer {
+            background: linear-gradient(135deg, #e0f2fe, #ede9fe);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+            border-left: 5px solid #667eea;
+        }
+        .quick-answer h3 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.15em;
+        }
+        .quick-answer p {
+            font-size: 1.05em;
+            line-height: 1.8;
+        }
+
+        /* Info Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .card {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+        .card h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+        }
+        .card p {
+            color: #4a5568;
+            font-size: 0.95em;
+        }
+
+        /* Feature List */
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #edf2f7;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        .feature-list .check {
+            color: #48bb78;
+            font-size: 1.2em;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* Comparison Table */
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+            font-size: 0.95em;
+        }
+        .compare-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+        }
+        .compare-table th:first-child {
+            border-radius: 8px 0 0 0;
+        }
+        .compare-table th:last-child {
+            border-radius: 0 8px 0 0;
+        }
+        .compare-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #edf2f7;
+        }
+        .compare-table tr:nth-child(even) {
+            background: #f7fafc;
+        }
+        .compare-table tr:hover {
+            background: #edf2f7;
+        }
+
+        /* Safety Badge */
+        .safety-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #c6f6d5;
+            color: #22543d;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 0.88em;
+            font-weight: 600;
+        }
+        .warning-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fefcbf;
+            color: #744210;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 0.88em;
+            font-weight: 600;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin-top: 16px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: #f7fafc;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            background: #667eea;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px #667eea;
+        }
+        .timeline-item h4 {
+            color: #667eea;
+            margin-bottom: 4px;
+        }
+        .timeline-item .year {
+            font-size: 0.85em;
+            color: #a0aec0;
+            margin-bottom: 6px;
+        }
+
+        /* Tips Box */
+        .tips-box {
+            background: #fffaf0;
+            border: 1px solid #fbd38d;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 16px;
+        }
+        .tips-box h4 {
+            color: #c05621;
+            margin-bottom: 10px;
+        }
+        .tips-box ul {
+            padding-left: 20px;
+        }
+        .tips-box li {
+            margin-bottom: 6px;
+            color: #744210;
+        }
+
+        /* Q&A */
+        .qa-item {
+            margin-bottom: 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .qa-q {
+            background: #f7fafc;
+            padding: 14px 20px;
+            font-weight: 600;
+            color: #2d3748;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .qa-q:hover {
+            background: #edf2f7;
+        }
+        .qa-q::after {
+            content: '+';
+            font-size: 1.3em;
+            color: #667eea;
+            transition: transform 0.2s;
+        }
+        .qa-item.open .qa-q::after {
+            transform: rotate(45deg);
+        }
+        .qa-a {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            color: #4a5568;
+            line-height: 1.8;
+        }
+        .qa-item.open .qa-a {
+            max-height: 500px;
+            padding: 16px 20px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #a0aec0;
+            font-size: 0.9em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2em; }
+            .section { padding: 24px 18px; }
+            .card-grid { grid-template-columns: 1fr; }
+            .compare-table { font-size: 0.85em; }
+            .compare-table th, .compare-table td { padding: 8px 10px; }
+        }
+
+        /* Highlight Number */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+            border-radius: 12px;
+        }
+        .stat-item .num {
+            font-size: 2em;
+            font-weight: 700;
+            color: #667eea;
+        }
+        .stat-item .label {
+            font-size: 0.9em;
+            color: #718096;
+            margin-top: 4px;
+        }
+
+        /* Tag */
+        .tag {
+            display: inline-block;
+            background: #edf2f7;
+            color: #4a5568;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            margin: 2px;
+        }
+        .tag.green { background: #c6f6d5; color: #22543d; }
+        .tag.blue { background: #bee3f8; color: #2a4365; }
+        .tag.yellow { background: #fefcbf; color: #744210; }
+
+        /* Section anchor offset */
+        .section[id] {
+            scroll-margin-top: 70px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+    <h1>洛克王国</h1>
+    <div class="subtitle">一份写给家长的全面游戏指南</div>
+    <div class="badge">面向 7-14 岁儿童 | 腾讯出品 | 2010 年上线至今</div>
+</div>
+
+<!-- Navigation -->
+<nav class="nav">
+    <div class="nav-inner">
+        <a href="#overview">游戏概览</a>
+        <a href="#core">核心玩法</a>
+        <a href="#miracle">奇迹连击</a>
+        <a href="#world">洛克王国：世界</a>
+        <a href="#safety">安全与防沉迷</a>
+        <a href="#age">适龄评估</a>
+        <a href="#compare">同类对比</a>
+        <a href="#tips">家长建议</a>
+        <a href="#qa">常见问题</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- Quick Answer -->
+    <div class="quick-answer">
+        <h3>一句话回答：适合孩子玩吗？</h3>
+        <p><strong>适合。</strong>《洛克王国》是腾讯专为 7-14 岁儿童设计的绿色社区游戏，没有暴力血腥内容，有严格的防沉迷系统和家长监控功能。核心玩法是宠物收集和回合制策略对战，操作简单，画面卡通可爱。你的两个孩子（11 岁和 9 岁）正好在官方适龄范围内。</p>
+    </div>
+
+    <!-- 1. Overview -->
+    <div class="section" id="overview">
+        <h2 class="section-title"><span class="icon">游戏概览</span></h2>
+
+        <div class="stat-grid">
+            <div class="stat-item">
+                <div class="num">16年</div>
+                <div class="label">运营时长（2010至今）</div>
+            </div>
+            <div class="stat-item">
+                <div class="num">2亿+</div>
+                <div class="label">累计服务家庭</div>
+            </div>
+            <div class="stat-item">
+                <div class="num">700+</div>
+                <div class="label">益智游戏场景</div>
+            </div>
+            <div class="stat-item">
+                <div class="num">10万+</div>
+                <div class="label">年均科普问答更新</div>
+            </div>
+        </div>
+
+        <p style="margin-top: 16px;">
+            《洛克王国》是由<strong>腾讯游戏魔方工作室</strong>开发运营的在线绿色社区网页游戏，2010 年 7 月 15 日正式公测。游戏以魔法王国为世界观背景，玩家扮演小魔法师"洛克"，在卡洛西亚大陆上学习魔法、捕捉和培养宠物、与小伙伴组队冒险。
+        </p>
+        <p style="margin-top: 12px;">
+            游戏的定位非常明确：<strong>专为儿童打造的健康网络社区</strong>。它不是一个单纯的"打怪升级"游戏，而是一个融合了益智问答、百科知识学习、安全社交互动的数字化成长空间。
+        </p>
+
+        <h3 style="margin-top: 24px; margin-bottom: 12px;">发展历程</h3>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="year">2010 年 7 月</div>
+                <h4>页游公测</h4>
+                <p>《洛克王国》网页游戏正式上线，以 Flash 为基础，孩子们在浏览器里就能玩。</p>
+            </div>
+            <div class="timeline-item">
+                <div class="year">2011 年</div>
+                <h4>大电影《圣龙骑士》</h4>
+                <p>同名动画电影上映，IP 影响力扩大，成为一代人的童年记忆。</p>
+            </div>
+            <div class="timeline-item">
+                <div class="year">2013 年</div>
+                <h4>儿童舞台剧巡演</h4>
+                <p>《洛克王国大冒险》舞台剧在全国巡演，线上线下联动。</p>
+            </div>
+            <div class="timeline-item">
+                <div class="year">2026 年 3 月</div>
+                <h4>《洛克王国：世界》公测</h4>
+                <p>全新 3D 开放世界手游正式全平台上线，画面和玩法全面升级，支持手机和电脑数据互通。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Core Gameplay -->
+    <div class="section" id="core">
+        <h2 class="section-title"><span class="icon">核心玩法详解</span></h2>
+
+        <p>《洛克王国》的核心乐趣可以概括为四个字：<strong>抓、养、打、交</strong>。下面逐一解释。</p>
+
+        <div class="card-grid">
+            <div class="card">
+                <h4> 抓 — 宠物收集</h4>
+                <p>游戏里有数百种可爱宠物，分布在不同地图。玩家可以在野外遇到宠物，通过战斗削弱后用"咕噜球"捕捉。特定宠物需要触发特定条件才能遇到，比如特定天气、时间段或完成隐藏任务。收集图鉴是很多孩子的核心动力。</p>
+            </div>
+            <div class="card">
+                <h4> 养 — 宠物养成</h4>
+                <p>捕捉到的宠物可以升级、进化、学习新技能。进化后外形会变得更酷，属性也会大幅提升。宠物有性格系统（影响属性成长方向），努力值系统（可自定义强化方向），让养成有策略深度。</p>
+            </div>
+            <div class="card">
+                <h4> 打 — 回合制对战</h4>
+                <p>战斗采用回合制，玩家选择技能，宠物自动执行。<strong>属性克制</strong>是核心策略——火克草、草克水、水克火，类似"石头剪刀布"但更复杂。阵容搭配、技能组合、速度先后手都有讲究，但操作门槛不高，孩子容易上手。</p>
+            </div>
+            <div class="card">
+                <h4> 交 — 社交互动</h4>
+                <p>可以加好友、互相拜访家园、组队打 BOSS、一起做任务。游戏内有聊天系统（带内容过滤），还有"兴趣协会"等社群玩法。社交功能设计上偏向合作，鼓励互助而非竞争。</p>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 28px; margin-bottom: 12px;">其他玩法</h3>
+        <ul class="feature-list">
+            <li>
+                <span class="check">✓</span>
+                <div><strong>益智问答</strong> — 每隔 15 分钟出现百科知识问答，涵盖科学、历史、地理等，答对有奖励。这是游戏"寓教于乐"的核心设计。</div>
+            </li>
+            <li>
+                <span class="check">✓</span>
+                <div><strong>家园装扮</strong> — 每个玩家有自己的小屋和花园，可以种植物、装饰家园，类似"牧场"玩法。</div>
+            </li>
+            <li>
+                <span class="check">✓</span>
+                <div><strong>职业系统</strong> — 可以成为医生、商人、侦探、园艺师等，完成职业任务获得称号和奖励。</div>
+            </li>
+            <li>
+                <span class="check">✓</span>
+                <div><strong>定期活动</strong> — 每周更新活动和新内容，保持新鲜感。比如"金星凌日""万象浮影"等主题活动。</div>
+            </li>
+            <li>
+                <span class="check">✓</span>
+                <div><strong>天梯赛 / 系别排位</strong> — PVP 竞技玩法，玩家之间用宠物对战排名。这是进阶内容，适合熟悉游戏后挑战。</div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 3. Miracle Combo -->
+    <div class="section" id="miracle">
+        <h2 class="section-title"><span class="icon">"奇迹连击"是什么？</span></h2>
+
+        <div class="tips-box" style="margin-top: 0; margin-bottom: 20px;">
+            <h4> 给家长的简化解释</h4>
+            <p>"奇迹连击"就像下棋时的"连环套路"——先布局几个棋子，然后一步步触发连锁反应，最后一招制胜。它是游戏里的高阶对战策略，需要对游戏有深入理解才能玩好。</p>
+        </div>
+
+        <p>"奇迹连击"（也叫"奇迹连击队"或"连击强化队"）是《洛克王国》PVP 竞技中的一种<strong>高阶阵容玩法</strong>，不是独立的游戏模式，而是玩家自己研究出来的"套路"。</p>
+
+        <h3 style="margin-top: 20px; margin-bottom: 12px;">核心原理</h3>
+        <div class="card-grid">
+            <div class="card">
+                <h4>核心宠物：圣羽翼王</h4>
+                <p>这只宠物有一个特殊能力叫"飓风"——只要队友使用了不同属性的技能，它就能立刻获得加速效果。配合"锐利"特性，输出能力大幅提升。</p>
+            </div>
+            <div class="card">
+                <h4>连击机制</h4>
+                <p>通过"热身运动"和"三连破"等技能组合，宠物可以在三个回合内快速叠加增益效果（buff），然后连续打出多次攻击，瞬间造成大量伤害。</p>
+            </div>
+            <div class="card">
+                <h4>团队配合</h4>
+                <p>需要 3-4 只宠物协同作战。通常搭配多只翼系精灵（速度快），加上辅助宠物降低对手技能消耗，形成"快攻压制"的节奏。</p>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 24px; margin-bottom: 12px;">为什么家长需要了解这个？</h3>
+        <ul class="feature-list">
+            <li>
+                <span class="check">✓</span>
+                <div><strong>它说明游戏有策略深度</strong> — 不是无脑点击，需要思考和学习，对孩子的逻辑思维有一定锻炼。</div>
+            </li>
+            <li>
+                <span class="check">✓</span>
+                <div><strong>它是进阶内容</strong> — 新手孩子不需要一开始就接触这个，先享受收集和探索的乐趣就好。</div>
+            </li>
+            <li>
+                <span class="check">✓</span>
+                <div><strong>它可能让孩子"上头"</strong> — 为了研究最优阵容，孩子可能会花很多时间查阅攻略。这是引导时间管理的好机会。</div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 4. New World -->
+    <div class="section" id="world">
+        <h2 class="section-title"><span class="icon">《洛克王国：世界》— 全新 3D 版</span></h2>
+
+        <p>2026 年 3 月 26 日，全新版本《洛克王国：世界》全平台公测。这是经典页游的<strong>正统续作</strong>，从 2D 升级为 3D 开放世界。</p>
+
+        <div class="card-grid">
+            <div class="card">
+                <h4>3D 开放世界</h4>
+                <p>卡洛西亚大陆全面高清重制，魔法学院、宠物园等经典场景以 3D 呈现。支持自由探索，走到哪都有惊喜。</p>
+            </div>
+            <div class="card">
+                <h4>动态环境系统</h4>
+                <p>天气和昼夜变化会影响精灵分布——雷暴天气稀有精灵出现概率提升，极光下能遇到异色宠物。探索不再只是"跑图"。</p>
+            </div>
+            <div class="card">
+                <h4>自由捕捉，无强制抽卡</h4>
+                <p>核心宠物都能在野外抓到，不靠"氪金抽卡"。对零氪玩家非常友好，孩子不会因为"别人充了钱"而玩不下去。</p>
+            </div>
+            <div class="card">
+                <h4>手机电脑互通</h4>
+                <p>支持移动端和 PC 端数据同步，在家用电脑、出门用手机，进度完全一样。</p>
+            </div>
+        </div>
+
+        <div class="tips-box">
+            <h4> 开服福利（2026年3月）</h4>
+            <ul>
+                <li>新手登录送 3 套 S 级时装</li>
+                <li>预注册补偿：棱镜球（必中炫彩精灵）</li>
+                <li>连续签到领取稀有宠物和养成资源</li>
+                <li>全平台预约送燃了鸭精灵蛋 + 全套外观</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 5. Safety -->
+    <div class="section" id="safety">
+        <h2 class="section-title"><span class="icon">安全与防沉迷</span></h2>
+
+        <p>这是家长最关心的部分。腾讯在《洛克王国》上做了多层安全防护：</p>
+
+        <h3 style="margin-top: 20px; margin-bottom: 12px;">防沉迷系统</h3>
+        <table class="compare-table">
+            <thead>
+                <tr>
+                    <th>时间段</th>
+                    <th>在线时长限制</th>
+                    <th>后果</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>周一至周四</td>
+                    <td>超过 2 小时</td>
+                    <td>社区收益减半</td>
+                </tr>
+                <tr>
+                    <td>周一至周四</td>
+                    <td>超过 3 小时</td>
+                    <td>收益为 0，之后每 15 分钟提醒下线</td>
+                </tr>
+                <tr>
+                    <td>周五至周日</td>
+                    <td>超过 3 小时</td>
+                    <td>社区收益减半</td>
+                </tr>
+                <tr>
+                    <td>周五至周日</td>
+                    <td>超过 5 小时</td>
+                    <td>收益为 0，之后每 15 分钟提醒下线</td>
+                </tr>
+                <tr>
+                    <td>每小时</td>
+                    <td>—</td>
+                    <td>提醒做眼保健操和健身体操</td>
+                </tr>
+                <tr>
+                    <td>晚上 11 点 - 早上 6 点</td>
+                    <td>—</td>
+                    <td><strong>社区关闭，禁止登录</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 style="margin-top: 28px; margin-bottom: 12px;">内容安全</h3>
+        <ul class="feature-list">
+            <li>
+                <span class="safety-badge">✓ 已验证</span>
+                <div><strong>AI 内容过滤</strong> — 强大的语言过滤功能，有效拦截广告及各种不良信息，杜绝不健康内容。</div>
+            </li>
+            <li>
+                <span class="safety-badge">✓ 已验证</span>
+                <div><strong>实时监控</strong> — 保障儿童隐私安全，严格制止诈骗行为。</div>
+            </li>
+            <li>
+                <span class="safety-badge">✓ 已验证</span>
+                <div><strong>无暴力血腥</strong> — 打怪场面为对魔法的刻画，没有流血及血液刻画的画面，没有体现暴力行为和结果的视觉、听觉表现。</div>
+            </li>
+            <li>
+                <span class="safety-badge">✓ 已验证</span>
+                <div><strong>教育专家参与</strong> — 力邀各知名教育专家参与指导，分享心得，体味成长。</div>
+            </li>
+        </ul>
+
+        <h3 style="margin-top: 28px; margin-bottom: 12px;">家长监控功能</h3>
+        <div class="card-grid">
+            <div class="card">
+                <h4>家长守护联盟</h4>
+                <p>腾讯独创的家长监管体系，可以实现账号管理、消费限额、行为日志全维度可视化监管。</p>
+            </div>
+            <div class="card">
+                <h4>消费控制</h4>
+                <p>可以设定每月消费上限，防止孩子冲动充值。游戏本身有洛克钻和洛克 VIP 两种付费模式，但核心玩法不依赖付费。</p>
+            </div>
+            <div class="card">
+                <h4>在线时长管理</h4>
+                <p>除了游戏内置的防沉迷，家长还可以通过腾讯的成长守护平台进一步限制游戏时间。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Age Assessment -->
+    <div class="section" id="age">
+        <h2 class="section-title"><span class="icon">适龄评估</span></h2>
+
+        <p>根据官方信息和实际游戏体验，以下是针对不同年龄段的评估：</p>
+
+        <table class="compare-table">
+            <thead>
+                <tr>
+                    <th>年龄段</th>
+                    <th>适合程度</th>
+                    <th>说明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>6-7 岁</strong></td>
+                    <td><span class="tag yellow">需家长陪同</span></td>
+                    <td>可以体验基础的宠物收集和简单探索，但可能需要家长帮助理解游戏机制。建议每次玩 30 分钟以内。</td>
+                </tr>
+                <tr>
+                    <td><strong>8-10 岁</strong></td>
+                    <td><span class="tag green">适合</span></td>
+                    <td>能够独立理解核心玩法，享受收集和养成的乐趣。建议每天玩 1 小时以内，家长定期检查。</td>
+                </tr>
+                <tr>
+                    <td><strong>11-14 岁</strong></td>
+                    <td><span class="tag green">非常适合</span></td>
+                    <td>可以深入理解策略对战，参与 PVP 竞技。建议引导合理分配时间，避免沉迷研究攻略。</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="tips-box" style="margin-top: 20px;">
+            <h4> 关于你的两个孩子</h4>
+            <ul>
+                <li><strong>11 岁女儿</strong> — 正好在"非常适合"年龄段，可以独立探索游戏全部内容，包括 PVP 竞技和奇迹连击等进阶玩法。</li>
+                <li><strong>9 岁儿子</strong> — 在"适合"年龄段，核心玩法完全没问题，PVP 竞技可以等熟悉游戏后再尝试。</li>
+                <li><strong>建议</strong> — 两个孩子一起玩可以互相交流，但建议约定好每天的游戏时间，避免因为"一起玩"而延长总时长。</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 7. Comparison -->
+    <div class="section" id="compare">
+        <h2 class="section-title"><span class="icon">同类游戏对比</span></h2>
+
+        <p>市面上有不少类似的宠物收集类游戏，以下是和《洛克王国》的对比：</p>
+
+        <table class="compare-table">
+            <thead>
+                <tr>
+                    <th>维度</th>
+                    <th>洛克王国</th>
+                    <th>宝可梦</th>
+                    <th>赛尔号</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>适龄范围</strong></td>
+                    <td><span class="tag green">7-14 岁</span></td>
+                    <td>6 岁以上</td>
+                    <td>8-14 岁</td>
+                </tr>
+                <tr>
+                    <td><strong>画面风格</strong></td>
+                    <td>2D/3D 卡通</td>
+                    <td>2D/3D 卡通</td>
+                    <td>2D 卡通</td>
+                </tr>
+                <tr>
+                    <td><strong>战斗方式</strong></td>
+                    <td>回合制策略</td>
+                    <td>回合制策略</td>
+                    <td>回合制策略</td>
+                </tr>
+                <tr>
+                    <td><strong>社交性</strong></td>
+                    <td><span class="tag green">强</span> 社区互动丰富</td>
+                    <td><span class="tag blue">中</span> 联机对战</td>
+                    <td><span class="tag blue">中</span> 社区功能</td>
+                </tr>
+                <tr>
+                    <td><strong>防沉迷</strong></td>
+                    <td><span class="tag green">严格</span> 收益递减+停服</td>
+                    <td>依赖平台政策</td>
+                    <td>有基础防沉迷</td>
+                </tr>
+                <tr>
+                    <td><strong>付费压力</strong></td>
+                    <td><span class="tag green">低</span> 核心宠物免费抓</td>
+                    <td><span class="tag green">低</span> 买断制</td>
+                    <td><span class="tag yellow">中</span> 有VIP体系</td>
+                </tr>
+                <tr>
+                    <td><strong>家长监控</strong></td>
+                    <td><span class="tag green">有</span> 家长守护联盟</td>
+                    <td>无内置</td>
+                    <td>有限</td>
+                </tr>
+                <tr>
+                    <td><strong>教育元素</strong></td>
+                    <td><span class="tag green">丰富</span> 百科问答+益智</td>
+                    <td>较少</td>
+                    <td>有一些</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p style="margin-top: 16px; color: #718096; font-size: 0.92em;">
+            * 对比基于公开信息整理，具体体验可能因版本更新而变化。
+        </p>
+    </div>
+
+    <!-- 8. Tips -->
+    <div class="section" id="tips">
+        <h2 class="section-title"><span class="icon">给家长的建议</span></h2>
+
+        <div class="card-grid">
+            <div class="card">
+                <h4>1. 先了解再放手</h4>
+                <p>建议家长花 10 分钟看一下游戏画面和基本操作，了解孩子在玩什么。不需要精通，知道"大概在做什么"就好。</p>
+            </div>
+            <div class="card">
+                <h4>2. 约定游戏时间</h4>
+                <p>游戏本身有防沉迷，但建议和孩子<strong>额外约定</strong>每天的游戏时间。比如"写完作业后玩 30 分钟"，让孩子参与制定规则。</p>
+            </div>
+            <div class="card">
+                <h4>3. 开启家长监控</h4>
+                <p>注册游戏时用孩子的账号，但<strong>绑定你自己的手机号</strong>。开启家长守护功能，设置消费限额。</p>
+            </div>
+            <div class="card">
+                <h4>4. 关注社交内容</h4>
+                <p>游戏有社交功能，偶尔看看孩子的好友列表和聊天内容。不是监控，是了解孩子的社交圈。</p>
+            </div>
+            <div class="card">
+                <h4>5. 利用游戏做教育</h4>
+                <p>游戏里的百科问答是很好的学习素材。可以和孩子一起讨论"今天在游戏里学到了什么知识"。</p>
+            </div>
+            <div class="card">
+                <h4>6. 警惕"攻略沉迷"</h4>
+                <p>孩子可能会花大量时间在网上查攻略、看视频。这比玩游戏本身更耗时间，需要引导。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. Q&A -->
+    <div class="section" id="qa">
+        <h2 class="section-title"><span class="icon">常见问题</span></h2>
+
+        <div class="qa-item open">
+            <div class="qa-q" onclick="toggleQA(this)">游戏需要花钱吗？</div>
+            <div class="qa-a">
+                <p>核心玩法<strong>不需要花钱</strong>。所有宠物都可以通过野外捕捉获得，不存在"必须充值才能通关"的设计。游戏有洛克钻（虚拟货币）和洛克 VIP（会员）两种付费选项，主要用于购买外观装饰和额外便利功能，不影响游戏平衡。建议<strong>不给孩子开通付费功能</strong>，或者设置严格的消费限额。</p>
+            </div>
+        </div>
+
+        <div class="qa-item">
+            <div class="qa-q" onclick="toggleQA(this)">孩子会不会沉迷？</div>
+            <div class="qa-a">
+                <p>游戏本身有严格的防沉迷系统（收益递减 + 深夜停服），但任何游戏都有沉迷的可能。关键在于<strong>家长引导</strong>：约定时间、开启监控、保持沟通。如果发现孩子因为游戏影响学习或睡眠，要及时介入调整。</p>
+            </div>
+        </div>
+
+        <div class="qa-item">
+            <div class="qa-q" onclick="toggleQA(this)">游戏里的社交安全吗？</div>
+            <div class="qa-a">
+                <p>游戏有 AI 内容过滤和实时监控，能拦截大部分不良信息。但没有任何系统是 100% 有效的。建议：1）开启家长监控；2）告诉孩子不要在游戏里透露真实姓名、学校、电话等个人信息；3）如果遇到陌生人的不当行为，及时告诉家长。</p>
+            </div>
+        </div>
+
+        <div class="qa-item">
+            <div class="qa-q" onclick="toggleQA(this)">手机和电脑都能玩吗？</div>
+            <div class="qa-a">
+                <p>经典页游版可以在电脑浏览器玩；新版《洛克王国：世界》支持手机和电脑数据互通，进度完全同步。手机端更方便碎片时间玩，电脑端画面更好。建议<strong>以电脑端为主</strong>，方便家长在旁边了解。</p>
+            </div>
+        </div>
+
+        <div class="qa-item">
+            <div class="qa-q" onclick="toggleQA(this)">游戏能学到东西吗？</div>
+            <div class="qa-a">
+                <p>能。游戏内置的百科问答涵盖科学、历史、地理等知识，年均更新 10 万条以上。宠物养成可以锻炼孩子的规划能力和策略思维。社交互动能培养团队合作和沟通能力。但要记住，游戏是娱乐，不是教育工具——学到东西是"附带收益"，不是主要目的。</p>
+            </div>
+        </div>
+
+        <div class="qa-item">
+            <div class="qa-q" onclick="toggleQA(this)">《洛克王国》和《洛克王国：世界》有什么区别？</div>
+            <div class="qa-a">
+                <p>《洛克王国》是 2010 年上线的经典页游，2D 画面，在浏览器里玩。《洛克王国：世界》是 2026 年上线的新版手游，3D 开放世界，画面和玩法全面升级。两者世界观相同，但新版本内容更丰富、画面更好。建议<strong>直接玩新版《洛克王国：世界》</strong>，内容更完整，体验更好。</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="footer">
+    <p>本页面基于公开信息整理，仅供家长参考。游戏内容可能随版本更新而变化。</p>
+    <p style="margin-top: 6px;">制作日期：2026 年 7 月 4 日</p>
+</div>
+
+<script>
+function toggleQA(el) {
+    const item = el.parentElement;
+    item.classList.toggle('open');
+}
+
+// Smooth scroll for nav
+document.querySelectorAll('.nav a').forEach(a => {
+    a.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+});
+
+// Active nav highlight on scroll
+const sections = document.querySelectorAll('.section[id]');
+const navLinks = document.querySelectorAll('.nav a');
+window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+        const top = section.offsetTop - 80;
+        if (scrollY >= top) {
+            current = section.getAttribute('id');
+        }
+    });
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+            link.classList.add('active');
+        }
+    });
+});
+</script>
+
+</body>
+</html>

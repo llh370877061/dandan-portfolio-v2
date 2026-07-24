@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>猫咪视角冒险游戏 - 设计文档</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --card: #12121a;
+    --border: #1e1e2e;
+    --text: #e0ddd5;
+    --dim: #8a8690;
+    --accent-volcano: #ff4d00;
+    --accent-peach: #ffb7c5;
+    --accent-lake: #00c8ff;
+    --accent-gold: #ffd700;
+    --accent-purple: #a855f7;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans SC', sans-serif;
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 600px 400px at 30% 40%, rgba(255,77,0,0.08), transparent),
+      radial-gradient(ellipse 500px 300px at 70% 60%, rgba(0,200,255,0.06), transparent),
+      radial-gradient(ellipse 400px 400px at 50% 80%, rgba(255,183,197,0.05), transparent);
+    pointer-events: none;
+  }
+
+  /* Cat paw cursor */
+  .cat-shadow {
+    position: absolute;
+    bottom: 80px;
+    width: 120px;
+    height: 60px;
+    background: radial-gradient(ellipse, rgba(0,0,0,0.35), transparent 70%);
+    border-radius: 50%;
+    animation: shadowPulse 3s ease-in-out infinite;
+  }
+
+  @keyframes shadowPulse {
+    0%, 100% { transform: scaleX(1); opacity: 0.35; }
+    50% { transform: scaleX(1.15); opacity: 0.5; }
+  }
+
+  /* Cat paws at bottom */
+  .paws-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    pointer-events: none;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    padding-bottom: 10px;
+  }
+
+  .paw {
+    width: 70px;
+    height: 55px;
+    position: relative;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+  }
+
+  .paw-main {
+    width: 50px;
+    height: 45px;
+    background: linear-gradient(135deg, #2a2a3a, #1a1a28);
+    border-radius: 50% 50% 45% 45%;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 1.5px solid rgba(255,255,255,0.08);
+  }
+
+  .paw-pad {
+    width: 14px;
+    height: 12px;
+    background: linear-gradient(135deg, #c47a8a, #a85f6f);
+    border-radius: 50%;
+    position: absolute;
+    border: 0.5px solid rgba(255,255,255,0.1);
+  }
+
+  .paw-pad:nth-child(2) { top: 2px; left: 6px; }
+  .paw-pad:nth-child(3) { top: 0; left: 20px; }
+  .paw-pad:nth-child(4) { top: 0; right: 20px; }
+  .paw-pad:nth-child(5) { top: 2px; right: 6px; }
+
+  .paw-big-pad {
+    width: 22px;
+    height: 18px;
+    background: linear-gradient(135deg, #d48a9a, #b87080);
+    border-radius: 50% 50% 40% 40%;
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 0.5px solid rgba(255,255,255,0.1);
+  }
+
+  @keyframes pawLeft {
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-8px) rotate(-2deg); }
+  }
+
+  @keyframes pawRight {
+    0%, 100% { transform: translateY(0) rotate(5deg); }
+    50% { transform: translateY(-8px) rotate(2deg); }
+  }
+
+  .paw-left { animation: pawLeft 2.5s ease-in-out infinite; }
+  .paw-right { animation: pawRight 2.5s ease-in-out infinite 0.3s; }
+
+  .hero h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 3.2rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #fff, #c47a8a, #ffd700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero .subtitle {
+    font-size: 1.15rem;
+    color: var(--dim);
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    margin-bottom: 3rem;
+  }
+
+  .hero .tagline {
+    font-size: 0.95rem;
+    color: var(--dim);
+    opacity: 0.6;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+
+  /* Sections */
+  .section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 80px 32px;
+  }
+
+  .section-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+  }
+
+  .section-line {
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-gold), transparent);
+    margin-bottom: 2.5rem;
+  }
+
+  /* Core concept */
+  .concept-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 2rem;
+  }
+
+  .concept-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    transition: border-color 0.3s;
+  }
+
+  .concept-card:hover {
+    border-color: rgba(255,215,0,0.2);
+  }
+
+  .concept-card .icon {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+  }
+
+  .concept-card h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #fff;
+  }
+
+  .concept-card p {
+    font-size: 0.9rem;
+    color: var(--dim);
+    line-height: 1.7;
+  }
+
+  /* POV section */
+  .pov-showcase {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    margin-top: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pov-showcase::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-volcano), var(--accent-peach), var(--accent-lake));
+  }
+
+  .pov-visual {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-top: 1.5rem;
+  }
+
+  .pov-screen {
+    flex: 1;
+    aspect-ratio: 16/9;
+    background: linear-gradient(135deg, #1a1520, #0d0d14);
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+    overflow: hidden;
+    min-height: 200px;
+  }
+
+  /* Screen elements */
+  .screen-ground {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 35%;
+    background: linear-gradient(180deg, transparent, rgba(60,40,30,0.3));
+  }
+
+  .screen-paw-left, .screen-paw-right {
+    position: absolute;
+    bottom: 8px;
+    width: 48px;
+    height: 38px;
+    background: linear-gradient(135deg, #2a2a3a, #1a1a28);
+    border-radius: 50% 50% 45% 45%;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .screen-paw-left { left: 25%; transform: rotate(-10deg); }
+  .screen-paw-right { right: 25%; transform: rotate(10deg); }
+
+  .screen-paw-pad-s {
+    width: 10px;
+    height: 8px;
+    background: #c47a8a;
+    border-radius: 50%;
+    position: absolute;
+  }
+
+  .screen-paw-left .screen-paw-pad-s:nth-child(1) { top: 4px; left: 6px; }
+  .screen-paw-left .screen-paw-pad-s:nth-child(2) { top: 2px; left: 18px; }
+  .screen-paw-left .screen-paw-pad-s:nth-child(3) { top: 4px; right: 6px; }
+
+  .screen-paw-right .screen-paw-pad-s:nth-child(1) { top: 4px; left: 6px; }
+  .screen-paw-right .screen-paw-pad-s:nth-child(2) { top: 2px; left: 18px; }
+  .screen-paw-right .screen-paw-pad-s:nth-child(3) { top: 4px; right: 6px; }
+
+  .screen-shadow {
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 30px;
+    background: radial-gradient(ellipse, rgba(0,0,0,0.4), transparent 70%);
+    border-radius: 50%;
+  }
+
+  .screen-light {
+    position: absolute;
+    top: -20px;
+    right: 30%;
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, rgba(255,255,200,0.15), transparent 70%);
+    border-radius: 50%;
+  }
+
+  .pov-details {
+    flex: 1;
+  }
+
+  .pov-details h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #fff;
+  }
+
+  .pov-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .pov-list li {
+    padding: 8px 0;
+    padding-left: 20px;
+    position: relative;
+    font-size: 0.9rem;
+    color: var(--dim);
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+
+  .pov-list li::before {
+    content: '>';
+    position: absolute;
+    left: 0;
+    color: var(--accent-gold);
+    font-family: monospace;
+  }
+
+  /* Maps section */
+  .maps-container {
+    margin-top: 2rem;
+  }
+
+  .map-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.4s;
+  }
+
+  .map-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+  }
+
+  .map-card:hover { border-color: rgba(255,255,255,0.1); }
+
+  .map-volcano::before { background: linear-gradient(90deg, #ff4d00, #ff8800, #ffcc00); }
+  .map-peach::before { background: linear-gradient(90deg, #ffb7c5, #ffd700, #fff0f5); }
+  .map-lake::before { background: linear-gradient(90deg, #00c8ff, #00ff88, #88ddff); }
+
+  .map-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 1.5rem;
+  }
+
+  .map-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    flex-shrink: 0;
+  }
+
+  .map-volcano .map-icon { background: rgba(255,77,0,0.12); }
+  .map-peach .map-icon { background: rgba(255,183,197,0.12); }
+  .map-lake .map-icon { background: rgba(0,200,255,0.12); }
+
+  .map-name {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .map-subtitle {
+    font-size: 0.85rem;
+    color: var(--dim);
+    margin-top: 2px;
+  }
+
+  .map-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .map-section h4 {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .map-section p, .map-section li {
+    font-size: 0.9rem;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  .map-section ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .map-section ul li {
+    padding: 4px 0 4px 16px;
+    position: relative;
+  }
+
+  .map-section ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 12px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .map-volcano .map-section ul li::before { background: var(--accent-volcano); }
+  .map-peach .map-section ul li::before { background: var(--accent-peach); }
+  .map-lake .map-section ul li::before { background: var(--accent-lake); }
+
+  /* Cat encounters */
+  .cat-section {
+    margin-top: 2rem;
+  }
+
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 1.5rem;
+  }
+
+  .cat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  .cat-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255,215,0,0.15);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  }
+
+  .cat-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    margin: 0 auto 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    position: relative;
+  }
+
+  .cat-avatar::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.06);
+  }
+
+  .cat-card h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .cat-card .cat-breed {
+    font-size: 0.8rem;
+    color: var(--dim);
+    margin-bottom: 10px;
+  }
+
+  .cat-card .cat-personality {
+    font-size: 0.85rem;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* Visual effects */
+  .fx-section {
+    margin-top: 2rem;
+  }
+
+  .fx-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 1.5rem;
+  }
+
+  .fx-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .fx-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    background: rgba(255,215,0,0.08);
+  }
+
+  .fx-card h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .fx-card p {
+    font-size: 0.85rem;
+    color: var(--dim);
+    line-height: 1.6;
+  }
+
+  /* Mission flow */
+  .mission-flow {
+    margin-top: 2rem;
+  }
+
+  .flow-steps {
+    display: flex;
+    gap: 0;
+    margin-top: 1.5rem;
+    position: relative;
+  }
+
+  .flow-steps::before {
+    content: '';
+    position: absolute;
+    top: 36px;
+    left: 36px;
+    right: 36px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-volcano), var(--accent-peach), var(--accent-lake));
+    opacity: 0.3;
+  }
+
+  .flow-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .step-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin: 0 auto 14px;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    position: relative;
+  }
+
+  .flow-step:nth-child(1) .step-dot { border-color: var(--accent-volcano); box-shadow: 0 0 12px rgba(255,77,0,0.3); }
+  .flow-step:nth-child(2) .step-dot { border-color: var(--accent-peach); box-shadow: 0 0 12px rgba(255,183,197,0.3); }
+  .flow-step:nth-child(3) .step-dot { border-color: var(--accent-lake); box-shadow: 0 0 12px rgba(0,200,255,0.3); }
+  .flow-step:nth-child(4) .step-dot { border-color: var(--accent-gold); box-shadow: 0 0 12px rgba(255,215,0,0.3); }
+  .flow-step:nth-child(5) .step-dot { border-color: var(--accent-purple); box-shadow: 0 0 12px rgba(168,85,247,0.3); }
+
+  .step-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .step-desc {
+    font-size: 0.78rem;
+    color: var(--dim);
+    padding: 0 8px;
+  }
+
+  /* Tech specs */
+  .tech-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+  }
+
+  .tech-table th, .tech-table td {
+    padding: 14px 18px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+
+  .tech-table th {
+    color: var(--dim);
+    font-weight: 500;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .tech-table td { color: var(--text); }
+  .tech-table td:first-child { color: #fff; font-weight: 500; }
+
+  .tech-tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    background: rgba(255,215,0,0.08);
+    color: var(--accent-gold);
+    border: 1px solid rgba(255,215,0,0.15);
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 60px 32px 120px;
+    color: var(--dim);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer .paw-print {
+    font-size: 2rem;
+    margin-bottom: 12px;
+    opacity: 0.3;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 2rem; }
+    .concept-grid, .map-body, .fx-grid { grid-template-columns: 1fr; }
+    .cat-grid { grid-template-columns: 1fr 1fr; }
+    .flow-steps { flex-direction: column; gap: 20px; }
+    .flow-steps::before { display: none; }
+    .pov-visual { flex-direction: column; }
+    .paws-container { gap: 30px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Cat paws overlay (always visible during gameplay) -->
+<div class="paws-container">
+  <div class="paw paw-left">
+    <div class="paw-pad"></div>
+    <div class="paw-pad"></div>
+    <div class="paw-pad"></div>
+    <div class="paw-pad"></div>
+    <div class="paw-main">
+      <div class="paw-big-pad"></div>
+    </div>
+  </div>
+  <div class="paw paw-right">
+    <div class="paw-pad"></div>
+    <div class="paw-pad"></div>
+    <div class="paw-pad"></div>
+    <div class="paw-pad"></div>
+    <div class="paw-main">
+      <div class="paw-big-pad"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="cat-shadow"></div>
+  <h1>猫眼看世界</h1>
+  <p class="subtitle">以猫的第一视角，踏入炫彩的冒险地图</p>
+  <p class="tagline">Pawsworth Adventures</p>
+</section>
+
+<!-- Core Concept -->
+<section class="section">
+  <h2 class="section-title">核心概念</h2>
+  <div class="section-line"></div>
+  <p style="color:var(--dim); font-size:0.95rem; margin-bottom:1rem;">
+    你是一只猫。你的世界从地面 23 厘米的高度展开——一切都比人类看到的更大、更近、更有质感。
+    你低头能看到自己的爪子，转身能看见自己的影子随光线变化。
+    每一张地图都是一个独立的世界，有自己的规则、色彩和故事。
+  </p>
+
+  <div class="concept-grid">
+    <div class="concept-card">
+      <div class="icon">&#128062;</div>
+      <h3>第一人称猫视角</h3>
+      <p>画面底部常驻两只猫爪，走路时交替抬起。影子随光源实时变化——正午缩短，黄昏拉长。跳跃时爪子离开画面，落地时微微震颤。</p>
+    </div>
+    <div class="concept-card">
+      <div class="icon">&#127752;</div>
+      <h3>炫彩地图世界</h3>
+      <p>火山的赤红岩浆、桃花源的粉白花雨、湖泊的碧蓝倒影——每张地图都有独特的色彩语言和视觉氛围，写实风格中融入梦幻光效。</p>
+    </div>
+    <div class="concept-card">
+      <div class="icon">&#128049;</div>
+      <h3>偶遇其他猫咪</h3>
+      <p>每张地图都有独特的猫居民。它们有自己的性格、行为和故事线。你可以和它们对话、合作完成任务，也可能遇到需要化解的小冲突。</p>
+    </div>
+    <div class="concept-card">
+      <div class="icon">&#127919;</div>
+      <h3>地图专属任务</h3>
+      <p>火山地图要你帮忙灭火、桃花源要你寻找散落的花瓣、湖泊要你追踪水下的神秘光影。每个任务都和地图的环境特性深度绑定。</p>
+    </div>
+  </div>
+</section>
+
+<!-- First Person POV -->
+<section class="section">
+  <h2 class="section-title">第一人称视觉系统</h2>
+  <div class="section-line"></div>
+
+  <div class="pov-showcase">
+    <h3 style="color:#fff; font-size:1.1rem;">画面构成示意</h3>
+    <div class="pov-visual">
+      <div class="pov-screen">
+        <div class="screen-light"></div>
+        <div class="screen-ground"></div>
+        <div class="screen-paw-left">
+          <div class="screen-paw-pad-s"></div>
+          <div class="screen-paw-pad-s"></div>
+          <div class="screen-paw-pad-s"></div>
+        </div>
+        <div class="screen-paw-right">
+          <div class="screen-paw-pad-s"></div>
+          <div class="screen-paw-pad-s"></div>
+          <div class="screen-paw-pad-s"></div>
+        </div>
+        <div class="screen-shadow"></div>
+      </div>
+      <div class="pov-details">
+        <h3>画面元素</h3>
+        <ul class="pov-list">
+          <li>猫爪占据画面底部约 15%，走路时交替抬起</li>
+          <li>影子跟随光源方向实时投射在地面上</li>
+          <li>视角高度固定在猫眼位置（约 23cm），所有物体都显得高大</li>
+          <li>头部微动时画面轻微晃动，模拟猫的步态</li>
+          <li>受到惊吓时画面快速左右晃动（猫的警觉反应）</li>
+          <li>瞳孔随环境光线变化：亮处缩成细线，暗处放大变圆</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Maps -->
+<section class="section">
+  <h2 class="section-title">地图设计</h2>
+  <div class="section-line"></div>
+
+  <div class="maps-container">
+
+    <!-- Volcano Map -->
+    <div class="map-card map-volcano">
+      <div class="map-header">
+        <div class="map-icon">&#127755;</div>
+        <div>
+          <div class="map-name">熔岩之心</div>
+          <div class="map-subtitle">Volcano Heartland &middot; 炽热与勇气的试炼</div>
+        </div>
+      </div>
+      <div class="map-body">
+        <div class="map-section">
+          <h4>视觉风格</h4>
+          <p>
+            主色调：赤红、橙金、深灰。地面是凝固的黑色熔岩，缝隙中涌动着发光的岩浆河流。
+            天空被火山灰染成暗橘色，偶尔有流星般的火山弹划过。
+            地面的热度让空气产生轻微的扭曲折射效果。
+          </p>
+          <ul>
+            <li>岩浆流动时有动态光影，映在猫爪上呈暖红色</li>
+            <li>火山灰像金色雪花一样飘落</li>
+            <li>踩在不同材质上爪垫颜色微微变化（热石偏红，冷石偏灰）</li>
+          </ul>
+        </div>
+        <div class="map-section">
+          <h4>任务</h4>
+          <ul>
+            <li><strong>扑灭火山裂缝火</strong>：用尾巴扇灭蔓延的火苗，保护火山兔的家</li>
+            <li><strong>寻找降温水晶</strong>：散落在火山各处的蓝色水晶能降低岩浆温度</li>
+            <li><strong>火山猫的传承</strong>：帮助年迈的火山猫找到它年轻时埋藏的宝物</li>
+            <li><strong>岩浆桥搭建</strong>：推动冷却的岩石块，为被困的小动物搭桥</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Peach Blossom Map -->
+    <div class="map-card map-peach">
+      <div class="map-header">
+        <div class="map-icon">&#127800;</div>
+        <div>
+          <div class="map-name">桃花源</div>
+          <div class="map-subtitle">Peach Blossom Spring &middot; 宁静与秘密的花园</div>
+        </div>
+      </div>
+      <div class="map-body">
+        <div class="map-section">
+          <h4>视觉风格</h4>
+          <p>
+            主色调：粉白、嫩绿、淡金。漫天飘落的桃花瓣铺满小径，阳光透过花枝洒下斑驳光影。
+            远处有薄雾笼罩的山丘，近处是潺潺溪流和长满青苔的石桥。
+            整体氛围宁静治愈，像走进了一幅水墨画。
+          </p>
+          <ul>
+            <li>花瓣落在猫爪上会停留片刻再飘走</li>
+            <li>水面有真实的倒影和波纹，能看到猫脸的反射</li>
+            <li>黄昏时整片桃花林被染成金色，猫的影子拉得很长</li>
+          </ul>
+        </div>
+        <div class="map-section">
+          <h4>任务</h4>
+          <ul>
+            <li><strong>收集七色花瓣</strong>：七种不同颜色的花瓣散落各处，拼成一幅画</li>
+            <li><strong>修复古桥</strong>：石桥断了，需要找到合适的石块重新搭建</li>
+            <li><strong>桃花猫的诗会</strong>：帮助害羞的桃花猫在月下诗会上朗读它的诗</li>
+            <li><strong>追踪蝴蝶群</strong>：跟随一群发光蝴蝶找到隐藏的桃花源入口</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lake Map -->
+    <div class="map-card map-lake">
+      <div class="map-header">
+        <div class="map-icon">&#127754;</div>
+        <div>
+          <div class="map-name">碧波幻境</div>
+          <div class="map-subtitle">Azure Mirage Lake &middot; 水底的另一个世界</div>
+        </div>
+      </div>
+      <div class="map-body">
+        <div class="map-section">
+          <h4>视觉风格</h4>
+          <p>
+            主色调：碧蓝、翠绿、银白。湖面平静如镜，倒映着天空和远山。
+            湖底有发光的水草和游动的鱼群，透过水面能看到斑斓的色彩。
+            夜间湖面会升起萤火虫般的光点，水面下有神秘的蓝色光芒闪烁。
+          </p>
+          <ul>
+            <li>猫靠近水边时，能看到自己清晰的倒影</li>
+            <li>爪子触水时产生涟漪，倒影随之波动</li>
+            <li>不同深度的水呈现不同蓝色层次，从浅蓝到深靛</li>
+          </ul>
+        </div>
+        <div class="map-section">
+          <h4>任务</h4>
+          <ul>
+            <li><strong>打捞落水星光</strong>：星星掉进了湖里，需要找到方法捞上来</li>
+            <li><strong>湖底迷宫</strong>：潜入浅水区，穿过水草迷宫找到出口</li>
+            <li><strong>鱼群音乐会</strong>：帮助湖猫组织一场水下音乐会</li>
+            <li><strong>月光钓手</strong>：在特定月相下钓鱼，钓到传说中的月光鱼</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Cat Encounters -->
+<section class="section">
+  <h2 class="section-title">猫咪图鉴</h2>
+  <div class="section-line"></div>
+  <p style="color:var(--dim); font-size:0.9rem; margin-bottom:0.5rem;">
+    每张地图都有独特的猫居民。它们不是 NPC——它们有自己的脾气、习惯和故事。
+  </p>
+
+  <div class="cat-grid">
+    <div class="cat-card">
+      <div class="cat-avatar" style="background: rgba(255,77,0,0.1);">&#128049;</div>
+      <h4>炎爪</h4>
+      <div class="cat-breed">火山猫 &middot; 橘色虎斑</div>
+      <div class="cat-personality">性格火爆但心地善良，守护火山免受灾害。走路时爪子会微微发光，是火山赋予的特殊能力。</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-avatar" style="background: rgba(255,183,197,0.1);">&#128049;</div>
+      <h4>花辞</h4>
+      <div class="cat-breed">桃花猫 &middot; 白色长毛</div>
+      <div class="cat-personality">安静害羞，喜欢在桃花树下写诗。毛发上永远沾着几片花瓣，走动时会飘落。</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-avatar" style="background: rgba(0,200,255,0.1);">&#128049;</div>
+      <h4>涟漪</h4>
+      <div class="cat-breed">湖猫 &middot; 蓝色暹罗</div>
+      <div class="cat-personality">优雅神秘，能听懂水的语言。眼睛在黑暗中会发出幽蓝色的光，擅长潜水和游泳。</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-avatar" style="background: rgba(255,215,0,0.1);">&#128049;</div>
+      <h4>铜铃</h4>
+      <div class="cat-breed">流浪猫 &middot; 三花</div>
+      <div class="cat-personality">活泼好动，穿梭于各张地图之间。脖子上挂着一个小铜铃，走到哪里都叮当响。</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-avatar" style="background: rgba(168,85,247,0.1);">&#128049;</div>
+      <h4>墨影</h4>
+      <div class="cat-breed">暗影猫 &middot; 纯黑</div>
+      <div class="cat-personality">独来独往，行踪神秘。只在夜晚出现，毛发在月光下会泛出紫色光泽。</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-avatar" style="background: rgba(0,255,136,0.1);">&#128049;</div>
+      <h4>苔藓</h4>
+      <div class="cat-breed">森林猫 &middot; 绿眼缅因</div>
+      <div class="cat-personality">温和稳重，是所有猫的长辈。身上覆盖着薄薄的苔藓纹路，与自然融为一体。</div>
+    </div>
+  </div>
+</section>
+
+<!-- Visual Effects -->
+<section class="section">
+  <h2 class="section-title">炫彩视觉特效</h2>
+  <div class="section-line"></div>
+
+  <div class="fx-grid">
+    <div class="fx-card">
+      <div class="fx-icon">&#128171;</div>
+      <div>
+        <h4>光线追踪</h4>
+        <p>实时计算猫影子的方向和长度。正午影子缩成脚下一个小圆，黄昏影子拉长到十几米外。猫走过不同光源时，影子方向平滑过渡。</p>
+      </div>
+    </div>
+    <div class="fx-card">
+      <div class="fx-icon">&#127752;</div>
+      <div>
+        <h4>粒子特效</h4>
+        <p>火山地图的飘落火山灰、桃花源的花瓣雨、湖泊的萤火光点。每片粒子都有独立的物理轨迹，随风摆动、受猫的移动影响。</p>
+      </div>
+    </div>
+    <div class="fx-card">
+      <div class="fx-icon">&#128167;</div>
+      <div>
+        <h4>水面反射</h4>
+        <p>湖面实时反射周围环境和猫的倒影。爪子触水时涟漪向四周扩散，倒影随之扭曲变形。水下物体有折射偏移效果。</p>
+      </div>
+    </div>
+    <div class="fx-card">
+      <div class="fx-icon">&#127769;</div>
+      <div>
+        <h4>昼夜循环</h4>
+        <p>每张地图有独立的时间流逝。白天和夜晚的光影完全不同——夜晚的火山更红，桃花源更静谧，湖泊有月光银辉。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Mission Flow -->
+<section class="section">
+  <h2 class="section-title">任务流程</h2>
+  <div class="section-line"></div>
+
+  <div class="mission-flow">
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="step-dot"></div>
+        <div class="step-label">探索</div>
+        <div class="step-desc">自由探索地图，发现环境中的线索和可互动物体</div>
+      </div>
+      <div class="flow-step">
+        <div class="step-dot"></div>
+        <div class="step-label">偶遇</div>
+        <div class="step-desc">遇到其他猫，通过行为和对话了解它们的困境</div>
+      </div>
+      <div class="flow-step">
+        <div class="step-dot"></div>
+        <div class="step-label">接受</div>
+        <div class="step-desc">选择是否帮助——不同选择导向不同任务分支</div>
+      </div>
+      <div class="flow-step">
+        <div class="step-dot"></div>
+        <div class="step-label">执行</div>
+        <div class="step-desc">利用猫的能力（跳跃、潜行、攀爬）完成任务</div>
+      </div>
+      <div class="flow-step">
+        <div class="step-dot"></div>
+        <div class="step-label">影响</div>
+        <div class="step-desc">任务结果改变地图面貌，解锁新区域和新故事线</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Tech Specs -->
+<section class="section">
+  <h2 class="section-title">技术规格</h2>
+  <div class="section-line"></div>
+
+  <table class="tech-table">
+    <thead>
+      <tr>
+        <th>模块</th>
+        <th>方案</th>
+        <th>备注</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>引擎</td>
+        <td>Unity / Unreal Engine 5</td>
+        <td><span class="tech-tag">光线追踪</span></td>
+      </tr>
+      <tr>
+        <td>渲染</td>
+        <td>PBR 物理渲染 + 后处理</td>
+        <td>水面反射、粒子系统、体积光</td>
+      </tr>
+      <tr>
+        <td>视角系统</td>
+        <td>固定猫眼高度相机 + 动态爪子模型</td>
+        <td>爪子动画与移动速度联动</td>
+      </tr>
+      <tr>
+        <td>影子</td>
+        <td>实时阴影贴图 + 光源追踪</td>
+        <td>多光源混合阴影</td>
+      </tr>
+      <tr>
+        <td>NPC AI</td>
+        <td>行为树 + 状态机</td>
+        <td>每只猫有独立日程和情绪系统</td>
+      </tr>
+      <tr>
+        <td>任务系统</td>
+        <td>条件触发 + 分支选择</td>
+        <td>玩家选择影响地图状态</td>
+      </tr>
+      <tr>
+        <td>平台</td>
+        <td>PC / 主机 / 移动端</td>
+        <td><span class="tech-tag">跨平台</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="paw-print">&#128062;</div>
+  <p>猫眼看世界 &middot; Pawsworth Adventures &middot; Game Design Document</p>
+  <p style="margin-top:8px; opacity:0.5;">每只猫都有自己的故事，每个世界都值得被探索</p>
+</footer>
+
+</body>
+</html>

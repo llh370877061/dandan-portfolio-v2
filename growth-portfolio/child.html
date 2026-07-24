@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的成长档案</title>
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/modules.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+    }
+
+    .child-view-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: var(--space-4);
+      min-height: 100vh;
+    }
+
+    .child-header {
+      text-align: center;
+      padding: var(--space-8) var(--space-4);
+      background: var(--color-bg-card);
+      border-radius: var(--radius-xl);
+      margin-bottom: var(--space-6);
+      box-shadow: var(--shadow-md);
+    }
+
+    .child-avatar-large {
+      width: 80px;
+      height: 80px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      margin: 0 auto var(--space-4);
+    }
+
+    .child-name-large {
+      font-size: var(--text-2xl);
+      font-weight: 700;
+      margin-bottom: var(--space-2);
+    }
+
+    .child-age {
+      font-size: var(--text-lg);
+      color: var(--color-text-muted);
+    }
+
+    .tab-bar {
+      display: flex;
+      gap: var(--space-2);
+      padding: var(--space-2);
+      background: var(--color-bg-card);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-6);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .tab-item {
+      flex: 1;
+      padding: var(--space-3);
+      text-align: center;
+      border-radius: var(--radius-md);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .tab-item:hover {
+      background: var(--color-bg-hover);
+    }
+
+    .tab-item.active {
+      background: var(--color-primary);
+      color: white;
+    }
+
+    .section-title {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-4);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .achievement-highlight {
+      background: linear-gradient(135deg, #fff9e6, #fff3cc);
+      border: 2px solid var(--color-gold);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      text-align: center;
+      margin-bottom: var(--space-6);
+    }
+
+    .achievement-highlight-icon {
+      font-size: 48px;
+      margin-bottom: var(--space-2);
+    }
+
+    .achievement-highlight-title {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      color: #b8860b;
+    }
+
+    .reflection-input-area {
+      background: var(--color-bg-card);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .reflection-question-display {
+      font-size: var(--text-lg);
+      font-weight: 500;
+      color: var(--color-primary);
+      padding: var(--space-4);
+      background: var(--color-primary-bg);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-4);
+    }
+
+    .mood-selector {
+      display: flex;
+      gap: var(--space-3);
+      justify-content: center;
+      margin: var(--space-4) 0;
+    }
+
+    .mood-option {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-1);
+      padding: var(--space-3);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      border: 2px solid transparent;
+    }
+
+    .mood-option:hover {
+      background: var(--color-bg-hover);
+    }
+
+    .mood-option.selected {
+      border-color: var(--color-primary);
+      background: var(--color-primary-bg);
+    }
+
+    .mood-option-icon {
+      font-size: 24px;
+    }
+
+    .mood-option-label {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    .history-item {
+      background: var(--color-bg-card);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      margin-bottom: var(--space-3);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .history-date {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-2);
+    }
+
+    .history-question {
+      font-weight: 500;
+      margin-bottom: var(--space-2);
+    }
+
+    .history-answer {
+      color: var(--color-text-secondary);
+    }
+
+    .history-comment {
+      margin-top: var(--space-3);
+      padding: var(--space-3);
+      background: rgba(232, 160, 191, 0.1);
+      border-radius: var(--radius-md);
+      border-left: 3px solid var(--color-child1);
+    }
+
+    .history-comment-label {
+      font-size: var(--text-xs);
+      color: var(--color-child1);
+      margin-bottom: var(--space-1);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-4);
+      background: var(--color-bg-card);
+      border-radius: var(--radius-full);
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-4);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .back-link:hover {
+      color: var(--color-primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="child-view-container" id="app">
+    <a class="back-link" href="index.html">← 妈妈视图</a>
+    <!-- 动态内容 -->
+  </div>
+
+  <script src="app.bundle.js"></script>
+  <script>
+    // child.html 专用逻辑 - 使用全局变量方式
+    (function() {
+      let _childViewCurrentChild = 'child_1';
+      let _childViewCurrentTab = 'home';
+      let _childViewCurrentQuestion = getRandomQuestion();
+
+      function childViewInit() {
+        childViewRender();
+      }
+
+      function childViewRender() {
+        const app = document.getElementById('app');
+        const children = store.getChildren();
+        const child = children.find(c => c.id === _childViewCurrentChild);
+
+        app.innerHTML = `
+          <a class="back-link" href="index.html">← 妈妈视图</a>
+
+          <div class="child-header">
+            <div class="child-avatar-large" style="background: ${child?.color || '#e8a0bf'}20;">
+              ${child?.avatar || '🌸'}
+            </div>
+            <div class="child-name-large">${escapeHtml(child?.name || '孩子')}</div>
+            <div class="child-age">${child?.age || 0}岁</div>
+          </div>
+
+          <div class="child-tabs" style="margin-bottom: var(--space-4);">
+            ${children.map(c => `
+              <div class="child-tab child-${c.id === 'child_1' ? '1' : '2'} ${_childViewCurrentChild === c.id ? 'active' : ''}" data-child="${c.id}">
+                <span>${c.avatar} ${c.name}</span>
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="tab-bar">
+            <div class="tab-item ${_childViewCurrentTab === 'home' ? 'active' : ''}" data-tab="home">🏠 我的主页</div>
+            <div class="tab-item ${_childViewCurrentTab === 'timeline' ? 'active' : ''}" data-tab="timeline">📅 时间轴</div>
+            <div class="tab-item ${_childViewCurrentTab === 'reflection' ? 'active' : ''}" data-tab="reflection">💭 反思</div>
+            <div class="tab-item ${_childViewCurrentTab === 'achievements' ? 'active' : ''}" data-tab="achievements">🏆 成就</div>
+          </div>
+
+          <div id="tab-content">
+            ${childViewRenderTabContent()}
+          </div>
+        `;
+
+        childViewBindEvents();
+      }
+
+      function childViewRenderTabContent() {
+        switch (_childViewCurrentTab) {
+          case 'home': return childViewRenderHome();
+          case 'timeline': return childViewRenderTimeline();
+          case 'reflection': return childViewRenderReflection();
+          case 'achievements': return childViewRenderAchievements();
+          default: return '';
+        }
+      }
+
+      function childViewRenderHome() {
+        const achievements = store.getAchievements(_childViewCurrentChild);
+        const recentAchievement = achievements[achievements.length - 1];
+
+        return `
+          ${recentAchievement ? `
+            <div class="achievement-highlight">
+              <div class="achievement-highlight-icon">${recentAchievement.icon}</div>
+              <div class="achievement-highlight-title">最新成就：${escapeHtml(recentAchievement.name)}</div>
+            </div>
+          ` : ''}
+
+          <div class="section-title">📝 最近记录</div>
+          ${childViewRenderRecentRecords()}
+        `;
+      }
+
+      function childViewRenderRecentRecords() {
+        const activities = store.getActivities(_childViewCurrentChild).slice(0, 3);
+        const readings = store.getReadings(_childViewCurrentChild).slice(0, 3);
+        const all = [...activities.map(a => ({ ...a, type: 'activity' })), ...readings.map(r => ({ ...r, type: 'reading' }))]
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          .slice(0, 5);
+
+        if (all.length === 0) {
+          return `
+            <div class="empty-state" style="background: var(--color-bg-card); border-radius: var(--radius-lg); padding: var(--space-8);">
+              <div class="empty-state-icon">🌟</div>
+              <div class="empty-state-title">还没有记录</div>
+              <div class="empty-state-text">让妈妈帮你记录吧</div>
+            </div>
+          `;
+        }
+
+        return all.map(record => `
+          <div class="history-item">
+            <div class="history-date">${formatDate(record.date, 'short')} · ${record.type === 'activity' ? '🌱 活动' : '📚 阅读'}</div>
+            <div class="history-question">${escapeHtml(record.title || '未命名')}</div>
+            ${record.description ? `<div class="history-answer">${escapeHtml(record.description).substring(0, 80)}${record.description.length > 80 ? '...' : ''}</div>` : ''}
+          </div>
+        `).join('');
+      }
+
+      function childViewRenderTimeline() {
+        const activities = store.getActivities(_childViewCurrentChild).map(r => ({ ...r, type: 'activity' }));
+        const readings = store.getReadings(_childViewCurrentChild).map(r => ({ ...r, type: 'reading' }));
+        const progresses = store.getProgresses(_childViewCurrentChild).map(r => ({ ...r, type: 'progress' }));
+        const all = [...activities, ...readings, ...progresses].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        if (all.length === 0) {
+          return `
+            <div class="empty-state" style="background: var(--color-bg-card); border-radius: var(--radius-lg); padding: var(--space-8);">
+              <div class="empty-state-icon">📅</div>
+              <div class="empty-state-title">还没有记录</div>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="section-title">📅 我的时间轴</div>
+          <div class="timeline" style="padding-left: 30px;">
+            ${all.slice(0, 10).map(record => `
+              <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">${formatDate(record.date)}</div>
+                <div class="timeline-card">
+                  <div style="font-weight: 500;">${escapeHtml(record.title || '未命名')}</div>
+                  ${record.description ? `<div style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-top: var(--space-2);">${escapeHtml(record.description).substring(0, 100)}${record.description.length > 100 ? '...' : ''}</div>` : ''}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      function childViewRenderReflection() {
+        const reflections = store.getReflections(_childViewCurrentChild);
+
+        return `
+          <div class="section-title">💭 今日反思</div>
+          <div class="reflection-input-area">
+            <div class="reflection-question-display">
+              ${escapeHtml(_childViewCurrentQuestion)}
+            </div>
+            <textarea id="child-answer" class="form-textarea" placeholder="写下你的想法..." style="min-height: 100px;"></textarea>
+            <div class="mood-selector">
+              ${MOOD_OPTIONS.map(m => `
+                <div class="mood-option" data-mood="${m.value}">
+                  <div class="mood-option-icon">${m.icon}</div>
+                  <div class="mood-option-label">${m.value}</div>
+                </div>
+              `).join('')}
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" id="save-child-reflection">保存反思</button>
+          </div>
+
+          ${reflections.length > 0 ? `
+            <div class="section-title" style="margin-top: var(--space-6);">📝 历史反思</div>
+            ${reflections.slice(0, 5).map(r => `
+              <div class="history-item">
+                <div class="history-date">${formatDate(r.date, 'short')}</div>
+                <div class="history-question">${escapeHtml(r.question)}</div>
+                ${r.answer ? `<div class="history-answer">${escapeHtml(r.answer)}</div>` : ''}
+                ${r.momComment ? `
+                  <div class="history-comment">
+                    <div class="history-comment-label">妈妈的回复</div>
+                    <div>${escapeHtml(r.momComment)}</div>
+                  </div>
+                ` : ''}
+              </div>
+            `).join('')}
+          ` : ''}
+        `;
+      }
+
+      function childViewRenderAchievements() {
+        const achievements = store.getAchievements(_childViewCurrentChild);
+
+        return `
+          <div class="section-title">🏆 我的成就</div>
+          <div style="text-align: center; margin-bottom: var(--space-4); font-size: var(--text-lg); font-weight: 600; color: var(--color-primary);">
+            ${achievements.length} / ${ACHIEVEMENTS.length} 个成就
+          </div>
+          ${ACHIEVEMENT_CATEGORIES.map(category => {
+            const catAchievements = ACHIEVEMENTS.filter(a => a.category === category.id);
+            const catUnlocked = catAchievements.filter(a => achievements.some(u => u.badgeId === a.id));
+
+            if (catUnlocked.length === 0) return '';
+
+            return `
+              <div style="margin-bottom: var(--space-4);">
+                <div style="font-weight: 500; margin-bottom: var(--space-2);">${category.icon} ${category.name}</div>
+                <div style="display: flex; gap: var(--space-3); flex-wrap: wrap;">
+                  ${catUnlocked.map(a => `
+                    <div style="background: var(--color-bg-card); border-radius: var(--radius-lg); padding: var(--space-4); text-align: center; min-width: 100px; box-shadow: var(--shadow-sm);">
+                      <div style="font-size: 32px; margin-bottom: var(--space-1);">${a.icon}</div>
+                      <div style="font-size: var(--text-sm); font-weight: 500;">${escapeHtml(a.name)}</div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `;
+          }).join('')}
+          ${achievements.length === 0 ? `
+            <div class="empty-state" style="background: var(--color-bg-card); border-radius: var(--radius-lg); padding: var(--space-8);">
+              <div class="empty-state-icon">🏆</div>
+              <div class="empty-state-title">还没有成就</div>
+              <div class="empty-state-text">继续努力，解锁更多成就吧</div>
+            </div>
+          ` : ''}
+        `;
+      }
+
+      function childViewBindEvents() {
+        document.querySelectorAll('.child-tab').forEach(tab => {
+          tab.addEventListener('click', () => {
+            _childViewCurrentChild = tab.dataset.child;
+            childViewRender();
+          });
+        });
+
+        document.querySelectorAll('.tab-item').forEach(tab => {
+          tab.addEventListener('click', () => {
+            _childViewCurrentTab = tab.dataset.tab;
+            childViewRender();
+          });
+        });
+
+        document.querySelectorAll('.mood-option').forEach(option => {
+          option.addEventListener('click', () => {
+            document.querySelectorAll('.mood-option').forEach(o => o.classList.remove('selected'));
+            option.classList.add('selected');
+          });
+        });
+
+        document.getElementById('save-child-reflection')?.addEventListener('click', () => {
+          const answer = document.getElementById('child-answer')?.value;
+          const mood = document.querySelector('.mood-option.selected')?.dataset.mood;
+
+          if (!answer?.trim()) {
+            showToast('请写下你的想法', 'error');
+            return;
+          }
+
+          store.addReflection({
+            childId: _childViewCurrentChild,
+            date: getToday(),
+            question: _childViewCurrentQuestion,
+            answer: answer.trim(),
+            mood: mood || ''
+          });
+
+          checkAchievements(_childViewCurrentChild);
+
+          showToast('反思保存成功', 'success');
+          _childViewCurrentQuestion = getRandomQuestion();
+          childViewRender();
+        });
+      }
+
+      // 延迟初始化，等待 bundle 加载完成
+      document.addEventListener('DOMContentLoaded', childViewInit);
+    })();
+  </script>
+</body>
+</html>
