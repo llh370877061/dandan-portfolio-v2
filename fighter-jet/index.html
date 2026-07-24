@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>战斗机飞行模组</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #000;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+    }
+    #game-canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+    #loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #0f0;
+      font-size: 24px;
+      z-index: 100;
+    }
+    #aircraft-select {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.9);
+      border: 2px solid #0f0;
+      padding: 30px;
+      display: none;
+      z-index: 50;
+    }
+    #aircraft-select h2 {
+      color: #0f0;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .aircraft-btn {
+      display: block;
+      width: 200px;
+      margin: 10px auto;
+      padding: 10px;
+      background: transparent;
+      border: 1px solid #0f0;
+      color: #0f0;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .aircraft-btn:hover {
+      background: #0f0;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <div id="loading">正在加载...</div>
+  <canvas id="game-canvas"></canvas>
+  <div id="aircraft-select">
+    <h2>选择飞机</h2>
+    <button class="aircraft-btn" data-aircraft="j20">歼-20</button>
+    <button class="aircraft-btn" data-aircraft="j35">歼-35</button>
+    <button class="aircraft-btn" data-aircraft="j16">歼-16</button>
+    <button class="aircraft-btn" data-aircraft="j10">歼-10</button>
+    <button class="aircraft-btn" data-aircraft="mig25">米格-25</button>
+    <button class="aircraft-btn" data-aircraft="mig27">米格-27</button>
+    <button class="aircraft-btn" data-aircraft="y20">运-20</button>
+    <button class="aircraft-btn" data-aircraft="bomber">轰炸机</button>
+  </div>
+  <script src="src/game.js"></script>
+  <script src="src/combat.js"></script>
+</body>
+</html>
