@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自我探索方案 · 认识真实的自己</title>
+<style>
+  :root {
+    --bg: #faf9f6;
+    --card: #ffffff;
+    --accent: #2d6a4f;
+    --accent2: #40916c;
+    --accent-light: #d8f3dc;
+    --warm: #ff8c42;
+    --warm-light: #fff3e6;
+    --coral: #ff6b6b;
+    --coral-light: #ffe0e0;
+    --purple: #7c5cbf;
+    --purple-light: #ede6f7;
+    --teal: #4ecdc4;
+    --teal-light: #e0f7f5;
+    --text: #1b1b1b;
+    --text2: #555;
+    --text3: #888;
+    --border: #e8e8e8;
+    --shadow: 0 2px 16px rgba(0,0,0,.05);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,.08);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.8; scroll-behavior: smooth;
+  }
+
+  /* ── 导航 ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 0;
+  }
+  nav .inner {
+    max-width: 1000px; margin: 0 auto;
+    display: flex; align-items: center; gap: 24px;
+    padding: 0 24px; flex-wrap: wrap;
+  }
+  nav .logo { font-size: 1.1rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
+  nav a { text-decoration: none; color: var(--text2); font-size: .88rem; transition: color .2s; }
+  nav a:hover { color: var(--accent); }
+
+  /* ── 英雄区 ── */
+  .hero {
+    max-width: 1000px; margin: 0 auto; padding: 72px 24px 56px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: 2.6rem; font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--teal));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 16px;
+  }
+  .hero .subtitle { font-size: 1.05rem; color: var(--text2); max-width: 680px; margin: 0 auto 28px; }
+  .hero .principles {
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+  }
+  .hero .principle {
+    background: var(--accent-light); color: var(--accent);
+    padding: 6px 16px; border-radius: 20px;
+    font-size: .82rem; font-weight: 600;
+  }
+
+  /* ── 通用板块 ── */
+  section {
+    max-width: 1000px; margin: 0 auto 56px; padding: 0 24px;
+  }
+  .phase-header {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 28px; padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+  }
+  .phase-num {
+    width: 48px; height: 48px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; font-weight: 800; color: #fff;
+    flex-shrink: 0;
+  }
+  .phase-header h2 { font-size: 1.5rem; font-weight: 700; }
+  .phase-header .phase-sub { font-size: .9rem; color: var(--text3); margin-top: 2px; }
+
+  h3 { font-size: 1.15rem; font-weight: 600; margin: 28px 0 12px; color: var(--text); }
+  h4 { font-size: 1rem; font-weight: 600; margin: 20px 0 8px; }
+  p { margin-bottom: 14px; }
+
+  /* ── 卡片 ── */
+  .card-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px; margin-top: 16px;
+  }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px;
+    box-shadow: var(--shadow); transition: transform .2s, box-shadow .2s;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+  .card .tag {
+    display: inline-block; font-size: .75rem; font-weight: 600;
+    padding: 3px 10px; border-radius: 20px; margin-bottom: 8px;
+  }
+  .card h4 { margin-top: 4px; }
+  .card p { font-size: .9rem; color: var(--text2); margin-bottom: 0; }
+
+  .tag-green { background: var(--accent-light); color: var(--accent); }
+  .tag-warm { background: var(--warm-light); color: #c46a1a; }
+  .tag-coral { background: var(--coral-light); color: #c0392b; }
+  .tag-purple { background: var(--purple-light); color: var(--purple); }
+  .tag-teal { background: var(--teal-light); color: #1a8a7d; }
+
+  /* ── 引用 ── */
+  blockquote {
+    border-left: 3px solid var(--accent2);
+    padding: 16px 20px; background: var(--accent-light);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    margin: 20px 0; font-style: italic; color: #333;
+  }
+  blockquote cite {
+    display: block; margin-top: 8px; font-style: normal;
+    font-weight: 600; font-size: .85rem; color: var(--accent);
+  }
+
+  /* ── 表格 ── */
+  table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: .9rem; }
+  th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: var(--accent-light); color: var(--accent); font-weight: 600; }
+  tr:hover { background: #f8f8f8; }
+
+  /* ── 工作纸/可填写区域 ── */
+  .worksheet {
+    background: #fff; border: 2px dashed var(--accent);
+    border-radius: var(--radius); padding: 28px;
+    margin: 20px 0; position: relative;
+  }
+  .worksheet::before {
+    content: '✎ 自我探索工作纸'; position: absolute; top: -14px; left: 20px;
+    background: var(--accent); color: #fff;
+    padding: 4px 14px; border-radius: 12px;
+    font-size: .78rem; font-weight: 600;
+  }
+  .worksheet .field { margin-bottom: 18px; }
+  .worksheet label {
+    display: block; font-weight: 600; font-size: .9rem;
+    margin-bottom: 6px; color: var(--accent);
+  }
+  .worksheet .line {
+    border-bottom: 1px solid #ddd; min-height: 28px;
+    padding: 4px 0; color: var(--text3); font-size: .85rem;
+  }
+  .worksheet .blank-area {
+    border: 1px solid #eee; border-radius: var(--radius-sm);
+    min-height: 100px; padding: 12px; color: var(--text3);
+    font-size: .85rem; background: #fcfcfc;
+  }
+
+  /* ── 情绪轮 ── */
+  .emotion-wheel {
+    display: flex; flex-wrap: wrap; gap: 12px;
+    justify-content: center; margin: 20px 0;
+  }
+  .emotion-item {
+    width: 100px; text-align: center; padding: 14px 8px;
+    border-radius: var(--radius); cursor: default;
+    transition: transform .2s;
+  }
+  .emotion-item:hover { transform: scale(1.08); }
+  .emotion-item .emoji { font-size: 1.8rem; margin-bottom: 4px; }
+  .emotion-item .name { font-size: .82rem; font-weight: 600; }
+  .emotion-item .desc { font-size: .72rem; color: var(--text3); margin-top: 2px; }
+
+  /* ── 冰山图 ── */
+  .iceberg {
+    max-width: 500px; margin: 24px auto; position: relative;
+  }
+  .iceberg .water-line {
+    border-top: 2px dashed var(--teal); position: relative;
+    padding-top: 8px; margin-top: 0;
+  }
+  .iceberg .water-line::before {
+    content: '🌊 水面线'; position: absolute; top: -12px; right: 0;
+    font-size: .75rem; color: var(--teal);
+  }
+  .iceberg .layer {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px; margin: 6px 0;
+    border-radius: var(--radius-sm); font-size: .88rem;
+  }
+  .iceberg .layer .num {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .78rem; font-weight: 700; color: #fff; flex-shrink: 0;
+  }
+
+  /* ── MBTI 维度 ── */
+  .mbti-dimension {
+    display: flex; align-items: stretch; gap: 0;
+    margin: 16px 0; border-radius: var(--radius);
+    overflow: hidden; box-shadow: var(--shadow);
+  }
+  .mbti-dimension .pole {
+    flex: 1; padding: 20px; text-align: center;
+  }
+  .mbti-dimension .pole h4 { margin: 0 0 6px; font-size: 1rem; }
+  .mbti-dimension .pole p { font-size: .85rem; margin: 0; }
+  .mbti-dimension .vs {
+    width: 48px; display: flex; align-items: center; justify-content: center;
+    background: var(--text); color: #fff; font-weight: 800; font-size: .9rem;
+  }
+
+  /* ── MBTI 类型卡片 ── */
+  .type-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px;
+    margin: 16px 0; box-shadow: var(--shadow);
+  }
+  .type-card .type-code {
+    font-size: 1.6rem; font-weight: 800; margin-bottom: 4px;
+    letter-spacing: 2px;
+  }
+  .type-card .type-name { font-size: 1rem; color: var(--text2); margin-bottom: 12px; }
+  .type-card .type-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px; font-size: .88rem;
+  }
+  .type-card .type-section h5 {
+    font-size: .82rem; font-weight: 600; color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .type-card .type-section p { font-size: .85rem; color: var(--text2); margin: 0; }
+
+  /* ── 时间线 ── */
+  .timeline { position: relative; padding-left: 28px; margin: 16px 0; }
+  .timeline::before {
+    content: ''; position: absolute; left: 8px; top: 0; bottom: 0;
+    width: 2px; background: var(--accent-light);
+  }
+  .timeline .step {
+    position: relative; margin-bottom: 24px; padding-left: 8px;
+  }
+  .timeline .step::before {
+    content: ''; position: absolute; left: -24px; top: 6px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--accent); border: 2px solid var(--card);
+  }
+  .timeline .step h4 { margin: 0 0 4px; }
+  .timeline .step p { font-size: .88rem; color: var(--text2); margin: 0; }
+
+  /* ── 核心原则条 ── */
+  .principle-bar {
+    background: linear-gradient(135deg, var(--accent-light), var(--teal-light));
+    border-radius: var(--radius); padding: 24px 28px;
+    margin: 24px 0; border-left: 4px solid var(--accent);
+  }
+  .principle-bar h4 { color: var(--accent); margin-bottom: 8px; }
+  .principle-bar ul { padding-left: 20px; }
+  .principle-bar li { margin-bottom: 6px; font-size: .9rem; }
+
+  /* ── 评估量表 ── */
+  .scale-table { margin: 16px 0; }
+  .scale-table td:first-child { font-weight: 600; white-space: nowrap; }
+  .scale-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 0; border-bottom: 1px solid #f0f0f0;
+  }
+  .scale-row .label { width: 200px; font-size: .88rem; font-weight: 500; flex-shrink: 0; }
+  .scale-row .options { display: flex; gap: 6px; }
+  .scale-row .opt {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 2px solid var(--border); display: flex;
+    align-items: center; justify-content: center;
+    font-size: .75rem; color: var(--text3); cursor: default;
+    transition: all .2s;
+  }
+  .scale-row .opt:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── 底部 ── */
+  footer {
+    text-align: center; padding: 48px 24px;
+    color: var(--text3); font-size: .85rem;
+    border-top: 1px solid var(--border); margin-top: 56px;
+  }
+  footer .quote { font-style: italic; color: var(--text2); margin-bottom: 8px; }
+
+  /* ── 响应式 ── */
+  @media (max-width: 700px) {
+    .hero h1 { font-size: 1.8rem; }
+    .mbti-dimension { flex-direction: column; }
+    .mbti-dimension .vs { width: 100%; height: 36px; }
+    .type-card .type-grid { grid-template-columns: 1fr; }
+    nav .inner { gap: 12px; }
+    .card-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ 导航 ═══ -->
+<nav>
+  <div class="inner">
+    <span class="logo">自我探索方案</span>
+    <a href="#phase1">安全空间</a>
+    <a href="#phase2">情绪觉察</a>
+    <a href="#phase3">处事记录</a>
+    <a href="#phase4">性格认知</a>
+    <a href="#phase5">整合行动</a>
+    <a href="#mbti">MBTI</a>
+  </div>
+</nav>
+
+<!-- ═══ 英雄区 ═══ -->
+<div class="hero">
+  <h1>自我探索方案</h1>
+  <p class="subtitle">每个人都是自己生活的科学家。用好奇心和温柔的勇气，探索情绪、性格与处事方式的奥秘。</p>
+  <div class="principles">
+    <span class="principle">尊重</span>
+    <span class="principle">接纳</span>
+    <span class="principle">不评判</span>
+    <span class="principle">不打断</span>
+    <span class="principle">不指责</span>
+    <span class="principle">自由节奏</span>
+  </div>
+</div>
+
+<!-- ═══ 使用说明 ═══ -->
+<section>
+  <blockquote>
+    这不是一份"考试卷"，没有对错，没有标准答案。你可以在任何阶段停下来，可以跳过任何不想回答的问题，可以随时回到之前的部分。你的节奏就是最好的节奏。
+    <cite>—— 写在前面的话</cite>
+  </blockquote>
+  <p><strong>方案结构：</strong>五个渐进阶段，从建立安全感开始，到整合行动结束。每个阶段包含理论讲解、自我觉察工具和可填写的工作纸。</p>
+  <p><strong>理论基础：</strong>整合了自我科学（Personal Science）方法论、戈尔曼情商五要素模型、REBT理性情绪行为疗法ABC模型、萨提亚冰山理论，以及社会情感学习（SEL）框架。</p>
+  <p><strong>适用人群：</strong>成人与青少年均可使用。部分内容标注了"亲子版"提示，适合家长与孩子一起探索。</p>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     第一阶段：安全空间建立
+     ═══════════════════════════════════════════════════════════ -->
+<section id="phase1">
+  <div class="phase-header">
+    <div class="phase-num" style="background:var(--accent);">1</div>
+    <div>
+      <h2>第一阶段：安全空间建立</h2>
+      <div class="phase-sub">在这里，你可以做任何自己</div>
+    </div>
+  </div>
+
+  <p>在开始任何自我探索之前，我们需要先建立一个"安全空间"——一个你可以完全放松、不需要伪装的地方。这不是一个物理空间，而是一种心理状态：<strong>在这里，你是被接纳的，不需要证明任何事。</strong></p>
+
+  <div class="principle-bar">
+    <h4>安全空间的五个承诺</h4>
+    <ul>
+      <li><strong>尊重</strong> — 你的感受和想法都是真实的，不需要被纠正</li>
+      <li><strong>接纳</strong> — 无论你发现自己是什么样子，都值得被善待</li>
+      <li><strong>不评判</strong> — 这里没有"好"或"坏"的情绪，只有真实的情绪</li>
+      <li><strong>不打断</strong> — 你可以说完你想说的任何话</li>
+      <li><strong>自由节奏</strong> — 你可以随时暂停、跳过、或回到任何部分</li>
+    </ul>
+  </div>
+
+  <h3>情绪安全岛</h3>
+  <p>想象一个只属于你的地方——可能是一片安静的海滩、一间温暖的小屋、一棵大树下。当你觉得不舒服、需要喘口气的时候，可以随时回到这里。这是你的"情绪安全岛"。</p>
+
+  <div class="worksheet">
+    <div class="field">
+      <label>我的情绪安全岛</label>
+      <div class="blank-area" style="min-height:120px;">
+        描述一下你的安全岛：它在哪里？是什么样子？有什么声音、气味、颜色？你在那里是什么感觉？
+      </div>
+    </div>
+    <div class="field">
+      <label>回到安全岛的方式</label>
+      <div class="blank-area">
+        当你感到不舒服时，你可以怎么做回到安全岛？（比如：深呼吸三次、闭上眼睛想象、摸一个让你安心的东西……）
+      </div>
+    </div>
+  </div>
+
+  <h3>情绪温度计</h3>
+  <p>在开始探索之前，先感受一下此刻的自己。不需要分析原因，只是诚实地给自己的情绪"量个体温"。</p>
+
+  <div class="worksheet">
+    <div class="field">
+      <label>此刻的情绪温度（1-10，1是最低落，10是最饱满）</label>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <div class="opt" style="width:36px;height:36px;">1</div>
+        <div class="opt" style="width:36px;height:36px;">2</div>
+        <div class="opt" style="width:36px;height:36px;">3</div>
+        <div class="opt" style="width:36px;height:36px;">4</div>
+        <div class="opt" style="width:36px;height:36px;">5</div>
+        <div class="opt" style="width:36px;height:36px;">6</div>
+        <div class="opt" style="width:36px;height:36px;">7</div>
+        <div class="opt" style="width:36px;height:36px;">8</div>
+        <div class="opt" style="width:36px;height:36px;">9</div>
+        <div class="opt" style="width:36px;height:36px;">10</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>如果用一种颜色描述此刻的心情，是什么颜色？</label>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <label>如果用一种天气描述此刻的状态，是什么天气？</label>
+      <div class="line"></div>
+    </div>
+  </div>
+
+  <div class="principle-bar" style="background:linear-gradient(135deg, #fff3e6, #ffe0e0); border-left-color: var(--warm);">
+    <h4 style="color:var(--warm);">给陪伴者的提示</h4>
+    <p style="font-size:.88rem;">如果对方在探索过程中情绪波动较大，不要急于"解决问题"。可以说：</p>
+    <ul>
+      <li>"你现在的感受是真实的，我在这里陪你。"</li>
+      <li>"不需要现在就理清楚，慢慢来。"</li>
+      <li>"你想说的时候再说，不想说也没关系。"</li>
+      <li>"你不需要为自己的情绪道歉。"</li>
+    </ul>
+    <p style="font-size:.85rem; margin-top:12px;"><strong>线下见面时：</strong>如果关系允许，可以提供一个拥抱。肢体接触（拥抱、拍肩、握手）能激活催产素分泌，帮助降低焦虑、建立安全感。但务必尊重对方的意愿——如果对方不需要，一个温暖的微笑同样有力。</p>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     第二阶段：情绪觉察
+     ═══════════════════════════════════════════════════════════ -->
+<section id="phase2">
+  <div class="phase-header">
+    <div class="phase-num" style="background:var(--warm);">2</div>
+    <div>
+      <h2>第二阶段：情绪觉察</h2>
+      <div class="phase-sub">认识你的情绪，理解它的语言</div>
+    </div>
+  </div>
+
+  <p>情绪不是敌人，而是信使。每一种情绪都在告诉你一些重要的事情。愤怒在说"你的边界被侵犯了"，悲伤在说"你在失去一些重要的东西"，恐惧在说"这里有需要注意的危险"。</p>
+  <p>这个阶段的目标不是"消灭"负面情绪，而是<strong>学会听懂情绪在说什么</strong>。</p>
+
+  <h3>第一步：情绪词汇表 — 给情绪命名</h3>
+  <p>研究表明，能精确命名情绪的人，情绪调节能力更强。这叫做"情绪颗粒度"——你的情绪词汇越丰富，你对自己内心世界的理解就越精细。</p>
+
+  <div class="emotion-wheel">
+    <div class="emotion-item" style="background:#ffe0e0;">
+      <div class="emoji">😠</div><div class="name">愤怒</div>
+      <div class="desc">边界被侵犯</div>
+    </div>
+    <div class="emotion-item" style="background:#e0e8ff;">
+      <div class="emoji">😢</div><div class="name">悲伤</div>
+      <div class="desc">在失去什么</div>
+    </div>
+    <div class="emotion-item" style="background:#fff3d0;">
+      <div class="emoji">😨</div><div class="name">恐惧</div>
+      <div class="desc">潜在的威胁</div>
+    </div>
+    <div class="emotion-item" style="background:#d0ffe0;">
+      <div class="emoji">🤢</div><div class="name">厌恶</div>
+      <div class="desc">想远离某事</div>
+    </div>
+    <div class="emotion-item" style="background:#fff0e0;">
+      <div class="emoji">😊</div><div class="name">快乐</div>
+      <div class="desc">需求被满足</div>
+    </div>
+    <div class="emotion-item" style="background:#e8e0ff;">
+      <div class="emoji">😲</div><div class="name">惊讶</div>
+      <div class="desc">预期被打破</div>
+    </div>
+    <div class="emotion-item" style="background:#ffe8f0;">
+      <div class="emoji">🥰</div><div class="name">爱</div>
+      <div class="desc">深层连接</div>
+    </div>
+    <div class="emotion-item" style="background:#e0f0ff;">
+      <div class="emoji">😔</div><div class="name">孤独</div>
+      <div class="desc">渴望连接</div>
+    </div>
+  </div>
+
+  <p style="font-size:.88rem; color:var(--text3); text-align:center;">👆 每种情绪都有积极意义。试着不把它们分成"好"和"坏"。</p>
+
+  <h3>进阶：情绪的细分光谱</h3>
+  <div class="card-grid">
+    <div class="card">
+      <span class="tag tag-coral">愤怒光谱</span>
+      <h4>从烦躁到暴怒</h4>
+      <p>不满 → 烦躁 → 恼火 → 愤怒 → 暴怒 → 狂怒<br><em>你能区分"有点烦"和"真的很生气"吗？</em></p>
+    </div>
+    <div class="card">
+      <span class="tag tag-purple">悲伤光谱</span>
+      <h4>从失落到绝望</h4>
+      <p>失望 → 沮丧 → 悲伤 → 痛苦 → 绝望<br><em>有时候我们说"不开心"，其实里面藏着好几层不同的感受。</em></p>
+    </div>
+    <div class="card">
+      <span class="tag tag-teal">恐惧光谱</span>
+      <h4>从不安到惊恐</h4>
+      <p>不安 → 焦虑 → 担心 → 恐惧 → 惊恐<br><em>焦虑是对未来不确定性的反应，和恐惧不同——恐惧有明确的对象。</em></p>
+    </div>
+    <div class="card">
+      <span class="tag tag-warm">快乐光谱</span>
+      <h4>从满意到狂喜</h4>
+      <p>满足 → 愉快 → 开心 → 喜悦 → 狂喜<br><em>快乐也有很多层次，不只是"开心"二字能概括的。</em></p>
+    </div>
+  </div>
+
+  <h3>第二步：情绪溯源 — 冰山追问法</h3>
+  <p>来自萨提亚冰山理论。当一种情绪出现时，水面之下隐藏着更深的层次。我们可以像潜水员一样，一层层往下探索。</p>
+
+  <div class="iceberg">
+    <div class="layer" style="background:#ffe0e0; border-radius:var(--radius-sm);">
+      <div class="num" style="background:var(--coral);">1</div>
+      <div><strong>行为</strong> — 你做了什么？（摔门、哭泣、沉默、发消息……）</div>
+    </div>
+    <div class="water-line"></div>
+    <div class="layer" style="background:#e8e0ff;">
+      <div class="num" style="background:var(--purple);">2</div>
+      <div><strong>感受</strong> — 你感受到的是什么情绪？（愤怒、委屈、害怕、羞耻……）</div>
+    </div>
+    <div class="layer" style="background:#e0e8ff;">
+      <div class="num" style="background:#5b7fc7;">3</div>
+      <div><strong>观点</strong> — 你当时是怎么想的？（"他不应该这样对我""我不够好"……）</div>
+    </div>
+    <div class="layer" style="background:#d0ffe0;">
+      <div class="num" style="background:#2d8a4f;">4</div>
+      <div><strong>期待</strong> — 你期待什么？（期待被理解、被尊重、被看见……）</div>
+    </div>
+    <div class="layer" style="background:#fff3d0;">
+      <div class="num" style="background:#c49a1a;">5</div>
+      <div><strong>渴望</strong> — 你内心最深处渴望什么？（被爱、被接纳、自由、安全感……）</div>
+    </div>
+  </div>
+
+  <div class="worksheet">
+    <div class="field">
+      <label>最近一次让你情绪波动的事</label>
+      <div class="blank-area" style="min-height:60px;">发生了什么？简单描述事件。</div>
+    </div>
+    <div class="field">
+      <label>当时你做了什么？（行为）</label>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <label>你感受到的是什么情绪？试着用精确的词命名（感受）</label>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <label>你当时脑海中浮现的想法是什么？（观点）</label>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <label>你期待什么？对自己、对对方、对这件事？（期待）</label>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <label>在这一切之下，你内心最深的渴望是什么？（渴望）</label>
+      <div class="line"></div>
+    </div>
+  </div>
+
+  <h3>第三步：情绪的积极意义</h3>
+  <p>每种情绪都有它的"功能"。当我们理解了情绪的积极意义，就不再需要害怕或压抑它。</p>
+
+  <table>
+    <thead>
+      <tr><th>情绪</th><th>表面感受</th><th>积极意义</th><th>它在保护你什么？</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>愤怒</strong></td><td>灼热、紧绷、想攻击</td><td>保护边界</td><td>你在告诉世界："这是我的底线"</td></tr>
+      <tr><td><strong>悲伤</strong></td><td>沉重、无力、想哭泣</td><td>帮助放下</td><td>你在释放不再属于你的东西</td></tr>
+      <tr><td><strong>恐惧</strong></td><td>紧张、心跳加速、想逃</td><td>让你警觉</td><td>你在识别危险并准备应对</td></tr>
+      <tr><td><strong>焦虑</strong></td><td>不安、坐立不安</td><td>推动准备</td><td>你在为未来的不确定性做准备</td></tr>
+      <tr><td><strong>羞耻</strong></td><td>想消失、脸红</td><td>维护社会连接</td><td>你在关心自己在他人眼中的形象</td></tr>
+      <tr><td><strong>内疚</strong></td><td>后悔、想弥补</td><td>修复关系</td><td>你在乎这段关系并想维护它</td></tr>
+      <tr><td><strong>嫉妒</strong></td><td>酸涩、不安</td><td>揭示渴望</td><td>你在看到自己真正想要的东西</td></tr>
+    </tbody>
+  </table>
+
+  <div class="worksheet">
+    <div class="field">
+      <label>回顾一下：你最常体验到的情绪是什么？</label>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <label>这种情绪在试图告诉你什么？</label>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <label>你通常怎么回应它？这个回应方式有用吗？</label>
+      <div class="blank-area"></div>
+    </div>
+  </div>
+
+  <h3>情绪自由消化时间</h3>
+  <p>在这个阶段，你可能需要一些时间来消化这些内容。这是完全正常的。</p>
+  <div class="principle-bar" style="background:linear-gradient(135deg, var(--purple-light), var(--teal-light)); border-left-color: var(--purple);">
+    <h4 style="color:var(--purple);">你可以：</h4>
+    <ul>
+      <li>合上这个页面，去做一些让你放松的事</li>
+      <li>画一幅画、写一段文字、散一次步</li>
+      <li>找一个信任的人聊聊你刚才想到的东西</li>
+      <li>什么都不做，只是安静地和自己的情绪待一会儿</li>
+      <li>随时回来继续，没有时间限制</li>
+    </ul>
+    <p style="font-size:.88rem; margin-top:12px;">当你觉得准备好了，愿意和我聊聊你刚才的发现时，我会在这里。不着急。</p>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     第三阶段：处事方式记录
+     ═══════════════════════════════════════════════════════════ -->
+<section id="phase3">
+  <div class="phase-header">
+    <div class="phase-num" style="background:var(--purple);">3</div>
+    <div>
+      <h2>第三阶段：处事方式记录</h2>
+      <div class="phase-sub">看见自己的模式，才能选择新的方式</div>
+    </div>
+  </div>
+
+  <p>我们每个人都有自己习惯的处事方式——面对冲突时的第一反应、遇到压力时的应对模式、做决定时的思维路径。这些模式大多数时候是自动运行的，我们甚至意识不到它们的存在。</p>
+  <p>这个阶段的核心工具来自REBT（理性情绪行为疗法）：<strong>ABC模型</strong>。它帮你看清一个关键事实——<strong>不是事件本身决定了你的情绪，而是你对事件的解读决定了你的情绪。</strong></p>
+
+  <h3>ABC事件记录卡</h3>
+
+  <div class="card-grid">
+    <div class="card" style="border-left: 4px solid var(--coral);">
+      <span class="tag tag-coral">A — 事件</span>
+      <h4>Activating Event</h4>
+      <p>发生了什么？<br>客观描述事实，像一个旁观者在录像。</p>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--warm);">
+      <span class="tag tag-warm">B — 信念</span>
+      <h4>Belief</h4>
+      <p>你怎么解读这件事？<br>你脑海中浮现的第一个念头是什么？</p>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--purple);">
+      <span class="tag tag-purple">C — 后果</span>
+      <h4>Consequence</h4>
+      <p>你的情绪和行为反应是什么？<br>身体有什么感觉？做了什么？</p>
+    </div>
+  </div>
+
+  <blockquote>
+    "不是A直接导致C，而是B（信念）决定了C（后果）。改变B，就能改变C。"
+    <cite>—— 阿尔伯特·埃利斯，REBT创始人</cite>
+  </blockquote>
+
+  <p><strong>关键洞见：</strong>同一件事，不同的信念会导致完全不同的情绪反应。比如"朋友没回你消息"——如果你的信念是"她可能在忙"，你会平静等待；如果你的信念是"她不在乎我了"，你会焦虑不安。事件没变，变的是你的解读。</p>
+
+  <h3>ABC记录实践</h3>
+  <div class="worksheet">
+    <div class="field">
+      <label>事件 A — 发生了什么？（只写事实）</label>
+      <div class="blank-area" style="min-height:60px;"></div>
+    </div>
+    <div class="field">
+      <label>信念 B — 你脑海中冒出的第一个想法是什么？</label>
+      <div class="blank-area" style="min-height:60px;"></div>
+    </div>
+    <div class="field">
+      <label>后果 C — 你的情绪和行为反应是什么？</label>
+      <div class="blank-area" style="min-height:60px;"></div>
+    </div>
+    <div class="field" style="border-top: 2px dashed var(--accent); padding-top: 16px;">
+      <label>D — 辩论：这个信念一定是真的吗？有没有另一种解读？</label>
+      <div class="blank-area" style="min-height:60px;"></div>
+    </div>
+    <div class="field">
+      <label>E — 新的效果：如果换一种信念，你会有什么不同的情绪和行为？</label>
+      <div class="blank-area" style="min-height:60px;"></div>
+    </div>
+  </div>
+
+  <h3>非理性信念识别 — 三种思维陷阱</h3>
+  <p>埃利斯发现，让我们陷入情绪困扰的信念，通常有三种特征。学会识别它们，就是改变的第一步。</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <span class="tag tag-coral">陷阱一</span>
+      <h4>绝对化要求</h4>
+      <p>用"必须""应该""一定要"来要求自己或他人。</p>
+      <p style="margin-top:8px;"><strong>例子：</strong>"我必须成功""所有人都应该喜欢我""他必须理解我"</p>
+      <p style="margin-top:8px;"><strong>觉察问句：</strong>谁定的这个"必须"？如果没达到，真的就是灾难吗？</p>
+    </div>
+    <div class="card">
+      <span class="tag tag-warm">陷阱二</span>
+      <h4>过度概括</h4>
+      <p>从一件事推到所有事，用"总是""从来""每次"来描述。</p>
+      <p style="margin-top:8px;"><strong>例子：</strong>"我总是失败""没有人理解我""每次都是这样"</p>
+      <p style="margin-top:8px;"><strong>觉察问句：</strong>真的是"每次"吗？有没有例外？</p>
+    </div>
+    <div class="card">
+      <span class="tag tag-purple">陷阱三</span>
+      <h4>糟糕至极</h4>
+      <p>把事情想到最坏的程度，觉得"完了""彻底完了"。</p>
+      <p style="margin-top:8px;"><strong>例子：</strong>"如果这次失败了，我的人生就毁了""被拒绝就是世界末日"</p>
+      <p style="margin-top:8px;"><strong>觉察问句：</strong>最坏的结果真的是"世界末日"吗？我能承受吗？</p>
+    </div>
+  </div>
+
+  <div class="worksheet">
+    <div class="field">
+      <label>回顾你最近的一次情绪波动，你的信念里有没有这三种陷阱？</label>
+      <div class="blank-area" style="min-height:120px;">
+        绝对化要求：有没有"必须""应该"的念头？
+过度概括：有没有"总是""从来"的描述？
+糟糕至极：有没有把后果想到最极端？
+      </div>
+    </div>
+  </div>
+
+  <h3>行为模式观察 — "我发现自己的……"</h3>
+  <p>当你记录了足够多的ABC之后，你会开始看到一些重复出现的模式。这些模式就是你的"默认设置"——它们不是你的全部，但它们是你最习惯的反应方式。</p>
+
+  <div class="worksheet">
+    <div class="field">
+      <label>我发现自己在面对冲突时，最常做的反应是：</label>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <label>我发现自己在压力下，最常有的想法是：</label>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <label>我发现自己在做决定时，最常依赖的是：</label>
+      <div class="blank-area" style="min-height:60px;">（直觉？逻辑？别人的建议？过往经验？……）</div>
+    </div>
+    <div class="field">
+      <label>我发现自己最常回避的情绪是：</label>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <label>如果我有一个"情绪签名"（最常出现的情绪组合），它会是什么？</label>
+      <div class="line"></div>
+    </div>
+  </div>
+
+  <h3>处事风格快速自检</h3>
+  <p>下面这个量表帮助你看到自己在不同场景下的处事倾向。没有好坏——每种风格都有它的优势和盲区。</p>
+
+  <div class="scale-table">
+    <div class="scale-row">
+      <div class="label">遇到分歧时，我倾向于</div>
+      <div class="options">
+        <div class="opt">1</div><div class="opt">2</div><div class="opt">3</div><div class="opt">4</div><div class="opt">5</div>
+      </div>
+      <span style="font-size:.78rem;color:var(--text3);margin-left:8px;">直接表达 ← → 避免冲突</span>
+    </div>
+    <div class="scale-row">
+      <div class="label">做决定时，我更依赖</div>
+      <div class="options">
+        <div class="opt">1</div><div class="opt">2</div><div class="opt">3</div><div class="opt">4</div><div class="opt">5</div>
+      </div>
+      <span style="font-size:.78rem;color:var(--text3);margin-left:8px;">逻辑分析 ← → 感觉直觉</span>
+    </div>
+    <div class="scale-row">
+      <div class="label">面对失败时，我的第一反应是</div>
+      <div class="options">
+        <div class="opt">1</div><div class="opt">2</div><div class="opt">3</div><div class="opt">4</div><div class="opt">5</div>
+      </div>
+      <span style="font-size:.78rem;color:var(--text3);margin-left:8px;">分析原因 ← → 情绪反应</span>
+    </div>
+    <div class="scale-row">
+      <div class="label">在团队中，我通常扮演的角色是</div>
+      <div class="options">
+        <div class="opt">1</div><div class="opt">2</div><div class="opt">3</div><div class="opt">4</div><div class="opt">5</div>
+      </div>
+      <span style="font-size:.78rem;color:var(--text3);margin-left:8px;">领导者 ← → 支持者</span>
+    </div>
+    <div class="scale-row">
+      <div class="label">面对新环境，我通常</div>
+      <div class="options">
+        <div class="opt">1</div><div class="opt">2</div><div class="opt">3</div><div class="opt">4</div><div class="opt">5</div>
+      </div>
+      <span style="font-size:.78rem;color:var(--text3);margin-left:8px;">主动适应 ← → 观望等待</span>
+    </div>
+  </div>
+
+  <div class="worksheet">
+    <div class="field">
+      <label>回顾上面的量表，你觉得最准的是哪一条？最不准的是哪一条？</label>
+      <div class="blank-area"></div>
+    </div>
+    <div class="field">
+      <label>有没有什么时候，你的反应和平时不太一样？发生了什么？</label>
+      <div class="blank-area"></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     第四阶段：性格与认知风格
+     ═══════════════════════════════════════════════════════════ -->
+<section id="phase4">
+  <div class="phase-header">
+    <div class="phase-num" style="background:var(--teal);">4</div>
+    <div>
+      <h2>第四阶段：性格与认知风格</h2>
+      <div class="phase-sub">理解"我为什么这样处理信息"</div>
+    </div>
+  </div>
+
+  <p>MBTI（迈尔斯-布里格斯类型指标）不是贴标签的工具，而是一面镜子。它帮你看清自己在信息获取、做决定、与世界互动时的偏好。记住：<strong>没有"最好"的类型，只有"不同"的类型。每种类型都有独特的优势和盲区。</strong></p>
+
+  <h3 id="mbti">MBTI 四个维度</h3>
+  <p>MBTI基于四个二元维度，每个维度描述一种偏好。你不需要是某一端的极端——大多数人是混合的，但会有一个更自然的倾向。</p>
+
+  <!-- 维度一：能量来源 -->
+  <div class="mbti-dimension">
+    <div class="pole" style="background:var(--accent-light);">
+      <h4>E — 外倾 Extraversion</h4>
+      <p>从与人互动中获得能量。喜欢讨论、合作、在行动中思考。先说再想。</p>
+    </div>
+    <div class="vs">VS</div>
+    <div class="pole" style="background:var(--purple-light);">
+      <h4>I — 内倾 Introversion</h4>
+      <p>从独处中获得能量。喜欢深度思考、书面表达、先想再说。社交后需要独处恢复。</p>
+    </div>
+  </div>
+
+  <!-- 维度二：信息获取 -->
+  <div class="mbti-dimension">
+    <div class="pole" style="background:var(--warm-light);">
+      <h4>S — 实感 Sensing</h4>
+      <p>关注具体的事实和细节。相信亲身经历，重视实际经验。活在当下。</p>
+    </div>
+    <div class="vs">VS</div>
+    <div class="pole" style="background:var(--teal-light);">
+      <h4>N — 直觉 Intuition</h4>
+      <p>关注模式和可能性。喜欢抽象概念、未来想象、"如果……会怎样"。</p>
+    </div>
+  </div>
+
+  <!-- 维度三：做决定 -->
+  <div class="mbti-dimension">
+    <div class="pole" style="background:#e8e0ff;">
+      <h4>T — 思考 Thinking</h4>
+      <p>基于逻辑和客观分析做决定。重视公平、原则、效率。直言不讳。</p>
+    </div>
+    <div class="vs">VS</div>
+    <div class="pole" style="background:#ffe8f0;">
+      <h4>F — 情感 Feeling</h4>
+      <p>基于价值观和对他人的影响做决定。重视和谐、同理心、维护关系。</p>
+    </div>
+  </div>
+
+  <!-- 维度四：生活方式 -->
+  <div class="mbti-dimension">
+    <div class="pole" style="background:#e0f0ff;">
+      <h4>J — 判断 Judging</h4>
+      <p>喜欢有计划、有条理的生活。提前安排、遵守截止日期、喜欢确定性。</p>
+    </div>
+    <div class="vs">VS</div>
+    <div class="pole" style="background:#fff3d0;">
+      <h4>P — 知觉 Perceiving</h4>
+      <p>喜欢灵活、开放的生活方式。随机应变、保持选项、享受 spontaneity。</p>
+    </div>
+  </div>
+
+  <div class="worksheet">
+    <div class="field">
+      <label>每个维度，你觉得更靠近哪一端？写下你的直觉判断：</label>
+      <div class="blank-area" style="min-height:140px;">
+E 还是 I？（能量来源）
+S 还是 N？（信息获取）
+T 还是 F？（做决定）
+J 还是 P？（生活方式）
+      </div>
+    </div>
+  </div>
+
+  <h3>思维偏好分析</h3>
+  <p>除了MBTI四维度，还有一些额外的思维偏好维度值得觉察：</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <span class="tag tag-green">发散 vs 收敛</span>
+      <h4>你的思维走向</h4>
+      <p><strong>发散型：</strong>一个点能想到十个方向，创意多但容易发散<br>
+      <strong>收敛型：</strong>从多个信息中快速找到核心，效率高但可能错过可能性</p>
+    </div>
+    <div class="card">
+      <span class="tag tag-warm">全局 vs 细节</span>
+      <h4>你的关注焦点</h4>
+      <p><strong>全局型：</strong>先看整体蓝图，"大方向对就行"<br>
+      <strong>细节型：</strong>先看具体执行，"魔鬼在细节里"</p>
+    </div>
+    <div class="card">
+      <span class="tag tag-purple">独立 vs 协作</span>
+      <h4>你的工作方式</h4>
+      <p><strong>独立型：</strong>一个人效率最高，深度工作是最佳状态<br>
+      <strong>协作型：</strong>在互动中激发灵感，讨论让想法更完整</p>
+    </div>
+    <div class="card">
+      <span class="tag tag-teal">稳定 vs 变化</span>
+      <h4>你的节奏偏好</h4>
+      <p><strong>稳定型：</strong>规律的作息和流程让你安心<br>
+      <strong>变化型：</strong>新鲜感让你兴奋，重复让你窒息</p>
+    </div>
+  </div>
+
+  <h3>社会情感力评估</h3>
+  <p>基于戈尔曼情商五要素和巴昂EQ-i五维度模型，评估你在社会情感学习（SEL）五大核心能力上的表现：</p>
+
+  <div class="card-grid">
+    <div class="card" style="border-left: 4px solid var(--accent);">
+      <span class="tag tag-green">SEL 核心能力 1</span>
+      <h4>自我意识</h4>
+      <p>能否准确识别自己的情绪、优势、局限和价值观？能否认识到情绪对行为的影响？</p>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--warm);">
+      <span class="tag tag-warm">SEL 核心能力 2</span>
+      <h4>自我管理</h4>
+      <p>能否有效调节情绪和冲动？能否设定并朝着目标努力？能否在压力下保持适应性？</p>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--purple);">
+      <span class="tag tag-purple">SEL 核心能力 3</span>
+      <h4>社会意识</h4>
+      <p>能否理解他人的观点和感受？能否欣赏多样性？能否识别社会规范和他人的需要？</p>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--coral);">
+      <span class="tag tag-coral">SEL 核心能力 4</span>
+      <h4>人际关系技能</h4>
+      <p>能否有效沟通？能否在冲突中寻找共识？能否在团队中协作？能否寻求和提供帮助？</p>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--teal);">
+      <span class="tag tag-teal">SEL 核心能力 5</span>
+      <h4>负责任的决策</h4>
+      <p>能否基于伦理标准和社会规范做决定？能否考虑行为的后果？能否反思自己的角色？</p>
+    </div>
+  </div>
+
+  <div class="worksheet">
+    <div class="field">
+      <label>SEL自评：在上面五项能力中，你觉得自己最强的是哪一项？最需要提升的是哪一项？</label>
+      <div class="blank-area" style="min-height:120px;">
+最强：
+最需要提升：
+      </div>
+    </div>
+    <div class="field">
+      <label>你能想到一个最近的例子，体现你在某项能力上的表现吗？</label>
+      <div class="blank-area"></div>
+    </div>
+  </div>
+
+
+<!-- ═══ MBTI 十六型人格完整解析 ═══ -->
+<section id="mbti-types" style="margin-top:48px;">
+  <h3>MBTI 十六型人格完整解析</h3>
+  <p>以下按四个"气质群"分组。每个类型包含：核心特质、优势、盲区、成长建议。</p>
+
+  <!-- ── 分析家气质 ── -->
+  <h4 style="color:var(--purple); margin-top:36px;">👑 分析家气质 (NT) — 战略思考者</h4>
+
+  <div class="type-card" style="border-top:4px solid var(--purple);">
+    <div class="type-code" style="color:var(--purple);">INTJ — 建筑师</div>
+    <div class="type-name">想象力丰富的战略思考者，一切皆在计划之中</div>
+    <div class="type-grid">
+      <div class="type-section"><h5>核心特质</h5><p>独立、有远见、追求效率。喜欢制定长期战略，对无能和低效零容忍。</p></div>
+      <div class="type-section"><h5>优势</h5><p>战略思维、独立决策、坚定执着、高标准</p></div>
+      <div class="type-section"><h5>盲区</h5><p>可能显得冷漠、过于挑剔、忽视他人感受、难以接受不同意见</p></div>
+      <div class="type-section"><h5>成长建议</h5><p>练习表达欣赏；主动询问他人感受；接受"足够好"也是一种选择</p></div>
+    </div>
+  </div>
+
+  <div class="type-card" style="border-top:4px solid var(--purple);">
+    <div class="type-code" style="color:var(--purple);">INTP — 逻辑学家</div>
+    <div class="type-name">具有创造力的发明家，对知识有永不满足的渴求</div>
+    <div class="type-grid">
+      <div class="type-section"><h5>核心特质</h5><p>好奇、分析力强、喜欢解构复杂问题。享受思考的过程胜过得出结论。</p></div>
+      <div class="type-section"><h5>优势</h5><p>逻辑推理、创新思维、客观公正、深度分析</p></div>
+      <div class="type-section"><h5>盲区</h5><p>可能陷入分析瘫痪、忽视实际执行、社交笨拙、对"不理性"的人不耐烦</p></div>
+      <div class="type-section"><h5>成长建议</h5><p>设定"思考截止时间"；练习将想法转化为行动；学会说"这很有意思"而不是"这不对"</p></div>
+    </div>
+  </div>
+
+  <div class="type-card" style="border-top:4px solid var(--purple);">
+    <div class="type-code" style="color:var(--purple);">ENTJ — 指挥官</div>
+    <div class="type-name">大胆的领导者，有动力和意志力创造改变</div>
+    <div class="type-grid">
+      <div class="type-section"><h5>核心特质</h5><p>天生领导者、果断、高效。看到大局并知道如何实现。</p></div>
+      <div class="type-section"><h5>优势</h5><p>领导力、战略规划、果断行动、高效率</p></div>
+      <div class="type-section"><h5>盲区</h5><p>可能过于强势、缺乏耐心、忽视情感需求、将效率置于关系之上</p></div>
+      <div class="type-section"><h5>成长建议</h5><p>练习倾听（不是为了回应，而是为了理解）；承认自己的脆弱；允许团队按自己的节奏来</p></div>
+    </div>
+  </div>
+
+  <div class="type-card" style="border-top:4px solid var(--purple);">
+    <div class="type-code" style="color:var(--purple);">ENTP — 辩论家</div>
+    <div class="type-name">聪明好奇的思想家，不会放过任何智力挑战</div>
+    <div class="type-grid">
+      <div class="type-section"><h5>核心特质</h5><p>机智、热爱辩论、喜欢挑战现状。对新想法充满热情。</p></div>
+      <div class="type-section"><h5>优势</h5><p>创新思维、适应性强、善于辩论、多才多艺</p></div>
+      <div class="type-section"><h5>盲区</h5><p>可能过于爱争辩、难以坚持、忽视细节、容易伤害他人感情而不自知</p></div>
+      <div class="type-section"><h5>成长建议</h5><p>选择值得辩论的事；练习"完成"一个项目再开始下一个；注意你的"玩笑"是否真的好笑</p></div>
+    </div>
+  </div>
+
+  <!-- ── 外交家气质 ── -->
+  <h4 style="color:var(--teal); margin-top:36px;">🌿 外交家气质 (NF) — 理想主义者</h4>
+
+  <div class="type-card" style="border-top:4px solid var(--teal);">
+    <div class="type-code" style="color:var(--teal);">INFJ — 提倡者</div>
+    <div class="type-name">安静而神秘的理想主义者，鼓舞人心且不知疲倦</div>
+    <div class="type-grid">
+      <div class="type-section"><h5>核心特质</h5><p>有洞察力、追求意义、理想主义。是16型中最稀有的类型。</p></div>
+      <div class="type-section"><h5>优势</h5><p>深刻洞察、坚定信念、理解他人、有远见</p></div>
+      <div class="type-section"><h5>盲区</h5><p>可能过于理想化、容易耗竭、难以被理解、对现实感到失望</p></div>
+      <div class="type-section"><h5>成长建议</h5><p>学会说"不"；接受不完美；找到表达自己的方式（写作、艺术）；不要一个人扛</p></div>
+    </div>
+  </div>
+
+  <div class="type-card" style="border-top:4px solid var(--teal);">
+    <div class="type-code" style="color:var(--teal);">INFP — 调停者</div>
+    <div class="type-name">诗意善良的利他主义者，总是热心为正义事业提供帮助</div>
+    <div class="type-grid">
+      <div class="type-section"><h5>核心特质</h5><p>理想主义、忠于价值观、富有同理心。内心世界丰富而复杂。</p></div>
+      <div class="type-section"><h5>优势</h5><p>创造力、同理心、忠诚、深刻的情感理解</p></div>
+      <div class="type-section"><h5>盲区</h5><p>可能过于理想化、逃避冲突、难以完成实际任务、对自己过于苛刻</p></div>
+      <div class="type-section"><h5>成长建议</h5><p>接受现实不总是理想的；练习面对冲突；将大梦想分解为小步骤；对自己温柔一些</p></div>
+    </div>
+  </div>
+
+  <div class="type-card" style="border-top:4px solid var(--teal);">
+    <div class="type-code" style="color:var(--teal);">ENFJ — 主人公</div>
+    <div class="type-name">鼓舞人心的领导者，有魅力且能激励他人</div>
+    <div class="type-grid">
+      <div class="type-section"><h5>核心特质</h5><p>天生领导者、有感染力、关注他人成长。善于看到每个人的潜力。</p></div>
+      <div class="type-section"><h5>优势</h5><p>领导力、同理心、沟通能力、激励他人</p></div>
+      <div class="type-section"><h5>盲区</h5><p>可能过度付出、忽视自己的需求、对批评敏感、试图控制他人</p></div>
+      <div class="type-section"><h5>成长建议</h5><p>学会照顾自己；接受你无法拯救所有人；允许他人犯错和成长</p></div>
+    </div>
+  </div>
+
+  <div class="type-card" style="border-top:4px solid var(--teal);">
+    <div class="type-code" style="color:var(--teal);">ENFP — 竞选者</div>
+    <div class="type-name">热情有创造力的社交达人，总能找到理由微笑</div>
+    <div class="type-grid">
+      <div class="type-section"><h5>核心特质</h5><p>热情、创意无限、善于社交。在可能性中看到希望。</p></div>
+      <div class="type-section"><h5>优势</h5><p>创造力、热情、适应性、善于激励</p></div>
+      <div class="type-section"><h5>盲区</h5><p>可能三分钟热度、难以专注、过度理想化、回避无聊的细节</p></div>
+      <div class="type-section"><h5>成长建议</h5><p>选择最重要的2-3件事深耕；接受"无聊"的细节是实现梦想的必经之路；学会独处</p></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── 守护者气质 ── -->
+<section>
+  <h4 style="color:#c49a1a; margin-top:36px;">🛡️ 守护者气质 (SJ) — 社会支柱</h4>
+
+  <div class="type-card" style="border-top:4px solid #c49a1a;">
+    <div class="type-code" style="color:#c49a1a;">ISTJ — 物流师</div>
+    <div class="type-name">实际且注重事实的个人，其可靠性不容怀疑</div>
+    <div class="type-grid">
+      <div class="type-section"><h5>核心特质</h5><p>可靠、有条理、重视传统和规则。说到做到。</p></div>
+      <div class="type-section"><h5>优势</h5><p>责任心强、注重细节、可靠稳定、逻辑清晰</p></div>
+      <div class="type-section"><h5>盲区</h5><p>可能过于僵化、不善表达情感、抗拒变化、对"不靠谱"的人不耐烦</p></div>
+      <div class="type-section"><h5>成长建议</h5><p>尝试新方法不意味着背叛旧价值；练习表达感受；接受有些事不需要完美</p></div>
+    </div>
+  </div>
+
+  <div class="type-card" style="border-top:4px solid #c49a1a;">
+    <div class="type-code" style="color:#c49a1a;">ISFJ — 守卫者</div>
+    <div class="type-name">非常专注且温暖的守护者，时刻准备着保护所爱的人</div>
+    <div class="type-grid">
+      <div class="type-section"><h5>核心特质</h5><p>温暖、细心、忠诚。默默付出，不求回报。</p></div>
+      <div class="type-section"><h5>优势</h5><p>可靠、有爱心、注重细节、记忆力好</p></div>
+      <div class="type-section"><h5>盲区</h5><p>可能过度付出、不善拒绝、忽视自己的需求、对变化感到不安</p></div>
+      <div class="type-section"><h5>成长建议</h5><p>你的需求同样重要；学会说"我现在做不到"；接受帮助不是软弱</p></div>
+    </div>
+  </div>
+
+  <div class="type-card" style="border-top:4px solid #c49a1a;">
+    <div class="type-code" style="color:#c49a1a;">ESTJ — 总经理</div>
+    <div class="type-name">出色的管理者，在管理人和事方面有天赋</div>
+    <div class="type-grid">
+      <div class="type-section"><h5>核心特质</h5><p>果断、有组织能力、重视秩序。天生的管理者。</p></div>
+      <div class="type-section"><h5>优势</h5><p>组织能力、执行力强、可靠、传统智慧</p></div>
+      <div class="type-section"><h5>盲区</h5><p>可能过于强势、不善倾听、对"不守规矩"的人零容忍、忽视情感</p></div>
+      <div class="type-section"><h5>成长建议</h5><p>规则是为人服务的，不是反过来；学会问"你怎么看？"；灵活性也是一种力量</p></div>
+    </div>
+  </div>
+
+  <div class="type-card" style="border-top:4px solid #c49a1a;">
+    <div class="type-code" style="color:#c49a1a;">ESFJ — 执政官</div>
+    <div class="type-name">非常有同理心的社交达人，最受欢迎的人之一</div>
+    <div class="type-grid">
+      <div class="type-section"><h5>核心特质</h5><p>热心、有责任心、重视和谐。善于照顾他人。</p></div>
+      <div class="type-section"><h5>优势</h5><p>同理心、组织能力、可靠、善于社交</p></div>
+      <div class="type-section"><h5>盲区</h5><p>可能过度在意他人评价、回避冲突、忽视自己的需求、对批评敏感</p></div>
+      <div class="type-section"><h5>成长建议</h5><p>不是所有人都需要你的帮助；学会接受不同意见；你的价值不取决于他人的认可</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 探险家气质 ── -->
+<section>
+  <h4 style="color:var(--coral); margin-top:36px;">🎨 探险家气质 (SP) — 自由灵魂</h4>
+
+  <div class="type-card" style="border-top:4px solid var(--coral);">
+    <div class="type-code" style="color:var(--coral);">ISTP — 鉴赏家</div>
+    <div class="type-name">大胆而实际的实验家，擅长使用任何形式的工具</div>
+    <div class="type-grid">
+      <div class="type-section"><h5>核心特质</h5><p>冷静、务实、善于解决问题。喜欢动手操作和拆解。</p></div>
+      <div class="type-section"><h5>优势</h5><p>冷静理性、动手能力强、适应性好、善于分析</p></div>
+      <div class="type-section"><h5>盲区</h5><p>可能显得冷漠、难以被了解、回避长期承诺、对情感话题不耐烦</p></div>
+      <div class="type-section"><h5>成长建议</h5><p>情感也是一种"数据"；尝试表达你的感受；关系需要时间来建立</p></div>
+    </div>
+  </div>
+
+  <div class="type-card" style="border-top:4px solid var(--coral);">
+    <div class="type-code" style="color:var(--coral);">ISFP — 探险家</div>
+    <div class="type-name">灵活有魅力的艺术家，时刻准备着探索和体验新事物</div>
+    <div class="type-grid">
+      <div class="type-section"><h5>核心特质</h5><p>温和、敏感、有艺术感。活在当下，享受此刻。</p></div>
+      <div class="type-section"><h5>优势</h5><p>艺术感、敏感、灵活、善良</p></div>
+      <div class="type-section"><h5>盲区</h5><p>可能回避长期计划、难以被了解、对批评敏感、避免冲突</p></div>
+      <div class="type-section"><h5>成长建议</h5><p>你不需要为做自己而道歉；尝试表达你的想法；计划不是牢笼，是脚手架</p></div>
+    </div>
+  </div>
+
+  <div class="type-card" style="border-top:4px solid var(--coral);">
+    <div class="type-code" style="color:var(--coral);">ESTP — 企业家</div>
+    <div class="type-name">聪明、精力充沛的感知者，享受活在边缘的刺激</div>
+    <div class="type-grid">
+      <div class="type-section"><h5>核心特质</h5><p>大胆、务实、善于社交。行动力强，喜欢即兴。</p></div>
+      <div class="type-section"><h5>优势</h5><p>行动力、适应性、社交能力、务实</p></div>
+      <div class="type-section"><h5>盲区</h5><p>可能冲动、忽视后果、回避深层情感、对"无聊"的事不耐烦</p></div>
+      <div class="type-section"><h5>成长建议</h5><p>三思而后行不是胆小；有些"无聊"的事很重要；深度关系比派对更持久</p></div>
+    </div>
+  </div>
+
+  <div class="type-card" style="border-top:4px solid var(--coral);">
+    <div class="type-code" style="color:var(--coral);">ESFP — 表演者</div>
+    <div class="type-name">自发的、精力充沛的、有趣的，生活是一场永不停歇的派对</div>
+    <div class="type-grid">
+      <div class="type-section"><h5>核心特质</h5><p>热情、乐观、善于社交。天生的表演者和气氛制造者。</p></div>
+      <div class="type-section"><h5>优势</h5><p>热情、社交能力、务实、乐观</p></div>
+      <div class="type-section"><h5>盲区</h5><p>可能回避严肃话题、难以长期专注、对负面情绪不耐烦、冲动消费</p></div>
+      <div class="type-section"><h5>成长建议</h5><p>笑容背后也可以有眼泪；深度对话比派对更滋养；学会和不适感共处</p></div>
+    </div>
+  </div>
+
+<div class="principle-bar" style="margin-top:36px;">
+  <h4>关于MBTI的重要提醒</h4>
+  <ul>
+    <li><strong>类型不是标签，是起点。</strong>它描述的是你的偏好，不是你的限制。</li>
+    <li><strong>每个人都有"非偏好"功能。</strong>一个I型也可以在必要时表现得很外向。</li>
+    <li><strong>MBTI不能定义你的全部。</strong>你的经历、价值观、文化背景同样塑造了你。</li>
+    <li><strong>最好的成长方向是发展你的劣势功能。</strong>不是变成另一个人，而是成为一个更完整的自己。</li>
+    <li><strong>MBTI的信效度有争议。</strong>把它当作自我探索的工具，而不是科学定论。</li>
+  </ul>
+</div>
+
+<div class="worksheet">
+  <div class="field">
+    <label>看完16种类型，你觉得最接近自己的是哪个？为什么？</label>
+    <div class="blank-area" style="min-height:100px;"></div>
+  </div>
+  <div class="field">
+    <label>你的"非偏好"功能是什么？在什么场景下你会用到它？</label>
+    <div class="blank-area"></div>
+  </div>
+  <div class="field">
+    <label>你最想发展的"短板"是什么？可以怎么做？</label>
+    <div class="blank-area"></div>
+  </div>
+</div>
+</section>
+
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     第五阶段：整合与行动
+     ═══════════════════════════════════════════════════════════ -->
+<section id="phase5">
+  <div class="phase-header">
+    <div class="phase-num" style="background:var(--accent);">5</div>
+    <div>
+      <h2>第五阶段：整合与行动</h2>
+      <div class="phase-sub">把发现变成改变</div>
+    </div>
+  </div>
+
+  <p>经过前四个阶段的探索，你对自己有了更多的了解。现在是时候把这些发现整合起来，变成可以持续实践的行动了。</p>
+
+  <h3>我的自我科学地图</h3>
+  <p>把你在这个过程中的发现画成一张"地图"。这张地图是你独有的，没有标准答案。</p>
+
+  <div class="worksheet">
+    <div class="field">
+      <label>我发现我的核心情绪模式是：</label>
+      <div class="blank-area" style="min-height:80px;">
+（比如：我最容易在感到"不被理解"时产生愤怒，底层是渴望被看见）
+      </div>
+    </div>
+    <div class="field">
+      <label>我发现我的非理性信念陷阱主要是：</label>
+      <div class="blank-area">
+（绝对化要求？过度概括？糟糕至极？还是某种组合？）
+      </div>
+    </div>
+    <div class="field">
+      <label>我的处事风格关键词是：</label>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <label>我的MBTI类型（或最接近的类型）是：</label>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <label>我最强的SEL能力是：</label>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <label>我最想提升的一个方面是：</label>
+      <div class="line"></div>
+    </div>
+  </div>
+
+  <h3>个人微型实验计划</h3>
+  <p>自我科学的核心方法：不追求大改变，而是做"小实验"。选一个你最想探索的点，设计一个为期一周的小实验。</p>
+
+  <div class="timeline">
+    <div class="step">
+      <h4>Step 1：选择一个你想观察的点</h4>
+      <p>从前面的探索中，找到一个你最有好奇心想深入了解的方面。</p>
+    </div>
+    <div class="step">
+      <h4>Step 2：设计一个微型实验</h4>
+      <p>保持其他条件不变，只改变一个变量。比如："这周每天睡前写三件今天感恩的事"或"这周在做决定前多停顿5秒问自己'我在想什么'"。</p>
+    </div>
+    <div class="step">
+      <h4>Step 3：记录数据</h4>
+      <p>每天用1-2句话记录：发生了什么？我的反应是什么？和平时有什么不同？</p>
+    </div>
+    <div class="step">
+      <h4>Step 4：一周后回顾</h4>
+      <p>这周的实验给你带来了什么发现？你想继续吗？想调整什么？</p>
+    </div>
+  </div>
+
+  <div class="worksheet">
+    <div class="field">
+      <label>我这周的微型实验是：</label>
+      <div class="blank-area" style="min-height:60px;"></div>
+    </div>
+    <div class="field">
+      <label>我要观察的变量是：</label>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <label>我记录的方式是：</label>
+      <div class="blank-area" style="min-height:60px;">（日记？手机备忘录？和朋友讨论？画画？……）</div>
+    </div>
+  </div>
+
+  <h3>持续自我观察的习惯</h3>
+  <p>自我探索不是一次性的活动，而是一种生活方式。以下是几个可以长期坚持的"自我科学"习惯：</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <span class="tag tag-green">每日</span>
+      <h4>情绪签到</h4>
+      <p>每天花1分钟，问自己：此刻我的情绪温度是几度？发生了什么？</p>
+    </div>
+    <div class="card">
+      <span class="tag tag-warm">每周</span>
+      <h4>ABC回顾</h4>
+      <p>每周回顾一次：这周有什么重复出现的模式？我的"默认设置"是什么？</p>
+    </div>
+    <div class="card">
+      <span class="tag tag-purple">每月</span>
+      <h4>深度对话</h4>
+      <p>每月和一个信任的人进行一次关于自我认知的对话。让他人成为你的镜子。</p>
+    </div>
+    <div class="card">
+      <span class="tag tag-teal">每季</span>
+      <h4>地图更新</h4>
+      <p>每三个月重新画一次你的"自我科学地图"，看看有什么变化。</p>
+    </div>
+  </div>
+
+  <h3>情感学习资源</h3>
+  <p>如果你想继续深入，以下资源值得探索：</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <span class="tag tag-green">书籍</span>
+      <h4>推荐书单</h4>
+      <p>《情商》戈尔曼 · 《情绪法则》Fiona · 《被讨厌的勇气》岸见一郎 · 《非暴力沟通》马歇尔·卢森堡 · 《心流》米哈里</p>
+    </div>
+    <div class="card">
+      <span class="tag tag-warm">在线工具</span>
+      <h4>情绪探索</h4>
+      <p>6seconds.org 情绪智慧轮 · 普拉奇克情绪轮 · 情绪探索器 · 情绪信任度测试 · 情绪盲点测试</p>
+    </div>
+    <div class="card">
+      <span class="tag tag-purple">视频</span>
+      <h4>学习资源</h4>
+      <p>哈佛幸福课（积极心理学）· TED: 戈尔曼谈情商 · Netflix《头脑解密》· 耶鲁心理学导论</p>
+    </div>
+    <div class="card">
+      <span class="tag tag-teal">实践</span>
+      <h4>日常练习</h4>
+      <p>正念呼吸 · 情绪日记 · 感恩三件事 · 身体扫描 · 冰山追问练习</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 给陪伴者/引导者的特别说明 ═══ -->
+<section>
+  <div class="principle-bar" style="background:linear-gradient(135deg, var(--warm-light), var(--coral-light)); border-left-color: var(--warm);">
+    <h4 style="color:var(--warm);">给陪伴者 / 引导者的说明</h4>
+    <p style="font-size:.9rem;">如果你是社工、心理咨询师、教育工作者或家长，以下原则贯穿全程：</p>
+    <ul>
+      <li><strong>尊重节奏</strong> — 用户可以选择跳过任何部分，不要催促</li>
+      <li><strong>不评判</strong> — 不论用户写下什么，都是真实且有价值的</li>
+      <li><strong>不打断</strong> — 即使你觉得某个答案"不对"，也先让它存在</li>
+      <li><strong>接住情绪</strong> — 当用户表达强烈情绪时，先回应情绪，再讨论内容</li>
+      <li><strong>创伤知情</strong> — 如果用户触及深层创伤，不追问细节，引导回到安全岛</li>
+      <li><strong>自由消化</strong> — 用户可能需要暂停、离开、过几天再回来，这都是正常的</li>
+      <li><strong>线下支持</strong> — 如果条件允许，见面时提供拥抱等肢体支持（需尊重对方意愿）</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══ 底部 ═══ -->
+<footer>
+  <p class="quote">"我们都是自己生活的科学家，进行着最重要的实验：发现能帮助我们生活得更好、更健康、更充实的东西。"</p>
+  <p>自我探索方案 · 基于自我科学、戈尔曼情商理论、REBT、萨提亚冰山理论与SEL框架</p>
+  <p style="margin-top:6px; font-size:.8rem;">尊重 · 接纳 · 不评判 · 自由节奏</p>
+</footer>
+
+</body>
+</html>
+
