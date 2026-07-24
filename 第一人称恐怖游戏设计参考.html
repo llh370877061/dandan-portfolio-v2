@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第一人称恐怖游戏设计参考</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent: #E8735A;
+      --accent-purple: #8B7EC8;
+      --accent-green: #7EC88B;
+      --accent-blue: #5BA8D5;
+      --text-primary: #2D2D2D;
+      --text-secondary: #555;
+      --text-muted: #888;
+      --border-subtle: rgba(0,0,0,0.06);
+      --card-bg: rgba(255,255,255,0.58);
+      --card-border: rgba(255,255,255,0.45);
+      --radius: 18px;
+      --font-body: 'Noto Sans SC', 'PingFang SC', -apple-system, sans-serif;
+      --font-display: 'DM Serif Display', Georgia, serif;
+      --font-mono: 'SF Mono', 'JetBrains Mono', 'Menlo', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--text-secondary);
+      line-height: 1.7;
+      background: linear-gradient(135deg,
+        hsla(170, 40%, 95%, 0.6) 0%,
+        hsla(40, 20%, 97%, 0.4) 50%,
+        hsla(10, 50%, 95%, 0.5) 100%);
+      background-attachment: fixed;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+    .blob-1 {
+      width: 420px; height: 420px;
+      background: hsla(275, 35%, 65%, 0.22);
+      filter: blur(80px);
+      top: -60px; left: -80px;
+    }
+    .blob-2 {
+      width: 380px; height: 380px;
+      background: hsla(10, 60%, 70%, 0.20);
+      filter: blur(78px);
+      bottom: 10%; right: -40px;
+    }
+    .blob-3 {
+      width: 400px; height: 400px;
+      background: hsla(140, 35%, 65%, 0.18);
+      filter: blur(85px);
+      top: 55%; left: 20%;
+    }
+
+    .page-wrapper {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 40px 24px 60px;
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 80px 0 60px;
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.25;
+      margin-bottom: 16px;
+    }
+    .hero .subtitle {
+      font-size: clamp(1rem, 1.6vw, 1.15rem);
+      color: var(--text-muted);
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+    .hero .accent-en {
+      color: var(--accent);
+      font-family: var(--font-display);
+      font-style: italic;
+    }
+
+    /* Section Header */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 48px 0 28px;
+    }
+    .section-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .section-header h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* Card */
+    .card {
+      background: rgba(255,255,255,0.58);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.45);
+      border-radius: 18px;
+      padding: 36px 40px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04),
+                  inset 0 1px 0 rgba(255,255,255,0.4);
+      margin-bottom: 24px;
+    }
+
+    /* Glow variants */
+    .glow-coral::before {
+      content: '';
+      position: absolute;
+      width: 110px; height: 110px;
+      background: var(--accent);
+      border-radius: 50%;
+      filter: blur(32px);
+      opacity: 0.22;
+      top: -30px; left: -20px;
+      pointer-events: none;
+    }
+    .glow-coral::after {
+      content: '';
+      position: absolute;
+      width: 80px; height: 80px;
+      background: var(--accent);
+      border-radius: 50%;
+      filter: blur(25px);
+      opacity: 0.12;
+      bottom: -20px; right: 30px;
+      pointer-events: none;
+    }
+    .glow-purple::before {
+      content: '';
+      position: absolute;
+      width: 110px; height: 110px;
+      background: var(--accent-purple);
+      border-radius: 50%;
+      filter: blur(32px);
+      opacity: 0.22;
+      top: -30px; left: -20px;
+      pointer-events: none;
+    }
+    .glow-purple::after {
+      content: '';
+      position: absolute;
+      width: 80px; height: 80px;
+      background: var(--accent-purple);
+      border-radius: 50%;
+      filter: blur(25px);
+      opacity: 0.12;
+      bottom: -20px; right: 30px;
+      pointer-events: none;
+    }
+    .glow-green::before {
+      content: '';
+      position: absolute;
+      width: 110px; height: 110px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      filter: blur(32px);
+      opacity: 0.22;
+      top: -30px; left: -20px;
+      pointer-events: none;
+    }
+    .glow-green::after {
+      content: '';
+      position: absolute;
+      width: 80px; height: 80px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      filter: blur(25px);
+      opacity: 0.12;
+      bottom: -20px; right: 30px;
+      pointer-events: none;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .card-icon {
+      width: 44px; height: 44px;
+      flex-shrink: 0;
+    }
+    .card-title {
+      font-size: clamp(1.2rem, 2.2vw, 1.55rem);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .card-title .accent-en {
+      color: var(--accent-purple);
+      font-family: var(--font-display);
+      font-style: italic;
+    }
+
+    .card-body p {
+      margin-bottom: 12px;
+      font-size: clamp(0.92rem, 1.3vw, 1.05rem);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0 20px;
+    }
+    .tag {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+    .tag-coral {
+      background: rgba(232,115,90,0.10);
+      color: var(--accent);
+    }
+    .tag-purple {
+      background: rgba(139,126,200,0.10);
+      color: var(--accent-purple);
+    }
+    .tag-green {
+      background: rgba(126,200,139,0.10);
+      color: var(--accent-green);
+    }
+    .tag-blue {
+      background: rgba(91,168,213,0.10);
+      color: var(--accent-blue);
+    }
+
+    .works-label {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    .works {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .work-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(255,255,255,0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      font-size: 0.88rem;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+    .work-chip svg {
+      width: 16px; height: 16px;
+    }
+
+    /* Immersion section */
+    .immersion-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .immersion-card {
+      background: rgba(255,255,255,0.58);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.45);
+      border-radius: 18px;
+      padding: 28px 30px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04),
+                  inset 0 1px 0 rgba(255,255,255,0.4);
+    }
+    .immersion-card .card-header {
+      margin-bottom: 14px;
+    }
+    .immersion-card .card-icon {
+      width: 36px; height: 36px;
+    }
+    .immersion-card .card-title {
+      font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+    }
+    .immersion-card p {
+      font-size: clamp(0.88rem, 1.2vw, 0.98rem);
+      line-height: 1.75;
+    }
+
+    .glow-card-1::before {
+      content: '';
+      position: absolute;
+      width: 90px; height: 90px;
+      background: var(--accent);
+      border-radius: 50%;
+      filter: blur(28px);
+      opacity: 0.18;
+      top: -20px; left: -15px;
+      pointer-events: none;
+    }
+    .glow-card-2::before {
+      content: '';
+      position: absolute;
+      width: 90px; height: 90px;
+      background: var(--accent-purple);
+      border-radius: 50%;
+      filter: blur(28px);
+      opacity: 0.18;
+      top: -20px; left: -15px;
+      pointer-events: none;
+    }
+    .glow-card-3::before {
+      content: '';
+      position: absolute;
+      width: 90px; height: 90px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      filter: blur(28px);
+      opacity: 0.18;
+      top: -20px; left: -15px;
+      pointer-events: none;
+    }
+    .glow-card-4::before {
+      content: '';
+      position: absolute;
+      width: 90px; height: 90px;
+      background: var(--accent-blue);
+      border-radius: 50%;
+      filter: blur(28px);
+      opacity: 0.18;
+      top: -20px; left: -15px;
+      pointer-events: none;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 40px 0 20px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    .footer .accent-en {
+      color: var(--accent);
+      font-family: var(--font-display);
+      font-style: italic;
+    }
+
+    @media (max-width: 700px) {
+      .page-wrapper { padding: 24px 16px 40px; }
+      .hero { padding: 48px 0 36px; }
+      .card { padding: 28px 24px; }
+      .immersion-grid { grid-template-columns: 1fr; }
+      .immersion-card { padding: 24px 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="page-wrapper">
+
+    <!-- Hero -->
+    <header class="hero">
+      <h1>第一人称恐怖游戏<br>设计参考</h1>
+      <p class="subtitle">
+        第一视角的沉浸感很强，画面、声音、交互细节
+        都比第三人称更关键——<br>
+        恐怖感不是来自「看见了什么」，<br>
+        而是来自「不得不看」。
+      </p>
+    </header>
+
+    <!-- Section: 三种恐怖类型 -->
+    <div class="section-header">
+      <div class="section-dot" style="background: var(--accent);"></div>
+      <h2>三种恐怖类型</h2>
+    </div>
+
+    <!-- Card 1: 心理恐怖 -->
+    <div class="card glow-coral">
+      <div class="card-header">
+        <svg class="card-icon" viewBox="0 0 44 44" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="22" cy="16" r="10"/>
+          <path d="M22 26c0 0-6 4-6 10h12c0-6-6-10-6-10z"/>
+          <circle cx="22" cy="16" r="3"/>
+        </svg>
+        <h3 class="card-title">
+          心理恐怖 <span class="accent-en">Psychological Horror</span>
+        </h3>
+      </div>
+      <div class="card-body">
+        <p>
+          探索叙事为主，吓人靠氛围和暗示。恐怖感不来自直接威胁，
+          而来自「这里不对劲」的持续不安——空间在变、记忆在碎、
+          你在怀疑自己看到的是不是真的。
+        </p>
+        <div class="tag-row">
+          <span class="tag tag-coral">氛围营造</span>
+          <span class="tag tag-coral">叙事驱动</span>
+          <span class="tag tag-purple">空间异变</span>
+          <span class="tag tag-blue">心理暗示</span>
+        </div>
+        <p class="works-label">代表作品</p>
+        <div class="works">
+          <span class="work-chip">
+            <svg viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="1.2" stroke-linecap="round"><circle cx="8" cy="8" r="5"/><path d="M8 5v3l2 2"/></svg>
+            层层恐惧
+          </span>
+          <span class="work-chip">
+            <svg viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="1.2" stroke-linecap="round"><circle cx="8" cy="8" r="5"/><path d="M6 6h4M6 10h4"/></svg>
+            太平间闹鬼
+          </span>
+        </div>
+        <div class="quote-block">
+          心理恐怖的核心不是「吓你一跳」，而是让你在平静中
+          感到脊背发凉——你不知道下一秒会发生什么，
+          但你知道「有什么东西」在那里。
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: 生存恐怖 -->
+    <div class="card glow-purple">
+      <div class="card-header">
+        <svg class="card-icon" viewBox="0 0 44 44" fill="none" stroke="var(--accent-purple)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 6L8 14v12l14 8 14-8V14L22 6z"/>
+          <path d="M15 20h14M22 14v12"/>
+        </svg>
+        <h3 class="card-title">
+          生存恐怖 <span class="accent-en">Survival Horror</span>
+        </h3>
+      </div>
+      <div class="card-body">
+        <p>
+          资源有限，要躲、逃、有限对抗。每一颗子弹都要算计，
+          每一次转身都可能是最后一次。恐怖来自「我可能活不下去」
+          的真实威胁感，而不是剧情安排。
+        </p>
+        <div class="tag-row">
+          <span class="tag tag-purple">资源管理</span>
+          <span class="tag tag-purple">躲藏机制</span>
+          <span class="tag tag-coral">有限对抗</span>
+          <span class="tag tag-green">生存压力</span>
+        </div>
+        <p class="works-label">代表作品</p>
+        <div class="works">
+          <span class="work-chip">
+            <svg viewBox="0 0 16 16" fill="none" stroke="var(--accent-purple)" stroke-width="1.2" stroke-linecap="round"><rect x="4" y="6" width="8" height="7" rx="1"/><path d="M6 6V4a2 2 0 014 0v2"/></svg>
+            生化危机
+          </span>
+          <span class="work-chip">
+            <svg viewBox="0 0 16 16" fill="none" stroke="var(--accent-purple)" stroke-width="1.2" stroke-linecap="round"><circle cx="8" cy="7" r="3"/><path d="M4 14c0-2.2 1.8-4 4-4s4 1.8 4 4"/></svg>
+            逃生
+          </span>
+        </div>
+        <div class="quote-block" style="border-color: var(--accent-purple); background: rgba(139,126,200,0.04);">
+          生存恐怖的精髓在于「选择的重量」——你不是主角，
+          你只是一个试图活下去的人。
+          弹药不够、血量见底、怪物就在隔壁，
+          你必须决定：冲、躲、还是绕路。
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: Jump Scare 密室 -->
+    <div class="card glow-green">
+      <div class="card-header">
+        <svg class="card-icon" viewBox="0 0 44 44" fill="none" stroke="var(--accent-green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 8l6 14-6 14"/>
+          <path d="M30 8l-6 14 6 14"/>
+        </svg>
+        <h3 class="card-title">
+          Jump Scare 密室 <span class="accent-en">Jump Scare Escape</span>
+        </h3>
+      </div>
+      <div class="card-body">
+        <p>
+          节奏快，机关触发式惊吓，适合短流程。恐怖来自突发的感官冲击
+          和密闭空间的紧迫感——你不知道下一个门后面是什么，
+          但你知道「你必须打开它」。
+        </p>
+        <div class="tag-row">
+          <span class="tag tag-green">节奏紧凑</span>
+          <span class="tag tag-coral">机关触发</span>
+          <span class="tag tag-blue">短流程</span>
+          <span class="tag tag-green">感官冲击</span>
+        </div>
+        <p class="works-label">典型特征</p>
+        <div class="works">
+          <span class="work-chip">
+            <svg viewBox="0 0 16 16" fill="none" stroke="var(--accent-green)" stroke-width="1.2" stroke-linecap="round"><path d="M3 8h10M10 5l3 3-3 3"/></svg>
+            快节奏解谜
+          </span>
+          <span class="work-chip">
+            <svg viewBox="0 0 16 16" fill="none" stroke="var(--accent-green)" stroke-width="1.2" stroke-linecap="round"><circle cx="8" cy="8" r="5"/><path d="M6 6l4 4M10 6l-4 4"/></svg>
+            机关惊吓
+          </span>
+          <span class="work-chip">
+            <svg viewBox="0 0 16 16" fill="none" stroke="var(--accent-green)" stroke-width="1.2" stroke-linecap="round"><rect x="3" y="3" width="10" height="10" rx="2"/><path d="M8 6v4M6 8h4"/></svg>
+            密闭空间
+          </span>
+        </div>
+        <div class="quote-block" style="border-color: var(--accent-green); background: rgba(126,200,139,0.04);">
+          Jump Scare 不是「廉价惊吓」——好的机关设计
+          让你在被吓到的同时感到「原来如此」。
+          恐怖来自你亲手触发了那个「不该打开的东西」。
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: 第一人称沉浸设计 -->
+    <div class="section-header">
+      <div class="section-dot" style="background: var(--accent-purple);"></div>
+      <h2>第一人称沉浸设计要点</h2>
+    </div>
+
+    <div class="immersion-grid">
+      <div class="immersion-card glow-card-1">
+        <div class="card-header">
+          <svg class="card-icon" viewBox="0 0 36 36" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8C10 8 4 18 4 18s6 10 14 10 14-10 14-10S26 8 18 8z"/>
+            <circle cx="18" cy="18" r="4"/>
+          </svg>
+          <h3 class="card-title">画面</h3>
+        </div>
+        <p>
+          第一人称视角下，玩家只能看到角色能看到的——
+          视野受限本身就是恐惧来源。用光影制造盲区，
+          用手电筒的有限光锥制造隧道视野，
+          用镜头晃动暗示不稳定。
+        </p>
+      </div>
+
+      <div class="immersion-card glow-card-2">
+        <div class="card-header">
+          <svg class="card-icon" viewBox="0 0 36 36" fill="none" stroke="var(--accent-purple)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6v6M18 24v6M6 18h6M24 18h6"/>
+            <circle cx="18" cy="18" r="6"/>
+          </svg>
+          <h3 class="card-title">声音</h3>
+        </div>
+        <p>
+          恐怖游戏的声音设计比画面更关键——你听到了什么
+          比看到了什么更让人不安。环境音的微小变化、
+          脚步声的远近、突然的寂静，
+          都比视觉冲击更持久地侵入意识。
+        </p>
+      </div>
+
+      <div class="immersion-card glow-card-3">
+        <div class="card-header">
+          <svg class="card-icon" viewBox="0 0 36 36" fill="none" stroke="var(--accent-green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 26V10a2 2 0 012-2h12a2 2 0 012 2v16"/>
+            <path d="M8 26h20M14 14h8M14 18h5"/>
+          </svg>
+          <h3 class="card-title">交互</h3>
+        </div>
+        <p>
+          第一人称的交互是「你在做」，不是「角色在做」——
+          翻抽屉、开柜门、摸墙壁的动作越真实，
+          恐怖感越强。交互的延迟和阻力也能制造不安：
+          门卡住了、灯打不着、手在抖。
+        </p>
+      </div>
+
+      <div class="immersion-card glow-card-4">
+        <div class="card-header">
+          <svg class="card-icon" viewBox="0 0 36 36" fill="none" stroke="var(--accent-blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="18" cy="14" r="8"/>
+            <path d="M10 28c0-4.4 3.6-8 8-8s8 3.6 8 8"/>
+            <path d="M14 13v2M22 13v2"/>
+          </svg>
+          <h3 class="card-title">心理暗示</h3>
+        </div>
+        <p>
+          比「吓你」更有效的是「让你自己吓自己」——
+          模糊的轮廓、似有似无的低语、
+          镜子里一闪而过的东西。玩家的想象力
+          永远比你的设计更恐怖。
+        </p>
+      </div>
+    </div>
+
+    <footer class="footer">
+      第一人称恐怖游戏设计参考 · <span class="accent-en">First-Person Horror</span> · 2026
+    </footer>
+  </div>
+</body>
+</html>

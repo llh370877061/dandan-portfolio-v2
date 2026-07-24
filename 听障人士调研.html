@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>听障人士调研资料汇编</title>
+<style>
+  :root {
+    --primary: #2563eb;
+    --primary-light: #eff6ff;
+    --accent: #f59e0b;
+    --danger: #ef4444;
+    --success: #10b981;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    line-height: 1.7;
+  }
+  .hero {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 50%, #7c3aed 100%);
+    color: #fff;
+    padding: 60px 24px 48px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 12px; letter-spacing: 2px; }
+  .hero .subtitle { font-size: 1rem; opacity: 0.85; max-width: 640px; margin: 0 auto 20px; }
+  .hero .stats {
+    display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 24px;
+  }
+  .hero .stat-item { text-align: center; }
+  .hero .stat-num { font-size: 2rem; font-weight: 700; }
+  .hero .stat-label { font-size: 0.8rem; opacity: 0.7; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+  /* 导航 */
+  .toc {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    padding: 28px 32px;
+    margin: -30px auto 36px;
+    position: relative;
+    z-index: 10;
+  }
+  .toc h2 { font-size: 1rem; color: var(--gray-500); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px; }
+  .toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+  .toc-grid a {
+    display: block; padding: 10px 14px; border-radius: 8px; text-decoration: none;
+    color: var(--gray-700); font-size: 0.9rem; font-weight: 500;
+    border: 1px solid var(--gray-200); transition: all 0.2s;
+  }
+  .toc-grid a:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+  .toc-grid a .toc-icon { margin-right: 6px; }
+
+  /* 板块 */
+  .section { margin-bottom: 48px; }
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; padding-bottom: 12px;
+    border-bottom: 2px solid var(--primary);
+  }
+  .section-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; flex-shrink: 0;
+  }
+  .section-header h2 { font-size: 1.3rem; color: var(--gray-900); }
+  .section-header .count {
+    background: var(--primary-light); color: var(--primary);
+    font-size: 0.75rem; padding: 2px 8px; border-radius: 10px; font-weight: 600;
+  }
+
+  /* 卡片 */
+  .card-grid { display: grid; gap: 16px; }
+  .card {
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid var(--gray-200);
+    padding: 20px 24px;
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+  .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); border-color: var(--primary); }
+  .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+  .card-title { font-size: 1rem; font-weight: 600; color: var(--gray-900); }
+  .card-title a { color: inherit; text-decoration: none; }
+  .card-title a:hover { color: var(--primary); }
+  .badge {
+    display: inline-block; font-size: 0.7rem; padding: 2px 8px;
+    border-radius: 6px; font-weight: 600; white-space: nowrap; flex-shrink: 0;
+  }
+  .badge-interview { background: #fef3c7; color: #92400e; }
+  .badge-documentary { background: #dbeafe; color: #1e40af; }
+  .badge-news { background: #d1fae5; color: #065f46; }
+  .badge-paper { background: #ede9fe; color: #5b21b6; }
+  .badge-tech { background: #fce7f3; color: #9d174d; }
+  .badge-standup { background: #ffedd5; color: #9a3412; }
+  .badge-guide { background: #e0e7ff; color: #3730a3; }
+  .badge-market { background: #ecfdf5; color: #047857; }
+  .badge-personal { background: #fef9c3; color: #854d0e; }
+  .badge-movie { background: #f3e8ff; color: #7e22ce; }
+  .badge-scene { background: #fff7ed; color: #c2410c; }
+  .card-meta { font-size: 0.8rem; color: var(--gray-500); margin-bottom: 8px; }
+  .card-desc { font-size: 0.9rem; color: var(--gray-600); line-height: 1.65; }
+  .card-link { display: inline-block; margin-top: 10px; font-size: 0.82rem; color: var(--primary); text-decoration: none; font-weight: 500; }
+  .card-link:hover { text-decoration: underline; }
+
+  /* 场景痛点 */
+  .pain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .pain-card {
+    background: linear-gradient(135deg, #fef2f2, #fff1f2);
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .pain-card h3 { font-size: 1rem; color: var(--danger); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .pain-card ul { list-style: none; padding: 0; }
+  .pain-card li { font-size: 0.88rem; color: var(--gray-700); padding: 3px 0; padding-left: 16px; position: relative; }
+  .pain-card li::before { content: "!!"; position: absolute; left: 0; color: var(--danger); font-weight: 700; font-size: 0.7rem; }
+
+  /* 解决方案 */
+  .solution-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .solution-card {
+    background: linear-gradient(135deg, #ecfdf5, #f0fdf4);
+    border: 1px solid #a7f3d0;
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .solution-card h3 { font-size: 1rem; color: #065f46; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .solution-card ul { list-style: none; padding: 0; }
+  .solution-card li { font-size: 0.88rem; color: var(--gray-700); padding: 3px 0; padding-left: 16px; position: relative; }
+  .solution-card li::before { content: ""; position: absolute; left: 0; top: 10px; width: 6px; height: 6px; background: var(--success); border-radius: 50%; }
+
+  /* 页脚 */
+  .footer {
+    text-align: center; padding: 36px 20px; color: var(--gray-500);
+    font-size: 0.8rem; border-top: 1px solid var(--gray-200); margin-top: 48px;
+  }
+  .footer .gen-date { font-weight: 600; }
+
+  /* 筛选按钮 */
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .filter-btn {
+    padding: 6px 14px; border-radius: 20px; border: 1px solid var(--gray-300);
+    background: #fff; font-size: 0.82rem; cursor: pointer; transition: all 0.2s;
+    color: var(--gray-600); font-weight: 500;
+  }
+  .filter-btn:hover, .filter-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 1.5rem; }
+    .hero .stats { gap: 20px; }
+    .hero .stat-num { font-size: 1.4rem; }
+    .toc-grid { grid-template-columns: 1fr 1fr; }
+    .pain-grid, .solution-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="hero">
+  <h1>听障人士调研资料汇编</h1>
+  <p class="subtitle">聚焦会议、嘈杂环境、车站三大场景的沟通障碍，汇集采访、纪录片、脱口秀、研究论文、新闻报道与个人叙事</p>
+  <div class="stats">
+    <div class="stat-item"><div class="stat-num">50+</div><div class="stat-label">调研资料</div></div>
+    <div class="stat-item"><div class="stat-num">2780万</div><div class="stat-label">中国听障人口</div></div>
+    <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">核心场景</div></div>
+    <div class="stat-item"><div class="stat-num">8</div><div class="stat-label">资料类别</div></div>
+  </div>
+</div>
+
+<!-- 目录 -->
+<div class="container">
+<div class="toc">
+  <h2>目录导航</h2>
+  <div class="toc-grid">
+    <a href="#pain"><span class="toc-icon">!!</span> 三大场景痛点</a>
+    <a href="#solution"><span class="toc-icon">"</span> 已验证的解决方案</a>
+    <a href="#scene-interview"><span class="toc-icon">"</span> 场景访谈与调研</a>
+    <a href="#documentary"><span class="toc-icon">"</span> 纪录片与影视作品</a>
+    <a href="#standup"><span class="toc-icon">"</span> 脱口秀与个人表达</a>
+    <a href="#tech"><span class="toc-icon">"</span> AI辅助技术</a>
+    <a href="#paper"><span class="toc-icon">"</span> 研究论文</a>
+    <a href="#news"><span class="toc-icon">"</span> 新闻报道</a>
+    <a href="#guide"><span class="toc-icon">"</span> 沟通指南</a>
+    <a href="#market"><span class="toc-icon">"</span> 市场与机构</a>
+  </div>
+</div>
+
+<!-- ===== 三大场景痛点 ===== -->
+<div class="section" id="pain">
+  <div class="section-header">
+    <div class="section-icon" style="background:#fef2f2;color:#ef4444;">!!</div>
+    <h2>三大场景核心痛点</h2>
+  </div>
+  <div class="pain-grid">
+    <div class="pain-card">
+      <h3>!! 会议场景（4-5米距离）</h3>
+      <ul>
+        <li>距离远导致听不清发言人的讲话内容</li>
+        <li>多人同时发言产生"串扰"，是最困难的沟通场景之一</li>
+        <li>人工耳蜗在嘈杂环境中仍存在"听得见听不清"问题</li>
+        <li>听障者必须主动努力去理解，极易产生听觉疲劳</li>
+        <li>助听器调高音量不会使失真的声音更清晰</li>
+        <li>话题快速切换时跟不上，错过关键信息</li>
+      </ul>
+    </div>
+    <div class="pain-card">
+      <h3>!! 嘈杂环境（医院/车站等）</h3>
+      <ul>
+        <li>背景噪音叠加导致信噪比恶化，语音识别率骤降</li>
+        <li>医院叫号语音播报听不见，必须时刻盯屏幕</li>
+        <li>医生戴口罩遮挡唇语，问诊沟通效率极低</li>
+        <li>嘈杂环境中AI语音转文字翻译质量差，"翻译不出来人话"</li>
+        <li>环境噪音使助听器降噪功能失效</li>
+        <li>部分患者因"怕麻烦"心理小病硬扛，延误治疗</li>
+      </ul>
+    </div>
+    <div class="pain-card">
+      <h3>!! 车站场景（广播信息）</h3>
+      <ul>
+        <li>车站广播语音信息完全无法获取，只能死盯屏幕</li>
+        <li>害怕错过车次信息，出行前焦虑恐慌</li>
+        <li>站务人员缺乏手语能力，只能靠文字比划</li>
+        <li>紧急广播（如列车变更、安全提示）无法及时接收</li>
+        <li>地铁站台列车进站提示音与广播混合，更难分辨</li>
+        <li>跨城市出行时手语差异导致沟通进一步困难</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 已验证的解决方案 ===== -->
+<div class="section" id="solution">
+  <div class="section-header">
+    <div class="section-icon" style="background:#ecfdf5;color:#10b981;">"</div>
+    <h2>已验证的解决方案</h2>
+  </div>
+  <div class="solution-grid">
+    <div class="solution-card">
+      <h3>" 医疗场景</h3>
+      <ul>
+        <li>上海普陀区人民医院助聋门诊 — 7年服务4867人次</li>
+        <li>同济大学附属养志康复医院 — 全流程手语翻译志愿者</li>
+        <li>简阳市人民医院 — 5G远程手语翻译覆盖全流程</li>
+        <li>江西省妇幼保健院"心之声"手语门诊</li>
+        <li>挂号窗口"绿色通道" + 诊区"助聋专座"</li>
+      </ul>
+    </div>
+    <div class="solution-card">
+      <h3>" 交通场景</h3>
+      <ul>
+        <li>武汉地铁手语培训 + 便签纸文字沟通</li>
+        <li>地铁站台实时滚屏信息（视觉替代广播）</li>
+        <li>火车站/机场信息双播（语音+文字同步）</li>
+        <li>站务人员基础手语培训</li>
+      </ul>
+    </div>
+    <div class="solution-card">
+      <h3>" AI技术方案</h3>
+      <ul>
+        <li>华为AI字幕 — 实时语音转文字，支持外部声源</li>
+        <li>科大讯飞语音转写 — 累计服务听障人士超2亿分钟</li>
+        <li>畅听助手 — 噪音环境识别率提升66%</li>
+        <li>Windows 11实时字幕 — 40+语言支持，离线可用</li>
+        <li>Teams/Webex会议实时字幕 + CART字幕员</li>
+        <li>AR字幕眼镜 — TranscribeGlass、听语者二代</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 场景访谈与调研 ===== -->
+<div class="section" id="scene-interview">
+  <div class="section-header">
+    <div class="section-icon" style="background:#fef3c7;color:#d97706;">"</div>
+    <h2>场景访谈与调研</h2>
+    <span class="count">10 条</span>
+  </div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://m.sohu.com/a/711199962_121785613/" target="_blank">山东大学"除碍小队"听障人士调研报告</a></div>
+        <span class="badge badge-scene">调研报告</span>
+      </div>
+      <div class="card-meta">山东大学威海翻译学院 | 2023-08-12</div>
+      <div class="card-desc">对多位听障人士的访谈。受访者反映：在车站等需要通过广播获取信息时经常感到恐慌，害怕错过出行信息；在医院、银行办理业务时，环境嘈杂、服务人员佩戴口罩、隔着玻璃用麦克风对话等带来很大阻碍，导致听障人士抗拒出门。</div>
+      <a class="card-link" href="https://m.sohu.com/a/711199962_121785613/" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://m.toutiao.com/article/7613202552015946249/" target="_blank">听障人士独自就医会遇到哪些困难</a></div>
+        <span class="badge badge-personal">深度分析</span>
+      </div>
+      <div class="card-meta">头条号 | 2026-03-04</div>
+      <div class="card-desc">全面梳理听障人士就医全流程困难：挂号阶段多数APP无实时字幕；叫号阶段语音播报听不见容易过号；问诊阶段医生语速快来不及用文字回应；取药阶段药师没耐心逐字写用药说明；术后注意事项若无手语或文字提示容易记错。以广西为例，基层医疗机构听障患者无障碍沟通体系处于空白状态。</div>
+      <a class="card-link" href="https://m.toutiao.com/article/7613202552015946249/" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://www.jianshu.com/p/be2744b3d460" target="_blank">听障女孩在医院的独白</a></div>
+        <span class="badge badge-personal">个人叙事</span>
+      </div>
+      <div class="card-meta">简书 | 2023-10-19</div>
+      <div class="card-desc">一位听障女孩详细记录独自就医经历：医生戴口罩无法看唇语；无法迅速描述症状，担心看错病吃错药；叫号系统需时刻盯屏幕；使用讯飞听见APP翻译但嘈杂环境导致翻译质量差，"翻译不出来人话"；曾因医生打错针导致双耳失聪，从此排斥医院。</div>
+      <a class="card-link" href="https://www.jianshu.com/p/be2744b3d460" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://wk.baidu.com/view/4ba6151ade36a32d7375a417866fb84ae45cc304" target="_blank">轨道交通手语的认知及其学习的重要性</a></div>
+        <span class="badge badge-paper">研究论文</span>
+      </div>
+      <div class="card-meta">百度文库 | 2022-12-30</div>
+      <div class="card-desc">分析地铁站务人员与听障人士的沟通困境。以往站务人员和听障人士只能通过文字和动作比划来沟通，一定程度上使听障人士感到出行不便。文章呼吁对站务人员进行手语培训，强调无障碍乘车环境需要软件和硬件齐头并进。</div>
+      <a class="card-link" href="https://wk.baidu.com/view/4ba6151ade36a32d7375a417866fb84ae45cc304" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://m.sohu.com/a/421302378_664673/" target="_blank">武汉地铁：世界在您眼前，我们在您身边</a></div>
+        <span class="badge badge-news">新闻报道</span>
+      </div>
+      <div class="card-meta">搜狐 | 2020-09-27</div>
+      <div class="card-desc">武汉地铁蔡甸广场站为服务聋哑乘客，员工在口袋里放便签纸和笔用于文字沟通，并开展手语培训（安全、进站、文明、指引四个方面）。我国约1.2亿人存在听力障碍，听障群体在车站的信息获取依赖广播语音，存在明显障碍。</div>
+      <a class="card-link" href="https://m.sohu.com/a/421302378_664673/" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://news.qq.com/rain/a/LNK2026072103007600" target="_blank">微光黑客松：倾听听障人士"词不达意"的真实困境</a></div>
+        <span class="badge badge-interview">访谈报道</span>
+      </div>
+      <div class="card-meta">腾讯新闻 | 2026-07-21</div>
+      <div class="card-desc">明湾学校"微光黑客松"活动报道，学生访谈听障人士了解真实困境。特别提到听障人士"开会时听不清远处声音"的痛点，以及学生为此开发"清听"语音转文字工具。与你们的黑客松项目直接相关！</div>
+      <a class="card-link" href="https://news.qq.com/rain/a/LNK2026072103007600" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://m.renrendoc.com/paper/318419306.html" target="_blank">听障群体的信息无障碍</a></div>
+        <span class="badge badge-paper">研究文档</span>
+      </div>
+      <div class="card-meta">人人文库 | 2024-03-16</div>
+      <div class="card-desc">系统梳理听障群体面临的四类信息障碍：(1) 信息获取障碍 — 无法通过声音获取信息；(2) 信息理解障碍 — 理解口头语言和专业术语有困难；(3) 信息表达障碍 — 与听人沟通需借助手语翻译或文字；(4) 信息传播障碍 — 使用互联网有障碍。</div>
+      <a class="card-link" href="https://m.renrendoc.com/paper/318419306.html" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://m.sohu.com/a/900759703_121273021/" target="_blank">听障人士在生活中会面临怎样的挑战？</a></div>
+        <span class="badge badge-guide">科普汇总</span>
+      </div>
+      <div class="card-meta">搜狐 | 2025-06-02</div>
+      <div class="card-desc">梳理听障人士面临的五大挑战：(1) 听力挑战 — 嘈杂环境难以听清，无法察觉闹钟/电话铃声；(2) 沟通障碍 — 社交场合话题快速变化时听不明白；(3) 社会壁垒 — 因沟通障碍感到孤立；(4) 亲密关系受限；(5) 心理健康困扰。</div>
+      <a class="card-link" href="https://m.sohu.com/a/900759703_121273021/" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://m.toutiao.com/article/7311928542185685538/" target="_blank">无声的世界里，他们渴望被"听"到</a></div>
+        <span class="badge badge-personal">案例测评</span>
+      </div>
+      <div class="card-meta">头条号 | 2023-12-13</div>
+      <div class="card-desc">10名听障人士和10名公益体验官对博物馆、纪念馆等场所进行无障碍测评。发现手语讲解二维码覆盖率不足，部分扫出空白。听障人士李黎："对无障碍环境需求最大的是听障人士，最基本的读取信息和交流，对他们来说都非常难。"</div>
+      <a class="card-link" href="https://m.toutiao.com/article/7311928542185685538/" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://www.njqxq.gov.cn/sjb2018/ssqx/gdqx/202607/t20260701_5869093.html" target="_blank">南京栖霞区：沉浸式无障碍体验测评</a></div>
+        <span class="badge badge-news">活动报道</span>
+      </div>
+      <div class="card-meta">南京栖霞区政府 | 2026-07-01</div>
+      <div class="card-desc">南京栖霞区残联组织残疾人代表对商场进行无障碍体验测评。发现听障人士咨询服务时商场配备手写板打通无声沟通通道，但仍需优化语音播报系统、增设文字公示栏。"这些藏在城市公共空间里的细小问题，对于健全人而言微不足道，却是阻碍残疾人日常出行的一道道无形门槛。"</div>
+      <a class="card-link" href="https://www.njqxq.gov.cn/sjb2018/ssqx/gdqx/202607/t20260701_5869093.html" target="_blank">查看原文 ></a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 纪录片与影视作品 ===== -->
+<div class="section" id="documentary">
+  <div class="section-header">
+    <div class="section-icon" style="background:#dbeafe;color:#2563eb;">"</div>
+    <h2>纪录片与影视作品</h2>
+    <span class="count">8 条</span>
+  </div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://baike.baidu.com/item/See%20What%20I'm%20Saying%3A%20The%20Deaf%20Entertainers%20Documentary/55800120" target="_blank">See What I'm Saying: The Deaf Entertainers Documentary</a></div>
+        <span class="badge badge-documentary">纪录片</span>
+      </div>
+      <div class="card-meta">美国 | 2008 | 导演 Hilari Scarl | 90分钟</div>
+      <div class="card-desc">跟踪记录聋人艺术家在音乐、喜剧、戏剧等领域的创作与表演，呈现他们在主流娱乐行业中面临的沟通障碍与职业困境。主演包括 C.J. Jones、Robert DeMayo 等聋人演员。</div>
+      <a class="card-link" href="https://baike.baidu.com/item/See%20What%20I'm%20Saying%3A%20The%20Deaf%20Entertainers%20Documentary/55800120" target="_blank">查看详情 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://m.jrhz.info/ent/2106679.html" target="_blank">《震耳欲聋》— 国内首部听障反诈题材电影</a></div>
+        <span class="badge badge-movie">电影</span>
+      </div>
+      <div class="card-meta">中国 | 影评</div>
+      <div class="card-desc">国内首部聚焦听障人群反诈题材电影，通过"无声"美学呈现听障人士的沟通困境。全国听障人口超两千万但手语律师仅约20人。听障群体的文化形态、交流习惯和社交模式成为故事重要线索。导演拍摄时社区居民提供了大量真实故事素材。</div>
+      <a class="card-link" href="https://m.jrhz.info/ent/2106679.html" target="_blank">查看影评 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://m.sohu.com/a/942982856_121106687/" target="_blank">电影《震耳欲聋》：这不是"小众叙事"，是2700万人的真实人生</a></div>
+        <span class="badge badge-movie">电影评论</span>
+      </div>
+      <div class="card-meta">搜狐 | 2025</div>
+      <div class="card-desc">从残疾人报道记者角度分析听障群体发声困难的原因：语言体系局限、社会支持缺乏、思维差异导致健听人难以理解听障人士。提到全国手语律师仅约20人。</div>
+      <a class="card-link" href="https://m.sohu.com/a/942982856_121106687/" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://m.douban.com/movie/review/17194491/" target="_blank">《人家都很吵！》— 豆瓣深度影评</a></div>
+        <span class="badge badge-movie">电影评论</span>
+      </div>
+      <div class="card-meta">豆瓣 | 2024</div>
+      <div class="card-desc">深度影评，讨论电影中听障人士与外国人共通的沟通障碍体验。作者以自身在日本身份与聋人群体共情，分析了语言障碍导致的边缘化处境，以及电影如何呈现"语言不重要"的主旨。</div>
+      <a class="card-link" href="https://m.douban.com/movie/review/17194491/" target="_blank">查看影评 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://epaper.guilinlife.com/glwbh5/glwb/20251027/Page09BC.htm" target="_blank">《震耳欲聋》：听障人士被剥夺话语权的困境</a></div>
+        <span class="badge badge-news">新闻报道</span>
+      </div>
+      <div class="card-meta">桂林生活网 | 2025-10-27</div>
+      <div class="card-desc">讨论电影如何呈现听障人士在现实中被剥夺话语权的困境，包括潘阿姨报警因无人懂手语而沟通失败、听障群体在寻求正义时面临的沟通壁垒与司法困境。</div>
+      <a class="card-link" href="https://epaper.guilinlife.com/glwbh5/glwb/20251027/Page09BC.htm" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://baijiahao.baidu.com/s?id=1864794769703934691" target="_blank">郭坤：听障创业者与手语视频号</a></div>
+        <span class="badge badge-interview">人物报道</span>
+      </div>
+      <div class="card-meta">百度百家号</div>
+      <div class="card-desc">介绍听障创业者郭坤的故事，他苦练手语与文字交流克服沟通障碍，创办一路阳光集团，相关纪录片获省级一等奖。开设手语视频号"郭一有话说"汇聚50万粉丝。</div>
+      <a class="card-link" href="https://baijiahao.baidu.com/s?id=1864794769703934691" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://m.ximalaya.com/audio/259642513" target="_blank">喜马拉雅：听障孩子沟通障碍讨论</a></div>
+        <span class="badge badge-interview">音频/播客</span>
+      </div>
+      <div class="card-meta">喜马拉雅</div>
+      <div class="card-desc">讨论亲子沟通障碍，特别提到听障孩子在沟通方面的困难：听不到声音、感受不到语气和情绪等。</div>
+      <a class="card-link" href="https://m.ximalaya.com/audio/259642513" target="_blank">收听 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://baijiahao.baidu.com/s?id=1845117009047975129" target="_blank">《震耳欲聋》口碑炸裂：听障群体的真实呈现</a></div>
+        <span class="badge badge-movie">影评</span>
+      </div>
+      <div class="card-meta">百度百家号</div>
+      <div class="card-desc">深度影评，提及全国听障人口超两千万但手语律师仅约20人。听障群体的文化形态、交流习惯和社交模式成为故事重要线索。导演在拍摄时社区居民提供了很多真实故事素材。</div>
+      <a class="card-link" href="https://baijiahao.baidu.com/s?id=1845117009047975129" target="_blank">查看原文 ></a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 脱口秀与个人表达 ===== -->
+<div class="section" id="standup">
+  <div class="section-header">
+    <div class="section-icon" style="background:#ffedd5;color:#ea580c;">"</div>
+    <h2>脱口秀与个人表达</h2>
+    <span class="count">5 条</span>
+  </div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://static.zhoudaosh.com/AC1E218D332851A204FDCEBEBF4D26FD95D1076C8EF292083A1C2CBB84969B39" target="_blank">蕾欧娜：当一个听障女孩开始说脱口秀</a></div>
+        <span class="badge badge-standup">访谈视频</span>
+      </div>
+      <div class="card-meta">周道 | 90后听障女孩</div>
+      <div class="card-desc">90后听障女孩蕾欧娜登上东方卫视《集合！开心果》脱口秀节目。她1-2岁因高烧失聪，8岁开始练说话，通过智能语音、手语和自身发声综合表演。话题#没想到聋哑人也可以讲脱口秀#登上抖音热搜第一。她表示"我都能做到的，你为什么不可以"。</div>
+      <a class="card-link" href="https://static.zhoudaosh.com/AC1E218D332851A204FDCEBEBF4D26FD95D1076C8EF292083A1C2CBB84969B39" target="_blank">查看访谈 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="http://bjtime.china.com.cn/2026-01/16/content_43336300.html" target="_blank">打破听觉壁垒笑对人生舞台 — 听障脱口秀演员大吉</a></div>
+        <span class="badge badge-standup">人物访谈</span>
+      </div>
+      <div class="card-meta">北京时间 | 2026-01-16</div>
+      <div class="card-desc">南开大学毕业的听障脱口秀演员大吉的个人故事。他以听障经历为创作底色，将因听不清产生的认知偏差、沟通趣事打磨成段子，以自嘲方式解构生活不便。从互联网营销到宠物店到脱口秀舞台，生动诠释听障人士也能站在聚光灯下。</div>
+      <a class="card-link" href="http://bjtime.china.com.cn/2026-01/16/content_43336300.html" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="http://www.cnhubei.com/content/2025-10/27/content_19607552.html" target="_blank">襄阳"襄阅指间"手语脱口秀联谊赛</a></div>
+        <span class="badge badge-standup">活动报道</span>
+      </div>
+      <div class="card-meta">湖北日报 | 2025-10-27</div>
+      <div class="card-desc">襄阳首届"襄阅指间"手语脱口秀联谊赛，20余位听障朋友以手语为"语言"，搭配表情与肢体动作演绎原创脱口秀。获奖者表示"这是我们聋人朋友发声的窗口"。</div>
+      <a class="card-link" href="http://www.cnhubei.com/content/2025-10/27/content_19607552.html" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://www.xsnet.cn/xsw/xwzx/xsxw/wjw/202505/t20250519_5575109.shtml" target="_blank">迎接全国助残日：创意脱口秀演绎助残新形式</a></div>
+        <span class="badge badge-standup">活动报道</span>
+      </div>
+      <div class="card-meta">萧山区聋人协会 | 2025-05-19</div>
+      <div class="card-desc">萧山区聋人协会与浙江财经大学联合举办的听障脱口秀活动，40名听障朋友通过手语和文字分享生活点滴，志愿者通过手语老师同步翻译参与互动。</div>
+      <a class="card-link" href="https://www.xsnet.cn/xsw/xwzx/xsxw/wjw/202505/t20250519_5575109.shtml" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://post.m.smzdm.com/zz/p/ago6lq8m/" target="_blank">黑灯脱口秀：聋人只听干货</a></div>
+        <span class="badge badge-standup">脱口秀视频</span>
+      </div>
+      <div class="card-meta">什么值得买</div>
+      <div class="card-desc">脱口秀演员黑灯的最新表演片段，涉及"聋人只听干货"等内容，讨论信息泛滥与有效沟通的重要性。</div>
+      <a class="card-link" href="https://post.m.smzdm.com/zz/p/ago6lq8m/" target="_blank">查看视频 ></a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== AI辅助技术 ===== -->
+<div class="section" id="tech">
+  <div class="section-header">
+    <div class="section-icon" style="background:#fce7f3;color:#db2777;">"</div>
+    <h2>AI辅助技术与产品</h2>
+    <span class="count">13 条</span>
+  </div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://baijiahao.baidu.com/s?id=1813689720934188412" target="_blank">华为AI声音修复：开启新生命之旅的声音</a></div>
+        <span class="badge badge-tech">技术案例</span>
+      </div>
+      <div class="card-meta">百度百家号 | 2024-10-23</div>
+      <div class="card-desc">华为HarmonyOS NEXT发布AI声音修复功能，针对听障人士在就医、购物、工作等场景的沟通困境。约8成听障人士依靠口语沟通但发音不准确，常遭遇误解和歧视。我国有超2700万听障者。</div>
+      <a class="card-link" href="https://baijiahao.baidu.com/s?id=1813689720934188412" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://news.sina.cn/bignews/insight/2026-02-14/detail-inhmtwhv9504185.d.html" target="_blank">AI实时字幕覆盖4500万视听障群体</a></div>
+        <span class="badge badge-news">新闻报道</span>
+      </div>
+      <div class="card-meta">新浪 | 2026-02-14</div>
+      <div class="card-desc">2026年春晚首次在CCTV-15同步直播无障碍版本，科大讯飞语音转写技术提供核心支持，累计服务听障人士超2亿分钟。康复辅助AI通过唇形与舌位实时纠正，将听障人士发音学习周期从8年缩短至4年。</div>
+      <a class="card-link" href="https://news.sina.cn/bignews/insight/2026-02-14/detail-inhmtwhv9504185.d.html" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://support.microsoft.com/zh-cn/windows/使用实时字幕更好地了解音频-b52da59c-14b8-4031-aeeb-f6a47e6055df" target="_blank">微软Windows 11 AI+ PC实时字幕</a></div>
+        <span class="badge badge-tech">产品功能</span>
+      </div>
+      <div class="card-meta">微软官方</div>
+      <div class="card-desc">支持将40多种语言翻译成英语，27种语言翻译成中文，可在离线状态下为音频提供字幕，所有处理在设备上完成，保护隐私。</div>
+      <a class="card-link" href="https://support.microsoft.com/zh-cn/windows/使用实时字幕更好地了解音频-b52da59c-14b8-4031-aeeb-f6a47e6055df" target="_blank">查看详情 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://zhidao.baidu.com/question/933111118364374859.html" target="_blank">华为智慧助手小艺AI字幕</a></div>
+        <span class="badge badge-tech">技术报道</span>
+      </div>
+      <div class="card-meta">百度知道</div>
+      <div class="card-desc">华为AI字幕通过实时语音转文字技术，支持手机内部声源（直播、短视频）和外部声源（面对面对话、线下演出），具备跨语言翻译功能。中国听力残疾人数约2780万，占残疾人总数30%以上。</div>
+      <a class="card-link" href="https://zhidao.baidu.com/question/933111118364374859.html" target="_blank">查看详情 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://m.xda.cn/soft/351837.html" target="_blank">畅听助手 — 联通+天籁+中国聋人协会</a></div>
+        <span class="badge badge-tech">应用软件</span>
+      </div>
+      <div class="card-meta">XDA</div>
+      <div class="card-desc">中国联通、天籁实验室、中国聋人协会联合打造的智能辅听工具，集成AI语音增强技术，典型噪音环境下可将单一字节言语识别率提升高达66%，实时字幕识别准确率提高5.5-9.9个百分点。</div>
+      <a class="card-link" href="https://m.xda.cn/soft/351837.html" target="_blank">查看详情 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://support.microsoft.com/zh-CN/accessibility/teams/best-practices-for-setting-up-and-running-a-teams-meeting-or-live-event-for-the-deaf-and-hard-of-hearing" target="_blank">Microsoft Teams会议实时字幕</a></div>
+        <span class="badge badge-tech">产品功能</span>
+      </div>
+      <div class="card-meta">微软官方</div>
+      <div class="card-desc">Teams提供实时字幕功能，可检测会议内容并显示字幕，支持固定手语翻译视频、快捷键操作等，为听障人士提供会议无障碍支持。支持CART（通信访问实时翻译）字幕员接入。</div>
+      <a class="card-link" href="https://support.microsoft.com/zh-CN/accessibility/teams/best-practices-for-setting-up-and-running-a-teams-meeting-or-live-event-for-the-deaf-and-hard-of-hearing" target="_blank">查看详情 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://www.webex.com/accessibility.html" target="_blank">Webex协作平台无障碍功能</a></div>
+        <span class="badge badge-tech">产品介绍</span>
+      </div>
+      <div class="card-meta">Webex官方</div>
+      <div class="card-desc">Webex提供实时字幕、手语翻译集成、与Voiceitt合作实现AI字幕和转录（针对非标准语音用户），支持同声传译。</div>
+      <a class="card-link" href="https://www.webex.com/accessibility.html" target="_blank">查看详情 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://baijiahao.baidu.com/s?id=1855318745669601161" target="_blank">让声音"看得见"：听障群体的信息无障碍之路</a></div>
+        <span class="badge badge-news">深度报道</span>
+      </div>
+      <div class="card-meta">百度百家号</div>
+      <div class="card-desc">听障人士最需要的五大可视化场景：公交站台实时滚屏、地铁站台字幕+蜂鸣提醒、火车站/机场信息双播、医院叫号文字+LED闪提醒、校园课堂实时语音转文字投屏。</div>
+      <a class="card-link" href="https://baijiahao.baidu.com/s?id=1855318745669601161" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://wap.eastmoney.com/a/202309232856684033.html" target="_blank">中国残联八代会：无障碍细节让代表倍感温暖</a></div>
+        <span class="badge badge-news">新闻报道</span>
+      </div>
+      <div class="card-meta">东方财富 | 2023-09-23</div>
+      <div class="card-desc">中国残联八代会实现信息无障碍，速录师实时记录发言并投放到大屏幕。听障代表反馈：人工耳蜗在嘈杂环境仍存在"听得见听不清"问题，实时字幕技术解决了这一痛点。</div>
+      <a class="card-link" href="https://wap.eastmoney.com/a/202309232856684033.html" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://www.leiphone.com/category/ai/Xyp5odlwD7zMwvfU.html" target="_blank">腾讯：用下一代互联网技术帮助3亿人跨越障碍</a></div>
+        <span class="badge badge-tech">技术报道</span>
+      </div>
+      <div class="card-meta">雷锋网</div>
+      <div class="card-desc">腾讯天籁实验室开放音频AI技术提升助听设备降噪效果，搜狗输入法"众声"无障碍输入公益计划提供AI手语翻译技术，与中国残联成立无障碍联合创新实验室。</div>
+      <a class="card-link" href="https://www.leiphone.com/category/ai/Xyp5odlwD7zMwvfU.html" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://caifuhao.eastmoney.com/news/20250829145546261054030" target="_blank">AR眼镜，给听力障碍者第二次机会？</a></div>
+        <span class="badge badge-tech">深度报道</span>
+      </div>
+      <div class="card-meta">东方财富 | 2025-08-29</div>
+      <div class="card-desc">斯坦福学生发明TranscribeGlass字幕眼镜，英国赫瑞-瓦特大学试点唇语识别+语音识别系统，亮亮视野推出"听语者二代"AR字幕眼镜。中国听力残疾人口约2780万，WHO预测2050年全球近7亿人将遭受听力损失。</div>
+      <a class="card-link" href="https://caifuhao.eastmoney.com/news/20250829145546261054030" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://blog.csdn.net/h7881394/article/details/162880251" target="_blank">AI录音卡：让会议纪要自动生成</a></div>
+        <span class="badge badge-tech">产品评测</span>
+      </div>
+      <div class="card-meta">CSDN</div>
+      <div class="card-desc">AI录音卡产品评测，特别提到"听障朋友需要在面对面交流中实时获取文字辅助"的场景，介绍产品如何通过降噪算法和AI转写帮助听障人士参与会议。</div>
+      <a class="card-link" href="https://blog.csdn.net/h7881394/article/details/162880251" target="_blank">查看评测 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://baijiahao.baidu.com/s?id=1834933170278571537" target="_blank">科学用耳与现代助听技术</a></div>
+        <span class="badge badge-guide">科普文章</span>
+      </div>
+      <div class="card-meta">百度百家号</div>
+      <div class="card-desc">AI技术在助听领域的应用，可实时分类环境声（区分餐厅、车流、人声），2024年行业白皮书显示智能助听器识别准确率达92%。普众华音推出"聪聆"芯片，降噪性能提升40%。</div>
+      <a class="card-link" href="https://baijiahao.baidu.com/s?id=1834933170278571537" target="_blank">查看原文 ></a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 研究论文 ===== -->
+<div class="section" id="paper">
+  <div class="section-header">
+    <div class="section-icon" style="background:#ede9fe;color:#7c3aed;">"</div>
+    <h2>研究论文</h2>
+    <span class="count">9 条</span>
+  </div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://m.zhangqiaokeyan.com/ntis-science-report_ad_thesis/020711338131.html" target="_blank">Effects of Hearing Loss on Speech Communication</a></div>
+        <span class="badge badge-paper">研究报告</span>
+      </div>
+      <div class="card-meta">英文 | 学术报告</div>
+      <div class="card-desc">噪音性听力损失如同低通滤波器，需要比正常听力者高出10dB的信噪比才能达到相同的语音识别水平。高频听力对嘈杂环境下理解语音至关重要。</div>
+      <a class="card-link" href="https://m.zhangqiaokeyan.com/ntis-science-report_ad_thesis/020711338131.html" target="_blank">查看论文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://m.zhangqiaokeyan.com/journal-foreign-detail/0704085447644.html" target="_blank">噪音中语音识别能力分析（PAHRE测试）</a></div>
+        <span class="badge badge-paper">研究论文</span>
+      </div>
+      <div class="card-meta">英文 | 104名受试者</div>
+      <div class="card-desc">研究104名37-98岁听力障碍者的噪音中语音识别能力，发现语音接收阈值随年龄和听力损失程度增加而升高，70岁后尤为显著。PAHRE测试可作为临床诊断、监测和助听器验配工具。</div>
+      <a class="card-link" href="https://m.zhangqiaokeyan.com/journal-foreign-detail/0704085447644.html" target="_blank">查看论文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://xueshu.baidu.com/usercenter/paper/show?paperid=ce5a152e7b4c200f0620b908ffba7c23" target="_blank">非线性频率压缩助听器对噪音中语音感知的影响</a></div>
+        <span class="badge badge-paper">研究论文</span>
+      </div>
+      <div class="card-meta">百度学术</div>
+      <div class="card-desc">研究非线性频率压缩助听器对老年听力障碍者的影响，发现该技术可显著改善噪音中的语音识别能力，尤其是陡峭下降型听力损失者获益更多，同时降低听觉努力程度。</div>
+      <a class="card-link" href="https://xueshu.baidu.com/usercenter/paper/show?paperid=ce5a152e7b4c200f0620b908ffba7c23" target="_blank">查看论文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://xueshu.baidu.com/usercenter/paper/show?paperid=0a77eff55a379104492831ec5024ec35" target="_blank">低信噪比下的元音感知线索估计</a></div>
+        <span class="badge badge-paper">研究论文</span>
+      </div>
+      <div class="card-meta">百度学术</div>
+      <div class="card-desc">研究低信噪比（-10dB至-3dB）下的语音增强和感知线索估计，应用于人工耳蜗信号处理算法开发，以对抗噪音影响。</div>
+      <a class="card-link" href="https://xueshu.baidu.com/usercenter/paper/show?paperid=0a77eff55a379104492831ec5024ec35" target="_blank">查看论文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="http://xueshu.baidu.com/usercenter/paper/show?cmd=paper_forward&paperid=3ff62d0972e7788fa0a2f7f2dcc867d5" target="_blank">听力损失模拟方法研究</a></div>
+        <span class="badge badge-paper">研究论文</span>
+      </div>
+      <div class="card-meta">百度学术</div>
+      <div class="card-desc">提出听力损失模拟方法（频率整形、幅度压缩、全相位低通滤波），用于提高助听器算法研究效率，可精确模拟听力损失特征。</div>
+      <a class="card-link" href="http://xueshu.baidu.com/usercenter/paper/show?cmd=paper_forward&paperid=3ff62d0972e7788fa0a2f7f2dcc867d5" target="_blank">查看论文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://m.zhangqiaokeyan.com/academic-conference-foreign_meeting-18511_thesis/020511268215.html" target="_blank">环境噪声评估的心理物理背景</a></div>
+        <span class="badge badge-paper">会议论文</span>
+      </div>
+      <div class="card-meta">英文 | 会议论文</div>
+      <div class="card-desc">环境噪声评估的心理物理背景研究，包括正常听力和听力受损者的响度感知仿真，以及声音意义和附加模态对噪声评估的影响。</div>
+      <a class="card-link" href="https://m.zhangqiaokeyan.com/academic-conference-foreign_meeting-18511_thesis/020511268215.html" target="_blank">查看论文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://m.renrendoc.com/paper/451739445.html" target="_blank">听障语音增强算法研究（44页）</a></div>
+        <span class="badge badge-paper">研究文档</span>
+      </div>
+      <div class="card-meta">人人文库 | 44页</div>
+      <div class="card-desc">系统研究听障语音增强算法，包括噪声抑制技术、语音信号预处理、频域/时域增强方法、深度学习模型应用（CNN、RNN），目标是提升听障人士在嘈杂环境中的语音可懂度。</div>
+      <a class="card-link" href="https://m.renrendoc.com/paper/451739445.html" target="_blank">查看文档 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://m.renrendoc.com/paper/464916506.html" target="_blank">噪声环境下的语音识别技术（31页）</a></div>
+        <span class="badge badge-paper">研究文档</span>
+      </div>
+      <div class="card-meta">人人文库 | 31页</div>
+      <div class="card-desc">全面分析噪声环境对语音识别的影响，包括背景噪声、回声噪声的类型，以及基于机器学习的降噪方法和深度学习模型（CNN、RNN）在降噪领域的应用。</div>
+      <a class="card-link" href="https://m.renrendoc.com/paper/464916506.html" target="_blank">查看文档 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://m.renrendoc.com/paper/496776040.html" target="_blank">多感官辅助的身份识别残障适配方案（34页）</a></div>
+        <span class="badge badge-paper">研究文档</span>
+      </div>
+      <div class="card-meta">人人文库 | 34页</div>
+      <div class="card-desc">针对听障者难以响应语音指令的问题，提出波束成形技术增强声纹识别中的目标语音、上下文语义纠错等解决方案，提升嘈杂场景下的语音识别准确性。</div>
+      <a class="card-link" href="https://m.renrendoc.com/paper/496776040.html" target="_blank">查看文档 ></a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 新闻报道 ===== -->
+<div class="section" id="news">
+  <div class="section-header">
+    <div class="section-icon" style="background:#d1fae5;color:#059669;">"</div>
+    <h2>新闻报道与案例纪实</h2>
+    <span class="count">8 条</span>
+  </div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://www.scf.org.cn/csjjh/n3421/n3778/n3779/n3790/u1ai312468.html" target="_blank">上海普陀区人民医院助聋门诊7年坚守纪实</a></div>
+        <span class="badge badge-news">案例纪实</span>
+      </div>
+      <div class="card-meta">上海市慈善基金会 | 2025-09-18</div>
+      <div class="card-desc">上海首家"助聋门诊"（2018年成立）7年服务数据：共开设246次，服务4867人次。核心发现："聋人看病，最难的不是病，而是沟通。"聋人患者的文字表达常因语序混乱、词汇有限而难以被理解。医院对全院窗口人员开展3个月手语培训。</div>
+      <a class="card-link" href="https://www.scf.org.cn/csjjh/n3421/n3778/n3779/n3790/u1ai312468.html" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://www.shobserver.com/sgh/detail?id=1715430" target="_blank">手语架起"沟通桥"！养志康复医院开设助聋门诊</a></div>
+        <span class="badge badge-news">解决方案</span>
+      </div>
+      <div class="card-meta">上观新闻 | 2026-03-03</div>
+      <div class="card-desc">同济大学附属养志康复医院开设助聋门诊，全流程配备手语翻译。患者高女士："以前看病很不方便，只能靠手机打字、写字交流，很慢。现在有志愿者全程陪同，方便多了。"</div>
+      <a class="card-link" href="https://www.shobserver.com/sgh/detail?id=1715430" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://m.sohu.com/a/917295478_100012060" target="_blank">简阳市人民医院："无障碍就医"暖了听障患者的心</a></div>
+        <span class="badge badge-news">解决方案</span>
+      </div>
+      <div class="card-meta">健康报 | 2025-07-24</div>
+      <div class="card-desc">四川省简阳市人民医院联合残联推出"无障碍就医"模式，采用5G远程手语翻译覆盖挂号、问诊、手术知情同意等全流程。听障患者就医面临多重困难：口头沟通障碍导致症状描述失真、嘈杂环境加剧焦虑。</div>
+      <a class="card-link" href="https://m.sohu.com/a/917295478_100012060" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="http://hc.jiangxi.gov.cn/jxswsjkwyh/xxxsdgmddjsssgy/content/content_1870733858663751680.html" target="_blank">江西：手语门诊解了听障者看病难</a></div>
+        <span class="badge badge-news">解决方案</span>
+      </div>
+      <div class="card-meta">江西省卫健委 | 2025-07-22</div>
+      <div class="card-desc">江西省妇幼保健院"心之声"手语门诊（2019年推出），已为200余名听障人士提供全生命周期生殖健康医疗服务。"听障人士在就医、产检、分娩等方面要比普通患者多了不少时间。"</div>
+      <a class="card-link" href="http://hc.jiangxi.gov.cn/jxswsjkwyh/xxxsdgmddjsssgy/content/content_1870733858663751680.html" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://baijiahao.baidu.com/s?id=1806516724099852137" target="_blank">听力障碍：沟通的缺失与误解</a></div>
+        <span class="badge badge-news">科普报道</span>
+      </div>
+      <div class="card-meta">百度百家号 | 2024-08-05</div>
+      <div class="card-desc">最新英国调查：每十人中就有一人承认会刻意回避与聋哑人士交流。48%的参与者坦言缺乏与听力困难者有效沟通的知识或技巧。59%的人对如何与这些人沟通缺乏信心。</div>
+      <a class="card-link" href="https://baijiahao.baidu.com/s?id=1806516724099852137" target="_blank">查看原文 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://www.futuremarketinsights.com/reports/ear-health-market" target="_blank">全球耳健康市场规模预测 2025-2035</a></div>
+        <span class="badge badge-market">市场报告</span>
+      </div>
+      <div class="card-meta">英文 | Future Market Insights</div>
+      <div class="card-desc">全球耳健康市场2025年约19.17亿美元，预计2035年达36.17亿美元（CAGR 6.6%）。主要驱动力包括噪音污染导致的听力损失增加、老龄化人口增长、AI和IoT技术应用。</div>
+      <a class="card-link" href="https://www.futuremarketinsights.com/reports/ear-health-market" target="_blank">查看报告 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://www.nidcd.nih.gov/about/nidcd-director-message" target="_blank">NIDCD：助听器与人工耳蜗技术创新</a></div>
+        <span class="badge badge-market">机构公告</span>
+      </div>
+      <div class="card-meta">英文 | 美国国家耳聋研究所</div>
+      <div class="card-desc">美国国家耳聋和其他交流障碍研究所（NIDCD）关于助听器和人工耳蜗技术创新的更新，以及大规模听力和平衡研究的数据科学投资。</div>
+      <a class="card-link" href="https://www.nidcd.nih.gov/about/nidcd-director-message" target="_blank">查看详情 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://zhidao.baidu.com/question/2002680977034395187.html" target="_blank">科技有AI更有爱：全新小艺点亮信息无障碍之路</a></div>
+        <span class="badge badge-tech">技术介绍</span>
+      </div>
+      <div class="card-meta">百度知道</div>
+      <div class="card-desc">HarmonyOS 5小艺通过AI技术为听障人群提供通话语音转文字、多场景字幕支持（英/日/韩翻译为中文字幕）、声音修复功能（AI修复语音保持音色）。</div>
+      <a class="card-link" href="https://zhidao.baidu.com/question/2002680977034395187.html" target="_blank">查看详情 ></a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 沟通指南 ===== -->
+<div class="section" id="guide">
+  <div class="section-header">
+    <div class="section-icon" style="background:#e0e7ff;color:#4f46e5;">"</div>
+    <h2>沟通技巧指南</h2>
+    <span class="count">4 条</span>
+  </div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://blog.csdn.net/cqf760806/article/details/135217034" target="_blank">如何与听力损失者沟通</a></div>
+        <span class="badge badge-guide">实用指南</span>
+      </div>
+      <div class="card-meta">CSDN | 2023-12-26</div>
+      <div class="card-desc">详细实用指南，包括降低背景噪音、面对面交谈、使用面部表情和手势、群体会议中的"串扰"问题处理。特别提到"会议中在看板上显示议程并指示正在讨论的项目会很有帮助"。</div>
+      <a class="card-link" href="https://blog.csdn.net/cqf760806/article/details/135217034" target="_blank">查看指南 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://m.sohu.com/a/467449161_120096825/" target="_blank">与听障人士沟通的方法</a></div>
+        <span class="badge badge-guide">实用指南</span>
+      </div>
+      <div class="card-meta">搜狐</div>
+      <div class="card-desc">全面的与听障人士沟通技巧指南：缩短谈话距离、让对方看清脸部、用平常语调说话（不要大喊）、说话前先引起注意、简化句子、会议中举手示意等。</div>
+      <a class="card-link" href="https://m.sohu.com/a/467449161_120096825/" target="_blank">查看指南 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://m.sohu.com/a/106419208_132784/" target="_blank">听障朋友如何与其他人更有效地沟通</a></div>
+        <span class="badge badge-guide">实用指南</span>
+      </div>
+      <div class="card-meta">搜狐</div>
+      <div class="card-desc">从听障者自身和亲友两个角度出发的沟通建议。提到"听力障碍会带来心理和社交上的痛苦，影响沟通，听障朋友为避免尴尬甚至会将自己孤立起来"。建议包括唇读学习、选择安静环境、多阅读时事等。</div>
+      <a class="card-link" href="https://m.sohu.com/a/106419208_132784/" target="_blank">查看指南 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://health.baidu.com/m/detail/ar_6907010993235288383" target="_blank">听障人士设计指南：创造无障碍交流环境</a></div>
+        <span class="badge badge-guide">设计指南</span>
+      </div>
+      <div class="card-meta">百度健康 | 2025-04-23</div>
+      <div class="card-desc">为听障人士设计交流环境的指南。预计到2050年全球将有9亿人面临残疾性听力损失。建议：提供清晰无障碍的交流环境、利用视觉元素辅助理解、提供多样化的交流方式、尊重和理解听障人士的沟通方式。</div>
+      <a class="card-link" href="https://health.baidu.com/m/detail/ar_6907010993235288383" target="_blank">查看指南 ></a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 市场与机构 ===== -->
+<div class="section" id="market">
+  <div class="section-header">
+    <div class="section-icon" style="background:#ecfdf5;color:#047857;">"</div>
+    <h2>相关机构与资源</h2>
+    <span class="count">2 条</span>
+  </div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://www.listentech.com/" target="_blank">Listen Technologies — 专业助听系统</a></div>
+        <span class="badge badge-market">公司</span>
+      </div>
+      <div class="card-meta">英文 | Listen Technologies</div>
+      <div class="card-desc">提供多种助听系统：ListenTALK（便携式双向通信）、ListenWIFI（Wi-Fi音频流）、ListenIR（红外线系统）、ListenRF（射频系统）、Auri（助听环路系统）。适用于会议、车站等场景。</div>
+      <a class="card-link" href="https://www.listentech.com/" target="_blank">访问官网 ></a>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="card-title"><a href="https://www.listentech.com/" target="_blank">Listen Technologies — 专业助听系统</a></div>
+        <span class="badge badge-market">公司</span>
+      </div>
+      <div class="card-meta">英文 | Listen Technologies</div>
+      <div class="card-desc">提供多种助听系统：ListenTALK（便携式双向通信）、ListenWIFI（Wi-Fi音频流）、ListenIR（红外线系统）、ListenRF（射频系统）、Auri（助听环路系统）。适用于会议、车站等场景。</div>
+      <a class="card-link" href="https://www.listentech.com/" target="_blank">访问官网 ></a>
+    </div>
+  </div>
+</div>
+
+<!-- 页脚 -->
+<div class="footer">
+  <p>听障人士调研资料汇编 | 为黑客松项目"AI帮助听障人士解决沟通障碍"提供资料支撑</p>
+  <p class="gen-date">生成日期：2026年7月24日</p>
+  <p style="margin-top:8px;">资料来源涵盖：访谈调研、纪录片、脱口秀、研究论文、新闻报道、技术文档、个人叙事、设计指南等</p>
+</div>
+
+</div><!-- /container -->
+</body>
+</html>

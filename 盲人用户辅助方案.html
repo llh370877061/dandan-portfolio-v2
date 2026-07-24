@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>盲人用户辅助方案</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: #f0f2f5;
+    color: #1a1a2e;
+    line-height: 1.6;
+  }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff;
+    padding: 60px 24px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 40%, rgba(83,178,255,0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(255,107,107,0.06) 0%, transparent 50%);
+    animation: drift 20s ease-in-out infinite;
+  }
+  @keyframes drift {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-2%, 1%); }
+  }
+  .hero h1 { font-size: 2.4em; font-weight: 700; position: relative; z-index: 1; letter-spacing: 2px; }
+  .hero p { font-size: 1.15em; margin-top: 14px; opacity: 0.85; position: relative; z-index: 1; max-width: 600px; margin-left: auto; margin-right: auto; }
+
+  /* Nav tabs */
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 20px 24px 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #f0f2f5;
+  }
+  .tab-btn {
+    padding: 12px 28px;
+    border: none;
+    border-radius: 30px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: #fff;
+    color: #666;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .tab-btn.active {
+    background: linear-gradient(135deg, #53b2ff, #3a7bd5);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(83,178,255,0.35);
+  }
+  .tab-btn:hover:not(.active) { background: #e8f0fe; color: #3a7bd5; }
+
+  /* Section container */
+  .section { display: none; padding: 30px 24px 60px; max-width: 1100px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  /* Scenario card */
+  .scenario-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 36px;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.04);
+  }
+  .scenario-card h2 {
+    font-size: 1.5em;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .scenario-card h2 .icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    flex-shrink: 0;
+  }
+  .scenario-card p { color: #555; margin-bottom: 12px; }
+
+  /* Pain point */
+  .pain-box {
+    background: #fff5f5;
+    border-left: 4px solid #ff6b6b;
+    padding: 16px 20px;
+    border-radius: 0 12px 12px 0;
+    margin: 16px 0;
+  }
+  .pain-box strong { color: #e63946; }
+
+  /* Solution grid */
+  .solutions { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 24px; }
+  .solution-item {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid #e8ecf1;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .solution-item:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+  .solution-item h3 { font-size: 1.1em; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .solution-item .tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.7em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .tag-phone { background: #dbeafe; color: #2563eb; }
+  .tag-product { background: #fef3c7; color: #d97706; }
+  .tag-life { background: #d1fae5; color: #059669; }
+  .tag-device { background: #ede9fe; color: #7c3aed; }
+  .tag-meeting { background: #fce7f3; color: #db2777; }
+  .solution-item ul { list-style: none; margin-top: 10px; }
+  .solution-item li { padding: 4px 0; color: #555; position: relative; padding-left: 18px; }
+  .solution-item li::before { content: '→'; position: absolute; left: 0; color: #3a7bd5; font-weight: bold; }
+
+  /* Phone mockup */
+  .phone-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-top: 30px; }
+  .phone-mockup {
+    background: #1a1a2e;
+    border-radius: 32px;
+    padding: 12px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    max-width: 300px;
+    margin: 0 auto;
+  }
+  .phone-screen {
+    background: #fff;
+    border-radius: 24px;
+    overflow: hidden;
+    min-height: 520px;
+  }
+  .phone-status-bar {
+    background: #f8f9fa;
+    padding: 8px 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75em;
+    font-weight: 600;
+    color: #333;
+  }
+  .phone-content { padding: 16px 20px; }
+
+  /* Notification mock */
+  .notif-item {
+    background: #f1f5f9;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    animation: slideIn 0.4s ease-out;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .notif-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1em;
+    flex-shrink: 0;
+  }
+  .notif-text { flex: 1; }
+  .notif-title { font-weight: 600; font-size: 0.88em; color: #1a1a2e; }
+  .notif-desc { font-size: 0.78em; color: #666; margin-top: 2px; }
+  .notif-time { font-size: 0.7em; color: #999; white-space: nowrap; }
+  .notif-badge {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-size: 0.65em;
+    font-weight: 700;
+    color: #fff;
+    margin-left: 6px;
+  }
+
+  /* Vibration pattern visual */
+  .vib-pattern {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 12px 0;
+    padding: 12px 16px;
+    background: #f0f4ff;
+    border-radius: 12px;
+  }
+  .vib-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #3a7bd5;
+    animation: vibrate 0.3s ease-in-out infinite alternate;
+  }
+  .vib-dot.off { background: #ddd; animation: none; }
+  @keyframes vibrate {
+    from { transform: translateY(-2px); }
+    to { transform: translateY(2px); }
+  }
+  .vib-label { font-size: 0.8em; color: #555; margin-left: 8px; }
+
+  /* Meeting mockup */
+  .meeting-mock {
+    background: #1e293b;
+    border-radius: 20px;
+    padding: 24px;
+    color: #fff;
+    margin-top: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .meeting-mock::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #53b2ff, #3a7bd5, #7c3aed);
+  }
+  .meeting-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .meeting-header h3 { font-size: 1.1em; }
+  .meeting-live {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8em;
+    color: #4ade80;
+  }
+  .meeting-live .dot {
+    width: 8px; height: 8px;
+    background: #4ade80;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  .transcript-line {
+    padding: 10px 16px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+    animation: fadeIn 0.5s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .transcript-line.speaker {
+    background: rgba(83,178,255,0.15);
+    border-left: 3px solid #53b2ff;
+  }
+  .transcript-line.highlight {
+    background: rgba(250,204,21,0.2);
+    border-left: 3px solid #facc15;
+    font-weight: 600;
+  }
+  .speaker-tag {
+    font-size: 0.72em;
+    font-weight: 700;
+    color: #53b2ff;
+    margin-bottom: 4px;
+  }
+
+  /* Steps */
+  .steps { margin-top: 30px; }
+  .step {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+  }
+  .step-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3a7bd5, #53b2ff);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9em;
+    flex-shrink: 0;
+  }
+  .step-content h4 { font-size: 1em; margin-bottom: 4px; }
+  .step-content p { font-size: 0.9em; color: #666; }
+
+  /* Summary table */
+  .summary-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .summary-table th {
+    background: #1a1a2e;
+    color: #fff;
+    padding: 14px 18px;
+    text-align: left;
+    font-size: 0.88em;
+    font-weight: 600;
+  }
+  .summary-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid #f0f2f5;
+    font-size: 0.88em;
+    background: #fff;
+  }
+  .summary-table tr:last-child td { border-bottom: none; }
+  .summary-table tr:hover td { background: #f8fafc; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 40px 24px;
+    color: #999;
+    font-size: 0.85em;
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 1.6em; }
+    .tabs { gap: 8px; }
+    .tab-btn { padding: 10px 18px; font-size: 0.88em; }
+    .scenario-card { padding: 24px 20px; }
+    .solutions { grid-template-columns: 1fr; }
+    .phone-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <h1>盲人用户辅助方案</h1>
+  <p>外卖通知 + 会议听清 — 两个场景的具体落地方案</p>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('food')">外卖通知方案</button>
+  <button class="tab-btn" onclick="switchTab('meeting')">会议辅助方案</button>
+  <button class="tab-btn" onclick="switchTab('summary')">整体总结</button>
+</div>
+
+<!-- ========== 外卖通知方案 ========== -->
+<div id="food" class="section active">
+
+  <div class="scenario-card">
+    <h2>
+      <span class="icon" style="background:#fee2e2;">🔔</span>
+      场景痛点
+    </h2>
+    <div class="pain-box">
+      <strong>核心问题：</strong>外卖 App 的提示音对盲人用户几乎无效 — 无法听到"叮"的提示、不知道骑手到了门口、错过电话通知，导致焦虑和不便。
+    </div>
+  </div>
+
+  <!-- 手机通知演示 -->
+  <div class="scenario-card">
+    <h2>
+      <span class="icon" style="background:#dbeafe;">📱</span>
+      手机端通知播报 — 改造前后对比
+    </h2>
+    <p>开启无障碍通知播报后，手机会把每条通知<strong>自动朗读</strong>出来，不依赖提示音。</p>
+
+    <div class="phone-grid">
+      <!-- 改造前 -->
+      <div>
+        <div style="text-align:center;margin-bottom:12px;font-weight:600;color:#e63946;">改造前</div>
+        <div class="phone-mockup">
+          <div class="phone-screen">
+            <div class="phone-status-bar">
+              <span>9:42</span>
+              <span>📶 🔋 87%</span>
+            </div>
+            <div class="phone-content">
+              <div style="text-align:center;padding:40px 0;color:#ccc;">
+                <div style="font-size:3em;margin-bottom:12px;">🔇</div>
+                <div style="font-size:0.9em;color:#999;">通知静默</div>
+                <div style="font-size:0.78em;color:#bbb;margin-top:8px;">提示音只有声音<br>盲人用户完全接收不到</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 改造后 -->
+      <div>
+        <div style="text-align:center;margin-bottom:12px;font-weight:600;color:#059669;">改造后</div>
+        <div class="phone-mockup">
+          <div class="phone-screen">
+            <div class="phone-status-bar">
+              <span>9:42</span>
+              <span>📶 🔋 87%</span>
+            </div>
+            <div class="phone-content">
+              <div class="notif-item" style="animation-delay:0s;">
+                <div class="notif-icon" style="background:#fef3c7;">🛵</div>
+                <div class="notif-text">
+                  <div class="notif-title">外卖已接单 <span class="notif-badge" style="background:#22c55e;">已播报</span></div>
+                  <div class="notif-desc">您的订单已接单，预计12:30送达</div>
+                </div>
+                <div class="notif-time">刚刚</div>
+              </div>
+              <div class="notif-item" style="animation-delay:0.2s;">
+                <div class="notif-icon" style="background:#dbeafe;">📍</div>
+                <div class="notif-text">
+                  <div class="notif-title">骑手已取餐 <span class="notif-badge" style="background:#22c55e;">已播报</span></div>
+                  <div class="notif-desc">骑手正在赶来，预计5分钟到达</div>
+                </div>
+                <div class="notif-time">3分钟前</div>
+              </div>
+              <div class="notif-item" style="animation-delay:0.4s;background:#fef9c3;border:1px solid #fde047;">
+                <div class="notif-icon" style="background:#fef08a;">📢</div>
+                <div class="notif-text">
+                  <div class="notif-title">骑手已到达 <span class="notif-badge" style="background:#ef4444;">语音循环播报中</span></div>
+                  <div class="notif-desc">您的外卖已到门口，请尽快取餐</div>
+                </div>
+                <div class="notif-time">现在</div>
+              </div>
+
+              <!-- 振动模式示意 -->
+              <div style="margin-top:16px;">
+                <div style="font-size:0.82em;font-weight:600;color:#333;margin-bottom:8px;">触觉振动模式</div>
+                <div class="vib-pattern">
+                  <div class="vib-dot"></div>
+                  <div class="vib-dot off"></div>
+                  <div class="vib-dot off"></div>
+                  <div class="vib-dot off"></div>
+                  <span class="vib-label">接单 = 振1下</span>
+                </div>
+                <div class="vib-pattern">
+                  <div class="vib-dot"></div>
+                  <div class="vib-dot"></div>
+                  <div class="vib-dot off"></div>
+                  <div class="vib-dot off"></div>
+                  <span class="vib-label">取餐 = 振2下</span>
+                </div>
+                <div class="vib-pattern">
+                  <div class="vib-dot"></div>
+                  <div class="vib-dot"></div>
+                  <div class="vib-dot"></div>
+                  <div class="vib-dot"></div>
+                  <span class="vib-label">到达 = 持续振动</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 具体方案 -->
+  <div class="scenario-card">
+    <h2>
+      <span class="icon" style="background:#d1fae5;">💡</span>
+      解决方案详解
+    </h2>
+    <div class="solutions">
+      <div class="solution-item">
+        <h3><span class="tag tag-phone">手机设置</span> 无障碍通知播报</h3>
+        <ul>
+          <li>iPhone：设置 → 辅助功能 → VoiceOver → 通知 → 开启播报</li>
+          <li>Android：设置 → 无障碍 → TalkBack → 通知播报</li>
+          <li>设为"播报全部内容"，确保外卖通知不被静音</li>
+          <li>配合耳机使用效果更好</li>
+        </ul>
+      </div>
+      <div class="solution-item">
+        <h3><span class="tag tag-product">产品适配</span> 振动编码 + 语音播报</h3>
+        <ul>
+          <li>状态变更时用<strong>振动模式编码</strong>（1下=接单，2下=取餐，持续=到达）</li>
+          <li>增加"语音播报模式"——主动推送语音，不只放提示音</li>
+          <li>骑手到达时持续振动 + 语音循环播报，直到用户确认</li>
+          <li>App 内增加"盲人模式"开关</li>
+        </ul>
+      </div>
+      <div class="solution-item">
+        <h3><span class="tag tag-life">生活辅助</span> 家人 & 第三方工具</h3>
+        <ul>
+          <li>家人帮忙设置好 TalkBack 权限，确保始终开启</li>
+          <li>安装"通知读屏"类第三方 App，增强通知朗读</li>
+          <li>使用智能音箱联动（如小爱同学）播报外卖状态</li>
+          <li>骑手电话来电时自动转为震动 + 语音重复</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 实施步骤 -->
+  <div class="scenario-card">
+    <h2>
+      <span class="icon" style="background:#fef3c7;">📋</span>
+      具体实施步骤（手机设置）
+    </h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>开启 TalkBack / VoiceOver</h4>
+          <p>iPhone：设置 → 辅助功能 → VoiceOver → 打开开关<br>
+          Android：设置 → 无障碍 → TalkBack → 打开开关</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>配置通知播报</h4>
+          <p>VoiceOver → 通知 → 选择"播报所有通知"<br>
+          TalkBack → 设置 → 通知播报 → 开启</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>外卖 App 通知权限</h4>
+          <p>确保美团/饿了么的通知权限全部打开，包括"横幅"和"声音"<br>
+          关闭"专注模式"或"免打扰"对这些 App 的限制</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>设置震动增强</h4>
+          <p>设置 → 辅助功能 → 触觉反馈 → 开启<br>
+          确保"强震动"模式开启，手机壳不要太厚</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h4>测试验证</h4>
+          <p>下单一份外卖，验证：接单/取餐/到达三个阶段是否都有语音播报<br>
+          骑手打电话时确认来电能被 TalkBack 朗读</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 会议辅助方案 ========== -->
+<div id="meeting" class="section">
+
+  <div class="scenario-card">
+    <h2>
+      <span class="icon" style="background:#fee2e2;">🎤</span>
+      场景痛点
+    </h2>
+    <div class="pain-box">
+      <strong>核心问题：</strong>会议时间过长，盲人用户只能靠听觉获取信息，注意力难以持续集中，容易漏听领导讲话的关键内容，事后无法回溯。
+    </div>
+  </div>
+
+  <!-- 会议实时字幕演示 -->
+  <div class="scenario-card">
+    <h2>
+      <span class="icon" style="background:#ede9fe;">🖥️</span>
+      实时转文字 + 关键标注 — 视觉演示
+    </h2>
+    <p>会议中同步显示<strong>实时转写文字</strong>，关键决策和待办事项<strong>高亮标注</strong>，帮助用户不遗漏重要信息。</p>
+
+    <div class="meeting-mock">
+      <div class="meeting-header">
+        <h3>周一例会 · 产品规划讨论</h3>
+        <div class="meeting-live"><div class="dot"></div> 实时转写中</div>
+      </div>
+      <div class="transcript-line speaker">
+        <div class="speaker-tag">张经理 · 主持人</div>
+        好，我们先回顾一下上周的进展。整体项目进度比预期慢了两天。
+      </div>
+      <div class="transcript-line speaker">
+        <div class="speaker-tag">李工 · 开发</div>
+        是的，主要卡在接口联调上，这周应该能完成。
+      </div>
+      <div class="transcript-line highlight">
+        <div class="speaker-tag">张经理 · 主持人 ⚠️ 关键决策</div>
+        好，那我定一下：这周五之前必须完成联调，下周一开始内测。<strong>这是硬性截止日期，不能推迟。</strong>
+      </div>
+      <div class="transcript-line speaker">
+        <div class="speaker-tag">王设计 · 设计</div>
+        UI 这边已经准备好了，随时可以配合。
+      </div>
+      <div class="transcript-line highlight">
+        <div class="speaker-tag">张经理 · 主持人 ⚠️ 待办事项</div>
+        <strong>李工</strong>：周五前完成联调并提交测试报告<br>
+        <strong>王设计</strong>：明天把新版设计稿发群里确认<br>
+        <strong>全员</strong>：下周一上午10点内测启动会
+      </div>
+    </div>
+
+    <div style="margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;">
+      <div style="background:#f0fdf4;border-radius:12px;padding:16px;border:1px solid #bbf7d0;">
+        <div style="font-weight:700;color:#15803d;font-size:0.9em;">绿色标注 = 关键决策</div>
+        <div style="font-size:0.82em;color:#666;margin-top:4px;">自动识别"必须、截止、定一下"等指令词</div>
+      </div>
+      <div style="background:#fefce8;border-radius:12px;padding:16px;border:1px solid #fde047;">
+        <div style="font-weight:700;color:#a16207;font-size:0.9em;">黄色标注 = 待办事项</div>
+        <div style="font-size:0.82em;color:#666;margin-top:4px;">自动提取"XX负责、明天完成"等任务分配</div>
+      </div>
+      <div style="background:#eff6ff;border-radius:12px;padding:16px;border:1px solid #bfdbfe;">
+        <div style="font-weight:700;color:#1d4ed8;font-size:0.9em;">普通文本 = 讨论内容</div>
+        <div style="font-size:0.82em;color:#666;margin-top:4px;">完整保留上下文，会后可回溯</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 解决方案 -->
+  <div class="scenario-card">
+    <h2>
+      <span class="icon" style="background:#d1fae5;">💡</span>
+      解决方案详解
+    </h2>
+    <div class="solutions">
+      <div class="solution-item">
+        <h3><span class="tag tag-device">设备辅助</span> 录音 + 实时转文字</h3>
+        <ul>
+          <li><strong>讯飞听见</strong>：实时语音转文字，支持中英文混合</li>
+          <li><strong>飞书妙记</strong>：飞书会议自动录制转写，会后生成纪要</li>
+          <li><strong>Otter.ai</strong>：英文会议首选，自动区分说话人</li>
+          <li>用<strong>骨传导耳机</strong>减少环境噪音，提高收音清晰度</li>
+        </ul>
+      </div>
+      <div class="solution-item">
+        <h3><span class="tag tag-meeting">会议中</span> 同伴协助 + 实时字幕</h3>
+        <ul>
+          <li>信任的同事做"信息锚点"——每隔一段时间复述关键点</li>
+          <li>飞书/腾讯会议支持<strong>实时字幕</strong>功能，盲人可同步阅读</li>
+          <li>会议主持人<strong>口头标注关键信息</strong>（"这是重点"、"这是决定"）</li>
+          <li>允许盲人用户录音，事后可以分段回听</li>
+        </ul>
+      </div>
+      <div class="solution-item">
+        <h3><span class="tag tag-life">会后补救</span> 录音转文字 + 纪要</h3>
+        <ul>
+          <li>会议录音转文字稿，用读屏软件慢慢消化</li>
+          <li>定期会议建议组织者<strong>发正式会议纪要</strong></li>
+          <li>AI 辅助生成摘要：提取待办、决策、时间线</li>
+          <li>重要会议的纪要保存为<strong>可读格式</strong>（TXT/DOCX），适配读屏</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 实施步骤 -->
+  <div class="scenario-card">
+    <h2>
+      <span class="icon" style="background:#fef3c7;">📋</span>
+      具体实施步骤
+    </h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>选一个实时转文字工具并配置</h4>
+          <p>推荐讯飞听见（国产、中文识别最好）或飞书妙记（如果团队用飞书）<br>
+          手机安装 App → 注册 → 测试一下录音转文字效果</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>准备硬件</h4>
+          <p>骨传导耳机（不堵耳，能同时听到环境音和转写语音）<br>
+          或降噪耳机（如果环境嘈杂）<br>
+          手机 + 充电宝（长时间会议耗电大）</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>与团队沟通</h4>
+          <p>跟领导和同事说明情况，争取：<br>
+          ① 会议允许录音 ② 主持人标注关键决策 ③ 会后提供纪要</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>会议中操作流程</h4>
+          <p>入会前：打开转文字 App → 开始录音 → 戴上耳机<br>
+          会议中：关注转写屏幕上的高亮内容<br>
+          会议后：导出文字稿 → 用读屏软件回顾重点</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h4>建立长期机制</h4>
+          <p>建议团队建立"会议纪要必发"制度<br>
+          重要决策通过文字渠道（飞书/邮件）二次确认<br>
+          定期和领导沟通，确保信息获取不遗漏</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 整体总结 ========== -->
+<div id="summary" class="section">
+  <div class="scenario-card">
+    <h2>
+      <span class="icon" style="background:#dbeafe;">📊</span>
+      两个场景方案对比
+    </h2>
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>维度</th>
+          <th>外卖通知</th>
+          <th>会议听清</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>核心痛点</strong></td>
+          <td>提示音无效，错过外卖到达</td>
+          <td>长时间听觉疲劳，漏听关键信息</td>
+        </tr>
+        <tr>
+          <td><strong>核心方案</strong></td>
+          <td>无障碍通知播报 + 振动编码</td>
+          <td>实时转文字 + 关键内容高亮</td>
+        </tr>
+        <tr>
+          <td><strong>立即可做</strong></td>
+          <td>开启 TalkBack/VoiceOver</td>
+          <td>安装讯飞听见并配置</td>
+        </tr>
+        <tr>
+          <td><strong>需要配合</strong></td>
+          <td>家人帮忙设置权限</td>
+          <td>团队允许录音、发纪要</td>
+        </tr>
+        <tr>
+          <td><strong>产品层面</strong></td>
+          <td>外卖 App 加盲人模式</td>
+          <td>会议系统加实时字幕</td>
+        </tr>
+        <tr>
+          <td><strong>成本</strong></td>
+          <td>低（系统自带功能）</td>
+          <td>中（需要工具 + 团队配合）</td>
+        </tr>
+        <tr>
+          <td><strong>见效速度</strong></td>
+          <td>当天设置，立刻生效</td>
+          <td>需沟通协调，1-2周建立机制</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="scenario-card">
+    <h2>
+      <span class="icon" style="background:#fef3c7;">🎯</span>
+      一句话总结
+    </h2>
+    <div style="font-size:1.15em;line-height:1.8;color:#333;padding:10px 0;">
+      <p><strong>外卖场景：</strong>用手机自带的无障碍播报功能把"听不到的声音"变成"自动读出来的文字/语音"，是最快见效的方案。</p>
+      <p style="margin-top:12px;"><strong>会议场景：</strong>用实时转文字工具把"一过性的听觉信息"变成"可回溯的文字记录"，再配合团队沟通建立纪要制度，才能长期解决问题。</p>
+      <p style="margin-top:16px;color:#666;font-size:0.9em;">两个场景的共同逻辑：<strong>把不可逆的听觉信息，转化为可保存、可回溯、可重复的视觉/触觉信息。</strong></p>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  为丹丹制作 · 2026年7月
+</div>
+
+<script>
+function switchTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

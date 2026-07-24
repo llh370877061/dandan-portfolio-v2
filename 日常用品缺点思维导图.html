@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日常用品常见缺点 · 思维导图</title>
+<style>
+  :root {
+    --c1: #E8735A; --c2: #8B7EC8; --c3: #5BA8D5; --c4: #7EC88B; --c5: #E8A84C; --c6: #D56B8B;
+    --center: #F4A261;
+    --text: #2D2D2D; --text-sub: #555;
+    --bg: #F8F6F2;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Noto Sans SC', 'PingFang SC', -apple-system, sans-serif;
+    background: var(--bg);
+    display: flex; flex-direction: column; align-items: center;
+    min-height: 100vh; padding: 24px 16px 40px;
+  }
+  h1 {
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 700; color: var(--text);
+    margin-bottom: 8px; letter-spacing: 0.02em;
+  }
+  .subtitle { font-size: 0.95rem; color: #888; margin-bottom: 20px; }
+  .map-container {
+    width: 100%; max-width: 1100px; overflow-x: auto;
+    background: #fff; border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    padding: 12px;
+  }
+  svg { display: block; margin: 0 auto; }
+  /* hand-drawn filter */
+  .sketch { filter: url(#sketchy); }
+
+  /* responsive */
+  @media (max-width: 768px) {
+    .map-container { padding: 4px; border-radius: 12px; }
+    svg { min-width: 680px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>日常用品常见缺点</h1>
+<p class="subtitle">6 大品类痛点梳理 · 思维导图</p>
+
+<div class="map-container">
+<svg viewBox="0 0 1200 820" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto">
+<defs>
+  <!-- hand-drawn sketch filter -->
+  <filter id="sketchy" x="-2%" y="-2%" width="104%" height="104%">
+    <feTurbulence type="turbulence" baseFrequency="0.03" numOctaves="4" seed="2" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <!-- glow filters per branch color -->
+  <filter id="glow1"><feGaussianBlur stdDeviation="6" result="blur"/><feFlood flood-color="#E8735A" flood-opacity="0.15"/><feComposite in2="blur" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="glow2"><feGaussianBlur stdDeviation="6" result="blur"/><feFlood flood-color="#8B7EC8" flood-opacity="0.15"/><feComposite in2="blur" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="glow3"><feGaussianBlur stdDeviation="6" result="blur"/><feFlood flood-color="#5BA8D5" flood-opacity="0.15"/><feComposite in2="blur" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="glow4"><feGaussianBlur stdDeviation="6" result="blur"/><feFlood flood-color="#7EC88B" flood-opacity="0.15"/><feComposite in2="blur" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="glow5"><feGaussianBlur stdDeviation="6" result="blur"/><feFlood flood-color="#E8A84C" flood-opacity="0.15"/><feComposite in2="blur" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="glow6"><feGaussianBlur stdDeviation="6" result="blur"/><feFlood flood-color="#D56B8B" flood-opacity="0.15"/><feComposite in2="blur" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="glow0"><feGaussianBlur stdDeviation="8" result="blur"/><feFlood flood-color="#F4A261" flood-opacity="0.2"/><feComposite in2="blur" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+
+<!-- ============ CONNECTING LINES ============ -->
+<g class="sketch" fill="none" stroke-linecap="round" stroke-linejoin="round">
+
+  <!-- Center to Branch 1: 指纹电子锁 (top-right) -->
+  <path d="M630,370 Q680,310 710,260" stroke="#E8735A" stroke-width="3.5" opacity="0.7"/>
+  <!-- Branch 1 sub-lines -->
+  <path d="M780,232 Q810,220 850,210" stroke="#E8735A" stroke-width="2" opacity="0.5"/>
+  <path d="M780,248 Q810,248 850,248" stroke="#E8735A" stroke-width="2" opacity="0.5"/>
+  <path d="M780,264 Q810,276 850,286" stroke="#E8735A" stroke-width="2" opacity="0.5"/>
+  <path d="M780,280 Q810,304 850,324" stroke="#E8735A" stroke-width="2" opacity="0.5"/>
+
+  <!-- Center to Branch 2: 衣柜 (top-left) -->
+  <path d="M570,370 Q520,310 490,260" stroke="#8B7EC8" stroke-width="3.5" opacity="0.7"/>
+  <path d="M420,232 Q390,220 350,210" stroke="#8B7EC8" stroke-width="2" opacity="0.5"/>
+  <path d="M420,248 Q390,248 350,248" stroke="#8B7EC8" stroke-width="2" opacity="0.5"/>
+  <path d="M420,264 Q390,276 350,286" stroke="#8B7EC8" stroke-width="2" opacity="0.5"/>
+  <path d="M420,280 Q390,304 350,324" stroke="#8B7EC8" stroke-width="2" opacity="0.5"/>
+
+  <!-- Center to Branch 3: 高铁座位 (left) -->
+  <path d="M555,400 Q480,400 420,400" stroke="#5BA8D5" stroke-width="3.5" opacity="0.7"/>
+  <path d="M350,370 Q320,358 280,348" stroke="#5BA8D5" stroke-width="2" opacity="0.5"/>
+  <path d="M350,386 Q320,386 280,386" stroke="#5BA8D5" stroke-width="2" opacity="0.5"/>
+  <path d="M350,402 Q320,414 280,424" stroke="#5BA8D5" stroke-width="2" opacity="0.5"/>
+  <path d="M350,418 Q320,442 280,462" stroke="#5BA8D5" stroke-width="2" opacity="0.5"/>
+
+  <!-- Center to Branch 4: 厨房场景 (bottom-left) -->
+  <path d="M570,430 Q520,490 490,540" stroke="#7EC88B" stroke-width="3.5" opacity="0.7"/>
+  <path d="M420,560 Q390,572 350,582" stroke="#7EC88B" stroke-width="2" opacity="0.5"/>
+  <path d="M420,576 Q390,576 350,576" stroke="#7EC88B" stroke-width="2" opacity="0.5"/>
+  <path d="M420,592 Q390,604 350,614" stroke="#7EC88B" stroke-width="2" opacity="0.5"/>
+  <path d="M420,608 Q390,632 350,652" stroke="#7EC88B" stroke-width="2" opacity="0.5"/>
+
+  <!-- Center to Branch 5: 电视显示器 (bottom-right) -->
+  <path d="M630,430 Q680,490 710,540" stroke="#E8A84C" stroke-width="3.5" opacity="0.7"/>
+  <path d="M780,560 Q810,572 850,582" stroke="#E8A84C" stroke-width="2" opacity="0.5"/>
+  <path d="M780,576 Q810,576 850,576" stroke="#E8A84C" stroke-width="2" opacity="0.5"/>
+  <path d="M780,592 Q810,604 850,614" stroke="#E8A84C" stroke-width="2" opacity="0.5"/>
+  <path d="M780,608 Q810,632 850,652" stroke="#E8A84C" stroke-width="2" opacity="0.5"/>
+
+  <!-- Center to Branch 6: 触屏手机 (right) -->
+  <path d="M645,400 Q720,400 780,400" stroke="#D56B8B" stroke-width="3.5" opacity="0.7"/>
+  <path d="M850,370 Q880,358 920,348" stroke="#D56B8B" stroke-width="2" opacity="0.5"/>
+  <path d="M850,386 Q880,386 920,386" stroke="#D56B8B" stroke-width="2" opacity="0.5"/>
+  <path d="M850,402 Q880,414 920,424" stroke="#D56B8B" stroke-width="2" opacity="0.5"/>
+  <path d="M850,418 Q880,442 920,462" stroke="#D56B8B" stroke-width="2" opacity="0.5"/>
+
+  <!-- Center to 共性问题 (bottom) -->
+  <path d="M600,445 Q600,500 600,540" stroke="#999" stroke-width="3" opacity="0.6" stroke-dasharray="8,5"/>
+  <path d="M560,590 Q520,600 470,608" stroke="#999" stroke-width="1.8" opacity="0.45" stroke-dasharray="6,4"/>
+  <path d="M580,590 Q560,612 540,630" stroke="#999" stroke-width="1.8" opacity="0.45" stroke-dasharray="6,4"/>
+  <path d="M620,590 Q640,612 660,630" stroke="#999" stroke-width="1.8" opacity="0.45" stroke-dasharray="6,4"/>
+  <path d="M640,590 Q680,600 730,608" stroke="#999" stroke-width="1.8" opacity="0.45" stroke-dasharray="6,4"/>
+
+</g>
+
+<!-- ============ NODES ============ -->
+
+<!-- CENTER CIRCLE -->
+<g filter="url(#glow0)">
+  <circle cx="600" cy="400" r="52" fill="#FFF7ED" stroke="#F4A261" stroke-width="3" class="sketch"/>
+  <text x="600" y="393" text-anchor="middle" font-size="17" font-weight="700" fill="#2D2D2D">日常用品</text>
+  <text x="600" y="415" text-anchor="middle" font-size="17" font-weight="700" fill="#2D2D2D">常见缺点</text>
+</g>
+
+<!-- ===== BRANCH 1: 指纹电子锁 (top-right) ===== -->
+<g filter="url(#glow1)">
+  <rect x="710" y="224" width="70" height="66" rx="14" fill="#FFF0ED" stroke="#E8735A" stroke-width="2" class="sketch"/>
+  <text x="745" y="246" text-anchor="middle" font-size="11.5" font-weight="600" fill="#C0513A">指纹</text>
+  <text x="745" y="262" text-anchor="middle" font-size="11.5" font-weight="600" fill="#C0513A">电子锁</text>
+  <!-- small icon hint -->
+  <circle cx="745" y="276" r="2.5" fill="#E8735A" opacity="0.5"/>
+</g>
+
+<!-- sub-items -->
+<g font-size="11" fill="#555">
+  <rect x="850" y="197" width="132" height="26" rx="8" fill="#FFF8F6" stroke="#E8735A" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="916" y="214" text-anchor="middle">手湿脱皮识别失败</text>
+
+  <rect x="850" y="235" width="132" height="26" rx="8" fill="#FFF8F6" stroke="#E8735A" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="916" y="252" text-anchor="middle">老人小孩指纹浅</text>
+
+  <rect x="850" y="273" width="132" height="26" rx="8" fill="#FFF8F6" stroke="#E8735A" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="916" y="290" text-anchor="middle">耗电快，没电锁门</text>
+
+  <rect x="850" y="311" width="140" height="26" rx="8" fill="#FFF8F6" stroke="#E8735A" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="920" y="328" text-anchor="middle">忘换电池被困门外</text>
+</g>
+
+<!-- ===== BRANCH 2: 衣柜 (top-left) ===== -->
+<g filter="url(#glow2)">
+  <rect x="420" y="224" width="70" height="66" rx="14" fill="#F0EDFA" stroke="#8B7EC8" stroke-width="2" class="sketch"/>
+  <text x="455" y="260" text-anchor="middle" font-size="12" font-weight="600" fill="#6B5EA8">衣柜</text>
+</g>
+
+<g font-size="11" fill="#555">
+  <rect x="240" y="197" width="110" height="26" rx="8" fill="#F8F6FC" stroke="#8B7EC8" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="295" y="214" text-anchor="middle">长款衣物放不下</text>
+
+  <rect x="240" y="235" width="120" height="26" rx="8" fill="#F8F6FC" stroke="#8B7EC8" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="300" y="252" text-anchor="middle">小件物品缺分区</text>
+
+  <rect x="240" y="273" width="118" height="26" rx="8" fill="#F8F6FC" stroke="#8B7EC8" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="299" y="290" text-anchor="middle">板材易变形发霉</text>
+
+  <rect x="240" y="311" width="118" height="26" rx="8" fill="#F8F6FC" stroke="#8B7EC8" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="299" y="328" text-anchor="middle">推拉门卡顿进灰</text>
+</g>
+
+<!-- ===== BRANCH 3: 高铁座位 (left) ===== -->
+<g filter="url(#glow3)">
+  <rect x="350" y="377" width="70" height="46" rx="14" fill="#EDF5FA" stroke="#5BA8D5" stroke-width="2" class="sketch"/>
+  <text x="385" y="404" text-anchor="middle" font-size="12" font-weight="600" fill="#3D8AB5">高铁座位</text>
+</g>
+
+<g font-size="11" fill="#555">
+  <rect x="162" y="335" width="118" height="26" rx="8" fill="#F4FAFD" stroke="#5BA8D5" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="221" y="352" text-anchor="middle">腿部活动空间小</text>
+
+  <rect x="162" y="373" width="118" height="26" rx="8" fill="#F4FAFD" stroke="#5BA8D5" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="221" y="390" text-anchor="middle">座椅偏硬腰酸</text>
+
+  <rect x="162" y="411" width="118" height="26" rx="8" fill="#F4FAFD" stroke="#5BA8D5" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="221" y="428" text-anchor="middle">充电口数量少</text>
+
+  <rect x="162" y="449" width="130" height="26" rx="8" fill="#F4FAFD" stroke="#5BA8D5" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="227" y="466" text-anchor="middle">无独立遮光隔音</text>
+</g>
+
+<!-- ===== BRANCH 4: 厨房场景 (bottom-left) ===== -->
+<g filter="url(#glow4)">
+  <rect x="420" y="540" width="70" height="66" rx="14" fill="#EDFAF0" stroke="#7EC88B" stroke-width="2" class="sketch"/>
+  <text x="455" y="562" text-anchor="middle" font-size="11.5" font-weight="600" fill="#4EA85E">厨房</text>
+  <text x="455" y="578" text-anchor="middle" font-size="11.5" font-weight="600" fill="#4EA85E">场景</text>
+</g>
+
+<g font-size="11" fill="#555">
+  <rect x="240" y="569" width="110" height="26" rx="8" fill="#F4FCF5" stroke="#7EC88B" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="295" y="586" text-anchor="middle">洗切炒动线绕</text>
+
+  <rect x="240" y="607" width="118" height="26" rx="8" fill="#F4FCF5" stroke="#7EC88B" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="299" y="624" text-anchor="middle">缝隙藏油污难擦</text>
+
+  <rect x="240" y="645" width="110" height="26" rx="8" fill="#F4FCF5" stroke="#7EC88B" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="295" y="662" text-anchor="middle">插座不够用</text>
+
+  <rect x="240" y="683" width="120" height="26" rx="8" fill="#F4FCF5" stroke="#7EC88B" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="300" y="700" text-anchor="middle">吊柜过高取物危险</text>
+</g>
+
+<!-- ===== BRANCH 5: 电视显示器 (bottom-right) ===== -->
+<g filter="url(#glow5)">
+  <rect x="710" y="540" width="70" height="66" rx="14" fill="#FDF5EA" stroke="#E8A84C" stroke-width="2" class="sketch"/>
+  <text x="745" y="562" text-anchor="middle" font-size="11" font-weight="600" fill="#C08030">电视</text>
+  <text x="745" y="578" text-anchor="middle" font-size="11" font-weight="600" fill="#C08030">显示器</text>
+</g>
+
+<g font-size="11" fill="#555">
+  <rect x="850" y="569" width="120" height="26" rx="8" fill="#FDF9F0" stroke="#E8A84C" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="910" y="586" text-anchor="middle">白天屏幕反光</text>
+
+  <rect x="850" y="607" width="130" height="26" rx="8" fill="#FDF9F0" stroke="#E8A84C" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="915" y="624" text-anchor="middle">开机广告长卡顿</text>
+
+  <rect x="850" y="645" width="120" height="26" rx="8" fill="#FDF9F0" stroke="#E8A84C" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="910" y="662" text-anchor="middle">壁挂打孔损墙面</text>
+
+  <rect x="850" y="683" width="130" height="26" rx="8" fill="#FDF9F0" stroke="#E8A84C" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="915" y="700" text-anchor="middle">屏幕易碎维修贵</text>
+</g>
+
+<!-- ===== BRANCH 6: 触屏手机 (right) ===== -->
+<g filter="url(#glow6)">
+  <rect x="780" y="377" width="70" height="46" rx="14" fill="#FAEDF2" stroke="#D56B8B" stroke-width="2" class="sketch"/>
+  <text x="815" y="404" text-anchor="middle" font-size="11" font-weight="600" fill="#B54A6B">触屏手机</text>
+</g>
+
+<g font-size="11" fill="#555">
+  <rect x="920" y="335" width="130" height="26" rx="8" fill="#FDF4F7" stroke="#D56B8B" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="985" y="352" text-anchor="middle">水油触控失灵</text>
+
+  <rect x="920" y="373" width="140" height="26" rx="8" fill="#FDF4F7" stroke="#D56B8B" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="990" y="390" text-anchor="middle">电池续航短频繁充</text>
+
+  <rect x="920" y="411" width="130" height="26" rx="8" fill="#FDF4F7" stroke="#D56B8B" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="985" y="428" text-anchor="middle">屏幕小损伤视力</text>
+
+  <rect x="920" y="449" width="140" height="26" rx="8" fill="#FDF4F7" stroke="#D56B8B" stroke-width="1.2" opacity="0.85" class="sketch"/>
+  <text x="990" y="466" text-anchor="middle">软件多卡顿发烫</text>
+</g>
+
+<!-- ===== 共性问题 (bottom center) ===== -->
+<g filter="url(#glow0)">
+  <rect x="540" y="545" width="120" height="46" rx="14" fill="#FFF7ED" stroke="#999" stroke-width="2" stroke-dasharray="5,4" class="sketch"/>
+  <text x="600" y="573" text-anchor="middle" font-size="12" font-weight="600" fill="#666">共性问题</text>
+</g>
+
+<g font-size="10.5" fill="#666">
+  <rect x="405" y="595" width="110" height="24" rx="7" fill="#F8F8F8" stroke="#999" stroke-width="1" opacity="0.8" stroke-dasharray="4,3" class="sketch"/>
+  <text x="460" y="611" text-anchor="middle">人性化设计不足</text>
+
+  <rect x="490" y="619" width="100" height="24" rx="7" fill="#F8F8F8" stroke="#999" stroke-width="1" opacity="0.8" stroke-dasharray="4,3" class="sketch"/>
+  <text x="540" y="635" text-anchor="middle">耐用程度较低</text>
+
+  <rect x="600" y="619" width="118" height="24" rx="7" fill="#F8F8F8" stroke="#999" stroke-width="1" opacity="0.8" stroke-dasharray="4,3" class="sketch"/>
+  <text x="659" y="635" text-anchor="middle">维修更换成本高</text>
+
+  <rect x="675" y="595" width="130" height="24" rx="7" fill="#F8F8F8" stroke="#999" stroke-width="1" opacity="0.8" stroke-dasharray="4,3" class="sketch"/>
+  <text x="740" y="611" text-anchor="middle">特殊人群不方便</text>
+</g>
+
+</svg>
+</div>
+
+<p style="margin-top:16px; font-size:0.82rem; color:#aaa;">日常用品缺点分析 · 思维导图 · 2026.07.09</p>
+
+</body>
+</html>

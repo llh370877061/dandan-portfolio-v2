@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>青少年AI科普课程 v2</title>
+<style>
+  :root {
+    --primary: #6366f1;
+    --primary-light: #818cf8;
+    --bg: #fafafa;
+    --card-bg: #ffffff;
+    --text: #1f2937;
+    --text-light: #6b7280;
+    --border: #e5e7eb;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .hero {
+    background: linear-gradient(135deg, var(--primary) 0%, #8b5cf6 100%);
+    color: white;
+    padding: 48px 24px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 2em; margin-bottom: 12px; }
+  .hero p { opacity: 0.9; font-size: 1.1em; }
+  .container { max-width: 800px; margin: 0 auto; padding: 32px 20px; }
+  .module {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border: 1px solid var(--border);
+  }
+  .module h2 {
+    color: var(--primary);
+    font-size: 1.2em;
+    margin-bottom: 8px;
+  }
+  .module p { color: var(--text-light); margin-bottom: 16px; }
+  .episode-list { list-style: none; }
+  .episode-list li {
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-bottom: 4px;
+    background: #f9fafb;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .episode-list li:hover { background: #f3f4f6; }
+  .episode-num { color: var(--primary); font-weight: 600; margin-right: 8px; }
+  .episode-time { color: var(--text-light); font-size: 0.85em; float: right; }
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 100;
+    overflow-y: auto;
+  }
+  .modal.active { display: block; }
+  .modal-content {
+    background: white;
+    max-width: 800px;
+    margin: 40px auto;
+    border-radius: 12px;
+    padding: 32px;
+    position: relative;
+  }
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: var(--text-light);
+  }
+  .modal-content h1 { color: var(--primary); margin-bottom: 16px; }
+  .modal-content h2 { margin-top: 24px; margin-bottom: 12px; }
+  .modal-content h3 { margin-top: 16px; margin-bottom: 8px; }
+  .modal-content p { margin-bottom: 12px; }
+  .modal-content ul, .modal-content ol { margin-left: 24px; margin-bottom: 12px; }
+  .modal-content li { margin-bottom: 6px; }
+  .modal-content strong { color: var(--primary); }
+  .modal-content code {
+    background: #f3f4f6;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  .modal-content pre {
+    background: #1f2937;
+    color: #f9fafb;
+    padding: 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin-bottom: 16px;
+  }
+  .modal-content pre code {
+    background: none;
+    padding: 0;
+    color: inherit;
+  }
+  .modal-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+  }
+  .modal-content th, .modal-content td {
+    border: 1px solid var(--border);
+    padding: 10px 12px;
+    text-align: left;
+  }
+  .modal-content th {
+    background: #f9fafb;
+    font-weight: 600;
+  }
+  @media (max-width: 640px) {
+    .hero { padding: 32px 16px; }
+    .hero h1 { font-size: 1.5em; }
+    .container { padding: 20px 16px; }
+    .modal-content { margin: 20px; padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>青少年 AI 科普 40 集课程</h1>
+  <p>从 AI 通识到动手创造，适合 8-14 岁孩子的学习路线</p>
+</div>
+
+<div class="container" id="modules"></div>
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+const modules = [
+  { id: 1, name: "AI 通识与兴趣入口", desc: "让孩子看见 AI 无处不在，建立好奇心", file: "模块一：AI通识与兴趣入口.md" },
+  { id: 2, name: "核心概念与底层理解", desc: "用简单例子讲清楚 AI 背后的关键原理", file: "模块二：核心概念与底层理解.md" },
+  { id: 3, name: "人物、公司与历史转折", desc: "通过故事和纪录片视角，让 AI 变得有人情味", file: "模块三：人物、公司与历史转折.md" },
+  { id: 4, name: "前沿科技、公司与未来职业", desc: "看见 AI 的前沿和未来", file: "模块四：前沿科技、公司与未来职业.md" },
+  { id: 5, name: "青少年真实榜样", desc: "同龄人已经在做的事，激发行动力", file: "模块五：青少年真实榜样.md" },
+  { id: 6, name: "PBL 创造挑战", desc: "动手做出你自己的 AI 项目", file: "模块六：PBL创造挑战.md" }
+];
+
+async function loadModule(file) {
+  try {
+    const resp = await fetch(file);
+    if (!resp.ok) throw new Error('加载失败');
+    const text = await resp.text();
+    return marked.parse(text);
+  } catch (e) {
+    return '<p>加载失败，请稍后重试</p>';
+  }
+}
+
+async function openModule(file, name) {
+  const html = await loadModule(file);
+  document.getElementById('modal-body').innerHTML = `<h1>${name}</h1>${html}`;
+  document.getElementById('modal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+const container = document.getElementById('modules');
+modules.forEach(m => {
+  const div = document.createElement('div');
+  div.className = 'module';
+  div.innerHTML = `
+    <h2>模块 ${m.id}：${m.name}</h2>
+    <p>${m.desc}</p>
+    <button onclick="openModule('${m.file}', '模块${m.id}：${m.name}')"
+            style="background:var(--primary);color:white;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-size:0.95em;">
+      查看内容 →
+    </button>
+  `;
+  container.appendChild(div);
+});
+</script>
+</body>
+</html>
