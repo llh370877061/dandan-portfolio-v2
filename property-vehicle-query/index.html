@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全国不动产机动车查询入口汇总</title>
+<style>
+  :root {
+    --bg: #f5f7fa;
+    --card: #fff;
+    --accent: #1565c0;
+    --accent-light: #e3f2fd;
+    --green: #2e7d32;
+    --green-light: #e8f5e9;
+    --orange: #e65100;
+    --orange-light: #fff3e0;
+    --text: #1b1b1b;
+    --text2: #555;
+    --border: #e0e0e0;
+    --shadow: 0 2px 8px rgba(0,0,0,.06);
+    --radius: 10px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.6;
+  }
+  .header {
+    background: linear-gradient(135deg, #1565c0, #0d47a1);
+    color: white; padding: 40px 24px 32px; text-align: center;
+  }
+  .header h1 { font-size: 1.6em; font-weight: 800; margin-bottom: 6px; }
+  .header p { opacity: .85; font-size: .95em; }
+  .tabs {
+    max-width: 1000px; margin: -16px auto 0; padding: 0 16px;
+    display: flex; gap: 8px; position: relative; z-index: 10;
+  }
+  .tab {
+    flex: 1; padding: 12px 8px; background: white; border: none; border-radius: 10px 10px 0 0;
+    font-size: .92em; font-weight: 600; cursor: pointer; transition: all .2s;
+    box-shadow: 0 -2px 8px rgba(0,0,0,.06);
+  }
+  .tab:hover { background: var(--accent-light); }
+  .tab.active { background: var(--accent); color: white; }
+  .main { max-width: 1000px; margin: 0 auto; padding: 0 16px 40px; }
+  .panel { display: none; background: white; border-radius: 0 0 var(--radius) var(--radius); box-shadow: var(--shadow); padding: 20px; }
+  .panel.active { display: block; }
+  .search-box {
+    width: 100%; padding: 10px 16px; border: 1px solid var(--border); border-radius: 8px;
+    font-size: .92em; margin-bottom: 16px; outline: none; transition: border .2s;
+  }
+  .search-box:focus { border-color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; font-size: .85em; }
+  th { background: var(--accent-light); color: var(--accent); font-weight: 600; position: sticky; top: 0; }
+  td, th { padding: 8px 10px; border-bottom: 1px solid #eee; text-align: left; }
+  tr:hover td { background: #f8f9fa; }
+  .tag {
+    display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: .78em; font-weight: 600;
+  }
+  .tag-web { background: var(--accent-light); color: var(--accent); }
+  .tag-app { background: var(--green-light); color: var(--green); }
+  .tag-mini { background: var(--orange-light); color: var(--orange); }
+  .tag-offline { background: #f5f5f5; color: #666; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .note {
+    background: #fffde7; border-left: 3px solid #fbc02d; padding: 10px 14px;
+    border-radius: 0 8px 8px 0; margin: 12px 0; font-size: .88em;
+  }
+  .note strong { color: #f57f17; }
+  .legal-table td:first-child { font-weight: 600; white-space: nowrap; }
+  @media (max-width: 640px) {
+    .tabs { flex-direction: column; gap: 4px; }
+    .tab { border-radius: 8px; }
+    .panel { border-radius: 0 0 var(--radius) var(--radius); }
+    table { font-size: .78em; }
+    td, th { padding: 6px 6px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>全国不动产 · 机动车查询入口</h1>
+  <p>覆盖全国31省市，含法律援助查询说明</p>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('bdc')">🏠 不动产登记查询</button>
+  <button class="tab" onclick="showTab('car')">🚗 机动车登记查询</button>
+  <button class="tab" onclick="showTab('law')">⚖️ 法律援助说明</button>
+</div>
+
+<div class="main">
+
+  <!-- 不动产登记查询 -->
+  <div class="panel active" id="panel-bdc">
+    <input class="search-box" type="text" placeholder="搜索省份或城市..." oninput="filterTable(this,'bdc-table')">
+    <div style="overflow-x:auto">
+    <table id="bdc-table">
+      <tr><th>地区</th><th>级别</th><th>平台名称</th><th>访问方式</th><th>说明</th></tr>
+      <tr><td>全国</td><td>全国</td><td><a href="http://zwfw.ch.mnr.gov.cn" target="_blank">自然资源部不动产登记网上查询</a></td><td><span class="tag tag-web">网页</span></td><td>跨省查询、验证证书真伪、下载查询证明；人脸识别+身份证号认证</td></tr>
+      <tr><td>全国</td><td>全国</td><td>国家政务服务平台</td><td><span class="tag tag-mini">小程序</span></td><td>微信搜索"国家政务服务平台"小程序，电子证照关联查询</td></tr>
+      <tr><td>北京市</td><td>直辖市</td><td><a href="http://bdc.ghzrzyw.beijing.gov.cn" target="_blank">北京市不动产登记领域网上办事服务平台</a></td><td><span class="tag tag-web">网页</span> <span class="tag tag-app">APP</span></td><td>手机端：北京通APP</td></tr>
+      <tr><td>上海市</td><td>直辖市</td><td><a href="https://zwdt.sh.gov.cn" target="_blank">上海一网通办-不动产登记"一件事"</a></td><td><span class="tag tag-web">网页</span> <span class="tag tag-app">APP</span></td><td>随申办APP；长三角跨省通查，历史追溯至1995年</td></tr>
+      <tr><td>天津市</td><td>直辖市</td><td>津心办</td><td><span class="tag tag-app">APP</span></td><td>津心办APP</td></tr>
+      <tr><td>重庆市</td><td>直辖市</td><td>重庆市不动产</td><td><span class="tag tag-mini">公众号</span></td><td>微信搜索"重庆市不动产"公众号</td></tr>
+      <tr><td>浙江省</td><td>省级</td><td>浙里办-权属查询</td><td><span class="tag tag-app">APP</span></td><td>浙里办APP搜索"不动产智治"，即时出证，免费；仅查本人名下</td></tr>
+      <tr><td>杭州市</td><td>市级</td><td>杭州不动产</td><td><span class="tag tag-app">APP</span></td><td>浙里办APP搜索"杭州不动产"，查档热线：0571-88227484</td></tr>
+      <tr><td>江苏省</td><td>省级</td><td>苏服办APP</td><td><span class="tag tag-app">APP</span></td><td>可查配偶/子女，3工作日出证，20元/次</td></tr>
+      <tr><td>南京市</td><td>市级</td><td>我的南京</td><td><span class="tag tag-app">APP</span></td><td>我的南京APP</td></tr>
+      <tr><td>苏州市</td><td>市级</td><td>苏易登</td><td><span class="tag tag-app">APP</span></td><td>苏易登APP</td></tr>
+      <tr><td>合肥市</td><td>市级</td><td>皖事通-皖美登</td><td><span class="tag tag-app">APP</span></td><td>皖事通APP</td></tr>
+      <tr><td>福建省</td><td>省级</td><td>闽政通</td><td><span class="tag tag-app">APP</span></td><td>闽政通APP</td></tr>
+      <tr><td>福州市</td><td>市级</td><td>e福州</td><td><span class="tag tag-app">APP</span></td><td>e福州APP</td></tr>
+      <tr><td>山东省</td><td>省级</td><td>爱山东</td><td><span class="tag tag-app">APP</span></td><td>爱山东APP</td></tr>
+      <tr><td>江西省</td><td>省级</td><td>赣服通</td><td><span class="tag tag-app">APP</span></td><td>赣服通APP</td></tr>
+      <tr><td>广东省</td><td>省级</td><td>粤省事</td><td><span class="tag tag-mini">小程序</span></td><td>粤省事微信小程序，可查开发商抵押情况、在线预约过户</td></tr>
+      <tr><td>广州市</td><td>市级</td><td><a href="http://ghzyj.gz.gov.cn/wxpro_ts/djcx/" target="_blank">广州不动产登记</a></td><td><span class="tag tag-web">网页</span> <span class="tag tag-mini">小程序</span></td><td></td></tr>
+      <tr><td>深圳市</td><td>市级</td><td><a href="http://www.szreorc.com/xsfw/hlwbdc/" target="_blank">深圳不动产登记中心</a></td><td><span class="tag tag-web">网页</span> <span class="tag tag-app">APP</span></td><td>i深圳APP；实时显示查封/抵押状态</td></tr>
+      <tr><td>湖北省</td><td>省级</td><td>鄂汇办</td><td><span class="tag tag-app">APP</span></td><td>鄂汇办APP</td></tr>
+      <tr><td>武汉市</td><td>市级</td><td>武汉不动产服务平台</td><td><span class="tag tag-mini">小程序</span> <span class="tag tag-web">网页</span></td><td>微信小程序</td></tr>
+      <tr><td>湖南省</td><td>省级</td><td>湖南不动产</td><td><span class="tag tag-mini">小程序</span></td><td>支付宝搜索"湖南不动产"小程序</td></tr>
+      <tr><td>长沙市</td><td>市级</td><td>长沙不动产登记</td><td><span class="tag tag-mini">公众号</span></td><td>微信搜索"长沙不动产登记"公众号</td></tr>
+      <tr><td>河南省</td><td>省级</td><td>--</td><td><span class="tag tag-offline">线下</span></td><td>需村委会开具查询证明，5工作日，10元+EMS</td></tr>
+      <tr><td>四川省</td><td>省级</td><td>天府通办</td><td><span class="tag tag-app">APP</span></td><td>天府通办APP</td></tr>
+      <tr><td>成都市</td><td>市级</td><td><a href="http://zxbl.sczwfw.gov.cn" target="_blank">成都市不动产登记网上办事大厅</a></td><td><span class="tag tag-web">网页</span> <span class="tag tag-app">APP</span> <span class="tag tag-mini">公众号</span></td><td>天府市民云APP；公众号"成都不动产登记"</td></tr>
+      <tr><td>贵州省</td><td>省级</td><td>贵州省不动产登记中心</td><td><span class="tag tag-mini">公众号</span></td><td>微信搜索"贵州省不动产登记中心"公众号</td></tr>
+      <tr><td>云南省</td><td>省级</td><td>办事通</td><td><span class="tag tag-app">APP</span></td><td>办事通APP</td></tr>
+      <tr><td>昆明市</td><td>市级</td><td>昆明不动产</td><td><span class="tag tag-mini">公众号</span></td><td>微信搜索"昆明不动产"公众号</td></tr>
+      <tr><td>陕西省</td><td>省级</td><td>秦务员</td><td><span class="tag tag-app">APP</span></td><td>也可通过i西安APP查询</td></tr>
+      <tr><td>甘肃省</td><td>省级</td><td>甘快办</td><td><span class="tag tag-app">APP</span> <span class="tag tag-web">网页</span></td><td></td></tr>
+      <tr><td>山西省</td><td>省级</td><td>三晋通</td><td><span class="tag tag-app">APP</span></td><td>三晋通APP</td></tr>
+      <tr><td>河北省</td><td>省级</td><td>冀时办</td><td><span class="tag tag-app">APP</span></td><td>冀时办APP</td></tr>
+      <tr><td>辽宁省</td><td>省级</td><td>辽事通</td><td><span class="tag tag-app">APP</span></td><td>辽事通APP</td></tr>
+      <tr><td>黑龙江省</td><td>省级</td><td>哈尔滨不动产</td><td><span class="tag tag-mini">公众号</span></td><td>大庆可用"大庆住建"小程序</td></tr>
+      <tr><td>海南省</td><td>省级</td><td>海易办</td><td><span class="tag tag-app">APP</span></td><td>海易办APP</td></tr>
+      <tr><td>广西</td><td>省级</td><td>南宁不动产</td><td><span class="tag tag-mini">公众号</span></td><td>微信搜索"南宁市不动产登记中心"公众号</td></tr>
+      <tr><td>内蒙古</td><td>省级</td><td>内蒙古政务服务网</td><td><span class="tag tag-web">网页</span></td><td></td></tr>
+    </table>
+    </div>
+  </div>
+
+  <!-- 机动车登记查询 -->
+  <div class="panel" id="panel-car">
+    <div class="note"><strong>💡 便捷提示：</strong>全国统一平台：<a href="https://www.122.gov.cn" target="_blank">交管12123</a>（APP/网页），语音热线 12123</div>
+    <input class="search-box" type="text" placeholder="搜索省份或城市..." oninput="filterTable(this,'car-table')">
+    <div style="overflow-x:auto">
+    <table id="car-table">
+      <tr><th>地区</th><th>平台名称</th><th>网址</th><th>说明</th></tr>
+      <tr><td>全国</td><td><a href="https://www.122.gov.cn" target="_blank">交管12123</a></td><td><a href="https://www.122.gov.cn" target="_blank">122.gov.cn</a></td><td>公安部统一平台，APP/网页均可</td></tr>
+      <tr><td>北京市</td><td>北京市交管平台</td><td><a href="http://bj.122.gov.cn" target="_blank">bj.122.gov.cn</a></td><td></td></tr>
+      <tr><td>天津市</td><td>天津市交管平台</td><td><a href="http://tj.122.gov.cn" target="_blank">tj.122.gov.cn</a></td><td></td></tr>
+      <tr><td>河北省</td><td>河北省交管平台</td><td><a href="http://he.122.gov.cn" target="_blank">he.122.gov.cn</a></td><td></td></tr>
+      <tr><td>山西省</td><td>山西省交管平台</td><td><a href="http://sx.122.gov.cn" target="_blank">sx.122.gov.cn</a></td><td></td></tr>
+      <tr><td>内蒙古</td><td>内蒙古交管平台</td><td><a href="http://nm.122.gov.cn" target="_blank">nm.122.gov.cn</a></td><td></td></tr>
+      <tr><td>辽宁省</td><td>辽宁省交管平台</td><td><a href="http://ln.122.gov.cn" target="_blank">ln.122.gov.cn</a></td><td></td></tr>
+      <tr><td>吉林省</td><td>吉林省交管平台</td><td><a href="http://jl.122.gov.cn" target="_blank">jl.122.gov.cn</a></td><td></td></tr>
+      <tr><td>黑龙江省</td><td>黑龙江省交管平台</td><td><a href="http://hl.122.gov.cn" target="_blank">hl.122.gov.cn</a></td><td></td></tr>
+      <tr><td>上海市</td><td>上海市交管平台</td><td><a href="http://sh.122.gov.cn" target="_blank">sh.122.gov.cn</a></td><td>随申办APP也可查询</td></tr>
+      <tr><td>江苏省</td><td>江苏省交管平台</td><td><a href="http://js.122.gov.cn" target="_blank">js.122.gov.cn</a></td><td></td></tr>
+      <tr><td>浙江省</td><td>浙江省交管平台</td><td><a href="http://zj.122.gov.cn" target="_blank">zj.122.gov.cn</a></td><td>浙里办APP也可查询</td></tr>
+      <tr><td>安徽省</td><td>安徽省交管平台</td><td><a href="http://ah.122.gov.cn" target="_blank">ah.122.gov.cn</a></td><td></td></tr>
+      <tr><td>福建省</td><td>福建省交管平台</td><td><a href="http://fj.122.gov.cn" target="_blank">fj.122.gov.cn</a></td><td></td></tr>
+      <tr><td>江西省</td><td>江西省交管平台</td><td><a href="http://jx.122.gov.cn" target="_blank">jx.122.gov.cn</a></td><td></td></tr>
+      <tr><td>山东省</td><td>山东省交管平台</td><td><a href="http://sd.122.gov.cn" target="_blank">sd.122.gov.cn</a></td><td></td></tr>
+      <tr><td>河南省</td><td>河南省交管平台</td><td><a href="http://hn.122.gov.cn" target="_blank">hn.122.gov.cn</a></td><td></td></tr>
+      <tr><td>湖北省</td><td>湖北省交管平台</td><td><a href="http://hb.122.gov.cn" target="_blank">hb.122.gov.cn</a></td><td></td></tr>
+      <tr><td>湖南省</td><td>湖南省交管平台</td><td><a href="http://hn.122.gov.cn" target="_blank">hn.122.gov.cn</a></td><td></td></tr>
+      <tr><td>海南省</td><td>海南省交管平台</td><td><a href="http://hi.122.gov.cn" target="_blank">hi.122.gov.cn</a></td><td></td></tr>
+      <tr><td>广东省</td><td>广东省交管平台</td><td><a href="http://gd.122.gov.cn" target="_blank">gd.122.gov.cn</a></td><td>粤省事小程序也可查询</td></tr>
+      <tr><td>广西</td><td>广西交管平台</td><td><a href="http://gx.122.gov.cn" target="_blank">gx.122.gov.cn</a></td><td></td></tr>
+      <tr><td>重庆市</td><td>重庆市交管平台</td><td><a href="http://cq.122.gov.cn" target="_blank">cq.122.gov.cn</a></td><td></td></tr>
+      <tr><td>四川省</td><td>四川省交管平台</td><td><a href="http://sc.122.gov.cn" target="_blank">sc.122.gov.cn</a></td><td></td></tr>
+      <tr><td>贵州省</td><td>贵州省交管平台</td><td><a href="http://gz.122.gov.cn" target="_blank">gz.122.gov.cn</a></td><td></td></tr>
+      <tr><td>云南省</td><td>云南省交管平台</td><td><a href="http://yn.122.gov.cn" target="_blank">yn.122.gov.cn</a></td><td></td></tr>
+      <tr><td>西藏</td><td>西藏交管平台</td><td><a href="http://xz.122.gov.cn" target="_blank">xz.122.gov.cn</a></td><td></td></tr>
+      <tr><td>陕西省</td><td>陕西省交管平台</td><td><a href="http://sn.122.gov.cn" target="_blank">sn.122.gov.cn</a></td><td></td></tr>
+      <tr><td>甘肃省</td><td>甘肃省交管平台</td><td><a href="http://gs.122.gov.cn" target="_blank">gs.122.gov.cn</a></td><td></td></tr>
+      <tr><td>青海省</td><td>青海省交管平台</td><td><a href="http://qh.122.gov.cn" target="_blank">qh.122.gov.cn</a></td><td></td></tr>
+      <tr><td>宁夏</td><td>宁夏交管平台</td><td><a href="http://nx.122.gov.cn" target="_blank">nx.122.gov.cn</a></td><td></td></tr>
+      <tr><td>新疆</td><td>新疆交管平台</td><td><a href="http://xj.122.gov.cn" target="_blank">xj.122.gov.cn</a></td><td></td></tr>
+    </table>
+    </div>
+  </div>
+
+  <!-- 法律援助说明 -->
+  <div class="panel" id="panel-law">
+    <div class="note"><strong>⚠️ 重要提示：</strong>律师查询需法院立案后方可申请调查令，具体材料要求以当地不动产登记中心为准。</div>
+    <table class="legal-table">
+      <tr><th>查询类型</th><th>查询主体</th><th>所需材料</th><th>法律依据</th><th>注意事项</th></tr>
+      <tr><td>不动产-本人</td><td>当事人本人</td><td>身份证原件+人脸识别</td><td>《不动产登记暂行条例》</td><td>大部分平台免费，部分地区需缴费</td></tr>
+      <tr><td>不动产-律师</td><td>律师（因办案需要）</td><td>律师执业证+法院调查令+律所公函+委托书</td><td>《不动产登记暂行条例实施细则》</td><td>需法院立案后方可申请调查令</td></tr>
+      <tr><td>机动车-本人</td><td>当事人本人</td><td>身份证原件+行驶证</td><td>《机动车登记规定》</td><td>交管12123 APP最便捷</td></tr>
+      <tr><td>机动车-律师</td><td>律师（因办案需要）</td><td>律师执业证+法院调查令+律所公函+授权委托书</td><td>《机动车登记规定》第72条、《律师法》第35条</td><td>需案件受理通知书等法院文书</td></tr>
+      <tr><td>机动车-法院/检察院</td><td>司法机关</td><td>工作证件+介绍信</td><td>《机动车登记规定》第72条</td><td>因办案需要可直接查阅</td></tr>
+    </table>
+  </div>
+
+</div>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+function filterTable(input, tableId) {
+  const q = input.value.toLowerCase();
+  const rows = document.getElementById(tableId).querySelectorAll('tr');
+  rows.forEach((row, i) => {
+    if (i === 0) return;
+    row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+</script>
+
+</body>
+</html>
