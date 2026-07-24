@@ -93,12 +93,39 @@
   .tag-product { background: #e8f5e9; color: #2e7d32; }
   .tag-ops { background: #fff3e0; color: #e65100; }
   .tag-hackathon { background: #f3e5f5; color: #7b1fa2; }
+  .tag-sales { background: #fce4ec; color: #c62828; }
+  .tag-security { background: #e0f2f1; color: #00695c; }
+  .tag-data { background: #ede7f6; color: #4527a0; }
   .tip {
     background: #fffde7; border-left: 3px solid #fbc02d;
     padding: 12px 16px; border-radius: 0 8px 8px 0;
     margin: 12px 0; font-size: .9em;
   }
   .tip strong { color: #f57f17; }
+  details { margin: 8px 0; }
+  details summary {
+    cursor: pointer; font-weight: 600; padding: 8px 0;
+    color: var(--text2); font-size: .95em;
+  }
+  details summary:hover { color: var(--accent); }
+  details[open] summary { color: var(--accent); margin-bottom: 8px; }
+  .link-card {
+    display: block; padding: 10px 14px; margin: 6px 0;
+    border: 1px solid var(--border); border-radius: 8px;
+    text-decoration: none; color: var(--text);
+    transition: all .2s; font-size: .9em;
+  }
+  .link-card:hover { border-color: var(--accent); background: var(--accent-light); }
+  .link-card .link-title { font-weight: 600; color: var(--accent); }
+  .link-card .link-desc { color: var(--text2); font-size: .85em; margin-top: 2px; }
+  .checklist { list-style: none; padding-left: 0; }
+  .checklist li { padding: 4px 0; }
+  .checklist li::before { content: "☐ "; color: var(--accent); font-weight: 700; }
+  pre {
+    background: #f5f5f5; padding: 12px; border-radius: 8px;
+    overflow-x: auto; font-size: .85em; margin: 8px 0;
+  }
+  code { background: #f0f0f0; padding: 1px 4px; border-radius: 3px; font-size: .9em; }
   @media (max-width: 640px) {
     .hero h1 { font-size: 1.4em; }
     .tabs { gap: 4px; }
@@ -115,6 +142,7 @@
     <a href="#" onclick="showTab('jobs');return false" class="active" id="nav-jobs">岗位分析</a>
     <a href="#" onclick="showTab('insights');return false" id="nav-insights">项目启示</a>
     <a href="#" onclick="showTab('hackathon');return false" id="nav-hackathon">比赛资料</a>
+    <a href="#" onclick="showTab('links');return false" id="nav-links">参考链接</a>
   </div>
 </nav>
 
@@ -125,11 +153,12 @@
 
 <div class="content">
 
-  <!-- 岗位分析 -->
+  <!-- ==================== 岗位分析 ==================== -->
   <div class="panel active" id="panel-jobs">
 
+    <!-- SandBase AI -->
     <div class="section">
-      <h2>SandBase AI ｜ 活动与生态运营经理/专家</h2>
+      <h2>1. SandBase AI ｜ 活动与生态运营经理/专家</h2>
       <p><span class="tag tag-ops">活动运营</span> AI Agent 安全运行层 · 社招 · 2-3年经验 · 英语工作语言</p>
       <h3>岗位职责</h3>
       <ol>
@@ -145,24 +174,550 @@
         <li>英语可独立商务沟通，熟悉 AI 领域术语和生态</li>
         <li>有独立操盘活动的完整经验，天然爱社交、人脉广</li>
       </ul>
-      <div class="tip"><strong>💡 启示：</strong>这家公司把"办活动"当成核心增长引擎，说明 AI 行业目前极度缺乏线下连接和生态建设能力。</div>
+      <h3>能力价值映射</h3>
+      <table>
+        <tr><th>能力</th><th>公司阶段需求</th><th>价值逻辑</th></tr>
+        <tr><td>活动策划执行</td><td>冷启动期</td><td>快速建立品牌认知，从0到1积累种子用户</td></tr>
+        <tr><td>开发者社区运营</td><td>生态建设期</td><td>让开发者自发传播，形成技术社区飞轮</td></tr>
+        <tr><td>BD/商务拓展</td><td>商业化初期</td><td>连接大厂和投资机构，推动付费客户转化</td></tr>
+        <tr><td>英语能力</td><td>全球化野心</td><td>AI Infra 是全球赛道，英文社区是必争之地</td></tr>
+        <tr><td>内容/社媒传播</td><td>品牌建设期</td><td>低成本高杠杆的获客方式</td></tr>
+        <tr><td>技术理解力</td><td>贯穿始终</td><td>能和开发者对话、能翻译技术价值为业务语言</td></tr>
+      </table>
+      <div class="tip"><strong>启示：</strong>这家公司把"办活动"当成核心增长引擎，说明 AI 行业目前极度缺乏线下连接和生态建设能力。</div>
     </div>
 
+    <!-- 暗壳科技 JD-01 -->
     <div class="section">
-      <h2>更多岗位（持续更新中）</h2>
-      <p>完整岗位列表见原始文档，涵盖技术、产品、运营、安全等多个方向。</p>
+      <h2>2. 暗壳科技 ｜ 高级算法应用工程师（AIGC 与 3D 重建）</h2>
+      <p><span class="tag tag-tech">技术</span> 天使轮 · AI 空间设计工作台 Lovspark · 腾讯设计 AIGC 联合实验室</p>
+      <h3>一句话定位</h3>
+      <p>把 AI 生成能力工程化落地——让"文字描述一个房间"变成"输出可用的 3D 模型"。</p>
+      <h3>核心职责</h3>
+      <ol>
+        <li>从文本/图像生成 3D 资产（Mesh/Texture）的算法研发与优化</li>
+        <li>3D 与物理引擎集成，让生成模型可交互</li>
+        <li>Python + Docker 容器化，搭建高可用生成式 AI 系统</li>
+        <li>跟踪 NeRF、Gaussian Splatting、3D Diffusion 前沿技术</li>
+      </ol>
+      <h3>必备技能</h3>
+      <ul>
+        <li>Python 精通 + PyTorch</li>
+        <li>ControlNet / LoRA / CLIP（AIGC 核心技术栈）</li>
+        <li>3D 重建（NeRF / 3D Gaussian Splatting / SLAM）</li>
+        <li>Docker 容器化 + CI/CD</li>
+        <li>跨团队协作（需和 Unity/Unreal 引擎团队配合）</li>
+      </ul>
+      <p><strong>人才画像：</strong>硕士起步（博士优先），3年+ AIGC 或 3D 视觉开发经验。能把论文变成服务的工程师。</p>
+    </div>
+
+    <!-- 暗壳科技 JD-02 -->
+    <div class="section">
+      <h2>3. 暗壳科技 ｜ 高级算法工程师（Physical AI & World Model）</h2>
+      <p><span class="tag tag-tech">技术</span> 天使轮 · AI 空间设计工作台</p>
+      <h3>一句话定位</h3>
+      <p>让 AI 不只"看到"空间，还能"理解"空间的物理规律。</p>
+      <h3>核心职责</h3>
+      <ol>
+        <li>构建融合视觉生成与物理仿真的 World Model</li>
+        <li>把建材物理参数（力学/热学/声学/光学）注入生成模型</li>
+        <li>搭建具身智能仿真环境，训练 Agent 做空间交互</li>
+        <li>时空图神经网络 / Agent-Based Modeling 跨尺度推演</li>
+      </ol>
+      <h3>专业术语</h3>
+      <ul>
+        <li><strong>World Model</strong>：能模拟因果关系的系统，不只是生成图像</li>
+        <li><strong>Physical AI</strong>：让 AI 具备物理常识，生成结果物理上说得通</li>
+        <li><strong>PINNs</strong>：把物理方程嵌入神经网络训练，输出天然符合物理规律</li>
+        <li><strong>Embodied Agent</strong>：有"身体"的 AI 智能体，能在环境中行动和交互</li>
+      </ul>
+      <h3>必备技能</h3>
+      <ul>
+        <li>PyTorch / JAX + 物理仿真引擎（MuJoCo / PyBullet / Taichi / NVIDIA Omniverse）</li>
+        <li>3D Vision（NeRF / 3DGS / SLAM）</li>
+        <li>强化学习 / 模仿学习基础</li>
+        <li>物理属性与视觉生成的联合优化</li>
+      </ul>
+      <p><strong>人才画像：</strong>博士优先，纯研究型但需能工程化落地。同时理解计算机视觉和物理世界的稀缺复合背景。</p>
+    </div>
+
+    <!-- 暗壳科技 JD-03 -->
+    <div class="section">
+      <h2>4. 暗壳科技 ｜ 资深海外增长投放 / 海外增长运营</h2>
+      <p><span class="tag tag-ops">增长运营</span> 天使轮 · Lovspark 海外推广</p>
+      <h3>一句话定位</h3>
+      <p>在海外主流平台花钱买量——围绕"设计师"精准人群，把 Lovspark 推到他们面前。</p>
+      <h3>核心职责</h3>
+      <ol>
+        <li>Meta/TikTok/Google/YouTube + Pinterest/Reddit/Discord/Product Hunt 多平台投放</li>
+        <li>搭建海外增长数据体系（CAC/LTV/ROI 等指标）</li>
+        <li>不同渠道制定差异化增长策略</li>
+        <li>协同产品/数据/设计/品牌团队优化转化路径</li>
+      </ol>
+      <h3>必备技能</h3>
+      <ul>
+        <li>5年+ 海外增长/投放经验</li>
+        <li>Meta/TikTok/Google/YouTube 投放实操</li>
+        <li>数据分析（CAC/LTV/ROI/注册转化/激活率/留存率）</li>
+        <li>归因分析与实验设计</li>
+        <li>英语工作语言</li>
+      </ul>
+    </div>
+
+    <!-- 暗壳科技 JD-04 -->
+    <div class="section">
+      <h2>5. 暗壳科技 ｜ 海外内容策划（AI 空间设计方向）</h2>
+      <p><span class="tag tag-ops">内容策划</span> 天使轮 · Lovspark 内容营销</p>
+      <h3>一句话定位</h3>
+      <p>把 Lovspark 产品能力翻译成海外设计师愿意看、愿意传的内容。</p>
+      <h3>核心职责</h3>
+      <ol>
+        <li>Instagram/TikTok/YouTube/Pinterest/X/Reddit/EDM 多平台内容选题</li>
+        <li>撰写本地化英文内容（社媒文案/短视频脚本/教程/案例/EDM/官网）</li>
+        <li>围绕 AI 空间设计等场景策划种草内容</li>
+        <li>数据驱动复盘，持续优化内容质量</li>
+      </ol>
+      <h3>必备技能</h3>
+      <ul>
+        <li>1年+ 海外内容策划/英文文案经验</li>
+        <li>英语工作语言（优秀英文写作和本地化表达）</li>
+        <li>熟悉各海外社媒内容形态</li>
+        <li>基础图文/视频处理（Canva/CapCut/Figma/PS/PR）</li>
+      </ul>
+    </div>
+
+    <!-- 微软小冰 -->
+    <div class="section">
+      <h2>6. 微软小冰 ｜ 销售总监（广州）</h2>
+      <p><span class="tag tag-sales">销售</span> 成熟期（分拆独立） · AI + 数字人 · 直销团队搭建</p>
+      <h3>公司背景</h3>
+      <ul>
+        <li>由微软（亚洲）互联网工程院人工智能小冰团队分拆而成</li>
+        <li>受微软前全球执行副总裁陆奇和沈向洋影响和支持</li>
+        <li>2020年成立，继承微软 AI 深厚积累</li>
+        <li>全球业务覆盖中国、日本、印度尼西亚等</li>
+      </ul>
+      <h3>岗位职责</h3>
+      <ol>
+        <li>搭建直销团队，负责 AI & 数字人产品的售卖</li>
+        <li>招聘新人、销售培养、客户陪访、业绩跟进、拓客创新</li>
+        <li>为团队提供产品、销售、管理及文化培训</li>
+        <li>理解传达公司政策，收集客户反馈同步业务</li>
+        <li>从数据中发现问题，持续优化策略和计划</li>
+        <li>带领团队完成业务目标和业绩达成</li>
+      </ol>
+      <h3>专业术语</h3>
+      <ul>
+        <li><strong>数字人</strong>：AI 驱动的虚拟形象，可用于直播、客服、短视频等场景</li>
+        <li><strong>直销</strong>：不通过代理商，直接面对客户销售</li>
+        <li><strong>SaaS</strong>：Software as a Service，云端订阅模式</li>
+      </ul>
+      <h3>必备技能</h3>
+      <ul>
+        <li>3年+ 软件销售管理经验 + 2年+ 直销管理经验</li>
+        <li>微盟/有赞/飞书等渠道资源优先</li>
+        <li>数字人/短视频/直播/SaaS/互联网从业经验优先</li>
+        <li>数据驱动的策略优化能力</li>
+      </ul>
+      <h3>岗位价值分析</h3>
       <table>
-        <tr><th>方向</th><th>代表岗位</th><th>核心要求</th></tr>
-        <tr><td><span class="tag tag-tech">技术</span></td><td>算法工程师、大模型开发、3D重建</td><td>模型训练/微调/工程化落地</td></tr>
-        <tr><td><span class="tag tag-product">产品</span></td><td>AI产品经理、安全风控PM</td><td>需求定义、用户体验、商业化</td></tr>
-        <tr><td><span class="tag tag-ops">运营</span></td><td>活动运营、DevRel、社区运营</td><td>生态建设、活动操盘、人脉拓展</td></tr>
-        <tr><td><span class="tag tag-tech">安全</span></td><td>安全风控、内容安全</td><td>红队测试、对抗攻击、合规</td></tr>
+        <tr><th>维度</th><th>分析</th></tr>
+        <tr><td>为什么现在招</td><td>小冰从微软分拆后需要独立建立商业化能力</td></tr>
+        <tr><td>解决什么问题</td><td>把 AI/数字人技术从"技术展示"变成"商业收入"</td></tr>
+        <tr><td>为什么要求微盟/有赞经验</td><td>这些渠道有大量中小企业客户，是数字人产品最可能的买单方</td></tr>
+        <tr><td>广州选址逻辑</td><td>华南商业中心，靠近大量制造业和贸易企业</td></tr>
+      </table>
+    </div>
+
+    <!-- 程序向技术美术 -->
+    <div class="section">
+      <h2>7. 程序向技术美术 ｜ 15-25k</h2>
+      <p><span class="tag tag-tech">技术美术</span></p>
+      <h3>核心技能</h3>
+      <ul>
+        <li>UE 蓝图系统，驱动场景动态效果</li>
+        <li>OSC 协议（Open Sound Control，常用于互动装置/音游的数据传输）</li>
+        <li>C++ 编程 + 图形效果编程</li>
+        <li>UE 各子系统</li>
+      </ul>
+      <p><strong>加分项：</strong>音游类游戏开发、互动游戏/互动视觉开发</p>
+      <p><strong>人才画像：</strong>技术美术（TA）是程序和美术之间的桥梁。适合有游戏开发背景、想做互动艺术/音游方向的人。</p>
+    </div>
+
+    <!-- 阿里通义 -->
+    <div class="section">
+      <h2>8. 阿里云智能 ｜ 客户端（Android）研发专家 ｜ 通义大模型 ｜ 杭州</h2>
+      <p><span class="tag tag-tech">技术</span> 通义千问 Android 端 · 多模态交互</p>
+      <h3>岗位定位</h3>
+      <p>通义千问 Android 端研发，负责多模态交互功能（文生文/文生图/图生图/语音对话）。</p>
+      <h3>核心技能</h3>
+      <ul>
+        <li>Java/Kotlin + Android 开发框架</li>
+        <li>TCP/IP、HTTP、HTTPS、WebSocket 网络协议</li>
+        <li>多线程编程</li>
+        <li>git、adb、linux 常用命令</li>
+      </ul>
+      <p><strong>加分项：</strong>Android Framework 源码分析、App 性能优化、中间件经验（推送/IM/热修复）、C++/JNI</p>
+      <p><strong>人才画像：</strong>资深 Android 开发，需要理解大模型的多模态交互特性，能做端侧推理优化。通义千问是阿里 AI 的 C 端入口。</p>
+    </div>
+
+    <!-- 腾娱互动 -->
+    <div class="section">
+      <h2>9. 腾娱互动 ｜ 2D 美术 AI 提效工具产品经理 ｜ 深圳</h2>
+      <p><span class="tag tag-product">产品</span> 游戏美术 AI 提效</p>
+      <h3>岗位定位</h3>
+      <p>帮游戏美术团队用 AI 工具提效——不是做 AI 产品，是做"让美术用 AI 更顺手"的工具。</p>
+      <h3>核心技能</h3>
+      <ul>
+        <li>Stable Diffusion + ComfyUI 工作流（半年+）</li>
+        <li>LoRA 训练 + ControlNet 插件</li>
+        <li>有 AI 作品案例，写实风格优先</li>
+        <li>了解游戏美术工作流（概念设计/宣发素材）</li>
+      </ul>
+      <p><strong>人才画像：</strong>不是纯产品经理，是"懂美术、懂 AI 工具、能翻译需求"的桥梁角色。本质是 AI 工具的内部布道师。</p>
+    </div>
+
+    <!-- 联想 -->
+    <div class="section">
+      <h2>10. 联想 ｜ 算法工程师（校招）｜ 天津</h2>
+      <p><span class="tag tag-tech">技术</span> 校招 · 大模型技术研究/微调/智能体开发</p>
+      <h3>核心技能</h3>
+      <ul>
+        <li>生成式 AI / ML / CV / CG / 语音 / 图像识别</li>
+        <li>Transformer、MOE、多模态、混合式 AI</li>
+        <li>PEFT、RLHF 等调优方法</li>
+        <li>RAG、Agent、LangChain 等应用开发框架</li>
+        <li>Python + 扎实的算法/数据结构</li>
+      </ul>
+      <p><strong>人才画像：</strong>2023.9-2024.8 应届毕业生，计算机/AI/自动化/数学/物理等相关专业。覆盖面很广——从底层算法到上层应用都要。</p>
+    </div>
+
+    <!-- 阿里百炼 -->
+    <div class="section">
+      <h2>11. 阿里云智能 ｜ 产品运营高级专员 ｜ 大模型服务平台百炼 ｜ 杭州</h2>
+      <p><span class="tag tag-ops">运营</span> toB 产品运营 · 用户增长</p>
+      <h3>岗位定位</h3>
+      <p>百炼平台的用户增长和内容运营——让企业用户用起来、用得好。</p>
+      <h3>核心技能</h3>
+      <ul>
+        <li>3年+ toB 产品运营经验</li>
+        <li>用户增长或内容运营背景</li>
+        <li>数据分析 + 结构化思维</li>
+        <li>独立负责大中型项目的经验</li>
+      </ul>
+      <p><strong>加分项：</strong>大模型/AI 运营经验</p>
+      <p><strong>人才画像：</strong>toB 运营老手，不是做 C 端流量运营，是做企业客户的渗透和活跃。</p>
+    </div>
+
+    <!-- 可触未来 -->
+    <div class="section">
+      <h2>12. 可触未来 ｜ LOOI 机器人项目 ｜ 深圳</h2>
+      <p><span class="tag tag-tech">技术</span><span class="tag tag-product">产品</span> AI 硬件 + 情感交互 · 受 Elon Musk 关注</p>
+      <h3>公司背景</h3>
+      <p>交互创新公司，做情感化桌面机器人。目标是"把智能硬件、AI、游戏、多媒介叙事融合创新"。有期权激励。</p>
+      <h3>招聘岗位</h3>
+      <h4>算法工程师</h4>
+      <ul>
+        <li>LLM 设计/训练/优化，多模态模型调优</li>
+        <li>模型部署到实际业务（智能问答/Agent/语义理解）</li>
+        <li>硕士+，计算机/AI/机器学习专业</li>
+      </ul>
+      <h4>嵌入式工程师</h4>
+      <ul>
+        <li>FreeRTOS + MCU 外设驱动</li>
+        <li>ESP32/STM32/AVR 开发经验</li>
+        <li>硬件调试（示波器/烙铁/风枪）</li>
+      </ul>
+      <h4>产品经理</h4>
+      <ul>
+        <li>定义情感化桌面机器人的软硬件交互方式</li>
+        <li>人机交互/计算机/设计相关专业</li>
+      </ul>
+      <h4>UI/交互设计师</h4>
+      <ul>
+        <li>App UI + 桌面机器人表情动画</li>
+        <li>Figma/PS/AE + 人机交互理解</li>
+      </ul>
+      <p><strong>人才画像：</strong>四个岗位需要紧密协作——算法做智能、嵌入式做硬件、产品做体验、设计做表达。适合想参与"从0到1造新物种"的人。</p>
+    </div>
+
+    <!-- 心跃智能 -->
+    <div class="section">
+      <h2>13. 心跃智能 ｜ 心理 AI 项目 ｜ 广州番禺/线上</h2>
+      <p><span class="tag tag-ops">运营</span><span class="tag tag-tech">技术</span> 23年初创 · 心理咨询师 AI 提效工具</p>
+      <h3>公司背景</h3>
+      <p>为心理咨询师提供 AI 提效工具，产品已上线，MVP 已验证。</p>
+      <h3>岗位</h3>
+      <h4>运营操盘手（可兼职/可合伙）</h4>
+      <ul>
+        <li>懂心理赛道</li>
+        <li>有小红书/抖音/视频号操盘经验</li>
+        <li>收集热点，推动产品增长</li>
+      </ul>
+      <h4>前端实习生</h4>
+      <ul>
+        <li>Vue 3 + uni-app</li>
+        <li>热爱 AI，用过各种 AIGC 应用</li>
+        <li>在校大学生</li>
+      </ul>
+      <p><strong>人才画像：</strong>早期创业公司，招的是"能干活、有热情"的人。运营操盘手可以兼职或合伙，说明团队小、灵活度高。</p>
+    </div>
+
+    <!-- 中国移动设计院 -->
+    <div class="section">
+      <h2>14. 中国移动设计院 ｜ AI 岗位 ｜ 北京海淀</h2>
+      <p><span class="tag tag-tech">技术</span> 国企编制 · 稳定性高</p>
+      <h4>AI 算法工程师（1名，5年+）</h4>
+      <ul>
+        <li>系统全局调优和预测性维护建模</li>
+        <li>机器学习/深度学习项目实践</li>
+        <li>TensorFlow</li>
+        <li>AI 在智能数据中心/智能网络应用</li>
+      </ul>
+      <h4>大模型开发工程师（1名，5年+）</h4>
+      <ul>
+        <li>大模型技术研究/微调/智能体/应用研发</li>
+        <li>数据工程（预训练/微调/行业数据）</li>
+        <li>推理优化/部署/AI-Agent/工具学习/领域大模型</li>
+        <li>Transformer、Prompt Tuning、RLHF、LangChain、Agent、MOE、RAG</li>
+        <li>Python + 分布式计算</li>
+      </ul>
+      <p><strong>人才画像：</strong>国企编制，稳定性高。AI 岗位做数据中心智能化，大模型岗位做应用落地。5年+ 经验要求。</p>
+    </div>
+
+    <!-- 度小满 -->
+    <div class="section">
+      <h2>15. 度小满金融 ｜ 大模型算法/产品实习 ｜ 北京</h2>
+      <p><span class="tag tag-tech">技术</span><span class="tag tag-product">产品</span> 百度旗下 · 金融场景大模型</p>
+      <h4>算法实习生</h4>
+      <ul>
+        <li>评测和优化大模型/智能体在业务场景的效果</li>
+        <li>训练模型做用户意图识别，迭代优化 badcase</li>
+        <li>调研前沿技术并应用</li>
+        <li>参与价值观对齐/智能体探索/论文发表</li>
+        <li>本科+，熟悉 Python/Transformer/BERT/Llama</li>
+        <li>每周4天+，持续3个月+</li>
+      </ul>
+      <h4>产品实习生</h4>
+      <ul>
+        <li>技术与产品调研</li>
+        <li>大模型效果评测，开发评测方法</li>
+        <li>协助算法/产品提高 AI 准确性</li>
+        <li>研究生+，熟悉大模型/NLP</li>
+        <li>每周5天，4个月+</li>
+      </ul>
+      <p><strong>人才画像：</strong>大模型在金融场景的应用是热点。实习有论文发表机会，适合想进大厂+做前沿研究的在校生。</p>
+    </div>
+
+    <!-- 飞书 -->
+    <div class="section">
+      <h2>16. 飞书 ｜ AI 产品 + 数字化解决方案专家 ｜ 北上杭深</h2>
+      <p><span class="tag tag-product">产品</span><span class="tag tag-ops">解决方案</span> 字节跳动企业协作产品</p>
+      <h4>AI 产品 leader/专家/经理</h4>
+      <ul>
+        <li>多个业务线都有需求，北上杭深</li>
+      </ul>
+      <h4>数字化解决方案专家（AI 方向）</h4>
+      <ul>
+        <li>为各领域制定飞书 AI 解决方案并推动商业化</li>
+        <li>与 BD 部门合作推进销售（方案交流→需求分析→方案设计→合同→交付→验收）</li>
+        <li>与产品/研发合作促进落地</li>
+        <li>本科+，计算机/通信/AI 相关</li>
+        <li>有 AI 领域 ToB 解决方案或产品设计经验</li>
+        <li>深刻理解生成式 AI 落地路径</li>
+      </ul>
+      <p><strong>人才画像：</strong>本质上是"AI 时代的售前架构师"——同时懂技术、懂业务、能做商务。</p>
+    </div>
+
+    <!-- 猿印教育 -->
+    <div class="section">
+      <h2>17. 猿印教育 ｜ AIGC 图像生成算法工程师/专家 ｜ 北京五道口</h2>
+      <p><span class="tag tag-tech">技术</span> 教育公司 · AIGC 图像生成</p>
+      <h3>核心技能</h3>
+      <ul>
+        <li>Python + TensorFlow/PyTorch</li>
+        <li>DDPM、DDIM、Stable Diffusion 原理</li>
+        <li>Dreambooth、ControlNet 等可控生成技术</li>
+        <li>计算机视觉基础理论</li>
+      </ul>
+      <p><strong>人才画像：</strong>教育公司做 AIGC 图像生成，可能是为教学内容生成配图/素材。需要扎实的扩散模型理论基础。</p>
+    </div>
+
+    <!-- 光轮智能 -->
+    <div class="section">
+      <h2>18. 光轮智能 ｜ 合成数据方向 ｜ 北京海淀/上海嘉定</h2>
+      <p><span class="tag tag-data">合成数据</span> 连续4轮融资 · 自动驾驶数据集</p>
+      <h3>公司背景</h3>
+      <p>合成数据赛道明星公司，被北京政府评为 AI 数据伙伴，与上海 AI 实验室联合开源自动驾驶数据集。团队背景强（英伟达/阿里/知乎），配 4090 显卡和 H800 集群。</p>
+      <h4>合成数据传感器仿真研发实习生（400-600元/天）</h4>
+      <ul>
+        <li>虚拟传感器建模，保证高真实度合成数据</li>
+        <li>物理学/光学本科，北大/清华物理/数学博士优先</li>
+        <li>多视图几何、相机模型、ISP、LiDAR</li>
+        <li>C++/Python</li>
+      </ul>
+      <h4>合成数据 Python 开发实习生（200-400元/天）</h4>
+      <ul>
+        <li>基于真实数据的合成数据生成</li>
+        <li>Python + 计算机视觉基础</li>
+        <li>每周4天+，4个月+</li>
+      </ul>
+      <h4>算法工程师-计算机视觉（200-400元/天）</h4>
+      <ul>
+        <li>合成数据的开发/生产/评测</li>
+        <li>清北复交浙或知名高校研究生+</li>
+        <li>3D 重建/计算机图形学/数据合成经验优先</li>
+      </ul>
+      <h4>合成数据 AI 云平台开发实习生（200-400元/天）</h4>
+      <ul>
+        <li>全国最大规模智驾合成数据平台设计与开发</li>
+        <li>PAAS 层（可观测/性能/DevOps/任务编排/资源调度/MLOps）</li>
+        <li>Python/Go + Linux + MySQL + Kubernetes</li>
+      </ul>
+    </div>
+
+    <!-- 阶跃星辰 -->
+    <div class="section">
+      <h2>19. 阶跃星辰 ｜ 大模型安全方向 ｜ 多岗位</h2>
+      <p><span class="tag tag-security">安全</span><span class="tag tag-tech">技术</span> 大模型公司 · AGI</p>
+      <h4>大语言模型产品实习生（大模型安全方向）</h4>
+      <ul>
+        <li>竞品分析，掌握 AGI 行业动态</li>
+        <li>构造安全训练数据，用 SFT/RLHF 调优模型安全性</li>
+        <li>设计数据标注和内容审核后台</li>
+        <li>本科在校生+，英语良好</li>
+      </ul>
+      <h4>大模型安全风控产品经理（5年+）</h4>
+      <ul>
+        <li>产品内容和用户安全</li>
+        <li>制定安全风险指标</li>
+        <li>大语言模型价值观和人文关怀对齐</li>
+        <li>5年+ 社交产品安全/内容安全/内容审核经验</li>
+      </ul>
+      <h4>内容安全运营经理（5年+）</h4>
+      <ul>
+        <li>制定大模型输出内容的安全审核标准和数据标注标准</li>
+        <li>结合社会热点更新安全标准</li>
+        <li>5年+ 经验，熟悉热点/时事/推荐算法</li>
+      </ul>
+      <h4>算法工程师（NLP/搜广推）</h4>
+      <ul>
+        <li>海量文本数据建模分析</li>
+        <li>文本语义匹配/分类</li>
+        <li>硕士+，计算机/电子/数学专业</li>
+      </ul>
+      <p><strong>人才画像：</strong>阶跃星辰在大模型安全方向投入很大——从算法到产品到运营都在招。安全是大模型商业化的必过门槛。</p>
+    </div>
+
+    <!-- 动微机器人 -->
+    <div class="section">
+      <h2>20. 动微机器人 ｜ 物流机器人 ｜ 深圳/美国亚特兰大</h2>
+      <p><span class="tag tag-tech">技术</span> 物流机器人+配套软件 · 可提供 H1B/L 签证</p>
+      <ul>
+        <li>实施工程师/FAE</li>
+        <li>定位算法工程师（SLAM）（视觉方向不要）</li>
+      </ul>
+      <p><strong>人才画像：</strong>硬件+软件结合的物流自动化公司，有海外岗位。SLAM 岗位只要非视觉方向（可能是激光雷达方向）。</p>
+    </div>
+
+    <!-- 中蓝炬量 -->
+    <div class="section">
+      <h2>21. 北京中蓝炬量科技 ｜ LLM-Agent 开发实习 ｜ 远程</h2>
+      <p><span class="tag tag-tech">技术</span> 初创公司 · 远程 · 灵活打卡</p>
+      <h3>岗位</h3>
+      <ul>
+        <li>LLM-Agent 开发实习生（2名）</li>
+        <li>研发 AI 驱动的虚拟数字人</li>
+        <li>Python + Flask/Gradio/PyTorch/Huggingface/LangChain/LlamaIndex</li>
+        <li>每月20天，每天6小时，完全自由安排</li>
+        <li>底薪 3k-5k + 绩效(10%-50%)，每季度涨底薪</li>
+        <li>实习≥6个月，英语六级450/雅思6.0，双一流/海外前200</li>
+      </ul>
+      <p><strong>人才画像：</strong>远程+灵活+有涨薪机制，适合自律性强的在校生。技术栈覆盖 LLM 全链路。</p>
+    </div>
+
+    <!-- 序智科技 -->
+    <div class="section">
+      <h2>22. 序智科技 ｜ AI Agent 平台 ｜ 北京中关村</h2>
+      <p><span class="tag tag-tech">技术</span> 数千万融资 · 清华博士创始人 · "行为即资产"</p>
+      <h4>后端开发工程师（3年+）</h4>
+      <ul>
+        <li>Java + Spring/Django/Gin</li>
+        <li>大模型编程范式（LangChain/LlamaIndex/RAG）</li>
+        <li>WebSocket/SSE 流式输出</li>
+        <li>MySQL/Redis/MongoDB</li>
+        <li>微服务/分布式/高并发/Docker/K8s</li>
+      </ul>
+      <h4>前端开发工程师（3年+）</h4>
+      <ul>
+        <li>HTML/CSS/JavaScript + React/Vue/Angular</li>
+        <li>Tailwind 优先</li>
+        <li>响应式设计/跨浏览器兼容/Web性能优化</li>
+      </ul>
+      <h4>大模型 Agent 算法工程师</h4>
+      <ul>
+        <li>训练/微调大模型支持 Agent 系统</li>
+        <li>GPT4 API + 前沿 Agent 框架设计</li>
+        <li><strong>硬性要求：</strong>对至少2个框架有源码级理解（LangChain/XAgent/ChatDev/DsPy/AutoGPT/BabyAGI/MetaGPT）</li>
+        <li>熟悉 GPT Function Calling + Prompt Engineering</li>
+      </ul>
+      <p><strong>人才画像：</strong>Agent 算法岗的硬性要求很高——需要源码级理解多个框架，不是调 API 就行。</p>
+    </div>
+
+    <!-- 米可世界 -->
+    <div class="section">
+      <h2>23. 米可世界 ｜ 海外社交平台 ｜ 多岗位</h2>
+      <p><span class="tag tag-ops">运营</span><span class="tag tag-product">产品</span> MICO/YoHo/TopTop/SUGO · 150+ 国家 · 1亿+ 用户</p>
+      <h4>产品运营（海外）</h4>
+      <ul>
+        <li>拉新/召回/促活运营体系</li>
+        <li>业务增长机会点挖掘</li>
+        <li>3年+ 海外互联网运营经验</li>
+        <li>加分：Discord/Snapchat/Reddit 经验</li>
+      </ul>
+      <h4>AI 产品（实习）</h4>
+      <ul>
+        <li>AIGC 产品建设，核心场景功能迭代</li>
+        <li>每周4天+，6个月+</li>
+        <li>本科+，有视频/工具产品实习优先</li>
+      </ul>
+    </div>
+
+    <!-- 岗位分布总览 -->
+    <div class="section">
+      <h2>岗位类型分布总览</h2>
+      <table>
+        <tr><th>岗位类型</th><th>代表公司</th><th>数量</th></tr>
+        <tr><td><span class="tag tag-tech">AI 算法/大模型</span></td><td>阿里通义、联想、中国移动、度小满、阶跃星辰、光轮智能、序智科技、中蓝炬量、猿印教育、可触未来</td><td>10+</td></tr>
+        <tr><td><span class="tag tag-product">产品经理</span></td><td>腾娱互动、可触未来、飞书、度小满、阶跃星辰、米可世界</td><td>6</td></tr>
+        <tr><td><span class="tag tag-tech">开发工程师</span></td><td>阿里通义(Android)、序智科技(前后端)、可触未来(嵌入式)、中国移动</td><td>5</td></tr>
+        <tr><td><span class="tag tag-ops">运营/增长</span></td><td>阿里百炼、米可世界、心跃智能、飞书</td><td>4</td></tr>
+        <tr><td><span class="tag tag-ops">内容/设计</span></td><td>腾娱互动(美术AI)、可触未来(UI/交互)、程序向技术美术</td><td>3</td></tr>
+        <tr><td><span class="tag tag-sales">销售/BD</span></td><td>微软小冰、SandBase AI</td><td>2</td></tr>
+        <tr><td><span class="tag tag-security">安全/合规</span></td><td>阶跃星辰</td><td>2</td></tr>
+        <tr><td><span class="tag tag-data">合成数据/仿真</span></td><td>光轮智能</td><td>4</td></tr>
+      </table>
+    </div>
+
+    <!-- 暗壳四岗位能力矩阵 -->
+    <div class="section">
+      <h2>暗壳科技四岗位能力矩阵</h2>
+      <table>
+        <tr><th>能力维度</th><th>JD-01 算法应用</th><th>JD-02 世界模型</th><th>JD-03 海外增长</th><th>JD-04 海外内容</th></tr>
+        <tr><td>AI 算法深度</td><td>★★★</td><td>★★★</td><td>☆</td><td>☆</td></tr>
+        <tr><td>3D/物理引擎</td><td>★★★</td><td>★★★</td><td>☆</td><td>☆</td></tr>
+        <tr><td>工程化部署</td><td>★★★</td><td>★★</td><td>☆</td><td>☆</td></tr>
+        <tr><td>数据分析</td><td>★</td><td>★</td><td>★★★</td><td>★★</td></tr>
+        <tr><td>海外市场</td><td>☆</td><td>☆</td><td>★★★</td><td>★★★</td></tr>
+        <tr><td>内容创作</td><td>☆</td><td>☆</td><td>★</td><td>★★★</td></tr>
+        <tr><td>英语能力</td><td>★</td><td>★</td><td>★★★</td><td>★★★</td></tr>
+        <tr><td>设计行业理解</td><td>★★</td><td>★</td><td>★★</td><td>★★★</td></tr>
       </table>
     </div>
 
   </div>
 
-  <!-- 项目启示 -->
+  <!-- ==================== 项目启示 ==================== -->
   <div class="panel" id="panel-insights">
 
     <div class="section">
@@ -177,64 +732,611 @@
         <tr><td>硬件集成</td><td>AI 需要跑在具体设备上</td><td>可触未来 LOOI 机器人</td></tr>
         <tr><td>数据基础</td><td>好模型需要好数据</td><td>光轮智能（合成数据）</td></tr>
       </table>
-      <div class="tip"><strong>💡 启示：</strong>AI 不是"调个 API"就行的，背后需要完整的工程体系。做项目时要理解——你的产品不是漂浮在空中的想法，而是需要落地到具体技术实现。</div>
+      <div class="tip"><strong>启示：</strong>AI 不是"调个 API"就行的，背后需要完整的工程体系。做项目时要理解——你的产品不是漂浮在空中的想法，而是需要落地到具体技术实现。</div>
 
       <h3>2. 产品层岗位——解决"做什么"的问题</h3>
-      <p>AI 产品经理的核心能力不是画原型，而是<strong>理解技术边界</strong>和<strong>定义问题</strong>。好的 AI 产品经理要能判断：这件事用 AI 做是否合理？技术能做到什么程度？用户体验怎么设计？</p>
-      <div class="tip"><strong>💡 启示：</strong>做项目时，先问自己"这个问题真的需要 AI 吗？"——如果传统方案能解决，硬套 AI 反而是减分项。</div>
+      <table>
+        <tr><th>需求</th><th>为什么需要</th><th>举例</th></tr>
+        <tr><td>场景定义</td><td>技术能做 100 件事，但用户只需要 3 件</td><td>腾娱互动（让美术用 AI 提效）</td></tr>
+        <tr><td>用户体验</td><td>AI 再强，用户不会用/不想用就白搭</td><td>可触未来（情感化交互）</td></tr>
+        <tr><td>安全合规</td><td>AI 输出可能有害，需要人来把关</td><td>阶跃星辰安全方向</td></tr>
+        <tr><td>商业化</td><td>技术价值需要翻译成商业价值</td><td>飞书解决方案专家</td></tr>
+      </table>
+      <div class="tip"><strong>启示：</strong>做项目时不要只问"AI 能做什么"，而要问"用户需要什么、AI 怎么帮他"。产品经理思维是把技术变成价值的桥梁。</div>
 
-      <h3>3. 运营层岗位——解决"怎么让更多人用"的问题</h3>
-      <p>AI 行业目前极度缺乏<strong>懂技术又懂人</strong>的运营人才。能把技术语言翻译成用户能理解的故事，是稀缺能力。</p>
-      <div class="tip"><strong>💡 启示：</strong>做比赛/项目时，不要只关注技术实现，也要思考"怎么让评委/用户理解你的价值"——这就是运营思维。</div>
+      <h3>3. 运营层岗位——解决"怎么让人用"的问题</h3>
+      <table>
+        <tr><th>需求</th><th>为什么需要</th><th>举例</th></tr>
+        <tr><td>用户获取</td><td>好产品也需要被看见</td><td>暗壳科技海外增长</td></tr>
+        <tr><td>内容传播</td><td>需要让用户看到"能帮我做什么"</td><td>暗壳科技海外内容策划</td></tr>
+        <tr><td>社区建设</td><td>开发者/用户社区是最持久的增长飞轮</td><td>SandBase AI</td></tr>
+        <tr><td>用户激活</td><td>注册≠使用，需要引导用户完成"啊哈时刻"</td><td>阿里百炼产品运营</td></tr>
+      </table>
+
+      <h3>4. 销售/BD 层岗位——解决"怎么赚钱"的问题</h3>
+      <table>
+        <tr><th>需求</th><th>为什么需要</th><th>举例</th></tr>
+        <tr><td>商业闭环</td><td>技术再好，没有收入公司就活不下去</td><td>微软小冰销售总监</td></tr>
+        <tr><td>客户理解</td><td>企业客户需要的是"解决我问题的方案"</td><td>飞书解决方案专家</td></tr>
+        <tr><td>渠道建设</td><td>光靠直销覆盖不了市场</td><td>小冰要求微盟/有赞渠道经验</td></tr>
+      </table>
     </div>
 
     <div class="section">
-      <h2>二、对项目和比赛的指导价值</h2>
+      <h2>二、好项目标准（从招聘要求反推）</h2>
+      <pre>好项目 = 解决真实问题 × 技术可行 × 用户体验好 × 能落地 × 有商业/社会价值</pre>
+
+      <h3>标准 1：解决真实问题</h3>
+      <p>招聘体现：暗壳科技（设计师需要快速出3D方案）、心跃智能（心理咨询师需要提效）、腾娱互动（美术团队重复劳动多）</p>
+      <p>比赛中：评委第一个问题——"你解决的是什么问题？"</p>
+      <ul class="checklist">
+        <li>你说的"问题"是真实存在的吗？你观察过/问过目标用户吗？</li>
+        <li>这个问题现在怎么解决的？现有方案有什么不足？</li>
+        <li>你的方案比现有方案好在哪里？好多少？</li>
+      </ul>
+
+      <h3>标准 2：技术可行</h3>
+      <p>招聘体现：所有算法岗都要求"工程化落地能力"——论文 ≠ 产品</p>
+      <p>比赛中：评委第二个问题——"你怎么实现的？能跑吗？"</p>
+      <ul class="checklist">
+        <li>你的技术方案是什么？用了哪些模型/API/框架？</li>
+        <li>你的原型能跑通核心功能吗？</li>
+        <li>你知道你的方案的局限性在哪里吗？</li>
+      </ul>
+
+      <h3>标准 3：用户体验好</h3>
+      <p>招聘体现：可触未来产品经理要求"对糟糕的产品容忍度低"</p>
+      <p>比赛中：评委第三个问题——"用户体验怎么样？"</p>
+      <ul class="checklist">
+        <li>主流程是什么？几步能完成核心任务？</li>
+        <li>你让目标用户试用过吗？他们第一反应是什么？</li>
+        <li>界面/交互是否简洁直观？</li>
+      </ul>
+
+      <h3>标准 4：能落地</h3>
+      <p>招聘体现：几乎所有岗位都要求"推动落地""交付能力""结果导向"</p>
+      <p>比赛中：评委第四个问题——"这个东西能推广/量产/持续运营吗？"</p>
+      <ul class="checklist">
+        <li>MVP 是什么？最小投入能做出什么？</li>
+        <li>如果要推广，第一步做什么？找谁合作？</li>
+        <li>有没有成本估算？</li>
+      </ul>
+
+      <h3>标准 5：有商业/社会价值</h3>
+      <p>招聘体现：所有公司都在回答"我的产品能为谁创造什么价值？"</p>
+      <p>比赛中：评委第五个问题——"这个项目有什么价值？"</p>
+      <ul class="checklist">
+        <li>你的项目创造了什么价值？用一句话说清楚。</li>
+        <li>这个价值是可衡量的吗？</li>
+        <li>如果持续运营，商业模式是什么？</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>三、比赛评选标准参考</h2>
+      <table>
+        <tr><th>维度</th><th>权重（参考）</th><th>评委关注点</th></tr>
+        <tr><td>问题定义</td><td>20-25%</td><td>问题是否真实、具体、有价值</td></tr>
+        <tr><td>技术实现</td><td>20-25%</td><td>方案是否可行、是否有技术深度</td></tr>
+        <tr><td>创新性</td><td>15-20%</td><td>是否有独特视角或新颖方案</td></tr>
+        <tr><td>用户体验</td><td>15-20%</td><td>产品是否好用、交互是否流畅</td></tr>
+        <tr><td>完成度</td><td>10-15%</td><td>能否演示、核心功能是否跑通</td></tr>
+        <tr><td>展示表达</td><td>5-10%</td><td>能否清晰说明做了什么、为什么做</td></tr>
+        <tr><td>可扩展性</td><td>5-10%</td><td>未来能否推广、迭代、商业化</td></tr>
+      </table>
+
+      <h3>不同类型比赛的侧重点</h3>
+      <ul>
+        <li><strong>微课比赛/教育类</strong>：教育价值、内容质量、交互设计。AI 的角色是辅助工具，不是"用 AI 做课件"，而是"AI 如何提升学习效果"</li>
+        <li><strong>黑客松/创新赛</strong>：问题定义、创新性、完成度、演示效果。48 小时内要做出能演示的原型，选题要小而精准</li>
+        <li><strong>科创赛/工程类</strong>：技术深度、工程实现、数据支撑。需要有实验数据、对比分析、技术文档</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>四、从想法到产品的五步流程</h2>
+      <pre>定义问题(1-2天) → 调研方案(1天) → 设计原型(1-2天) → 开发MVP(3-7天) → 测试迭代(持续)</pre>
+
+      <h3>第一步：定义问题</h3>
+      <p>明确目标用户、使用场景、核心痛点。产出一段话描述项目（"为 XX 用户解决 XX 问题"）。找 3-5 个目标用户确认问题是否真实存在。</p>
+
+      <h3>第二步：调研方案</h3>
+      <p>看看别人怎么解决类似问题。不需要原创技术——用现成的 AI API + 独特的场景理解 = 好项目。</p>
+
+      <h3>第三步：设计原型</h3>
+      <p>先设计再开发。用 Figma/Axure/纸笔画出产品长什么样、用户怎么用。</p>
+
+      <h3>第四步：开发 MVP</h3>
+      <p>用最小投入做出能跑通核心功能的版本。技术选型参考：</p>
+      <ul>
+        <li>网页应用：HTML/CSS/JS + AI API</li>
+        <li>移动应用：微信小程序 / uni-app</li>
+        <li>硬件产品：Arduino/ESP32 + 传感器 + AI 接口</li>
+        <li>AI 能力：通义千问 API / 百度文心 / OpenAI / 开源模型</li>
+      </ul>
+
+      <h3>第五步：测试迭代</h3>
+      <p>让真实用户使用，收集反馈，持续改进。比赛前至少迭代 2-3 轮。</p>
+    </div>
+
+    <div class="section">
+      <h2>五、产品标准自评表</h2>
+      <table>
+        <tr><th>维度</th><th>1分（基础）</th><th>3分（良好）</th><th>5分（优秀）</th></tr>
+        <tr><td>问题定义</td><td>有一个模糊的想法</td><td>明确了用户和场景</td><td>有用户调研数据支撑</td></tr>
+        <tr><td>技术实现</td><td>调用了 API</td><td>有自定义逻辑和优化</td><td>有技术创新或独特方案</td></tr>
+        <tr><td>用户体验</td><td>能用但不直观</td><td>主流程清晰</td><td>用户无需指导即可上手</td></tr>
+        <tr><td>完成度</td><td>有 PPT</td><td>能演示核心功能</td><td>有完整 MVP + 迭代记录</td></tr>
+        <tr><td>价值</td><td>有趣</td><td>解决了真实问题</td><td>有可量化的价值 + 扩展路径</td></tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>六、关键提醒</h2>
       <ul>
         <li><strong>技术可行性优先</strong>：先确认技术能做到，再设计产品形态</li>
         <li><strong>问题驱动而非技术驱动</strong>：从真实需求出发，不从"我会什么"出发</li>
         <li><strong>可落地比可演示更重要</strong>：评委看重的是"能不能真的用起来"</li>
         <li><strong>安全和合规是底线</strong>：AI 项目必须考虑内容安全、隐私保护</li>
         <li><strong>运营和传播是加分项</strong>：好的项目需要好的故事来传递价值</li>
+        <li><strong>从小切口入手</strong>：不要试图"改变世界"，先做一个"帮一个人解决一个问题"的小工具</li>
+        <li><strong>让孩子参与全过程</strong>：不是妈妈做、孩子看，而是孩子主导、妈妈辅助</li>
+        <li><strong>重视展示和表达</strong>：比赛不只是看产品，也看能不能讲清楚</li>
       </ul>
+      <div class="tip"><strong>最重要的一句话：</strong>好项目不是技术最先进的，而是最能解决真实问题的。AI 是工具，问题是核心。</div>
     </div>
 
   </div>
 
-  <!-- 比赛资料 -->
+  <!-- ==================== 比赛资料 ==================== -->
   <div class="panel" id="panel-hackathon">
 
     <div class="section">
       <h2>赛事全景图</h2>
       <table>
         <tr><th>类别</th><th>代表赛事</th><th>适合人群</th></tr>
-        <tr><td><span class="tag tag-hackathon">青少年</span></td><td>NOC 童创 AI 编程赛、全国青少年人工智能创新挑战赛</td><td>小学-高中在校生</td></tr>
-        <tr><td><span class="tag tag-hackathon">大学生</span></td><td>讯飞星火杯、中国大学生计算机设计大赛</td><td>本科生/研究生</td></tr>
-        <tr><td><span class="tag tag-hackathon">开发者</span></td><td>AdventureX 青年黑客松、GOAI 世界人工智能开源大赛</td><td>开发者/创业者</td></tr>
-        <tr><td><span class="tag tag-hackathon">行业专项</span></td><td>AI 安全大赛、芯片验证黑客松</td><td>特定技术领域从业者</td></tr>
+        <tr><td><span class="tag tag-hackathon">青少年</span></td><td>NOC 童创 AI 编程赛、全国青少年人工智能创新挑战赛、江西省 AI 艺术创作大赛</td><td>小学-高中在校生</td></tr>
+        <tr><td><span class="tag tag-hackathon">大学生</span></td><td>讯飞星火杯、中国大学生计算机设计大赛（4C）、MIT 全球 AI 黑客松</td><td>本科生/研究生</td></tr>
+        <tr><td><span class="tag tag-hackathon">开发者</span></td><td>AdventureX 青年黑客松、GOAI 世界人工智能开源大赛、PyCon China Vibe Coding</td><td>开发者/创业者</td></tr>
+        <tr><td><span class="tag tag-hackathon">行业专项</span></td><td>AI 安全大赛（广西）、芯片验证黑客松、MoonBit 编程挑战赛</td><td>特定技术领域从业者</td></tr>
       </table>
     </div>
 
     <div class="section">
       <h2>AdventureX 2025 青年黑客松</h2>
-      <p><span class="tag tag-hackathon">中国最大规模</span></p>
+      <p><span class="tag tag-hackathon">中国最大规模</span> 杭州 · 800+ 全球青年开发者 · 120 小时极限开发 · 百万级奖金</p>
+      <h3>赛道设置</h3>
       <ul>
-        <li><strong>地点</strong>：杭州</li>
-        <li><strong>规模</strong>：800+ 全球青年开发者</li>
-        <li><strong>时长</strong>：120 小时极限开发</li>
-        <li><strong>奖金</strong>：百万级</li>
+        <li>明日生活指南：AI 硬件的超前构想</li>
+        <li>从模仿到强化：多款开源机械臂实现灵活的自定义目标抓取</li>
+        <li>其他赛道（未公开全部）</li>
       </ul>
-      <div class="tip"><strong>💡 启示：</strong>大型黑客松的核心不是"做出来"，而是"在极限时间内做出有亮点的东西"。时间管理和 MVP 定义能力是关键。</div>
+      <h3>评审方式</h3>
+      <p>每个评委选一个赛道，到摊位看项目。打分时和上一个项目比较，逐步选出最优。最后一天项目展出是最重要的环节。</p>
+      <h3>获奖案例</h3>
+      <p>宁波诺丁汉大学徐璟团队：斩获"明日生活指南"赛道第一 + "机械臂抓取"赛道第三。产品 EchoZen：脑机接口 + App 开发 + 显示屏集成。关键成功因素：专业背景互补、跨校团队协作、快速掌握赞助商硬件。</p>
+      <div class="tip"><strong>核心理念：</strong>"AI 不是万能的，人性才是最高标准"。鼓励 Vibe Coding，强调创造的热情而非技术炫技。</div>
+      <div class="tip"><strong>启示：</strong>120 小时极限开发 = 脑力 + 体力 + 协作的三重考验。团队组建临时但专业互补是关键。路演/展示能力极其重要。</div>
     </div>
 
     <div class="section">
-      <h2>评审标准参考</h2>
+      <h2>讯飞星火杯大模型应用创新赛</h2>
+      <p><span class="tag tag-hackathon">高校赛事</span> 总奖池 ¥250,000 · 一等奖 ¥60,000</p>
+      <h3>赛制</h3>
+      <ol>
+        <li>报名 + 领取资源</li>
+        <li>基于星辰 Agent 完成作品开发并发布</li>
+        <li>热度冲榜（平台热度值形成实时榜单，前 300 名上榜）</li>
+        <li>复赛提交完整材料</li>
+        <li>决赛答辩</li>
+      </ol>
+      <h3>评审标准</h3>
+      <table>
+        <tr><th>维度</th><th>说明</th></tr>
+        <tr><td>创新水平</td><td>使用星火大模型能力进行垂直应用场景的创新开发</td></tr>
+        <tr><td>技术水平</td><td>合理运用大模型及其他 AI 技术，有深度和广度</td></tr>
+        <tr><td>应用程度</td><td>具备较高应用性、可操作性，能在行业内快速落地</td></tr>
+        <tr><td>商业价值</td><td>具备商业化潜力和价值</td></tr>
+        <tr><td>作品完成度</td><td>开发及内容达到较高完成度</td></tr>
+      </table>
+      <div class="tip"><strong>启示：</strong>热度冲榜机制 = 产品运营能力的重要性。不只是做技术，还要能推广、能获得用户。</div>
+    </div>
+
+    <div class="section">
+      <h2>GOAI 世界人工智能开源大赛</h2>
+      <p><span class="tag tag-hackathon">开源大赛</span> 之江实验室 + 阿里云 · 杭州云谷中心</p>
+      <h3>赛道定位</h3>
+      <p>征集"可运行、可验证、可审计的企业级多智能体系统方案"。不是让 Agent 更聪明，而是把多个 Agent 组织成可治理的生产级系统。</p>
+      <h3>评审标准</h3>
+      <table>
+        <tr><th>维度</th><th>权重</th><th>说明</th></tr>
+        <tr><td>场景价值与行业可复制性</td><td>25%</td><td>问题来自真实场景，能迁移到相似场景</td></tr>
+        <tr><td>多 Agent 协同与自主闭环能力</td><td>25%</td><td>3+ 个不同职能 Agent 组成的完整任务闭环</td></tr>
+        <tr><td>Skill 工程体系与生态复用</td><td>25%</td><td>关键能力封装为可复用的 Skill</td></tr>
+        <tr><td>工程落地与运行验证及安全审计</td><td>20%</td><td>可执行的代码包 + 可运行 Demo</td></tr>
+        <tr><td>开放与开源贡献</td><td>5%</td><td>开源程度</td></tr>
+      </table>
+      <div class="tip"><strong>赛道提示：</strong>"相比功能庞杂却无法真正运行的'大平台'，一个场景真实、结构清晰、证据完整的'小闭环'，往往更具竞争力。"</div>
+    </div>
+
+    <div class="section">
+      <h2>NOC 童创 AI 编程赛项</h2>
+      <p><span class="tag tag-hackathon">白名单赛事</span> 教育部白名单 · Novelty + Originality + Creativity</p>
+      <h3>竞赛流程</h3>
+      <ol>
+        <li><strong>初赛</strong>：限时答题（计算机素养 + 计算思维 + 编程客观题），90分钟，100分</li>
+        <li><strong>复赛</strong>：编程操作题（枚举/排序/递归/解析/递推等算法），120分钟，200分</li>
+        <li><strong>全国决赛</strong>：依据现场公布的主题，限时作品创作 + 现场作品展示答辩</li>
+      </ol>
+      <h3>决赛作品类型</h3>
       <ul>
-        <li><strong>创新性</strong>：是否解决了真实问题，是否有独特视角</li>
-        <li><strong>技术实现</strong>：完成度、技术深度、架构合理性</li>
-        <li><strong>产品体验</strong>：用户能否理解、能否上手使用</li>
-        <li><strong>可扩展性</strong>：未来能否持续迭代、是否有商业潜力</li>
-        <li><strong>展示效果</strong>：演示是否清晰、故事是否打动人</li>
+        <li>A. 互动艺术：绘画、录音、摄影等多媒体 + 新媒体互动手法</li>
+        <li>B. 互动游戏：竞技、探险、角色扮演、棋牌游戏等</li>
+        <li>C. 实用工具：有实用价值并能解决学习或生活中实际问题的程序工具</li>
+        <li>D. 科学探索：现实模拟、数学研究、科学实验等学科的趣味性展示与探究</li>
+      </ul>
+      <h3>评审标准</h3>
+      <p>创新性（Novelty）+ 原创性（Originality）+ 创造力（Creativity）</p>
+      <div class="tip"><strong>启示：</strong>白名单赛事含金量高，对升学有帮助。决赛是"限时创作 + 展示答辩"，考验综合能力。原创性是底线，抄袭直接取消资格。</div>
+    </div>
+
+    <div class="section">
+      <h2>全国青少年人工智能创新挑战赛</h2>
+      <p><span class="tag tag-hackathon">青少年</span> 中国少年儿童发展服务中心主办 · 小学-高中 · 团队赛2-5人</p>
+      <h3>三大方向</h3>
+      <h4>方向一：智能机器人及开源硬件</h4>
+      <p>设计操控全/半自动运行的智能机器人完成规则限定的任务。赛项：开源硬件创意智造、太空探索智能机器人、资源收集机器人等。</p>
+      <h4>方向二：智能程序设计</h4>
+      <p>运用图形化编程、Python、C++ 设计开发编程作品。赛项：编程创作与信息学、三维程序创意设计。</p>
+      <h4>方向三：人工智能应用技术</h4>
+      <p>综合运用大数据、机器视觉、自动规划、智能搜索等知识。赛项：智能学习与搜索应用、智能对话及模式识别应用、数据处理及可视化。</p>
+      <h3>奖项设置</h3>
+      <p>金奖 15% · 银奖 35% · 铜奖 50% · 优秀辅导教师奖 · 先进组织单位奖</p>
+    </div>
+
+    <div class="section">
+      <h2>江西省青少年 AI 艺术创作大赛</h2>
+      <p><span class="tag tag-hackathon">AI+艺术</span> 省内首个"AI+艺术"跨学科白名单竞赛</p>
+      <h3>三大命题类别</h3>
+      <ul>
+        <li>公益</li>
+        <li>AI 少年游赣鄱</li>
+        <li>课本里的 AI 视界</li>
+      </ul>
+      <h3>评审标准</h3>
+      <table>
+        <tr><th>维度</th><th>权重</th></tr>
+        <tr><td>主题契合度</td><td>25%</td></tr>
+        <tr><td>创意表达</td><td>30%</td></tr>
+        <tr><td>艺术审美</td><td>20%</td></tr>
+        <tr><td>AI 工具运用的技术表现力</td><td>25%</td></tr>
+      </table>
+      <div class="tip"><strong>启示：</strong>"创意表达"权重最高（30%），说明想法比技术更重要。AI 工具运用占 25%，需要展示技术能力但不是唯一标准。</div>
+    </div>
+
+    <div class="section">
+      <h2>中国大学生计算机设计大赛（4C）</h2>
+      <p><span class="tag tag-hackathon">高校赛事</span> 已举办18届91场 · 中国高教学会"竞赛目录"内</p>
+      <h3>竞赛内容（8 大类）</h3>
+      <ol>
+        <li>软件应用与开发</li>
+        <li><strong>微课与 AI 辅助教学</strong> ← 教育领域直接对口</li>
+        <li>物联网应用与物联网创新转化</li>
+        <li>大数据应用</li>
+        <li><strong>人工智能应用</strong> ← AI 方向对口</li>
+        <li>信息可视化设计</li>
+        <li>数媒静态设计</li>
+        <li>数媒动漫与短片</li>
+      </ol>
+      <h3>评审特色</h3>
+      <ul>
+        <li>产学研结合，企业直接参加命题</li>
+        <li>答辩形式贴近论文答辩/就业面试</li>
+        <li>特色作品点评：学生介绍构思创作过程，评审专家点评优缺点</li>
+      </ul>
+      <p><strong>奖项：</strong>一等奖不多于 5%，一等奖+二等奖合计 30%</p>
+    </div>
+
+    <div class="section">
+      <h2>PyCon China 2025 Vibe Coding 黑客松</h2>
+      <p><span class="tag tag-hackathon">开发者</span> 上海 · 当天完成 · 现场路演</p>
+      <h3>参赛规则</h3>
+      <ul>
+        <li>必须深度使用至少 1 种 AI 工具或平台</li>
+        <li>优先支持 Python 技术栈</li>
+        <li>作品需为赛事期间原创或未公开的半成品优化</li>
+        <li>拒绝非常成熟或多次获奖的项目</li>
+        <li>优先考虑 6 月份之后的新项目</li>
+      </ul>
+      <h3>作品方向参考</h3>
+      <ul>
+        <li>AI 辅助的效率工具（代码生成插件、文档自动整理工具）</li>
+        <li>AI 驱动的数据可视化项目（实时舆情分析看板）</li>
+        <li>基于 Python 的 AI 自动化脚本</li>
+        <li>创意类 AI 应用（AI 生成式交互小游戏、个性化推荐）</li>
+      </ul>
+      <p><strong>评审：</strong>创新最重要。最低分 60 分才能获奖。鼓励现场 Vibe Coding。</p>
+    </div>
+
+    <div class="section">
+      <h2>通用评审标准提炼</h2>
+      <table>
+        <tr><th>维度</th><th>权重范围</th><th>评委问的核心问题</th></tr>
+        <tr><td>问题定义/主题契合</td><td>20-30%</td><td>"你解决的是什么问题？"</td></tr>
+        <tr><td>创新性/创意</td><td>20-30%</td><td>"和别人有什么不同？"</td></tr>
+        <tr><td>技术实现</td><td>15-25%</td><td>"怎么实现的？能跑通吗？"</td></tr>
+        <tr><td>用户体验/设计</td><td>10-20%</td><td>"用起来怎么样？"</td></tr>
+        <tr><td>完成度/可运行</td><td>10-15%</td><td>"能演示吗？"</td></tr>
+        <tr><td>商业/社会价值</td><td>5-15%</td><td>"有什么用？谁会用？"</td></tr>
+        <tr><td>展示/答辩</td><td>5-10%</td><td>"能讲清楚吗？"</td></tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>获奖作品共性分析</h2>
+      <h3>技术层面</h3>
+      <ul>
+        <li>不是技术最先进的获奖，而是最能解决问题的获奖</li>
+        <li>调用现有 API + 独特场景理解 = 好项目（不需要自己训练模型）</li>
+        <li>工程化能力是硬门槛——能跑通 > 概念好</li>
+      </ul>
+      <h3>产品层面</h3>
+      <ul>
+        <li>小闭环 > 大平台——场景真实、结构清晰、证据完整</li>
+        <li>用户体验决定第一印象——评委看到 demo 的前 30 秒很重要</li>
+        <li>完成度是底线——半成品再好也不如能跑通的 MVP</li>
+      </ul>
+      <h3>展示层面</h3>
+      <ul>
+        <li>讲清楚"为什么做"比"做了什么"更重要</li>
+        <li>过程记录是加分项——从想法到成品的完整路径</li>
+        <li>答辩能力 = 说服能力——技术再好，讲不明白就白搭</li>
+      </ul>
+      <h3>团队层面</h3>
+      <ul>
+        <li>专业互补 > 个人全能——AdventureX 获奖团队是跨校跨专业组合</li>
+        <li>分工明确 + 沟通高效——120 小时极限开发考验协作</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>适合带孩子参加的赛事</h2>
+      <table>
+        <tr><th>赛事</th><th>适合年龄</th><th>优势</th><th>准备周期</th></tr>
+        <tr><td>NOC 童创 AI 编程赛</td><td>小学-初中</td><td>白名单赛事，含金量高</td><td>2-3 个月</td></tr>
+        <tr><td>全国青少年人工智能创新挑战赛</td><td>小学-高中</td><td>方向多，覆盖硬件/软件/AI</td><td>2-3 个月</td></tr>
+        <tr><td>江西省 AI 艺术创作大赛</td><td>中小学</td><td>AI+艺术跨学科，门槛低</td><td>1-2 个月</td></tr>
+        <tr><td>微光黑客松</td><td>不限</td><td>实战体验，有导师指导</td><td>活动期间</td></tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>项目选题建议（基于儿童阅读推广背景）</h2>
+      <ol>
+        <li><strong>AI 阅读推荐工具</strong>：根据孩子年龄/兴趣/阅读水平，AI 推荐适合的书籍</li>
+        <li><strong>社区探索 AI 助手</strong>：帮孩子规划社区探索路线，识别植物/建筑/历史遗迹</li>
+        <li><strong>互动故事创作平台</strong>：孩子输入想法，AI 生成插图和故事，孩子可以编辑和分享</li>
+        <li><strong>阅读打卡 + AI 评估</strong>：记录阅读习惯，AI 分析阅读偏好和成长轨迹</li>
+        <li><strong>亲子共读 AI 工具</strong>：为家长提供共读指导，AI 生成讨论问题和延伸活动</li>
+      </ol>
+    </div>
+
+    <div class="section">
+      <h2>8 周参赛准备时间线</h2>
+      <table>
+        <tr><th>时间</th><th>任务</th><th>产出</th></tr>
+        <tr><td>第1周</td><td>确定选题 + 用户调研</td><td>找 5-10 个目标用户确认需求</td></tr>
+        <tr><td>第2周</td><td>竞品分析 + 技术选型</td><td>看看别人怎么做，用什么技术</td></tr>
+        <tr><td>第3周</td><td>设计原型</td><td>线框图/流程图，让用户看懂</td></tr>
+        <tr><td>第4-5周</td><td>开发 MVP</td><td>最小可行产品，能跑通核心功能</td></tr>
+        <tr><td>第6周</td><td>用户测试 + 迭代</td><td>让真实用户试用，收集反馈</td></tr>
+        <tr><td>第7周</td><td>准备展示材料</td><td>PPT/视频/演示文稿</td></tr>
+        <tr><td>第8周</td><td>练习答辩</td><td>能讲清楚为什么做、怎么做、效果如何</td></tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>参赛材料清单</h2>
+      <ul class="checklist">
+        <li>项目简介（一段话说清楚做什么、为谁做、解决什么问题）</li>
+        <li>技术方案说明（用了什么技术、怎么实现的）</li>
+        <li>可运行的原型/Demo</li>
+        <li>用户反馈/测试数据（哪怕是 5 个人的反馈）</li>
+        <li>展示 PPT/视频</li>
+        <li>答辩稿（3-5 分钟讲清楚项目）</li>
+        <li>过程记录（从想法到成品的完整路径）</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>关键提醒</h2>
+      <ol>
+        <li><strong>原创性是底线</strong>——所有赛事都强调原创，抄袭直接取消资格</li>
+        <li><strong>展示能力很重要</strong>——再好的项目，讲不明白就白搭</li>
+        <li><strong>小而精 > 大而全</strong>——评委更喜欢"解决一个小问题"而不是"改变世界"</li>
+        <li><strong>过程比结果重要</strong>——很多赛事看重从想法到成品的思考过程</li>
+        <li><strong>用户体验是第一印象</strong>——demo 的前 30 秒决定评委的第一判断</li>
+        <li><strong>不要堆功能</strong>——功能多不如核心功能体验好</li>
+        <li><strong>提前准备答辩</strong>——技术再好，讲不明白就浪费了</li>
+      </ol>
+    </div>
+
+  </div>
+
+  <!-- ==================== 参考链接 ==================== -->
+  <div class="panel" id="panel-links">
+
+    <div class="section">
+      <h2>黑客松赛事访谈与报道</h2>
+
+      <h3>AdventureX（中国最大青年黑客松）</h3>
+      <a class="link-card" href="https://sspai.com/91777" target="_blank">
+        <div class="link-title">一场高中生唱主角的黑客松：访谈 AdventureX 核心团队及优秀作品团队</div>
+        <div class="link-desc">少数派 · 含核心团队策划经验 + 优秀团队作品分享</div>
+      </a>
+      <a class="link-card" href="https://segmentfault.com/a/1190000046915197" target="_blank">
+        <div class="link-title">几百位年轻黑客扎堆三天三夜，能搞出什么大事？</div>
+        <div class="link-desc">「十字路口」播客 · 8 个优秀项目线上路演 + 17 岁创始人 Ryan 深度访谈</div>
+      </a>
+      <a class="link-card" href="https://baike.baidu.com/item/AdventureX%202024/65076043" target="_blank">
+        <div class="link-title">AdventureX 2024 - 百度百科</div>
+        <div class="link-desc">赛事基本信息、团队介绍、参考文献</div>
+      </a>
+      <a class="link-card" href="https://m.sohu.com/coo/zmtq/929593832_120952561" target="_blank">
+        <div class="link-title">宁诺学子夺冠中国最大黑客松赛事</div>
+        <div class="link-desc">AdventureX 2025 获奖团队采访，EchoZen 项目</div>
+      </a>
+      <a class="link-card" href="https://podcasts.apple.com/de/podcast/三傻的所思所想/id1812290588" target="_blank">
+        <div class="link-title">三傻的所思所想 - AdventureX 专题</div>
+        <div class="link-desc">参赛者亲历分享，含现场影像资料</div>
+      </a>
+    </div>
+
+    <div class="section">
+      <h2>Runway GEN:48 AI 视频大赛</h2>
+      <a class="link-card" href="https://gen48.runwayml.com/winners" target="_blank">
+        <div class="link-title">GEN:48 Winners - 官方获奖页</div>
+        <div class="link-desc">8 部获奖作品逐帧解析</div>
+      </a>
+      <a class="link-card" href="https://view.inews.qq.com/a/20231107A000G800" target="_blank">
+        <div class="link-title">AI 视频大赛获奖作品解析</div>
+        <div class="link-desc">ShowMeAI 日报，含逐帧分析</div>
+      </a>
+      <div class="tip"><strong>核心信息：</strong>48 小时制作 1-4 分钟视频，AI 生成内容不少于 75%。获奖共性："AI 只是工具，故事的内核仍然是创作的灵魂"。评委关注：故事性 > 技术炫技。</div>
+    </div>
+
+    <div class="section">
+      <h2>PyCon China Vibe Coding 黑客松</h2>
+      <a class="link-card" href="https://baijiahao.baidu.com/s?id=1842850245162069924" target="_blank">
+        <div class="link-title">PyCon China 2025 Vibe Coding 黑客松大赛招募</div>
+        <div class="link-desc">完整赛制、评审标准</div>
+      </a>
+    </div>
+
+    <div class="section">
+      <h2>GOAI 世界人工智能开源大赛</h2>
+      <a class="link-card" href="https://m.toutiao.com/article/7665661708954092032" target="_blank">
+        <div class="link-title">GOAI 世界人工智能开源大赛 Agent Infra 赛道启动</div>
+        <div class="link-desc">阿里云承办，含完整评审标准</div>
+      </a>
+    </div>
+
+    <div class="section">
+      <h2>青少年 AI 竞赛资源</h2>
+
+      <h3>NOC 全国中小学信息技术创新与实践大赛</h3>
+      <a class="link-card" href="https://kidscodes.cn/9238.html" target="_blank">
+        <div class="link-title">NOC 童创 AI 编程赛项竞赛规则</div>
+        <div class="link-desc">完整竞赛规则、评审标准、分组要求</div>
+      </a>
+      <a class="link-card" href="https://www.hanlin.com/archives/1108702" target="_blank">
+        <div class="link-title">NOC 比赛是什么？备赛报名倒计时！</div>
+        <div class="link-desc">翰林教育，含作品要求、提交格式</div>
+      </a>
+      <a class="link-card" href="http://www.noc.net.cn" target="_blank">
+        <div class="link-title">NOC 大赛官网</div>
+        <div class="link-desc">报名、规则、获奖名单</div>
+      </a>
+      <a class="link-card" href="https://baike.sogou.com/v215550747.htm" target="_blank">
+        <div class="link-title">全国中小学信息技术创新与实践大赛 - 百度百科</div>
+        <div class="link-desc">赛事历史、组织架构、比赛项目</div>
+      </a>
+
+      <h3>全国青少年人工智能创新挑战赛</h3>
+      <a class="link-card" href="http://aiic.china61.org.cn/article-6232b431e9db23187bf37925-LlM1H" target="_blank">
+        <div class="link-title">第五届全国青少年人工智能创新挑战赛启事</div>
+        <div class="link-desc">完整赛制、三大方向、奖项设置</div>
+      </a>
+      <a class="link-card" href="https://m.163.com/news/article/IR4QO314041591UI.html" target="_blank">
+        <div class="link-title">衡中学生获"五星卓越"创新作品奖</div>
+        <div class="link-desc">获奖案例：YOLOv8 图像检测 + 智能小车</div>
+      </a>
+      <a class="link-card" href="https://jyj.yibin.gov.cn/zzzq/gzdt/202309/t20230913_1904242.html" target="_blank">
+        <div class="link-title">珙州学子斩获银奖铜奖</div>
+        <div class="link-desc">开源硬件创意智造专项赛获奖经验</div>
+      </a>
+      <a class="link-card" href="https://m.jiaoyubao.cn/news/n59528.html" target="_blank">
+        <div class="link-title">广东省赛获奖作品展示</div>
+        <div class="link-desc">6 个获奖作品详细介绍，含作品名称和技术方案</div>
+      </a>
+
+      <h3>江西省青少年 AI 艺术创作大赛</h3>
+      <a class="link-card" href="https://www.1zj.com/2025/biaoshi_0722/124009.html" target="_blank">
+        <div class="link-title">2025 江西省青少年 AI 艺术创作大赛</div>
+        <div class="link-desc">完整评审标准、组织架构</div>
+      </a>
+
+      <h3>"我是数智少年"AI 作品征集（山东）</h3>
+      <a class="link-card" href="http://news.lznews.cn/luzhong/shandong/202607/t20260715_17933486.html" target="_blank">
+        <div class="link-title">"我是数智少年"AI 作品征集活动</div>
+        <div class="link-desc">山东广播电视台少儿频道主办</div>
+      </a>
+    </div>
+
+    <div class="section">
+      <h2>产品设计与项目开发指导</h2>
+      <a class="link-card" href="https://wenku.csdn.net/answer/27jc64vbdk" target="_blank">
+        <div class="link-title">黑客松获奖标准详解</div>
+        <div class="link-desc">CSDN 文库 · 7 类奖项解析（Grand Prize / 最佳创新 / 最佳设计 / 最佳技术实现 / 最佳主题 / 企业赞助奖 / 新人奖）</div>
+      </a>
+      <a class="link-card" href="http://www.360.cn/hackaday" target="_blank">
+        <div class="link-title">360 Hackaday 产品创新挑战赛</div>
+        <div class="link-desc">完整赛制 + 评审标准 + 辅导体系</div>
+      </a>
+      <a class="link-card" href="https://jsjds.blcu.edu.cn/gyds1/dsjj.htm" target="_blank">
+        <div class="link-title">中国大学生计算机设计大赛（4C）</div>
+        <div class="link-desc">完整赛制、8 大类竞赛内容</div>
+      </a>
+    </div>
+
+    <div class="section">
+      <h2>获奖案例深度分析</h2>
+      <a class="link-card" href="https://m.sohu.com/a/881210613_121124646" target="_blank">
+        <div class="link-title">GPT4o 要是能早来几天！AI 创作比赛获奖作品</div>
+        <div class="link-desc">明基联合比赛 · 获奖作品分析</div>
+      </a>
+      <div class="tip"><strong>获奖启示：</strong>一等奖做了"一整套 AI 视频"，直接秀翻评委。核心发现："相较于画面是否美腻，甲方往往优先关注画面想要传递的信息是否到位"。保证视觉及格的基础上把信息传达做好。</div>
+    </div>
+
+    <div class="section">
+      <h2>技术学习资源</h2>
+      <table>
+        <tr><th>平台</th><th>链接</th><th>用途</th></tr>
+        <tr><td>讯飞星辰 Agent 平台</td><td><a href="https://xinghuo.xfyun.cn" target="_blank">xinghuo.xfyun.cn</a></td><td>星火杯比赛指定平台</td></tr>
+        <tr><td>MIT App Inventor</td><td><a href="https://appinventor.mit.edu" target="_blank">appinventor.mit.edu</a></td><td>MIT 全球 AI 黑客松指定工具</td></tr>
+        <tr><td>Stable Diffusion</td><td><a href="https://stability.ai" target="_blank">stability.ai</a></td><td>AI 图像生成</td></tr>
+        <tr><td>ComfyUI</td><td><a href="https://github.com/comfyanonymous/ComfyUI" target="_blank">GitHub</a></td><td>SD 工作流工具</td></tr>
+        <tr><td>MoonBit</td><td><a href="https://www.moonbitlang.com" target="_blank">moonbitlang.com</a></td><td>MoonBit 编程挑战赛指定语言</td></tr>
+        <tr><td>52 竞赛网</td><td><a href="https://www.52jingsai.com" target="_blank">52jingsai.com</a></td><td>各类竞赛信息汇总</td></tr>
+        <tr><td>天池竞赛平台</td><td><a href="https://tianchi.aliyun.com" target="_blank">tianchi.aliyun.com</a></td><td>阿里系比赛报名</td></tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>给你的行动清单</h2>
+
+      <h3>立即可做的</h3>
+      <ul class="checklist">
+        <li>听 AdventureX 访谈播客（少数派 + 十字路口），了解黑客松文化</li>
+        <li>看 Runway GEN:48 获奖作品，学习 AI 视频创作标准</li>
+        <li>读 NOC 童创 AI 编程赛项规则，对标孩子的年龄组</li>
+        <li>看广东获奖作品列表，找和你方向接近的参考</li>
+      </ul>
+
+      <h3>准备阶段做的</h3>
+      <ul class="checklist">
+        <li>研究"我是数智少年"征集要求，视频出镜讲解 + 演示的格式</li>
+        <li>下载 MIT App Inventor，让孩子先玩起来</li>
+        <li>关注 52 竞赛网，持续获取新赛事信息</li>
+        <li>收集 3-5 个获奖作品的完整案例，作为模板参考</li>
+      </ul>
+
+      <h3>参赛前做的</h3>
+      <ul class="checklist">
+        <li>准备答辩稿：为什么做 → 怎么做 → 效果如何（10 分钟陈述 + 5 分钟答辩）</li>
+        <li>录演示视频：1-3 分钟，出镜讲解 + 操作演示</li>
+        <li>整理过程记录：从想法到成品的完整路径</li>
+        <li>找目标用户测试：5-10 个人的反馈数据</li>
       </ul>
     </div>
 
@@ -248,6 +1350,7 @@ function showTab(id) {
   document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
   document.getElementById('panel-' + id).classList.add('active');
   document.getElementById('nav-' + id).classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
 }
 </script>
 
