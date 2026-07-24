@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>马踏飞燕 · 新疆旅游地图</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&display=swap');
+  :root { --bg:#0a0a0f; --card:#14141f; --accent:#c9a96e; --text:#e8e8e8; --muted:#777; --border:#222; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,"PingFang SC",sans-serif; background:var(--bg); color:var(--text); overflow:hidden; }
+
+  /* Header */
+  .hdr { display:flex; align-items:center; gap:16px; padding:14px 20px; border-bottom:1px solid var(--border); background:rgba(10,10,15,0.98); }
+  .hdr a { color:var(--accent); text-decoration:none; font-size:0.88em; }
+  .hdr h1 { font-family:"Noto Serif SC",serif; font-size:1.3em; background:linear-gradient(135deg,#c9a96e,#e8d5a3); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+
+  /* Tabs */
+  .tabs { display:flex; gap:2px; padding:8px 20px; background:var(--card); border-bottom:1px solid var(--border); overflow-x:auto; }
+  .tab { padding:10px 20px; border-radius:10px; font-size:0.88em; font-weight:600; cursor:pointer; transition:all 0.2s; white-space:nowrap; color:var(--muted); background:transparent; border:none; }
+  .tab:hover { color:var(--text); background:rgba(201,169,110,0.08); }
+  .tab.active { color:#0a0a0f; background:var(--accent); }
+
+  /* Map */
+  #map { width:100%; height:calc(100vh - 100px); }
+
+  /* Loading */
+  #loading { position:fixed; top:0;left:0;right:0;bottom:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:9999; transition:opacity 0.5s; }
+  #loading.hide { opacity:0; pointer-events:none; }
+  .spinner { width:36px;height:36px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.7s linear infinite; }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  #loading p { margin-top:14px; color:var(--muted); font-size:0.85em; }
+
+  /* Legend */
+  .legend { position:absolute; bottom:20px; left:14px; z-index:800; background:rgba(20,20,31,0.95); border:1px solid var(--border); border-radius:10px; padding:14px; backdrop-filter:blur(10px); }
+  .legend h4 { font-size:0.82em; color:var(--accent); margin-bottom:8px; }
+  .li { display:flex; align-items:center; gap:7px; font-size:0.78em; color:var(--muted); margin-bottom:4px; }
+  .dot { width:10px;height:10px; border-radius:50%; flex-shrink:0; }
+
+  /* Info panel */
+  .info-panel { position:absolute; top:10px; right:14px; z-index:800; background:rgba(20,20,31,0.95); border:1px solid var(--border); border-radius:10px; padding:14px; width:240px; backdrop-filter:blur(10px); font-size:0.82em; color:var(--muted); line-height:1.7; }
+  .info-panel h4 { color:var(--accent); margin-bottom:6px; font-size:0.9em; }
+  .info-panel .hi { color:#ccc; }
+
+  /* Popup */
+  .leaflet-popup-content-wrapper { background:rgba(20,20,31,0.95)!important; color:var(--text)!important; border-radius:10px!important; border:1px solid var(--border)!important; }
+  .leaflet-popup-tip { background:rgba(20,20,31,0.95)!important; }
+  .pt { font-family:"Noto Serif SC",serif; font-size:1em; font-weight:700; color:var(--accent); margin-bottom:4px; }
+  .pi { font-size:0.82em; color:#bbb; line-height:1.6; }
+  .tg { display:inline-block; padding:2px 8px; border-radius:6px; font-size:0.72em; margin-right:4px; margin-top:3px; }
+</style>
+</head>
+<body>
+
+<div id="loading"><div class="spinner"></div><p>加载中…</p></div>
+
+<div class="hdr">
+  <a href="index.html">← 返回</a>
+  <h1>🏇 新疆旅游地图</h1>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchView('overview')">🗺️ 全疆概览</button>
+  <button class="tab" onclick="switchView('south')">🏜️ 南疆</button>
+  <button class="tab" onclick="switchView('north')">🌲 北疆</button>
+  <button class="tab" onclick="switchView('yili')">🌿 伊犁</button>
+  <button class="tab" onclick="switchView('loop')">🔄 大环线</button>
+</div>
+
+<div id="map"></div>
+
+<div class="legend" id="legend"></div>
+<div class="info-panel" id="infoPanel"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map = L.map('map',{center:[41.5,86],zoom:6,preferCanvas:true,updateWhenIdle:true,updateWhenZooming:false,attributionControl:false});
+L.tileLayer('https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}',{subdomains:['1','2','3','4'],maxZoom:16,updateWhenIdle:true,keepBuffer:4}).addTo(map);
+
+function ico(emoji,sz=24){return L.divIcon({html:`<div style="font-size:${sz}px;filter:drop-shadow(0 2px 3px rgba(0,0,0,0.5));">${emoji}</div>`,className:'',iconSize:[sz,sz],iconAnchor:[sz/2,sz/2],popupAnchor:[0,-sz/2]});}
+
+// ===== 数据 =====
+const airports=[
+  {n:'乌鲁木齐地窝堡机场',lat:43.907,lng:87.474,c:'URC',l:'4F',d:'新疆最大枢纽，航线最多'},
+  {n:'喀什徕宁机场',lat:39.475,lng:75.989,c:'KHG',l:'4E',d:'南疆枢纽'},
+  {n:'阿勒泰雪都机场',lat:47.750,lng:88.089,c:'AAT',l:'4C',d:'北疆门户'},
+  {n:'伊宁机场',lat:43.958,lng:81.332,c:'YIN',l:'4C',d:'伊犁河谷'},
+  {n:'库尔勒梨城机场',lat:41.728,lng:86.124,c:'KRL',l:'4D',d:'南疆东部'},
+  {n:'阿克苏温宿机场',lat:41.263,lng:80.291,c:'AKU',l:'4C',d:'南疆中部'},
+  {n:'库车龟兹机场',lat:41.728,lng:82.988,c:'KCA',l:'4C',d:'库车大峡谷'},
+  {n:'和田机场',lat:37.138,lng:79.929,c:'HTN',l:'4D',d:'和田'},
+  {n:'哈密机场',lat:42.841,lng:93.670,c:'HMI',l:'4C',d:'东疆'},
+  {n:'吐鲁番交河机场',lat:43.033,lng:89.102,c:'TLQ',l:'4E',d:'火焰山'},
+  {n:'塔什库尔干机场',lat:37.718,lng:75.295,c:'HQT',l:'4C',d:'高原机场'},
+  {n:'布尔津喀纳斯机场',lat:48.245,lng:87.320,c:'BQU',l:'4C',d:'喀纳斯最近'},
+];
+
+const trains=[
+  {n:'乌鲁木齐站',lat:43.856,lng:87.582,d:'兰新高铁枢纽'},
+  {n:'乌鲁木齐南站',lat:43.820,lng:87.565,d:'普速列车'},
+  {n:'喀什站',lat:39.460,lng:75.985,d:'南疆铁路终点'},
+  {n:'阿克苏站',lat:41.168,lng:80.263,d:'南疆铁路'},
+  {n:'库尔勒站',lat:41.720,lng:86.120,d:'南疆+格库铁路'},
+  {n:'库车站',lat:41.680,lng:82.960,d:'南疆铁路'},
+  {n:'阿勒泰站',lat:47.730,lng:88.070,d:'北阿铁路'},
+  {n:'北屯市站',lat:47.347,lng:87.825,d:'北疆铁路'},
+  {n:'伊宁站',lat:43.900,lng:81.330,d:'精伊霍铁路'},
+  {n:'哈密站',lat:42.840,lng:93.668,d:'兰新高铁'},
+  {n:'吐鲁番站',lat:42.950,lng:89.100,d:'兰新高铁'},
+  {n:'和田站',lat:37.135,lng:79.925,d:'南疆铁路'},
+  {n:'莎车站',lat:38.418,lng:77.250,d:'南疆铁路'},
+];
+
+const busStations=[
+  {n:'乌鲁木齐高铁客运站',lat:43.860,lng:87.590,d:'发往全疆'},
+  {n:'喀什自驾车与房车营地',lat:39.465,lng:75.975,d:'办边防证+租车'},
+  {n:'喀什客运站',lat:39.470,lng:75.980,d:'发往塔县、莎车'},
+  {n:'阿勒泰汽车站',lat:47.745,lng:88.085,d:'发往布尔津（30min一趟）'},
+  {n:'布尔津客运站',lat:47.700,lng:86.855,d:'发往喀纳斯'},
+  {n:'伊犁州客运总站',lat:43.900,lng:81.325,d:'发往赛里木湖、那拉提'},
+  {n:'库尔勒客运站',lat:41.725,lng:86.120,d:'发往南疆各地'},
+  {n:'阿克苏客运站',lat:41.165,lng:80.260,d:'发往喀什、库车'},
+];
+
+const cities=[
+  {n:'乌鲁木齐',lat:43.825,lng:87.617,t:'首府',big:true},
+  {n:'喀什',lat:39.470,lng:75.990,t:'地级市',big:true},
+  {n:'伊宁',lat:43.905,lng:81.332,t:'地级市',big:true},
+  {n:'库尔勒',lat:41.728,lng:86.124,t:'县级市'},
+  {n:'阿克苏',lat:41.168,lng:80.263,t:'地级市'},
+  {n:'阿勒泰',lat:47.748,lng:88.082,t:'地级市',big:true},
+  {n:'和田',lat:37.138,lng:79.929,t:'地级市'},
+  {n:'库车',lat:41.728,lng:82.988,t:'县级市'},
+  {n:'哈密',lat:42.841,lng:93.670,t:'地级市'},
+  {n:'吐鲁番',lat:42.951,lng:89.181,t:'地级市'},
+  {n:'塔城',lat:46.751,lng:82.979,t:'地级市'},
+  {n:'博乐',lat:44.854,lng:82.067,t:'县级市'},
+  {n:'布尔津',lat:47.700,lng:86.855,t:'县级市'},
+  {n:'莎车',lat:38.418,lng:77.250,t:'县级市'},
+  {n:'塔什库尔干',lat:37.770,lng:75.230,t:'县级市'},
+  {n:'新源',lat:43.430,lng:83.250,t:'县级市'},
+  {n:'富蕴',lat:47.230,lng:89.810,t:'县级市'},
+  {n:'北屯市',lat:47.347,lng:87.825,t:'兵团'},
+  {n:'轮台',lat:41.770,lng:84.260,t:'县级市'},
+  {n:'库尔勒',lat:41.728,lng:86.124,t:'县级市'},
+  {n:'且末',lat:38.140,lng:85.530,t:'县级市'},
+  {n:'若羌',lat:39.024,lng:88.168,t:'县级市'},
+  {n:'焉耆',lat:42.060,lng:86.570,t:'县级市'},
+  {n:'和静',lat:42.320,lng:86.380,t:'县级市'},
+  {n:'巩留',lat:43.480,lng:82.240,t:'县级市'},
+  {n:'特克斯',lat:43.210,lng:81.840,t:'县级市'},
+  {n:'昭苏',lat:43.150,lng:80.130,t:'县级市'},
+  {n:'尼勒克',lat:43.790,lng:82.510,t:'县级市'},
+  {n:'霍尔果斯',lat:44.130,lng:80.420,t:'口岸城市'},
+  {n:'奎屯',lat:44.430,lng:84.900,t:'县级市'},
+  {n:'石河子',lat:44.310,lng:86.040,t:'兵团'},
+  {n:'克拉玛依',lat:45.590,lng:84.890,t:'地级市'},
+  {n:'乌苏',lat:44.430,lng:84.680,t:'县级市'},
+  {n:'沙湾',lat:44.330,lng:85.620,t:'县级市'},
+  {n:'精河',lat:44.600,lng:82.890,t:'县级市'},
+  {n:'温泉',lat:45.040,lng:81.030,t:'县级市'},
+  {n:'霍城',lat:44.060,lng:80.870,t:'县级市'},
+  {n:'察布查尔',lat:43.840,lng:81.150,t:'县级市'},
+  {n:'木垒',lat:43.830,lng:90.280,t:'县级市'},
+  {n:'奇台',lat:44.020,lng:89.590,t:'县级市'},
+  {n:'吉木萨尔',lat:44.000,lng:89.180,t:'县级市'},
+  {n:'阜康',lat:43.960,lng:87.980,t:'县级市'},
+  {n:'米东',lat:43.970,lng:87.650,t:'区'},
+  {n:'昌吉',lat:44.010,lng:87.310,t:'地级市'},
+  {n:'呼图壁',lat:44.190,lng:86.890,t:'县级市'},
+  {n:'玛纳斯',lat:44.300,lng:86.210,t:'县级市'},
+];
+
+const scenic=[
+  {n:'喀纳斯湖',lat:48.720,lng:87.017,r:'north',s:'★★★★★',d:'中国最美湖泊'},
+  {n:'禾木村',lat:48.680,lng:87.420,r:'north',s:'★★★★★',d:'神的自留地'},
+  {n:'白哈巴村',lat:49.040,lng:86.680,r:'north',s:'★★★★☆',d:'西北第一村'},
+  {n:'五彩滩',lat:47.920,lng:86.880,r:'north',s:'★★★★☆',d:'雅丹日落'},
+  {n:'魔鬼城',lat:46.100,lng:85.720,r:'north',s:'★★★★☆',d:'雅丹地貌'},
+  {n:'天山天池',lat:43.880,lng:88.120,r:'north',s:'★★★★☆',d:'瑶池'},
+  {n:'可可托海',lat:47.230,lng:89.810,r:'north',s:'★★★★★',d:'地质奇观'},
+  {n:'安集海大峡谷',lat:44.050,lng:85.850,r:'north',s:'★★★★☆',d:'免费！色彩斑斓'},
+  {n:'赛里木湖',lat:44.580,lng:81.330,r:'yili',s:'★★★★★',d:'大西洋最后一滴眼泪'},
+  {n:'那拉提草原',lat:43.320,lng:84.020,r:'yili',s:'★★★★★',d:'空中草原'},
+  {n:'巴音布鲁克',lat:42.930,lng:84.170,r:'yili',s:'★★★★★',d:'九曲十八弯'},
+  {n:'库尔德宁',lat:43.250,lng:82.850,r:'yili',s:'★★★★☆',d:'世界自然遗产'},
+  {n:'夏塔古道',lat:42.850,lng:80.850,r:'yili',s:'★★★★☆',d:'冰川壮美'},
+  {n:'喀什古城',lat:39.470,lng:75.990,r:'south',s:'★★★★★',d:'千年古城，免费'},
+  {n:'白沙湖',lat:38.780,lng:75.150,r:'south',s:'★★★★★',d:'蓝眼泪，风大'},
+  {n:'喀拉库勒湖',lat:38.430,lng:75.050,r:'south',s:'★★★★★',d:'慕士塔格峰倒影'},
+  {n:'盘龙古道',lat:37.720,lng:75.280,r:'south',s:'★★★★★',d:'600+弯道'},
+  {n:'塔县石头城',lat:37.770,lng:75.230,r:'south',s:'★★★★☆',d:'金草滩日落'},
+  {n:'红其拉甫口岸',lat:37.040,lng:74.880,r:'south',s:'★★★☆☆',d:'海拔4700m'},
+  {n:'班迪尔蓝湖',lat:37.900,lng:75.100,r:'south',s:'★★★★☆',d:'翡翠绿'},
+  {n:'库车大峡谷',lat:41.500,lng:83.260,r:'south',s:'★★★★★',d:'红褐色峡谷'},
+  {n:'克孜尔千佛洞',lat:41.780,lng:82.500,r:'south',s:'★★★★☆',d:'比敦煌还早'},
+  {n:'塔克拉玛干沙漠',lat:38.500,lng:82.000,r:'south',s:'★★★★☆',d:'中国最大沙漠'},
+  {n:'博斯腾湖',lat:42.000,lng:87.000,r:'south',s:'★★★★☆',d:'最大内陆淡水湖'},
+  {n:'和田夜市',lat:37.138,lng:79.929,r:'south',s:'★★★★☆',d:'鸽子汤、酸奶粽子'},
+  {n:'莎车王陵',lat:38.418,lng:77.250,r:'south',s:'★★★☆☆',d:'叶尔羌王国'},
+  {n:'木吉火山口',lat:38.950,lng:74.800,r:'south',s:'★★★☆☆',d:'需无人机'},
+  {n:'塔合曼湿地',lat:38.100,lng:75.100,r:'south',s:'★★★★☆',d:'草原+雪山'},
+];
+
+// 道路数据（简化经纬度，关键节点连线）
+const highways=[
+  {n:'G30 连霍高速',color:'#e67e22',coords:[[43.83,87.62],[44.01,87.31],[44.31,86.04],[44.43,84.90],[45.59,84.89],[46.75,82.98]],d:'东起连云港，西至霍尔果斯，新疆段横贯北疆'},
+  {n:'G314 喀喇昆仑公路',color:'#c9a96e',coords:[[39.47,75.99],[38.78,75.15],[38.43,75.05],[37.77,75.23],[37.04,74.88]],d:'喀什→塔县→红其拉甫→巴基斯坦，中巴友谊公路'},
+  {n:'G218 伊宁→若羌',color:'#3498db',coords:[[43.91,81.33],[43.32,84.02],[42.93,84.17],[41.73,86.12],[39.02,88.17]],d:'贯穿天山南北'},
+  {n:'G217 阿勒泰→和田',color:'#2ecc71',coords:[[47.75,88.09],[46.10,85.72],[44.43,84.90],[41.73,86.12],[41.17,80.26],[37.14,79.93]],d:'纵贯新疆南北'},
+  {n:'G315 喀什→和田',color:'#9b59b6',coords:[[39.47,75.99],[38.42,77.25],[37.14,79.93]],d:'南疆南部横线'},
+  {n:'G3012 吐鲁番→喀什',color:'#e74c3c',coords:[[42.95,89.18],[41.73,86.12],[41.17,80.26],[39.47,75.99]],d:'南疆大动脉'},
+  {n:'独库公路',color:'#1abc9c',coords:[[43.70,84.70],[43.50,84.50],[43.20,84.00],[42.93,84.17]],d:'6-10月开放，一日看四季'},
+];
+
+// 危险路段
+const dangerRoads=[
+  {n:'独库公路冬季封路',lat:43.35,lng:84.40,r:25000,color:'#e74c3c',d:'11月-次年5月封路。仅7座以下可通行。弯道多、海拔高、天气多变。'},
+  {n:'帕米尔盘山路段（G314）',lat:38.20,lng:75.10,r:30000,color:'#e67e22',d:'海拔4000m+，弯急路窄，冬季积雪结冰。高原反应高发区。'},
+  {n:'红其拉甫高海拔段',lat:37.10,lng:74.90,r:20000,color:'#e74c3c',d:'海拔4700m+，严重高反风险。不建议老人儿童。必须备氧。'},
+  {n:'塔克拉玛干沙漠公路',lat:38.50,lng:82.00,r:80000,color:'#e67e22',d:'夏季地表60°C+，沙尘暴频发，信号差，备足饮水。'},
+  {n:'G217阿勒泰冬季段',lat:47.00,lng:87.50,r:30000,color:'#f39c12',d:'冬季大雪封路，路面结冰。11月-3月慎行。'},
+  {n:'伊昭公路',lat:43.60,lng:81.80,r:15000,color:'#e67e22',d:'限5座车通行，弯道极多，雨天落石风险。'},
+  {n:'布尔津→喀纳斯山路',lat:48.10,lng:87.00,r:20000,color:'#f39c12',d:'山路弯多，冬季结冰。建议白天行车。'},
+  {n:'天山达坂路段',lat:43.20,lng:87.00,r:20000,color:'#f39c12',d:'大风区，侧风强劲。冬季暴风雪频发。'},
+];
+
+// 距离信息
+const distInfo=[
+  {a:'乌鲁木齐',b:'喀什',km:1480,t:'飞2h / 火车24h'},
+  {a:'乌鲁木齐',b:'阿勒泰',km:670,t:'飞1.5h / 火车8h'},
+  {a:'乌鲁木齐',b:'伊宁',km:690,t:'飞1.5h / 火车6h'},
+  {a:'喀什',b:'塔县',km:290,t:'包车5-6h'},
+  {a:'喀什',b:'阿克苏',km:470,t:'飞1h / 火车8h'},
+  {a:'喀什',b:'和田',km:510,t:'火车8h'},
+  {a:'阿克苏',b:'库车',km:260,t:'火车3h'},
+  {a:'库尔勒',b:'乌鲁木齐',km:470,t:'火车6h'},
+  {a:'阿勒泰',b:'布尔津',km:100,t:'大巴2h'},
+  {a:'布尔津',b:'喀纳斯',km:160,t:'大巴2.5h'},
+  {a:'伊宁',b:'赛里木湖',km:150,t:'大巴2h'},
+  {a:'伊宁',b:'那拉提',km:270,t:'大巴4.5h'},
+];
+
+// 路线
+const routeData={
+  south:{name:'南疆经典线',color:'#c9a96e',coords:[[39.47,75.99],[38.78,75.15],[38.43,75.05],[37.77,75.23],[37.72,75.28],[38.43,75.05],[39.47,75.99]],desc:'喀什→白沙湖→喀拉库勒湖→塔县→盘龙古道→喀什'},
+  north:{name:'北疆经典线',color:'#2ecc71',coords:[[43.83,87.62],[47.75,88.09],[47.70,86.86],[48.68,87.42],[49.04,86.68],[47.70,86.86],[46.10,85.72],[43.83,87.62]],desc:'乌鲁木齐→阿勒泰→布尔津→禾木→白哈巴→五彩滩→魔鬼城→乌鲁木齐'},
+  yili:{name:'伊犁草原线',color:'#3498db',coords:[[43.83,87.62],[44.58,81.33],[43.91,81.33],[43.25,82.85],[43.32,84.02],[42.93,84.17],[43.83,87.62]],desc:'乌鲁木齐→赛里木湖→伊宁→库尔德宁→那拉提→巴音布鲁克→乌鲁木齐'},
+  loop:{name:'南北疆大环线',color:'#9b59b6',coords:[[43.83,87.62],[47.75,88.09],[48.68,87.42],[46.10,85.72],[43.83,87.62],[43.91,81.33],[42.93,84.17],[41.73,86.12],[41.17,80.26],[39.47,75.99],[37.77,75.23],[37.14,79.93],[43.83,87.62]],desc:'乌鲁木齐→北疆→伊犁→南疆→和田→喀什→塔县→乌鲁木齐'},
+};
+
+// ===== 渲染 =====
+const allLayers={};
+function addLayer(k,l){allLayers[k]=l;}
+function clearAll(){Object.values(allLayers).forEach(l=>{if(map.hasLayer(l))map.removeLayer(l);});}
+
+function renderCityMarkers(){
+  cities.forEach(c=>{
+    const sz=c.big?18:12;
+    const em=c.big?'🏛️':'🏘️';
+    L.marker([c.lat,c.lng],{icon:L.divIcon({html:`<div style="text-align:center;"><div style="font-size:${sz}px;">${em}</div><div style="font-size:${c.big?11:9}px;color:rgba(201,169,110,${c.big?0.8:0.5});white-space:nowrap;font-weight:${c.big?700:400};">${c.n}</div></div>`,className:'',iconSize:[50,28],iconAnchor:[25,14]}),interactive:false}).addTo(map);
+  });
+}
+
+function renderAirports(){
+  const lg=L.layerGroup();
+  airports.forEach(a=>{
+    L.marker([a.lat,a.lng],{icon:ico('✈️',22)}).bindPopup(`<div class="pt">${a.n}</div><div class="pi"><span class="tg" style="background:rgba(231,76,60,0.2);color:#e74c3c;">${a.c}</span><span class="tg" style="background:rgba(107,140,206,0.2);color:#6b8cce;">${a.l}</span><br>${a.d}</div>`).addTo(lg);
+  });
+  addLayer('airport',lg);return lg;
+}
+
+function renderTrains(){
+  const lg=L.layerGroup();
+  trains.forEach(t=>{
+    L.marker([t.lat,t.lng],{icon:ico('🚄',20)}).bindPopup(`<div class="pt">${t.n}</div><div class="pi"><span class="tg" style="background:rgba(52,152,219,0.2);color:#3498db;">火车站</span><br>${t.d}</div>`).addTo(lg);
+  });
+  addLayer('train',lg);return lg;
+}
+
+function renderBuses(){
+  const lg=L.layerGroup();
+  busStations.forEach(b=>{
+    L.marker([b.lat,b.lng],{icon:ico('🚌',18)}).bindPopup(`<div class="pt">${b.n}</div><div class="pi"><span class="tg" style="background:rgba(46,204,113,0.2);color:#2ecc71;">汽车站</span><br>${b.d}</div>`).addTo(lg);
+  });
+  addLayer('bus',lg);return lg;
+}
+
+function renderScenic(filter){
+  const lg=L.layerGroup();
+  const items=filter?scenic.filter(s=>s.r===filter):scenic;
+  items.forEach(s=>{
+    const regionLabel=s.r==='south'?'南疆':s.r==='north'?'北疆':'伊犁';
+    L.marker([s.lat,s.lng],{icon:ico('🏔️',22)}).bindPopup(`<div class="pt">${s.n}</div><div class="pi"><span class="tg" style="background:rgba(243,156,18,0.2);color:#f39c12;">${s.s}</span><span class="tg" style="background:rgba(201,169,110,0.15);color:#c9a96e;">${regionLabel}</span><br>${s.d}</div>`).addTo(lg);
+  });
+  addLayer('scenic-'+(filter||'all'),lg);return lg;
+}
+
+function renderHighways(filter){
+  const lg=L.layerGroup();
+  const items=filter?highways.filter(h=>{
+    if(filter==='south')return h.n.includes('G314')||h.n.includes('G315')||h.n.includes('G3012');
+    if(filter==='north')return h.n.includes('G30')||h.n.includes('G217');
+    if(filter==='yili')return h.n.includes('G218')||h.n.includes('独库');
+    return true;
+  }):highways;
+  items.forEach(h=>{
+    L.polyline(h.coords,{color:h.color,weight:3,opacity:0.7}).bindPopup(`<div class="pt" style="color:${h.color};">${h.n}</div><div class="pi">${h.d}</div>`).addTo(lg);
+  });
+  addLayer('highway-'+(filter||'all'),lg);return lg;
+}
+
+function renderDanger(filter){
+  const lg=L.layerGroup();
+  const items=filter?dangerRoads.filter(d=>{
+    const lat=d.lat;
+    if(filter==='south')return lat<40;
+    if(filter==='north')return lat>45;
+    if(filter==='yili')return lat>=42&&lat<=44.5&&d.lng<85;
+    return true;
+  }):dangerRoads;
+  items.forEach(d=>{
+    L.circle([d.lat,d.lng],{radius:d.r,color:d.color,fillColor:d.color,fillOpacity:0.15,weight:1,dashArray:'5,5'}).bindPopup(`<div class="pt" style="color:#e74c3c;">⚠️ ${d.n}</div><div class="pi">${d.d}</div>`).addTo(lg);
+  });
+  addLayer('danger-'+(filter||'all'),lg);return lg;
+}
+
+function renderDistances(){
+  const lg=L.layerGroup();
+  distInfo.forEach(d=>{
+    const cA=cities.find(c=>c.n===d.a),cB=cities.find(c=>c.n===d.b);
+    if(!cA||!cB)return;
+    const mLat=(cA.lat+cB.lat)/2,mLng=(cA.lng+cB.lng)/2;
+    L.marker([mLat,mLng],{icon:L.divIcon({html:`<div style="background:rgba(10,10,15,0.8);padding:2px 7px;border-radius:5px;font-size:10px;color:#c9a96e;white-space:nowrap;border:1px solid rgba(201,169,110,0.2);">${d.km}km·${d.t}</div>`,className:'',iconSize:[0,0]}),interactive:false}).addTo(lg);
+  });
+  addLayer('dist',lg);return lg;
+}
+
+// ===== 视图切换 =====
+function switchView(v){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>{if(t.textContent.includes(v==='overview'?'概览':v==='south'?'南疆':v==='north'?'北疆':v==='yili'?'伊犁':'大环线'))t.classList.add('active');});
+
+  clearAll();
+  const centerMap={overview:[41.5,86,6],south:[38.5,76,7],north:[47,87,7],yili:[43.5,83,7],loop:[42,83,6]};
+  const [lat,lng,z]=centerMap[v];
+  map.setView([lat,lng],z);
+
+  const legendEl=document.getElementById('legend');
+  const infoEl=document.getElementById('infoPanel');
+
+  if(v==='overview'){
+    renderCityMarkers();
+    const a=renderAirports(),tr=renderTrains(),b=renderBuses();
+    renderHighways();
+    renderDanger();
+    renderDistances();
+    a.addTo(map);tr.addTo(map);b.addTo(map);
+    legendEl.innerHTML=`<h4>图例</h4><div class="li"><div class="dot" style="background:#e74c3c;"></div>机场</div><div class="li"><div class="dot" style="background:#3498db;"></div>火车站</div><div class="li"><div class="dot" style="background:#2ecc71;"></div>汽车站</div><div class="li"><div class="dot" style="background:#e67e22;"></div>高速公路</div><div class="li"><div class="dot" style="background:#e74c3c;opacity:0.4;"></div>危险区域</div><div class="li"><div class="dot" style="background:#c9a96e;"></div>距离标注</div>`;
+    infoEl.innerHTML=`<h4>🗺️ 全疆概览</h4><p class="hi">显示新疆所有主要交通枢纽（机场12个、火车站13个、汽车站8个）及高速公路网络。</p><p style="margin-top:8px;">点击任意标注查看详情。点击右下角图标可查看危险路段。</p>`;
+  } else if(v==='south'){
+    renderCityMarkers();
+    const a=renderAirports(),tr=renderTrains(),b=renderBuses(),sc=renderScenic('south'),hw=renderHighways('south'),dg=renderDanger('south'),dt=renderDistances();
+    a.addTo(map);tr.addTo(map);b.addTo(map);sc.addTo(map);hw.addTo(map);dg.addTo(map);dt.addTo(map);
+    legendEl.innerHTML=`<h4>南疆</h4><div class="li"><div class="dot" style="background:#e74c3c;"></div>机场</div><div class="li"><div class="dot" style="background:#3498db;"></div>火车站</div><div class="li"><div class="dot" style="background:#f39c12;"></div>景点</div><div class="li"><div class="dot" style="background:#c9a96e;"></div>G314喀喇昆仑公路</div><div class="li"><div class="dot" style="background:#9b59b6;"></div>G315喀什→和田</div><div class="li"><div class="dot" style="background:#e74c3c;opacity:0.4;"></div>危险路段</div>`;
+    infoEl.innerHTML=`<h4>🏜️ 南疆板块</h4><p class="hi">以喀什为中心，覆盖帕米尔高原、塔克拉玛干沙漠、和田。重点标注G314喀喇昆仑公路（喀什→塔县→红其拉甫）及沿途危险路段。</p><p style="margin-top:8px;"><strong>必看景点：</strong>喀什古城、白沙湖、喀拉库勒湖、盘龙古道、库车大峡谷</p>`;
+  } else if(v==='north'){
+    renderCityMarkers();
+    const a=renderAirports(),tr=renderTrains(),b=renderBuses(),sc=renderScenic('north'),hw=renderHighways('north'),dg=renderDanger('north'),dt=renderDistances();
+    a.addTo(map);tr.addTo(map);b.addTo(map);sc.addTo(map);hw.addTo(map);dg.addTo(map);dt.addTo(map);
+    legendEl.innerHTML=`<h4>北疆</h4><div class="li"><div class="dot" style="background:#e74c3c;"></div>机场</div><div class="li"><div class="dot" style="background:#3498db;"></div>火车站</div><div class="li"><div class="dot" style="background:#f39c12;"></div>景点</div><div class="li"><div class="dot" style="background:#e67e22;"></div>G30连霍高速</div><div class="li"><div class="dot" style="background:#2ecc71;"></div>G217阿勒泰→和田</div>`;
+    infoEl.innerHTML=`<h4>🌲 北疆板块</h4><p class="hi">以阿勒泰为中心，覆盖喀纳斯、禾木、白哈巴、魔鬼城、可可托海。G30连霍高速横贯北疆。</p><p style="margin-top:8px;"><strong>必看景点：</strong>喀纳斯湖、禾木村、五彩滩、魔鬼城、可可托海</p>`;
+  } else if(v==='yili'){
+    renderCityMarkers();
+    const a=renderAirports(),tr=renderTrains(),b=renderBuses(),sc=renderScenic('yili'),hw=renderHighways('yili'),dg=renderDanger('yili'),dt=renderDistances();
+    a.addTo(map);tr.addTo(map);b.addTo(map);sc.addTo(map);hw.addTo(map);dg.addTo(map);dt.addTo(map);
+    legendEl.innerHTML=`<h4>伊犁</h4><div class="li"><div class="dot" style="background:#3498db;"></div>G218伊宁→若羌</div><div class="li"><div class="dot" style="background:#1abc9c;"></div>独库公路</div><div class="li"><div class="dot" style="background:#f39c12;"></div>景点</div><div class="li"><div class="dot" style="background:#e67e22;opacity:0.4;"></div>伊昭公路（限5座）</div>`;
+    infoEl.innerHTML=`<h4>🌿 伊犁板块</h4><p class="hi">伊犁河谷草原环线。赛里木湖→那拉提→巴音布鲁克→独库公路。独库公路6-10月开放，限7座以下。</p><p style="margin-top:8px;"><strong>必看景点：</strong>赛里木湖、那拉提草原、巴音布鲁克、库尔德宁</p>`;
+  } else if(v==='loop'){
+    renderCityMarkers();
+    const sc=renderScenic(),hw=renderHighways(),dg=renderDanger(),dt=renderDistances();
+    sc.addTo(map);hw.addTo(map);dg.addTo(map);dt.addTo(map);
+    const lg=L.layerGroup();
+    Object.values(routeData).forEach(r=>{
+      L.polyline(r.coords,{color:r.color,weight:3.5,opacity:0.8,dashArray:r.color==='#9b59b6'?'8,8':null}).bindPopup(`<div class="pt" style="color:${r.color};">${r.name}</div><div class="pi">${r.desc}</div>`).addTo(lg);
+    });
+    lg.addTo(map);addLayer('routes',lg);
+    legendEl.innerHTML=`<h4>大环线</h4><div class="li"><div class="dot" style="background:#c9a96e;"></div>南疆经典线</div><div class="li"><div class="dot" style="background:#2ecc71;"></div>北疆经典线</div><div class="li"><div class="dot" style="background:#3498db;"></div>伊犁草原线</div><div class="li"><div class="dot" style="background:#9b59b6;"></div>南北疆大环线</div>`;
+    infoEl.innerHTML=`<h4>🔄 大环线</h4><p class="hi">四条主要线路总览。虚线为南北疆大环线（约3000km，建议15-20天）。</p><p style="margin-top:8px;"><strong>你选哪条？</strong>告诉我你的天数和偏好，我来帮你规划。</p>`;
+  }
+}
+
+// ===== 初始化 =====
+renderCityMarkers();
+const la=renderAirports(),lt=renderTrains(),lb=renderBuses();
+renderHighways();renderDanger();renderDistances();
+la.addTo(map);lt.addTo(map);lb.addTo(map);
+
+document.getElementById('legend').innerHTML=`<h4>图例</h4><div class="li"><div class="dot" style="background:#e74c3c;"></div>机场</div><div class="li"><div class="dot" style="background:#3498db;"></div>火车站</div><div class="li"><div class="dot" style="background:#e67e22;"></div>高速公路</div><div class="li"><div class="dot" style="background:#e74c3c;opacity:0.4;"></div>危险路段</div><div class="li"><div class="dot" style="background:#c9a96e;"></div>距离标注</div>`;
+document.getElementById('infoPanel').innerHTML=`<h4>🗺️ 全疆概览</h4><p class="hi">新疆所有主要交通枢纽及高速公路网络。点击标注查看详情。</p>`;
+
+setTimeout(()=>{const l=document.getElementById('loading');l.classList.add('hide');setTimeout(()=>l.remove(),600);},1000);
+</script>
+</body>
+</html>

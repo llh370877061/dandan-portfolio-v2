@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新疆旅游综合资料库 — 马踏飞燕</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&display=swap');
+  :root {
+    --bg: #0a0a0f;
+    --card: #14141f;
+    --accent: #c9a96e;
+    --accent2: #6b8cce;
+    --text: #e8e8e8;
+    --muted: #777;
+    --border: #222;
+    --green: #2ecc71;
+    --red: #e74c3c;
+    --orange: #e67e22;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Noto Serif SC", "Microsoft YaHei", serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    line-height: 1.7;
+  }
+
+  /* Top nav */
+  .top-nav {
+    position: fixed; top:0; left:0; right:0; z-index:100;
+    background: rgba(10,10,15,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    height: 56px;
+  }
+  .top-nav .brand {
+    font-family: "Noto Serif SC", serif;
+    font-weight: 700;
+    font-size: 1.1em;
+    color: var(--accent);
+    text-decoration: none;
+    margin-right: 30px;
+    white-space: nowrap;
+  }
+  .tab-bar {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex: 1;
+  }
+  .tab-bar::-webkit-scrollbar { display:none; }
+  .tab-btn {
+    padding: 8px 18px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 0.9em;
+    cursor: pointer;
+    white-space: nowrap;
+    border-radius: 8px;
+    transition: all 0.3s;
+    font-family: inherit;
+  }
+  .tab-btn:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+  .tab-btn.active { color: var(--accent); background: rgba(201,169,110,0.12); font-weight: 600; }
+
+  /* Sections */
+  .section { display:none; padding: 80px 24px 60px; max-width: 1200px; margin: 0 auto; }
+  .section.active { display:block; }
+  .section h2 {
+    font-family: "Noto Serif SC", serif;
+    font-size: 2em;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+  }
+  .section .subtitle {
+    color: var(--muted);
+    font-size: 0.95em;
+    margin-bottom: 40px;
+  }
+
+  /* Cards */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    transition: border-color 0.3s;
+  }
+  .card:hover { border-color: var(--accent); }
+  .card h3 {
+    font-family: "Noto Serif SC", serif;
+    font-size: 1.15em;
+    color: var(--accent);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card p, .card li {
+    font-size: 0.9em;
+    color: var(--text);
+    line-height: 1.8;
+  }
+  .card ul { padding-left: 18px; }
+  .card li { margin-bottom: 4px; }
+
+  /* Tables */
+  .table-wrap {
+    overflow-x: auto;
+    margin-bottom: 40px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88em;
+  }
+  th {
+    background: rgba(201,169,110,0.1);
+    color: var(--accent);
+    padding: 14px 16px;
+    text-align: left;
+    font-weight: 600;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: top;
+  }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* Tags */
+  .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 0.78em;
+    margin: 2px 4px 2px 0;
+    white-space: nowrap;
+  }
+  .tag-hot { background: rgba(231,76,60,0.15); color: #e74c3c; }
+  .tag-niche { background: rgba(46,204,113,0.15); color: #2ecc71; }
+  .tag-mid { background: rgba(230,126,34,0.15); color: #e67e22; }
+  .tag-5a { background: rgba(201,169,110,0.2); color: var(--accent); font-weight: 600; }
+  .tag-nature { background: rgba(107,140,206,0.15); color: var(--accent2); }
+  .tag-culture { background: rgba(155,89,182,0.15); color: #9b59b6; }
+  .tag-food { background: rgba(230,126,34,0.15); color: #e67e22; }
+  .tag-danger { background: rgba(231,76,60,0.2); color: #e74c3c; }
+
+  /* Section headers */
+  .sub-header {
+    font-family: "Noto Serif SC", serif;
+    font-size: 1.4em;
+    font-weight: 700;
+    color: var(--text);
+    margin: 40px 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sub-header .icon { font-size: 1.2em; }
+
+  /* Region filter */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .filter-btn {
+    padding: 6px 16px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--muted);
+    font-size: 0.85em;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: inherit;
+  }
+  .filter-btn:hover { border-color: var(--accent); color: var(--text); }
+  .filter-btn.active { background: rgba(201,169,110,0.15); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+  .stat-card .num {
+    font-family: "Noto Serif SC", serif;
+    font-size: 2.2em;
+    font-weight: 900;
+    color: var(--accent);
+  }
+  .stat-card .label {
+    font-size: 0.85em;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* Route timeline */
+  .route-day {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+    position: relative;
+    padding-left: 60px;
+  }
+  .route-day::before {
+    content: attr(data-day);
+    position: absolute;
+    left: 16px;
+    top: 20px;
+    font-family: "Noto Serif SC", serif;
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 0.85em;
+  }
+  .route-day h4 {
+    font-size: 1em;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  .route-day p {
+    font-size: 0.88em;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* Landscape cards */
+  .landscape-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .landscape-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .landscape-card .header {
+    padding: 16px 20px;
+    background: rgba(201,169,110,0.08);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .landscape-card .header .emoji { font-size: 1.5em; }
+  .landscape-card .header h4 {
+    font-family: "Noto Serif SC", serif;
+    font-size: 1.05em;
+    color: var(--accent);
+  }
+  .landscape-card .body { padding: 16px 20px; }
+  .landscape-card .body ul { padding-left: 16px; }
+  .landscape-card .body li {
+    font-size: 0.88em;
+    margin-bottom: 6px;
+    line-height: 1.6;
+  }
+
+  /* Food section */
+  .food-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .food-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .food-card h4 {
+    font-family: "Noto Serif SC", serif;
+    color: var(--accent);
+    margin-bottom: 10px;
+    font-size: 1.05em;
+  }
+  .food-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 0.88em;
+  }
+  .food-item:last-child { border-bottom: none; }
+  .food-item .price { color: var(--accent); font-size: 0.85em; white-space: nowrap; }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+  @media (max-width: 768px) {
+    .top-nav { padding: 0 12px; }
+    .top-nav .brand { font-size: 0.95em; margin-right: 16px; }
+    .tab-btn { padding: 6px 12px; font-size: 0.82em; }
+    .section { padding: 72px 16px 40px; }
+    .section h2 { font-size: 1.5em; }
+    .card-grid { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .route-day { padding-left: 50px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a class="brand" href="index.html">🏇 马踏飞燕</a>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="showSection('transport')">🚌 交通</button>
+    <button class="tab-btn" onclick="showSection('scenic')">📍 景点分布</button>
+    <button class="tab-btn" onclick="showSection('compare')">🔥 热门 vs 小众</button>
+    <button class="tab-btn" onclick="showSection('culture')">🕌 人文特色</button>
+    <button class="tab-btn" onclick="showSection('nature')">🏔️ 自然风光</button>
+    <button class="tab-btn" onclick="showSection('food')">🍖 美食</button>
+    <button class="tab-btn" onclick="showSection('routes')">🗺️ 经典线路</button>
+  </div>
+</nav>
+
+<!-- ==================== 1. 交通 ==================== -->
+<div class="section active" id="transport">
+  <h2>新疆交通全览</h2>
+  <p class="subtitle">28座机场 · 10条铁路 · 覆盖全疆的公路网络——新疆是全国机场最多的省级行政区</p>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="num">28</div><div class="label">民用机场</div></div>
+    <div class="stat-card"><div class="num">665+</div><div class="label">运营航线</div></div>
+    <div class="stat-card"><div class="num">2712</div><div class="label">环塔铁路(公里)</div></div>
+    <div class="stat-card"><div class="num">73</div><div class="label">兰新线站点</div></div>
+  </div>
+
+  <div class="sub-header"><span class="icon">✈️</span> 机场（28座在用）</div>
+  <p style="color:var(--muted);font-size:0.9em;margin-bottom:20px;">新疆机场数量全国第一。以乌鲁木齐为核心，疆内主要城市间均有航班，航程1-2.5小时。</p>
+
+  <div class="filter-bar" id="airportFilter">
+    <button class="filter-btn active" onclick="filterTable('airport','all',this)">全部</button>
+    <button class="filter-btn" onclick="filterTable('airport','north',this)">北疆</button>
+    <button class="filter-btn" onclick="filterTable('airport','south',this)">南疆</button>
+    <button class="filter-btn" onclick="filterTable('airport','east',this)">东疆</button>
+  </div>
+
+  <div class="table-wrap">
+    <table id="airportTable">
+      <thead><tr><th>序号</th><th>机场名称</th><th>所在城市</th><th>等级</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr data-region="north"><td>1</td><td>乌鲁木齐天山国际机场</td><td>乌鲁木齐</td><td>4F</td><td>国家门户枢纽，2024年吞吐量2776.6万人次</td></tr>
+        <tr data-region="south"><td>2</td><td>喀什徕宁国际机场</td><td>喀什</td><td>4E</td><td>国家一类航空口岸，2024年吞吐量449.7万人次</td></tr>
+        <tr data-region="north"><td>3</td><td>伊犁伊宁国际机场</td><td>伊宁</td><td>4D</td><td>国家一类航空口岸，2024年吞吐量251.1万人次</td></tr>
+        <tr data-region="north"><td>4</td><td>克拉玛依古海机场</td><td>克拉玛依</td><td>4D</td><td>北疆次枢纽</td></tr>
+        <tr data-region="north"><td>5</td><td>阿勒泰雪都机场</td><td>阿勒泰</td><td>4C</td><td>2024年吞吐量75.9万人次</td></tr>
+        <tr data-region="north"><td>6</td><td>布尔津喀纳斯机场</td><td>布尔津</td><td>4C</td><td>距喀纳斯景区最近</td></tr>
+        <tr data-region="north"><td>7</td><td>富蕴可可托海机场</td><td>富蕴</td><td>4C</td><td>服务可可托海景区</td></tr>
+        <tr data-region="north"><td>8</td><td>塔城千泉机场</td><td>塔城</td><td>4C</td><td></td></tr>
+        <tr data-region="north"><td>9</td><td>博乐阿拉山口机场</td><td>博乐</td><td>4C</td><td></td></tr>
+        <tr data-region="north"><td>10</td><td>新源那拉提机场</td><td>新源</td><td>4C</td><td>服务那拉提草原</td></tr>
+        <tr data-region="north"><td>11</td><td>昭苏天马机场</td><td>昭苏</td><td>4C</td><td></td></tr>
+        <tr data-region="north"><td>12</td><td>石河子花园机场</td><td>石河子</td><td>4C</td><td></td></tr>
+        <tr data-region="north"><td>13</td><td>奇台江布拉克机场</td><td>奇台</td><td>新建</td><td>服务江布拉克景区</td></tr>
+        <tr data-region="south"><td>14</td><td>库尔勒梨城机场</td><td>库尔勒</td><td>4D</td><td>新疆航空次枢纽，2024年吞吐量283.4万人次</td></tr>
+        <tr data-region="south"><td>15</td><td>阿克苏红旗坡机场</td><td>阿克苏</td><td>4C</td><td>2024年吞吐量250.7万人次</td></tr>
+        <tr data-region="south"><td>16</td><td>和田昆冈机场</td><td>和田</td><td>4D</td><td>2024年吞吐量157.6万人次</td></tr>
+        <tr data-region="south"><td>17</td><td>库车龟兹机场</td><td>库车</td><td>4C</td><td>服务龟兹文化景区</td></tr>
+        <tr data-region="south"><td>18</td><td>莎车叶尔羌机场</td><td>莎车</td><td>4C</td><td></td></tr>
+        <tr data-region="south"><td>19</td><td>且末玉都机场</td><td>且末</td><td>4C</td><td></td></tr>
+        <tr data-region="south"><td>20</td><td>若羌楼兰机场</td><td>若羌</td><td>4C</td><td></td></tr>
+        <tr data-region="south"><td>21</td><td>图木舒克唐王城机场</td><td>图木舒克</td><td>4C</td><td></td></tr>
+        <tr data-region="south"><td>22</td><td>于田万方机场</td><td>于田</td><td>4C</td><td></td></tr>
+        <tr data-region="south"><td>23</td><td>阿拉尔塔里木机场</td><td>阿拉尔</td><td>4C</td><td></td></tr>
+        <tr data-region="south"><td>24</td><td>塔什库尔干红其拉甫机场</td><td>塔什库尔干</td><td>4C</td><td>帕米尔高原</td></tr>
+        <tr data-region="east"><td>25</td><td>吐鲁番交河机场</td><td>吐鲁番</td><td>4E</td><td></td></tr>
+        <tr data-region="east"><td>26</td><td>哈密伊州机场</td><td>哈密</td><td>4D</td><td></td></tr>
+        <tr data-region="north"><td>27</td><td>巴里坤大河机场</td><td>巴里坤</td><td>新建</td><td></td></tr>
+        <tr data-region="south"><td>28</td><td>和静巴音布鲁克机场</td><td>和静</td><td>新建</td><td>服务巴音布鲁克草原</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sub-header"><span class="icon">🚄</span> 铁路与火车站</div>
+  <p style="color:var(--muted);font-size:0.9em;margin-bottom:20px;">兰新高铁连接内地，南疆铁路环塔克拉玛干沙漠，格库铁路打通出疆新通道。</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>铁路线</th><th>起止</th><th>全长</th><th>主要站点</th></tr></thead>
+      <tbody>
+        <tr><td>兰新高铁</td><td>乌鲁木齐—兰州</td><td>1776km</td><td>乌鲁木齐、吐鲁番北、鄯善北、哈密</td></tr>
+        <tr><td>兰新铁路（普速）</td><td>兰州—乌鲁木齐</td><td>2423km</td><td>哈密、吐鲁番、昌吉、石河子、奎屯等73站</td></tr>
+        <tr><td>南疆铁路</td><td>吐鲁番—喀什</td><td>1446km</td><td>库尔勒、轮台、库车、阿克苏、巴楚、喀什</td></tr>
+        <tr><td>喀和铁路</td><td>喀什—和田</td><td>—</td><td>英吉沙、莎车、叶城、皮山、和田</td></tr>
+        <tr><td>格库铁路</td><td>库尔勒—格尔木</td><td>—</td><td>库尔勒、若羌，南疆出疆新通道</td></tr>
+        <tr><td>和若铁路</td><td>和田—若羌</td><td>—</td><td>与南疆线、格库线构成2712km环塔铁路</td></tr>
+        <tr><td>精伊霍铁路</td><td>精河—霍尔果斯</td><td>—</td><td>伊宁、霍尔果斯</td></tr>
+        <tr><td>奎北铁路</td><td>奎屯—北屯</td><td>458km</td><td>克拉玛依、北屯</td></tr>
+        <tr><td>北阿铁路</td><td>北屯—阿勒泰</td><td>67km</td><td>阿勒泰</td></tr>
+        <tr><td>克塔铁路</td><td>克拉玛依—塔城</td><td>—</td><td>2019年通车</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sub-header"><span class="icon">🚌</span> 主要客运站</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>城市</th><th>客运站</th><th>主要方向</th></tr></thead>
+      <tbody>
+        <tr><td>乌鲁木齐</td><td>北郊客运站</td><td>阿勒泰、布尔津、克拉玛依等北疆方向</td></tr>
+        <tr><td>乌鲁木齐</td><td>南郊客运站</td><td>库尔勒、阿克苏、喀什、和田等南疆方向</td></tr>
+        <tr><td>乌鲁木齐</td><td>军供客运站</td><td>奎屯、石河子、呼图壁及团场</td></tr>
+        <tr><td>阿勒泰</td><td>阿勒泰汽车站</td><td>北屯、福海、布尔津、吉木乃</td></tr>
+        <tr><td>伊宁</td><td>大世界汽车站</td><td>奎屯、霍尔果斯、乌鲁木齐</td></tr>
+        <tr><td>库尔勒</td><td>客运中心</td><td>库车、阿克苏、若羌、乌鲁木齐</td></tr>
+        <tr><td>阿克苏</td><td>中心客运站</td><td>库车、喀什、乌鲁木齐</td></tr>
+        <tr><td>喀什</td><td>喀什客运站</td><td>塔什库尔干、和田、阿克苏</td></tr>
+        <tr><td>和田</td><td>和田汽车站</td><td>喀什、库尔勒、乌鲁木齐</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sub-header"><span class="icon">⏱️</span> 城市间交通时间</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>路段</th><th>距离</th><th>自驾</th><th>飞机</th><th>火车</th></tr></thead>
+      <tbody>
+        <tr><td>乌鲁木齐→吐鲁番</td><td>187km</td><td>2.5h</td><td>—</td><td>动车1h</td></tr>
+        <tr><td>乌鲁木齐→哈密</td><td>593km</td><td>6-7h</td><td>1.5h</td><td>动车4.5h</td></tr>
+        <tr><td>乌鲁木齐→库尔勒</td><td>470km</td><td>5-6h</td><td>1h</td><td>普速5-6h</td></tr>
+        <tr><td>乌鲁木齐→伊宁</td><td>670km</td><td>7-8h</td><td>1.5h</td><td>动车5h</td></tr>
+        <tr><td>乌鲁木齐→阿勒泰</td><td>500km</td><td>6h</td><td>1.5h</td><td>普速10h</td></tr>
+        <tr><td>乌鲁木齐→阿克苏</td><td>1008km</td><td>12h</td><td>2h</td><td>普速14-16h</td></tr>
+        <tr><td>乌鲁木齐→喀什</td><td>1465km</td><td>17-20h</td><td>2h</td><td>普速24h</td></tr>
+        <tr><td>乌鲁木齐→和田</td><td>1400km</td><td>20h</td><td>2.5h</td><td>普速28h</td></tr>
+        <tr><td>喀什→塔什库尔干</td><td>290km</td><td>5h</td><td>—</td><td>—</td></tr>
+        <tr><td>库尔勒→库车</td><td>294km</td><td>4.5h</td><td>—</td><td>—</td></tr>
+        <tr><td>库车→阿克苏</td><td>253km</td><td>3h</td><td>—</td><td>—</td></tr>
+        <tr><td>阿克苏→喀什</td><td>460km</td><td>4.5h</td><td>—</td><td>—</td></tr>
+        <tr><td>布尔津→喀纳斯</td><td>137km</td><td>3h</td><td>—</td><td>—</td></tr>
+        <tr><td>伊宁→那拉提</td><td>270km</td><td>4h</td><td>—</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card" style="margin-top:20px;border-color:var(--accent);">
+    <h3>💡 交通方式选择建议</h3>
+    <ul>
+      <li><strong>飞机</strong>：适合长距离跨区域（乌市→喀什/和田/阿勒泰），航程1-2.5h，旺季票价高</li>
+      <li><strong>火车/动车</strong>：兰新高铁最方便，南疆普速可夕发朝至省住宿费，票价便宜受天气影响小</li>
+      <li><strong>自驾/包车</strong>：新疆旅游最推荐，随走随停。租车淡季300-500元/天，旺季翻倍。注意区间测速、加油站间距远</li>
+      <li><strong>长途汽车</strong>：覆盖所有县市，票价最低但耗时最长，适合偏远地区</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== 2. 景点分布 ==================== -->
+<div class="section" id="scenic">
+  <h2>景点分布</h2>
+  <p class="subtitle">覆盖北疆、南疆、东疆三大区域，按地州市分类整理</p>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="num">130+</div><div class="label">景点/目的地</div></div>
+    <div class="stat-card"><div class="num">15</div><div class="label">5A景区</div></div>
+    <div class="stat-card"><div class="num">13</div><div class="label">地州市</div></div>
+  </div>
+
+  <div class="filter-bar" id="regionFilter">
+    <button class="filter-btn active" onclick="filterRegion('all',this)">全部</button>
+    <button class="filter-btn" onclick="filterRegion('urumqi',this)">乌鲁木齐</button>
+    <button class="filter-btn" onclick="filterRegion('changji',this)">昌吉</button>
+    <button class="filter-btn" onclick="filterRegion('altay',this)">阿勒泰</button>
+    <button class="filter-btn" onclick="filterRegion('tacheng',this)">塔城</button>
+    <button class="filter-btn" onclick="filterRegion('yili',this)">伊犁</button>
+    <button class="filter-btn" onclick="filterRegion('boertala',this)">博州</button>
+    <button class="filter-btn" onclick="filterRegion('kelamayi',this)">克拉玛依</button>
+    <button class="filter-btn" onclick="filterRegion('kashgar',this)">喀什</button>
+    <button class="filter-btn" onclick="filterRegion('hotan',this)">和田</button>
+    <button class="filter-btn" onclick="filterRegion('aksu',this)">阿克苏</button>
+    <button class="filter-btn" onclick="filterRegion('bayingguoleng',this)">巴州</button>
+    <button class="filter-btn" onclick="filterRegion('hami',this)">哈密</button>
+    <button class="filter-btn" onclick="filterRegion('tulufan',this)">吐鲁番</button>
+  </div>
+
+  <div class="table-wrap">
+    <table id="scenicTable">
+      <thead><tr><th>景点</th><th>地区</th><th>类型</th><th>热度</th><th>特色标签</th></tr></thead>
+      <tbody>
+        <!-- 乌鲁木齐 -->
+        <tr data-reg="urumqi"><td>天山天池</td><td>乌鲁木齐</td><td><span class="tag tag-nature">自然</span></td><td>★★★★★</td><td><span class="tag tag-5a">5A</span> 湖泊·雪山</td></tr>
+        <tr data-reg="urumqi"><td>新疆国际大巴扎</td><td>乌鲁木齐</td><td><span class="tag tag-culture">人文</span></td><td>★★★★★</td><td>民族风情·购物·美食</td></tr>
+        <tr data-reg="urumqi"><td>新疆博物馆</td><td>乌鲁木齐</td><td><span class="tag tag-culture">人文</span></td><td>★★★★</td><td>干尸·丝绸之路</td></tr>
+        <tr data-reg="urumqi"><td>南山牧场</td><td>乌鲁木齐</td><td><span class="tag tag-nature">自然</span></td><td>★★★★</td><td>草原·避暑·骑马</td></tr>
+        <tr data-reg="urumqi"><td>硫磺沟丹霞地貌</td><td>乌鲁木齐</td><td><span class="tag tag-niche">小众</span></td><td>★★</td><td>地质奇观·摄影</td></tr>
+        <!-- 昌吉 -->
+        <tr data-reg="changji"><td>五彩湾</td><td>昌吉</td><td><span class="tag tag-nature">自然</span></td><td>★★★★</td><td>雅丹地貌·摄影</td></tr>
+        <tr data-reg="changji"><td>天山大峡谷（庙尔沟）</td><td>昌吉</td><td><span class="tag tag-nature">自然</span></td><td>★★★</td><td>峡谷·瀑布·森林</td></tr>
+        <tr data-reg="changji"><td>康家石门子岩画</td><td>昌吉</td><td><span class="tag tag-niche">小众</span></td><td>★★★</td><td>岩画·考古</td></tr>
+        <tr data-reg="changji"><td>木垒胡杨林</td><td>昌吉</td><td><span class="tag tag-niche">小众</span></td><td>★★</td><td>胡杨·秋色</td></tr>
+        <!-- 阿勒泰 -->
+        <tr data-reg="altay"><td>喀纳斯湖</td><td>阿勒泰</td><td><span class="tag tag-nature">自然</span></td><td>★★★★★</td><td><span class="tag tag-5a">5A</span> 湖泊·原始森林</td></tr>
+        <tr data-reg="altay"><td>禾木村</td><td>阿勒泰</td><td><span class="tag tag-nature">自然</span></td><td>★★★★★</td><td>图瓦人村落·秋色</td></tr>
+        <tr data-reg="altay"><td>白哈巴村</td><td>阿勒泰</td><td><span class="tag tag-nature">自然</span></td><td>★★★★</td><td>边境·图瓦人·秋色</td></tr>
+        <tr data-reg="altay"><td>五彩滩</td><td>阿勒泰</td><td><span class="tag tag-nature">自然</span></td><td>★★★★</td><td>雅丹地貌·日落</td></tr>
+        <tr data-reg="altay"><td>可可托海</td><td>阿勒泰</td><td><span class="tag tag-nature">自然</span></td><td>★★★★★</td><td><span class="tag tag-5a">5A</span> 峡谷·地震遗迹</td></tr>
+        <tr data-reg="altay"><td>布尔津河堤夜市</td><td>阿勒泰</td><td><span class="tag tag-food">美食</span></td><td>★★★★</td><td>烤狗鱼·夜市</td></tr>
+        <tr data-reg="altay"><td>白沙湖</td><td>阿勒泰</td><td><span class="tag tag-niche">小众</span></td><td>★★★</td><td>沙漠湖泊·边境</td></tr>
+        <!-- 塔城 -->
+        <tr data-reg="tacheng"><td>安集海大峡谷</td><td>塔城</td><td><span class="tag tag-niche">小众</span></td><td>★★★★</td><td>峡谷·地质奇观·摄影</td></tr>
+        <tr data-reg="tacheng"><td>塔城红楼</td><td>塔城</td><td><span class="tag tag-culture">人文</span></td><td>★★★</td><td>俄式建筑·红色</td></tr>
+        <tr data-reg="tacheng"><td>鹿角湾草原</td><td>塔城</td><td><span class="tag tag-niche">小众</span></td><td>★★★</td><td>草原·牧场</td></tr>
+        <!-- 伊犁 -->
+        <tr data-reg="yili"><td>那拉提草原</td><td>伊犁</td><td><span class="tag tag-nature">自然</span></td><td>★★★★★</td><td><span class="tag tag-5a">5A</span> 草原·骑马</td></tr>
+        <tr data-reg="yili"><td>赛里木湖</td><td>伊犁</td><td><span class="tag tag-nature">自然</span></td><td>★★★★★</td><td><span class="tag tag-5a">5A</span> 湖泊·环湖</td></tr>
+        <tr data-reg="yili"><td>薰衣草基地（霍城）</td><td>伊犁</td><td><span class="tag tag-nature">自然</span></td><td>★★★★</td><td>花海·摄影·浪漫</td></tr>
+        <tr data-reg="yili"><td>喀拉峻草原</td><td>伊犁</td><td><span class="tag tag-nature">自然</span></td><td>★★★★★</td><td><span class="tag tag-5a">5A</span> 人体草原</td></tr>
+        <tr data-reg="yili"><td>果子沟大桥</td><td>伊犁</td><td><span class="tag tag-nature">自然</span></td><td>★★★★</td><td>大桥·网红·摄影</td></tr>
+        <tr data-reg="yili"><td>特克斯八卦城</td><td>伊犁</td><td><span class="tag tag-culture">人文</span></td><td>★★★★</td><td>城市规划·风水</td></tr>
+        <tr data-reg="yili"><td>伊宁喀赞其</td><td>伊犁</td><td><span class="tag tag-culture">人文</span></td><td>★★★★</td><td>蓝色小镇·民族风情</td></tr>
+        <tr data-reg="yili"><td>库尔德宁</td><td>伊犁</td><td><span class="tag tag-nature">自然</span></td><td>★★★★</td><td>云杉·世界遗产</td></tr>
+        <tr data-reg="yili"><td>琼库什台村</td><td>伊犁</td><td><span class="tag tag-niche">小众</span></td><td>★★★★</td><td>乌孙古道入口·原生态</td></tr>
+        <tr data-reg="yili"><td>夏塔古道</td><td>伊犁</td><td><span class="tag tag-nature">自然</span></td><td>★★★</td><td>冰川·徒步·探险</td></tr>
+        <tr data-reg="yili"><td>恰西草原</td><td>伊犁</td><td><span class="tag tag-niche">小众</span></td><td>★★★</td><td>原始·人少</td></tr>
+        <!-- 博州 -->
+        <tr data-reg="boertala"><td>怪石峪</td><td>博州</td><td><span class="tag tag-niche">小众</span></td><td>★★★</td><td>花岗岩地貌·摄影</td></tr>
+        <tr data-reg="boertala"><td>夏尔西里自然保护区</td><td>博州</td><td><span class="tag tag-niche">小众</span></td><td>★★★</td><td>原始生态·珍稀植物</td></tr>
+        <!-- 克拉玛依 -->
+        <tr data-reg="kelamayi"><td>世界魔鬼城（乌尔禾）</td><td>克拉玛依</td><td><span class="tag tag-nature">自然</span></td><td>★★★★★</td><td><span class="tag tag-5a">5A</span> 雅丹地貌·摄影</td></tr>
+        <tr data-reg="kelamayi"><td>黑油山</td><td>克拉玛依</td><td><span class="tag tag-culture">人文</span></td><td>★★★</td><td>石油·工业旅游</td></tr>
+        <!-- 喀什 -->
+        <tr data-reg="kashgar"><td>喀什古城</td><td>喀什</td><td><span class="tag tag-culture">人文</span></td><td>★★★★★</td><td><span class="tag tag-5a">5A</span> 维吾尔族·活着的古城</td></tr>
+        <tr data-reg="kashgar"><td>艾提尕尔清真寺</td><td>喀什</td><td><span class="tag tag-culture">人文</span></td><td>★★★★★</td><td>伊斯兰建筑·宗教</td></tr>
+        <tr data-reg="kashgar"><td>香妃墓</td><td>喀什</td><td><span class="tag tag-culture">人文</span></td><td>★★★★</td><td>维吾尔族·陵墓</td></tr>
+        <tr data-reg="kashgar"><td>塔什库尔干石头城</td><td>喀什</td><td><span class="tag tag-culture">人文</span></td><td>★★★★</td><td>古城·塔吉克族</td></tr>
+        <tr data-reg="kashgar"><td>慕士塔格峰</td><td>喀什</td><td><span class="tag tag-nature">自然</span></td><td>★★★★</td><td>雪山·冰川·7546m</td></tr>
+        <tr data-reg="kashgar"><td>喀拉库勒湖</td><td>喀什</td><td><span class="tag tag-nature">自然</span></td><td>★★★★</td><td>高原湖泊·雪山倒影</td></tr>
+        <tr data-reg="kashgar"><td>盘龙古道</td><td>喀什</td><td><span class="tag tag-nature">自然</span></td><td>★★★★</td><td>公路·网红·600个S弯</td></tr>
+        <tr data-reg="kashgar"><td>库科西鲁格乡（杏花村）</td><td>喀什</td><td><span class="tag tag-niche">小众</span></td><td>★★★★</td><td>杏花·春天·世外桃源</td></tr>
+        <tr data-reg="kashgar"><td>金草滩（塔县）</td><td>喀什</td><td><span class="tag tag-niche">小众</span></td><td>★★★★</td><td>湿地·日落·摄影</td></tr>
+        <tr data-reg="kashgar"><td>红其拉甫口岸</td><td>喀什</td><td><span class="tag tag-culture">人文</span></td><td>★★★</td><td>中巴友谊·海拔4700m</td></tr>
+        <tr data-reg="kashgar"><td>达瓦昆沙漠</td><td>喀什</td><td><span class="tag tag-nature">自然</span></td><td>★★★</td><td>沙漠·滑沙·骑骆驼</td></tr>
+        <!-- 和田 -->
+        <tr data-reg="hotan"><td>和田大巴扎/玉石市场</td><td>和田</td><td><span class="tag tag-culture">人文</span></td><td>★★★</td><td>玉石·美食·购物</td></tr>
+        <tr data-reg="hotan"><td>尼雅遗址</td><td>和田</td><td><span class="tag tag-niche">小众</span></td><td>★★★★</td><td>精绝古国·考古·探险</td></tr>
+        <tr data-reg="hotan"><td>于田达里雅布依村</td><td>和田</td><td><span class="tag tag-niche">小众</span></td><td>★★★★</td><td>沙漠部落·克里雅人</td></tr>
+        <tr data-reg="hotan"><td>桑皮纸文化村</td><td>和田</td><td><span class="tag tag-niche">小众</span></td><td>★★★</td><td>非遗·手工造纸</td></tr>
+        <tr data-reg="hotan"><td>千里葡萄长廊</td><td>和田</td><td><span class="tag tag-niche">小众</span></td><td>★★★</td><td>农业奇观</td></tr>
+        <!-- 阿克苏 -->
+        <tr data-reg="aksu"><td>天山托木尔峰/大峡谷</td><td>阿克苏</td><td><span class="tag tag-nature">自然</span></td><td>★★★★</td><td>峡谷·冰川·雪山</td></tr>
+        <tr data-reg="aksu"><td>温宿大峡谷</td><td>阿克苏</td><td><span class="tag tag-nature">自然</span></td><td>★★★★</td><td>丹霞·地质奇观</td></tr>
+        <tr data-reg="aksu"><td>天山神秘大峡谷（库车）</td><td>阿克苏</td><td><span class="tag tag-nature">自然</span></td><td>★★★★</td><td>峡谷·红崖</td></tr>
+        <tr data-reg="aksu"><td>克孜尔千佛洞</td><td>阿克苏</td><td><span class="tag tag-culture">人文</span></td><td>★★★★</td><td>佛教壁画·比莫高窟早300年</td></tr>
+        <tr data-reg="aksu"><td>沙雅胡杨林</td><td>阿克苏</td><td><span class="tag tag-nature">自然</span></td><td>★★★★★</td><td>胡杨·秋色·塔里木河</td></tr>
+        <tr data-reg="aksu"><td>库车王府</td><td>阿克苏</td><td><span class="tag tag-culture">人文</span></td><td>★★★</td><td>龟兹·王府</td></tr>
+        <tr data-reg="aksu"><td>阿瓦提刀郎部落</td><td>阿克苏</td><td><span class="tag tag-niche">小众</span></td><td>★★★</td><td>刀郎文化·木卡姆</td></tr>
+        <!-- 巴州 -->
+        <tr data-reg="bayingguoleng"><td>博斯腾湖</td><td>巴州</td><td><span class="tag tag-nature">自然</span></td><td>★★★★★</td><td><span class="tag tag-5a">5A</span> 湖泊·荷花·西海</td></tr>
+        <tr data-reg="bayingguoleng"><td>巴音布鲁克草原</td><td>巴州</td><td><span class="tag tag-nature">自然</span></td><td>★★★★★</td><td>草原·天鹅湖·九曲十八弯</td></tr>
+        <tr data-reg="bayingguoleng"><td>塔克拉玛干沙漠公路</td><td>巴州</td><td><span class="tag tag-nature">自然</span></td><td>★★★★</td><td>沙漠·公路旅行·穿越</td></tr>
+        <tr data-reg="bayingguoleng"><td>轮台胡杨林公园</td><td>巴州</td><td><span class="tag tag-nature">自然</span></td><td>★★★★</td><td>胡杨·秋色</td></tr>
+        <tr data-reg="bayingguoleng"><td>罗布人村寨</td><td>巴州</td><td><span class="tag tag-culture">人文</span></td><td>★★★</td><td>罗布人·沙漠·胡杨</td></tr>
+        <tr data-reg="bayingguoleng"><td>巩乃斯国家森林公园</td><td>巴州</td><td><span class="tag tag-niche">小众</span></td><td>★★★★</td><td>森林·河谷·原生态</td></tr>
+        <tr data-reg="bayingguoleng"><td>楼兰古城</td><td>巴州</td><td><span class="tag tag-niche">小众</span></td><td>★★★★★</td><td>古国·探险·需许可</td></tr>
+        <!-- 哈密 -->
+        <tr data-reg="hami"><td>巴里坤草原</td><td>哈密</td><td><span class="tag tag-nature">自然</span></td><td>★★★</td><td>草原·古城·哈萨克族</td></tr>
+        <tr data-reg="hami"><td>魔鬼城（哈密雅丹）</td><td>哈密</td><td><span class="tag tag-niche">小众</span></td><td>★★★</td><td>雅丹地貌·摄影</td></tr>
+        <tr data-reg="hami"><td>伊吾胡杨林</td><td>哈密</td><td><span class="tag tag-niche">小众</span></td><td>★★★</td><td>胡杨·秋色·人少</td></tr>
+        <tr data-reg="hami"><td>庙尔沟</td><td>哈密</td><td><span class="tag tag-niche">小众</span></td><td>★★★</td><td>峡谷·瀑布·原生态</td></tr>
+        <!-- 吐鲁番 -->
+        <tr data-reg="tulufan"><td>火焰山</td><td>吐鲁番</td><td><span class="tag tag-nature">自然</span></td><td>★★★★★</td><td><span class="tag tag-5a">5A</span> 西游记·地质</td></tr>
+        <tr data-reg="tulufan"><td>交河故城</td><td>吐鲁番</td><td><span class="tag tag-culture">人文</span></td><td>★★★★★</td><td><span class="tag tag-5a">5A</span> 古城·世界遗产</td></tr>
+        <tr data-reg="tulufan"><td>高昌故城</td><td>吐鲁番</td><td><span class="tag tag-culture">人文</span></td><td>★★★★★</td><td><span class="tag tag-5a">5A</span> 古城·世界遗产</td></tr>
+        <tr data-reg="tulufan"><td>葡萄沟</td><td>吐鲁番</td><td><span class="tag tag-nature">自然</span></td><td>★★★★★</td><td><span class="tag tag-5a">5A</span> 葡萄·民俗</td></tr>
+        <tr data-reg="tulufan"><td>坎儿井民俗园</td><td>吐鲁番</td><td><span class="tag tag-culture">人文</span></td><td>★★★★</td><td>水利工程·非遗</td></tr>
+        <tr data-reg="tulufan"><td>库木塔格沙漠（鄯善）</td><td>吐鲁番</td><td><span class="tag tag-nature">自然</span></td><td>★★★★</td><td><span class="tag tag-5a">5A</span> 城市沙漠</td></tr>
+        <tr data-reg="tulufan"><td>柏孜克里克千佛洞</td><td>吐鲁番</td><td><span class="tag tag-culture">人文</span></td><td>★★★★</td><td>佛教壁画·世界遗产</td></tr>
+        <tr data-reg="tulufan"><td>吐峪沟麻扎村</td><td>吐鲁番</td><td><span class="tag tag-niche">小众</span></td><td>★★★★</td><td>千年古村·原生态</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== 3. 热门 vs 小众 ==================== -->
+<div class="section" id="compare">
+  <h2>热门 vs 小众</h2>
+  <p class="subtitle">帮你区分哪些值得专程去、哪些适合深度探索</p>
+
+  <div class="sub-header"><span class="icon">🔥</span> 大众热门（值得专程去）</div>
+  <div class="card-grid">
+    <div class="card">
+      <h3>🏔️ 北疆热门</h3>
+      <ul>
+        <li><strong>喀纳斯湖</strong> — 新疆名片，秋色绝美，建议9-10月去</li>
+        <li><strong>禾木村</strong> — "中国第一村"，晨雾+炊烟+白桦林</li>
+        <li><strong>赛里木湖</strong> — "大西洋最后一滴眼泪"，环湖自驾</li>
+        <li><strong>那拉提草原</strong> — 空中草原，6-8月最佳</li>
+        <li><strong>可可托海</strong> — 地质奇观+额尔齐斯河峡谷</li>
+        <li><strong>天山天池</strong> — 距乌鲁木齐最近的5A景区</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🕌 南疆热门</h3>
+      <ul>
+        <li><strong>喀什古城</strong> — 活着的千年古城，必去</li>
+        <li><strong>慕士塔格峰</strong> — "冰山之父"，帕米尔高原地标</li>
+        <li><strong>盘龙古道</strong> — 600个S弯，网红公路</li>
+        <li><strong>塔克拉玛干沙漠公路</strong> — 穿越死亡之海</li>
+        <li><strong>博斯腾湖</strong> — 西海渔村，荷花盛开</li>
+        <li><strong>巴音布鲁克</strong> — 天鹅湖+九曲十八弯日落</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🌅 吐鲁番热门</h3>
+      <ul>
+        <li><strong>火焰山</strong> — 西游记取景地</li>
+        <li><strong>交河故城</strong> — 世界最大最古老的生土建筑城市</li>
+        <li><strong>高昌故城</strong> — 丝路重镇遗址</li>
+        <li><strong>葡萄沟</strong> — 绿洲奇观，8月葡萄成熟</li>
+        <li><strong>库木塔格沙漠</strong> — 城市边的沙漠，交通最方便</li>
+        <li><strong>坎儿井</strong> — 古代水利工程奇迹</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sub-header"><span class="icon">🌿</span> 小众独特（本地人私藏）</div>
+  <div class="card-grid">
+    <div class="card">
+      <h3>🏔️ 北疆小众</h3>
+      <ul>
+        <li><strong>安集海大峡谷</strong> — 免费！比美国科罗拉多更震撼</li>
+        <li><strong>琼库什台村</strong> — 乌孙古道入口，原生态牧民村</li>
+        <li><strong>恰西草原</strong> — 比那拉提人少10倍，原始草原</li>
+        <li><strong>硫磺沟丹霞</strong> — 距乌鲁木齐最近的丹霞地貌</li>
+        <li><strong>白沙湖</strong> — 阿勒泰的沙漠湖泊，边境风光</li>
+        <li><strong>鹿角湾草原</strong> — 塔城秘境，牧场风光</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🕌 南疆小众</h3>
+      <ul>
+        <li><strong>库科西鲁格杏花村</strong> — 帕米尔高原的世外桃源（3-4月）</li>
+        <li><strong>金草滩</strong> — 塔县最佳日落拍摄点</li>
+        <li><strong>达里雅布依村</strong> — 沙漠腹地的克里雅人部落</li>
+        <li><strong>桑皮纸文化村</strong> — 千年非遗手工造纸</li>
+        <li><strong>巩乃斯森林公园</strong> — 雪岭云杉密林，原生态</li>
+        <li><strong>阿瓦提刀郎部落</strong> — 刀郎文化发源地</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🏜️ 深度探险</h3>
+      <ul>
+        <li><strong>楼兰古城</strong> — 需许可+向导，真正的探险</li>
+        <li><strong>尼雅遗址</strong> — 精绝古国，考古圣地</li>
+        <li><strong>罗布泊无人区</strong> — "死亡之海"，需专业团队</li>
+        <li><strong>阿尔金山保护区</strong> — 野生动物天堂，无人区</li>
+        <li><strong>夏塔古道</strong> — 冰川徒步，乌孙古道最精华段</li>
+        <li><strong>瓦罕走廊入口</strong> — 中阿边境，地质奇观</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 4. 人文特色 ==================== -->
+<div class="section" id="culture">
+  <h2>人文特色</h2>
+  <p class="subtitle">13个世居民族 · 三大宗教文化 · 千年丝路文明</p>
+
+  <div class="sub-header"><span class="icon">👥</span> 民族风情</div>
+  <div class="card-grid">
+    <div class="card">
+      <h3>🌙 维吾尔族（约1000万人）</h3>
+      <ul>
+        <li><strong>十二木卡姆</strong> — 世界非物质文化遗产，维吾尔族音乐瑰宝</li>
+        <li><strong>艾德莱斯绸</strong> — 传统手工艺，色彩绚丽</li>
+        <li><strong>麦西热甫</strong> — 集歌舞、游戏、诗朗诵于一体的民间聚会</li>
+        <li><strong>古尔邦节</strong> — 最隆重的节日，宰牲献祭、歌舞庆祝</li>
+        <li><strong>诺鲁孜节</strong> — 春分日，迎接新年，类似春节</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🐎 哈萨克族（约160万人）</h3>
+      <ul>
+        <li><strong>阿肯弹唱</strong> — 即兴对唱，草原上的"说唱比赛"</li>
+        <li><strong>冬不拉</strong> — 哈萨克族标志性乐器</li>
+        <li><strong>叼羊</strong> — 马背上的竞技运动</li>
+        <li><strong>姑娘追</strong> — 骑马追逐，草原上的浪漫游戏</li>
+        <li><strong>转场</strong> — 季节性迁徙，千年游牧传统</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🏕️ 蒙古族（约18万人）</h3>
+      <ul>
+        <li><strong>土尔扈特东归</strong> — 200年前万里东归的壮举</li>
+        <li><strong>那达慕大会</strong> — 骑马、射箭、摔跤三项竞技</li>
+        <li><strong>长调民歌</strong> — 悠扬辽阔的草原之声</li>
+        <li><strong>蒙古包</strong> — 可移动的家，游牧文化的象征</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🕌 回族（约98万人）</h3>
+      <ul>
+        <li><strong>九碗三行子</strong> — 回族传统宴席菜</li>
+        <li><strong>花儿</strong> — 回族民歌，已被列入非遗</li>
+        <li><strong>开斋节</strong> — 伊斯兰教节日，美食分享</li>
+        <li><strong>盖碗茶</strong> — 回族茶文化，"三炮台"</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sub-header"><span class="icon">🕌</span> 宗教文化</div>
+  <div class="card-grid">
+    <div class="card">
+      <h3>☪️ 伊斯兰教</h3>
+      <ul>
+        <li>信众占新疆人口约58%，10个民族信仰</li>
+        <li><strong>艾提尕尔清真寺</strong> — 中国最大的清真寺之一</li>
+        <li>全疆约2.4万座清真寺</li>
+        <li>建筑特色：穹顶、宣礼塔、几何花纹</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🙏 佛教遗迹</h3>
+      <ul>
+        <li><strong>克孜尔千佛洞</strong> — 比莫高窟早300年的佛教艺术</li>
+        <li><strong>柏孜克里克千佛洞</strong> — 吐鲁番，世界遗产</li>
+        <li>龟兹乐舞对唐代宫廷音乐影响深远</li>
+        <li>丝绸之路佛教东传的重要中转站</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>📿 藏传佛教</h3>
+      <ul>
+        <li><strong>巴仑台黄庙</strong> — 新疆最大的藏传佛教寺院</li>
+        <li>蒙古族、藏族信仰</li>
+        <li>建筑风格：金顶、转经筒、酥油花</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sub-header"><span class="icon">⚠️</span> 民族习俗与禁忌</div>
+  <div class="card-grid">
+    <div class="card">
+      <h3>🌙 维吾尔族</h3>
+      <ul>
+        <li>忌用左手递物或接物（左手被视为不洁）</li>
+        <li>忌食猪肉及其制品</li>
+        <li>进清真寺需脱鞋，女性需包头</li>
+        <li>做客时主人递茶双手接，表示尊敬</li>
+        <li>忌在室内吐痰、擤鼻涕</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🐎 哈萨克族</h3>
+      <ul>
+        <li>忌逆时针方向绕敖包</li>
+        <li>忌踩踏门槛（被视为踩踏主人的尊严）</li>
+        <li>晚辈不能在长辈面前喝酒</li>
+        <li>不能骑马冲进羊群</li>
+        <li>接受礼物要双手接</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🏕️ 蒙古族</h3>
+      <ul>
+        <li>忌往火堆里扔垃圾或泼水</li>
+        <li>忌讳踩踏门槛</li>
+        <li>不能在火堆旁大小便</li>
+        <li>不能用脚踢蒙古包的门坎</li>
+        <li>接受哈达要双手，长辈在先</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🕌 回族</h3>
+      <ul>
+        <li>严格遵守清真饮食（Halal）</li>
+        <li>忌食猪肉、血液、自死物</li>
+        <li>饮酒在教义中被禁止</li>
+        <li>礼拜时不能从前方经过</li>
+        <li>尊重"油香"等宗教食品</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 5. 自然风光 ==================== -->
+<div class="section" id="nature">
+  <h2>自然风光</h2>
+  <p class="subtitle">从海拔-154m的艾丁湖到7443m的托木尔峰，新疆拥有地球上几乎所有地貌类型</p>
+
+  <div class="landscape-grid">
+    <div class="landscape-card">
+      <div class="header"><span class="emoji">⛰️</span><h4>山川瀑布</h4></div>
+      <div class="body">
+        <ul>
+          <li><strong>天山大峡谷（庙尔沟）</strong> — 昌吉，峡谷·瀑布·森林</li>
+          <li><strong>可可托海</strong> — 阿勒泰，额尔齐斯河峡谷·地震遗迹</li>
+          <li><strong>天山神秘大峡谷</strong> — 库车，红褐色崖壁·一线天</li>
+          <li><strong>温宿大峡谷</strong> — 阿克苏，丹霞地貌·地质博物馆</li>
+          <li><strong>安集海大峡谷</strong> — 塔城，免费！比科罗拉多更震撼</li>
+          <li><strong>庙尔沟瀑布</strong> — 哈密，峡谷中的隐藏瀑布</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="landscape-card">
+      <div class="header"><span class="emoji">🏞️</span><h4>湖泊草原</h4></div>
+      <div class="body">
+        <ul>
+          <li><strong>喀纳斯湖</strong> — 阿勒泰，神秘湖怪传说·变色湖</li>
+          <li><strong>赛里木湖</strong> — 博州/伊犁，大西洋最后一滴眼泪</li>
+          <li><strong>那拉提草原</strong> — 伊犁，空中草原·河谷草原</li>
+          <li><strong>喀拉峻草原</strong> — 伊犁，人体草原·世界遗产</li>
+          <li><strong>巴音布鲁克草原</strong> — 巴州，天鹅湖·九曲十八弯</li>
+          <li><strong>博斯腾湖</strong> — 巴州，中国最大的内陆淡水湖</li>
+          <li><strong>喀拉库勒湖</strong> — 喀什，慕士塔格峰倒影</li>
+          <li><strong>白沙湖</strong> — 阿勒泰/喀什，沙漠中的绿洲湖泊</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="landscape-card">
+      <div class="header"><span class="emoji">🏜️</span><h4>沙漠戈壁</h4></div>
+      <div class="body">
+        <ul>
+          <li><strong>塔克拉玛干沙漠</strong> — 中国最大沙漠，"死亡之海"</li>
+          <li><strong>库木塔格沙漠</strong> — 鄯善，城市边的沙漠，最方便到达</li>
+          <li><strong>古尔班通古特沙漠</strong> — 准噶尔盆地，中国第二大沙漠</li>
+          <li><strong>达瓦昆沙漠</strong> — 喀什岳普湖，沙漠+湖泊组合</li>
+          <li><strong>五彩湾</strong> — 昌吉，雅丹地貌+戈壁</li>
+          <li><strong>魔鬼城</strong> — 克拉玛依/哈密，雅丹地貌奇观</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="landscape-card">
+      <div class="header"><span class="emoji">🏔️</span><h4>雪山冰川</h4></div>
+      <div class="body">
+        <ul>
+          <li><strong>慕士塔格峰</strong> — 喀什塔县，7546m，"冰山之父"</li>
+          <li><strong>托木尔峰</strong> — 阿克苏，天山最高峰7443m</li>
+          <li><strong>博格达峰</strong> — 乌鲁木齐/阜康，天山东段最高峰</li>
+          <li><strong>友谊峰</strong> — 阿勒泰，中蒙俄哈四国交界</li>
+          <li><strong>哈雷克套冰川</strong> — 伊犁</li>
+          <li><strong>喀尔里克冰川</strong> — 哈密，天山东端冰川群</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="landscape-card">
+      <div class="header"><span class="emoji">🌊</span><h4>峡谷地貌</h4></div>
+      <div class="body">
+        <ul>
+          <li><strong>盘龙古道</strong> — 喀什塔县，600个S弯·网红公路</li>
+          <li><strong>独库公路</strong> — 伊犁→库车，中国最美公路之一</li>
+          <li><strong>伊昭公路</strong> — 伊宁→昭苏，白石峰达坂·悬崖公路</li>
+          <li><strong>中巴公路（G314）</strong> — 喀什→塔县，帕米尔高原天路</li>
+          <li><strong>塔克拉玛干沙漠公路</strong> — 民丰→轮台，穿越死亡之海</li>
+          <li><strong>禾木观景台</strong> — 阿勒泰，晨雾中的河谷</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="landscape-card">
+      <div class="header"><span class="emoji">🌾</span><h4>秋色与花海</h4></div>
+      <div class="body">
+        <ul>
+          <li><strong>轮台胡杨林</strong> — 10月中下旬，金色胡杨+塔里木河</li>
+          <li><strong>沙雅胡杨林</strong> — 面积最大，原生态</li>
+          <li><strong>伊犁杏花沟</strong> — 3-4月，野杏花山谷</li>
+          <li><strong>库科西鲁格杏花村</strong> — 帕米尔高原杏花（3-4月）</li>
+          <li><strong>霍城薰衣草</strong> — 6-7月，中国普罗旺斯</li>
+          <li><strong>昭苏油菜花</strong> — 7月，天马故乡的金色花海</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px;border-color:var(--accent2);">
+    <h3 style="color:var(--accent2);">📅 最佳季节速查</h3>
+    <ul>
+      <li><strong>春季（3-5月）</strong>：帕米尔杏花、伊犁杏花沟，南疆升温早</li>
+      <li><strong>夏季（6-8月）</strong>：北疆草原最佳、薰衣草（6月）、独库公路（6-10月）、伊昭公路</li>
+      <li><strong>秋季（9-11月）</strong>：喀纳斯/禾木秋色（9月中-10月中）、胡杨林（10月中下旬）</li>
+      <li><strong>冬季（12-2月）</strong>：喀纳斯雪景、禾木雾凇、阿勒泰滑雪、沙漠穿越</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== 6. 美食 ==================== -->
+<div class="section" id="food">
+  <h2>特色美食</h2>
+  <p class="subtitle">60+道菜品 · 四大民族美食 · 分城市美食攻略</p>
+
+  <div class="sub-header"><span class="icon">🍖</span> 维吾尔族美食</div>
+  <div class="food-grid">
+    <div class="food-card">
+      <h4>🔥 必吃经典</h4>
+      <div class="food-item"><span>烤全羊</span><span class="price">人均 80-150</span></div>
+      <div class="food-item"><span>手抓饭（抓饭）</span><span class="price">人均 25-40</span></div>
+      <div class="food-item"><span>烤包子（薄皮包子）</span><span class="price">人均 5-8/个</span></div>
+      <div class="food-item"><span>大盘鸡</span><span class="price">人均 40-60</span></div>
+      <div class="food-item"><span>拉条子（拌面）</span><span class="price">人均 18-28</span></div>
+      <div class="food-item"><span>馕坑肉</span><span class="price">人均 30-50</span></div>
+      <div class="food-item"><span>缸子肉</span><span class="price">人均 15-25</span></div>
+    </div>
+    <div class="food-card">
+      <h4>🍢 街头小吃</h4>
+      <div class="food-item"><span>烤羊肉串</span><span class="price">3-5元/串</span></div>
+      <div class="food-item"><span>馕（各类）</span><span class="price">3-10元/个</span></div>
+      <div class="food-item"><span>烤鸡蛋</span><span class="price">2-3元/个</span></div>
+      <div class="food-item"><span>酸奶刨冰</span><span class="price">8-15元</span></div>
+      <div class="food-item"><span>石榴汁</span><span class="price">10-15元</span></div>
+      <div class="food-item"><span>卡瓦斯（格瓦斯）</span><span class="price">5-10元</span></div>
+      <div class="food-item"><span>馓子</span><span class="price">5-10元</span></div>
+    </div>
+  </div>
+
+  <div class="sub-header"><span class="icon">🐎</span> 哈萨克族美食</div>
+  <div class="food-grid">
+    <div class="food-card">
+      <h4>🍖 草原味道</h4>
+      <div class="food-item"><span>纳仁（手抓肉拌面）</span><span class="price">人均 40-60</span></div>
+      <div class="food-item"><span>马肉纳仁</span><span class="price">人均 50-80</span></div>
+      <div class="food-item"><span>熏马肉·熏马肠</span><span class="price">人均 30-50</span></div>
+      <div class="food-item"><span>包尔萨克（油炸面食）</span><span class="price">人均 15-25</span></div>
+      <div class="food-item"><span>酥油茶</span><span class="price">人均 10-15</span></div>
+      <div class="food-item"><span>奶疙瘩</span><span class="price">人均 10-20</span></div>
+    </div>
+  </div>
+
+  <div class="sub-header"><span class="icon">🕌</span> 回族美食</div>
+  <div class="food-grid">
+    <div class="food-card">
+      <h4>🍲 宴席与家常</h4>
+      <div class="food-item"><span>九碗三行子</span><span class="price">人均 50-80</span></div>
+      <div class="food-item"><span>粉汤</span><span class="price">人均 15-25</span></div>
+      <div class="food-item"><span>油塔子</span><span class="price">人均 8-15</span></div>
+      <div class="food-item"><span>凉皮子</span><span class="price">人均 8-12</span></div>
+      <div class="food-item"><span>搓鱼子</span><span class="price">人均 15-20</span></div>
+      <div class="food-item"><span>羊杂碎</span><span class="price">人均 15-25</span></div>
+    </div>
+  </div>
+
+  <div class="sub-header"><span class="icon">🏙️</span> 分城市美食推荐</div>
+  <div class="card-grid">
+    <div class="card">
+      <h3>🏙️ 乌鲁木齐</h3>
+      <ul>
+        <li><strong>新疆国际大巴扎</strong> — 各类小吃汇集</li>
+        <li><strong>五一夜市</strong> — 烤肉、凉皮、烤包子</li>
+        <li><strong>血站大盘鸡</strong> — 大盘鸡发源地</li>
+        <li><strong>丸子汤</strong> — 本地早餐标配</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🕌 喀什</h3>
+      <ul>
+        <li><strong>喀什古城夜市</strong> — 烤蛋、酸奶、石榴汁</li>
+        <li><strong>艾提尕尔广场周边</strong> — 缸子肉、烤包子</li>
+        <li><strong>牛羊巴扎</strong> — 周日赶集日最热闹</li>
+        <li><strong>老城茶馆</strong> — 维吾尔族茶文化体验</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🍇 吐鲁番</h3>
+      <ul>
+        <li><strong>火焰山夜市</strong> — 烤全羊、特色烧烤</li>
+        <li><strong>葡萄沟</strong> — 鲜葡萄、葡萄干、葡萄酒</li>
+        <li><strong>豆豆面</strong> — 吐鲁番特色面食</li>
+        <li><strong>盆盆肉</strong> — 当地人的最爱</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🌿 伊犁</h3>
+      <ul>
+        <li><strong>六星街</strong> — 多民族美食融合</li>
+        <li><strong>喀赞其</strong> — 蓝色小镇里的手工冰淇淋</li>
+        <li><strong>布尔津烤鱼</strong> — 额尔齐斯河冷水鱼</li>
+        <li><strong>伊犁马肉</strong> — 熏马肉·马肠子</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 7. 经典线路 ==================== -->
+<div class="section" id="routes">
+  <h2>经典线路</h2>
+  <p class="subtitle">从深圳出发 · 多种方案 · 自由组合</p>
+
+  <div class="sub-header"><span class="icon">🏔️</span> 南疆深度游（8-12天）</div>
+  <div class="route-day" data-day="D1"><h4>深圳 → 喀什（飞机）</h4><p>深圳直飞喀什（经停），约6-7小时。抵达后入住喀什古城附近酒店，休整适应。晚上逛喀什古城夜市。</p></div>
+  <div class="route-day" data-day="D2"><h4>喀什市区</h4><p>上午：艾提尕尔清真寺 → 喀什古城（手工艺品街、铜器巴扎）<br>下午：香妃墓 → 老城区民居<br>晚上：古城夜市，体验维吾尔族美食</p></div>
+  <div class="route-day" data-day="D3"><h4>喀什 → 塔什库尔干（290km，约5h）</h4><p>走中巴公路G314，沿途：白沙湖 → 喀拉库勒湖（慕士塔格峰倒影）→ 慕士塔格峰观景台。傍晚抵达塔县。</p></div>
+  <div class="route-day" data-day="D4"><h4>塔什库尔干一日</h4><p>上午：石头城遗址 → 金草滩湿地（日落绝佳）<br>下午：盘龙古道（600个S弯）→ 红其拉甫口岸方向<br>如时间允许：大同乡杏花村（春季限定）</p></div>
+  <div class="route-day" data-day="D5"><h4>塔县 → 喀什（290km）</h4><p>原路返回喀什，途中可补拍沿途风光。下午抵达喀什，逛巴扎购物。</p></div>
+  <div class="route-day" data-day="D6"><h4>喀什 → 阿克苏（460km，约5h）</h4><p>上午出发，下午抵达阿克苏。参观库车王府（如走南线经莎车）。或直接飞阿克苏。</p></div>
+  <div class="route-day" data-day="D7"><h4>库车一日</h4><p>上午：天山神秘大峡谷<br>下午：克孜尔千佛洞（比莫高窟早300年）<br>晚上：库车老城美食</p></div>
+  <div class="route-day" data-day="D8"><h4>阿克苏 → 库尔勒（约5h）</h4><p>途经轮台胡杨林（秋季必停），或走沙漠公路体验穿越塔克拉玛干。</p></div>
+  <div class="route-day" data-day="D9"><h4>库尔勒周边</h4><p>上午：博斯腾湖（西海渔村）<br>下午：铁门关<br>如秋季：轮台胡杨林</p></div>
+  <div class="route-day" data-day="D10"><h4>库尔勒 → 乌鲁木齐（飞机1h）</h4><p>飞回乌鲁木齐，下午逛新疆博物馆（看干尸），大巴扎购物。晚上大盘鸡。</p></div>
+  <div class="route-day" data-day="D11"><h4>乌鲁木齐 → 深圳</h4><p>采购特产（葡萄干、红枣、核桃），下午/晚上航班返回深圳。</p></div>
+
+  <div class="sub-header" style="margin-top:50px;"><span class="icon">🚗</span> 北疆经典环线（10-12天）</div>
+  <div class="route-day" data-day="D1"><h4>深圳 → 乌鲁木齐（飞机）</h4><p>直飞约5小时。抵达后休整，逛大巴扎，大盘鸡接风。</p></div>
+  <div class="route-day" data-day="D2"><h4>乌鲁木齐 → 天山天池 → 富蕴（500km）</h4><p>上午游天山天池（1.5h车程），下午驱车前往富蕴，夜宿富蕴。</p></div>
+  <div class="route-day" data-day="D3"><h4>可可托海一日</h4><p>全天游览可可托海国家地质公园：额尔齐斯河大峡谷、神钟山、地震遗迹。</p></div>
+  <div class="route-day" data-day="D4"><h4>富蕴 → 布尔津（250km）</h4><p>途经五彩滩（日落时分最美），晚上布尔津河堤夜市吃烤鱼。</p></div>
+  <div class="route-day" data-day="D5"><h4>喀纳斯一日</h4><p>全天：喀纳斯湖 → 观鱼台 → 三湾（卧龙湾、月亮湾、神仙湾）</p></div>
+  <div class="route-day" data-day="D6"><h4>禾木村一日</h4><p>清晨看禾木晨雾（6:30-8:00），上午白桦林徒步，下午美丽峰观景。住禾木小木屋。</p></div>
+  <div class="route-day" data-day="D7"><h4>布尔津 → 克拉玛依（约300km）</h4><p>途经世界魔鬼城（乌尔禾雅丹地貌），日落时分最震撼。</p></div>
+  <div class="route-day" data-day="D8"><h4>克拉玛依 → 赛里木湖（约400km）</h4><p>穿越戈壁，下午抵达赛里木湖，环湖自驾，住湖边蒙古包。</p></div>
+  <div class="route-day" data-day="D9"><h4>赛里木湖 → 伊宁 → 那拉提（约400km）</h4><p>上午经果子沟大桥，下午抵达那拉提草原，骑马体验。</p></div>
+  <div class="route-day" data-day="D10"><h4>那拉提 → 巴音布鲁克（约90km）</h4><p>翻越天山，经独库公路南段（6-10月开放），下午抵达巴音布鲁克，等九曲十八弯日落。</p></div>
+  <div class="route-day" data-day="D11"><h4>巴音布鲁克 → 乌鲁木齐（约360km）</h4><p>走独库公路北段返回，穿越雪山、森林、草原。晚上抵达乌鲁木齐。</p></div>
+  <div class="route-day" data-day="D12"><h4>乌鲁木齐 → 深圳</h4><p>上午采购特产，下午航班返回。</p></div>
+
+  <div class="sub-header" style="margin-top:50px;"><span class="icon">🌍</span> 南北疆大环线（15天）</div>
+  <div class="route-day" data-day="D1-2"><h4>深圳 → 乌鲁木齐</h4><p>D1飞抵，D2市区游览（天山天池/博物馆/大巴扎）</p></div>
+  <div class="route-day" data-day="D3-4"><h4>乌鲁木齐 → 富蕴 → 可可托海</h4><p>D3驱车至富蕴，D4可可托海全天</p></div>
+  <div class="route-day" data-day="D5-6"><h4>布尔津 → 喀纳斯 → 禾木</h4><p>D5五彩滩+喀纳斯，D6禾木晨雾+白桦林</p></div>
+  <div class="route-day" data-day="D7"><h4>布尔津 → 克拉玛依（魔鬼城）</h4><p>乌尔禾魔鬼城日落</p></div>
+  <div class="route-day" data-day="D8-9"><h4>赛里木湖 → 伊宁 → 那拉提</h4><p>D8环赛里木湖+果子沟，D9那拉提草原</p></div>
+  <div class="route-day" data-day="D10"><h4>那拉提 → 巴音布鲁克</h4><p>独库公路南段，九曲十八弯日落</p></div>
+  <div class="route-day" data-day="D11"><h4>巴音布鲁克 → 库尔勒</h4><p>翻越天山，抵达库尔勒</p></div>
+  <div class="route-day" data-day="D12"><h4>库尔勒 → 库车</h4><p>博斯腾湖/铁门关，驱车至库车</p></div>
+  <div class="route-day" data-day="D13"><h4>库车 → 阿克苏</h4><p>天山大峡谷+克孜尔千佛洞</p></div>
+  <div class="route-day" data-day="D14"><h4>阿克苏 → 喀什（飞机或自驾）</h4><p>喀什古城+艾提尕尔清真寺+夜市</p></div>
+    <div class="route-day" data-day="D15"><h4>喀什 → 深圳（飞机）</h4><p>上午香妃墓/巴扎，下午飞回深圳。如时间允许可加塔什库尔干（+2天）。</p></div>
+
+  <div class="sub-header" style="margin-top:50px;"><span class="icon">🌸</span> 主题线路推荐</div>
+  <div class="card-grid">
+    <div class="card">
+      <h3>🌸 春季杏花线（3-4月）</h3>
+      <p>喀什 → 塔什库尔干 → 库科西鲁格杏花村 → 大同乡杏花 → 伊犁杏花沟（新源/吐尔根）</p>
+      <p style="margin-top:8px;color:var(--muted);font-size:0.85em;">帕米尔高原杏花+伊犁河谷野杏花，最佳窗口3月底-4月中旬</p>
+    </div>
+    <div class="card">
+      <h3>🍂 秋季胡杨线（10月）</h3>
+      <p>乌鲁木齐 → 库尔勒 → 轮台胡杨林 → 沙雅胡杨林 → 塔克拉玛干沙漠公路 → 和田</p>
+      <p style="margin-top:8px;color:var(--muted);font-size:0.85em;">最佳窗口10月10日-25日，金色胡杨+沙漠穿越</p>
+    </div>
+    <div class="card">
+      <h3>🏔️ 冰川雪山线</h3>
+      <p>喀什 → 慕士塔格峰 → 红其拉甫口岸 → 塔什库尔干 → 盘龙古道 → 金草滩</p>
+      <p style="margin-top:8px;color:var(--muted);font-size:0.85em;">帕米尔高原深度，海拔4000m+，注意高反</p>
+    </div>
+    <div class="card">
+      <h3>🏜️ 沙漠穿越线</h3>
+      <p>和田 → 民丰 → 塔克拉玛干沙漠公路 → 轮台 → 库尔勒</p>
+      <p style="margin-top:8px;color:var(--muted);font-size:0.85em;">522km穿越死亡之海，全程无加油站，需满油出发</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px;border-color:var(--accent);">
+    <h3>💰 费用参考（人均）</h3>
+    <ul>
+      <li><strong>机票</strong>：深圳↔喀什/乌鲁木齐，淡季 1500-2500元，旺季 3000-5000元</li>
+      <li><strong>租车</strong>：淡季 300-500元/天，旺季 600-1000元/天</li>
+      <li><strong>住宿</strong>：经济型 150-300元/晚，中档 300-600元/晚</li>
+      <li><strong>餐饮</strong>：人均 80-150元/天</li>
+      <li><strong>门票</strong>：总计约 500-800元（含各景区）</li>
+      <li><strong>10天总预算</strong>：经济型约 6000-8000元/人，舒适型约 10000-15000元/人</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function filterTable(tableId, region, btn) {
+  const tbody = document.querySelector('#' + tableId + 'Table tbody');
+  const rows = tbody.querySelectorAll('tr');
+  const filterBar = btn.parentElement;
+  filterBar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  rows.forEach(row => {
+    if (region === 'all') {
+      row.style.display = '';
+    } else {
+      row.style.display = row.dataset.region === region ? '' : 'none';
+    }
+  });
+}
+
+function filterRegion(region, btn) {
+  const tbody = document.querySelector('#scenicTable tbody');
+  const rows = tbody.querySelectorAll('tr');
+  const filterBar = btn.parentElement;
+  filterBar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  rows.forEach(row => {
+    if (region === 'all') {
+      row.style.display = '';
+    } else {
+      row.style.display = row.dataset.reg === region ? '' : 'none';
+    }
+  });
+}
+</script>
+</body>
+</html>

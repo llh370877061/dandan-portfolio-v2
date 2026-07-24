@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新疆交通全览 — 马踏飞燕</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  .route-map { background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: 14px; padding: 30px; margin-bottom: 30px; }
+  .route-line { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .route-line:last-child { border-bottom: none; }
+  .route-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .route-name { font-weight: 600; min-width: 140px; font-size: 0.92em; }
+  .route-info { color: var(--muted); font-size: 0.85em; }
+  .route-bar { flex: 1; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.06); position: relative; min-width: 100px; }
+  .route-bar .fill { height: 100%; border-radius: 3px; position: absolute; left: 0; top: 0; }
+  .transport-icon { font-size: 1.8em; text-align: center; padding: 8px; }
+</style>
+</head>
+<body>
+
+<div class="page-header" style="background: radial-gradient(ellipse at 50% 30%, rgba(201,169,110,0.1) 0%, transparent 60%);">
+  <div class="emoji-hero">✈️</div>
+  <h1>新疆交通全览</h1>
+  <p class="subtitle">28座机场 · 10条铁路 · 覆盖全疆的公路网络<br>新疆是全国机场最多的省级行政区</p>
+</div>
+
+<div class="content">
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="num">28</div><div class="label">民用机场</div></div>
+    <div class="stat-card"><div class="num">665+</div><div class="label">运营航线</div></div>
+    <div class="stat-card"><div class="num">2712km</div><div class="label">环塔铁路</div></div>
+    <div class="stat-card"><div class="num">73</div><div class="label">兰新线站点</div></div>
+    <div class="stat-card"><div class="num">16</div><div class="label">地州市</div></div>
+  </div>
+
+  <!-- Airport -->
+  <div class="sec-header"><span class="icon">✈️</span> 机场（28座在用）</div>
+  <p style="color:var(--muted);font-size:0.9em;margin-bottom:16px;">以乌鲁木齐为核心，疆内主要城市间均有航班，航程1-2.5小时。2025年前11月累计运营航线665条。</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <h3>🏙️ 枢纽机场</h3>
+      <ul>
+        <li><strong>乌鲁木齐天山国际</strong> — 4F级，国家门户，2024年吞吐2776万人次</li>
+        <li><strong>喀什徕宁国际</strong> — 4E级，南疆枢纽，吞吐449万人次</li>
+        <li><strong>库尔勒梨城</strong> — 4D级，航空次枢纽，吞吐283万人次</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🏔️ 景区机场</h3>
+      <ul>
+        <li><strong>布尔津喀纳斯</strong> — 距喀纳斯景区最近</li>
+        <li><strong>富蕴可可托海</strong> — 服务可可托海景区</li>
+        <li><strong>新源那拉提</strong> — 服务那拉提草原</li>
+        <li><strong>和静巴音布鲁克</strong> — 新建，服务巴音布鲁克</li>
+        <li><strong>奇台江布拉克</strong> — 新建，服务江布拉克景区</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>机场</th><th>城市</th><th>等级</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>乌鲁木齐天山国际</td><td>乌鲁木齐</td><td>4F</td><td>国家门户枢纽，通航74城+国际</td></tr>
+        <tr><td>喀什徕宁国际</td><td>喀什</td><td>4E</td><td>国家一类航空口岸</td></tr>
+        <tr><td>伊犁伊宁国际</td><td>伊宁</td><td>4D</td><td>国家一类航空口岸</td></tr>
+        <tr><td>库尔勒梨城</td><td>库尔勒</td><td>4D</td><td>新疆航空次枢纽</td></tr>
+        <tr><td>阿克苏红旗坡</td><td>阿克苏</td><td>4C</td><td>吞吐250万人次</td></tr>
+        <tr><td>和田昆冈</td><td>和田</td><td>4D</td><td>军民合用</td></tr>
+        <tr><td>克拉玛依古海</td><td>克拉玛依</td><td>4D</td><td>北疆次枢纽</td></tr>
+        <tr><td>阿勒泰雪都</td><td>阿勒泰</td><td>4C</td><td></td></tr>
+        <tr><td>布尔津喀纳斯</td><td>布尔津</td><td>4C</td><td>距喀纳斯最近</td></tr>
+        <tr><td>富蕴可可托海</td><td>富蕴</td><td>4C</td><td>服务可可托海</td></tr>
+        <tr><td>库车龟兹</td><td>库车</td><td>4C</td><td></td></tr>
+        <tr><td>吐鲁番交河</td><td>吐鲁番</td><td>4E</td><td></td></tr>
+        <tr><td>哈密伊州</td><td>哈密</td><td>4D</td><td></td></tr>
+        <tr><td>新源那拉提</td><td>新源</td><td>4C</td><td>服务那拉提草原</td></tr>
+        <tr><td>昭苏天马</td><td>昭苏</td><td>4C</td><td></td></tr>
+        <tr><td>塔城千泉</td><td>塔城</td><td>4C</td><td></td></tr>
+        <tr><td>博乐阿拉山口</td><td>博乐</td><td>4C</td><td></td></tr>
+        <tr><td>石河子花园</td><td>石河子</td><td>4C</td><td></td></tr>
+        <tr><td>莎车叶尔羌</td><td>莎车</td><td>4C</td><td></td></tr>
+        <tr><td>且末玉都</td><td>且末</td><td>4C</td><td></td></tr>
+        <tr><td>若羌楼兰</td><td>若羌</td><td>4C</td><td></td></tr>
+        <tr><td>图木舒克唐王城</td><td>图木舒克</td><td>4C</td><td></td></tr>
+        <tr><td>于田万方</td><td>于田</td><td>4C</td><td></td></tr>
+        <tr><td>阿拉尔塔里木</td><td>阿拉尔</td><td>4C</td><td></td></tr>
+        <tr><td>塔什库尔干红其拉甫</td><td>塔什库尔干</td><td>4C</td><td>帕米尔高原</td></tr>
+        <tr><td>奇台江布拉克</td><td>奇台</td><td>新建</td><td></td></tr>
+        <tr><td>巴里坤大河</td><td>巴里坤</td><td>新建</td><td></td></tr>
+        <tr><td>和静巴音布鲁克</td><td>和静</td><td>新建</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Railway -->
+  <div class="sec-header"><span class="icon">🚄</span> 铁路网络</div>
+  <p style="color:var(--muted);font-size:0.9em;margin-bottom:16px;">兰新高铁连接内地，南疆铁路环塔克拉玛干沙漠，2022年和若铁路通车后形成2712km沙漠环线。</p>
+
+  <div class="route-map">
+    <div class="route-line">
+      <div class="route-dot" style="background:#e67e22;"></div>
+      <div class="route-name" style="color:#e67e22;">兰新高铁</div>
+      <div class="route-info">乌鲁木齐—兰州 1776km · 动车最快11h45</div>
+      <div class="route-bar"><div class="fill" style="width:100%;background:#e67e22;"></div></div>
+    </div>
+    <div class="route-line">
+      <div class="route-dot" style="background:#c9a96e;"></div>
+      <div class="route-name" style="color:#c9a96e;">南疆铁路</div>
+      <div class="route-info">吐鲁番—喀什 1446km · 普速24h</div>
+      <div class="route-bar"><div class="fill" style="width:82%;background:#c9a96e;"></div></div>
+    </div>
+    <div class="route-line">
+      <div class="route-dot" style="background:#6b8cce;"></div>
+      <div class="route-name" style="color:#6b8cce;">喀和铁路</div>
+      <div class="route-info">喀什—和田 · 2010年开通</div>
+      <div class="route-bar"><div class="fill" style="width:29%;background:#6b8cce;"></div></div>
+    </div>
+    <div class="route-line">
+      <div class="route-dot" style="background:#2ecc71;"></div>
+      <div class="route-name" style="color:#2ecc71;">格库铁路</div>
+      <div class="route-info">库尔勒—格尔木 · 2020年贯通，出疆新通道</div>
+      <div class="route-bar"><div class="fill" style="width:45%;background:#2ecc71;"></div></div>
+    </div>
+    <div class="route-line">
+      <div class="route-dot" style="background:#9b59b6;"></div>
+      <div class="route-name" style="color:#9b59b6;">和若铁路</div>
+      <div class="route-info">和田—若羌 · 2022年通车，环塔铁路闭合</div>
+      <div class="route-bar"><div class="fill" style="width:25%;background:#9b59b6;"></div></div>
+    </div>
+    <div class="route-line">
+      <div class="route-dot" style="background:#e74c3c;"></div>
+      <div class="route-name" style="color:#e74c3c;">精伊霍铁路</div>
+      <div class="route-info">精河—霍尔果斯 · 2010年开通</div>
+      <div class="route-bar"><div class="fill" style="width:20%;background:#e74c3c;"></div></div>
+    </div>
+    <div class="route-line">
+      <div class="route-dot" style="background:#1abc9c;"></div>
+      <div class="route-name" style="color:#1abc9c;">奎北+北阿</div>
+      <div class="route-info">奎屯—北屯—阿勒泰 525km</div>
+      <div class="route-bar"><div class="fill" style="width:30%;background:#1abc9c;"></div></div>
+    </div>
+    <div class="route-line">
+      <div class="route-dot" style="background:#f39c12;"></div>
+      <div class="route-name" style="color:#f39c12;">克塔铁路</div>
+      <div class="route-info">克拉玛依—塔城 · 2019年通车</div>
+      <div class="route-bar"><div class="fill" style="width:15%;background:#f39c12;"></div></div>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>站名</th><th>城市</th><th>功能定位</th></tr></thead>
+      <tbody>
+        <tr><td>乌鲁木齐站</td><td>乌鲁木齐</td><td>特等站，9台18线，新疆最大枢纽</td></tr>
+        <tr><td>哈密站</td><td>哈密</td><td>兰新高铁/普铁重要站点</td></tr>
+        <tr><td>吐鲁番站/北站</td><td>吐鲁番</td><td>普铁/高铁</td></tr>
+        <tr><td>库尔勒站</td><td>库尔勒</td><td>南疆铁路枢纽，格库铁路起点</td></tr>
+        <tr><td>阿克苏站</td><td>阿克苏</td><td>南疆铁路重要站点</td></tr>
+        <tr><td>喀什站</td><td>喀什</td><td>南疆铁路终点</td></tr>
+        <tr><td>和田站</td><td>和田</td><td>喀和铁路终点</td></tr>
+        <tr><td>伊宁站</td><td>伊宁</td><td>精伊霍铁路</td></tr>
+        <tr><td>奎屯站</td><td>奎屯</td><td>北疆铁路枢纽</td></tr>
+        <tr><td>阿勒泰站</td><td>阿勒泰</td><td>北阿铁路</td></tr>
+        <tr><td>阿拉山口站</td><td>阿拉山口</td><td>国际口岸站</td></tr>
+        <tr><td>霍尔果斯站</td><td>霍尔果斯</td><td>国际口岸站</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Distance -->
+  <div class="sec-header"><span class="icon">⏱️</span> 城市间交通时间</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>路段</th><th>距离</th><th>自驾</th><th>飞机</th><th>火车</th></tr></thead>
+      <tbody>
+        <tr><td>乌鲁木齐→吐鲁番</td><td>187km</td><td>2.5h</td><td>—</td><td>动车1h</td></tr>
+        <tr><td>乌鲁木齐→哈密</td><td>593km</td><td>6-7h</td><td>1.5h</td><td>动车4.5h</td></tr>
+        <tr><td>乌鲁木齐→库尔勒</td><td>470km</td><td>5-6h</td><td>1h</td><td>普速5-6h</td></tr>
+        <tr><td>乌鲁木齐→伊宁</td><td>670km</td><td>7-8h</td><td>1.5h</td><td>动车5h</td></tr>
+        <tr><td>乌鲁木齐→阿勒泰</td><td>500km</td><td>6h</td><td>1.5h</td><td>普速10h</td></tr>
+        <tr><td>乌鲁木齐→阿克苏</td><td>1008km</td><td>12h</td><td>2h</td><td>普速14-16h</td></tr>
+        <tr><td>乌鲁木齐→喀什</td><td>1465km</td><td>17-20h</td><td>2h</td><td>普速24h</td></tr>
+        <tr><td>乌鲁木齐→和田</td><td>1400km</td><td>20h</td><td>2.5h</td><td>普速28h</td></tr>
+        <tr><td>喀什→塔什库尔干</td><td>290km</td><td>5h</td><td>—</td><td>—</td></tr>
+        <tr><td>库尔勒→库车</td><td>294km</td><td>4.5h</td><td>—</td><td>—</td></tr>
+        <tr><td>布尔津→喀纳斯</td><td>137km</td><td>3h</td><td>—</td><td>—</td></tr>
+        <tr><td>伊宁→那拉提</td><td>270km</td><td>4h</td><td>—</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Tips -->
+  <div class="info-box">
+    <h3>💡 交通方式选择建议</h3>
+    <ul>
+      <li><strong>飞机</strong>：长距离跨区域首选（乌市→喀什/和田/阿勒泰），航程1-2.5h，旺季票价高</li>
+      <li><strong>火车/动车</strong>：兰新高铁最方便，南疆普速可夕发朝至省住宿费</li>
+      <li><strong>自驾/包车</strong>：新疆旅游最推荐，随走随停。租车淡季300-500元/天，旺季翻倍</li>
+      <li><strong>长途汽车</strong>：覆盖所有县市，票价最低但耗时最长</li>
+    </ul>
+  </div>
+
+  <a class="back-link" href="../index.html">← 返回马踏飞燕</a>
+</div>
+</body>
+</html>

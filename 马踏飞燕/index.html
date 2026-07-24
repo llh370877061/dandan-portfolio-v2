@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>马踏飞燕 — 一句话，生成你的旅行</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&display=swap');
+  :root {
+    --bg: #0a0a0f;
+    --card: #14141f;
+    --accent: #c9a96e;
+    --accent2: #6b8cce;
+    --text: #e8e8e8;
+    --muted: #777;
+    --border: #222;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Noto Serif SC", "Microsoft YaHei", serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px 20px;
+    position: relative;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(201,169,110,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 50%, rgba(107,140,206,0.06) 0%, transparent 50%),
+      var(--bg);
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a96e' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.5;
+  }
+
+  .logo-area {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 20px;
+  }
+  .logo-icon {
+    font-size: 4em;
+    margin-bottom: 10px;
+    filter: drop-shadow(0 0 30px rgba(201,169,110,0.3));
+  }
+  .hero h1 {
+    font-family: "Noto Serif SC", serif;
+    font-size: 3.8em;
+    font-weight: 900;
+    background: linear-gradient(135deg, #c9a96e, #e8d5a3, #c9a96e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 0.15em;
+    position: relative;
+    z-index: 1;
+  }
+  .hero .tagline {
+    font-family: "Noto Serif SC", serif;
+    font-size: 1.2em;
+    color: var(--muted);
+    margin-top: 12px;
+    letter-spacing: 0.3em;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Search */
+  .search-box {
+    position: relative;
+    z-index: 1;
+    margin-top: 50px;
+    width: 100%;
+    max-width: 640px;
+  }
+  .search-box input {
+    width: 100%;
+    padding: 20px 28px;
+    font-size: 1.1em;
+    background: rgba(20,20,31,0.9);
+    border: 1px solid var(--accent);
+    border-radius: 16px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .search-box input::placeholder { color: #555; }
+  .search-box input:focus {
+    border-color: #e8d5a3;
+    box-shadow: 0 0 30px rgba(201,169,110,0.15);
+  }
+  .search-box button {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 12px 28px;
+    background: var(--accent);
+    color: #0a0a0f;
+    border: none;
+    border-radius: 12px;
+    font-size: 1em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .search-box button:hover { background: #e8d5a3; }
+
+  .examples {
+    position: relative;
+    z-index: 1;
+    margin-top: 24px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .examples span {
+    padding: 8px 18px;
+    border: 1px solid #333;
+    border-radius: 20px;
+    font-size: 0.85em;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .examples span:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* Hot destinations */
+  .section-title {
+    text-align: center;
+    padding: 80px 20px 40px;
+  }
+  .section-title h2 {
+    font-family: "Noto Serif SC", serif;
+    font-size: 2em;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+  .section-title p {
+    color: var(--muted);
+    margin-top: 8px;
+    font-size: 0.95em;
+  }
+
+  .dest-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  .dest-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s, border-color 0.3s;
+    text-decoration: none;
+    color: var(--text);
+  }
+  .dest-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+  }
+  .dest-card .img-area {
+    height: 180px;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5em;
+    position: relative;
+  }
+  .dest-card .img-area .badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 4px 12px;
+    background: rgba(201,169,110,0.9);
+    color: #0a0a0f;
+    border-radius: 8px;
+    font-size: 0.35em;
+    font-weight: 700;
+  }
+  .dest-card .info {
+    padding: 20px;
+  }
+  .dest-card .info h3 {
+    font-family: "Noto Serif SC", serif;
+    font-size: 1.2em;
+    margin-bottom: 8px;
+  }
+  .dest-card .info p {
+    font-size: 0.88em;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .dest-card .info .tags {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .dest-card .info .tags span {
+    padding: 4px 10px;
+    background: rgba(107,140,206,0.1);
+    color: var(--accent2);
+    border-radius: 8px;
+    font-size: 0.78em;
+  }
+
+  /* Feature */
+  .features {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px 100px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    text-align: center;
+  }
+  .feat { padding: 20px; }
+  .feat .icon { font-size: 2.5em; margin-bottom: 12px; }
+  .feat h4 {
+    font-family: "Noto Serif SC", serif;
+    font-size: 1.1em;
+    margin-bottom: 8px;
+    color: var(--accent);
+  }
+  .feat p { font-size: 0.88em; color: var(--muted); line-height: 1.6; }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: #444;
+    font-size: 0.82em;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 2.4em; }
+    .features { grid-template-columns: 1fr; }
+    .dest-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="logo-area">
+    <div class="logo-icon">🏇</div>
+    <h1>马踏飞燕</h1>
+    <p class="tagline">一句话 · 多种方案 · 自由选择</p>
+  </div>
+
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="你想去哪？比如：深圳直飞喀什，南疆深度游10天" />
+    <button onclick="goGuide()">出发</button>
+  </div>
+
+  <div class="examples">
+    <span onclick="fillAndGo('深圳直飞喀什，南疆深度游10天')">🏔️ 喀什南疆10天</span>
+    <span onclick="fillAndGo('深圳出发，北疆阿勒泰自驾')">🚗 北疆自驾</span>
+    <span onclick="fillAndGo('带孩子去云南亲子游一周')">👨‍👩‍👧 云南亲子游</span>
+    <span onclick="fillAndGo('成都出发，川西大环线自驾')">🌄 川西大环线</span>
+  </div>
+</div>
+
+<div class="section-title">
+  <h2>热门线路</h2>
+  <p>每条线路都有多种方案，挑你喜欢的</p>
+</div>
+
+<div class="dest-grid">
+  <a class="dest-card" href="xinjiang-kashgar.html">
+    <div class="img-area" style="background:linear-gradient(135deg,#2d1810,#1a2a3a);">
+      🏔️
+      <span class="badge">首发</span>
+    </div>
+    <div class="info">
+      <h3>喀什 · 南疆深度游</h3>
+      <p>喀什古城→白沙湖→塔县→盘龙古道→喀拉库勒湖→塔克拉玛干沙漠。多种交通方案，附详细住宿和价格对比。</p>
+      <div class="tags">
+        <span>人文风情</span>
+        <span>帕米尔高原</span>
+        <span>古城夜市</span>
+        <span>亲子友好</span>
+      </div>
+    </div>
+  </a>
+
+  <div class="dest-card" style="opacity:0.5; pointer-events:none;">
+    <div class="img-area" style="background:linear-gradient(135deg,#1a2a1a,#0a1a2a);">🌿</div>
+    <div class="info">
+      <h3>阿勒泰 · 北疆秋色</h3>
+      <p>喀纳斯→禾木→白哈巴→五彩滩→魔鬼城。即将上线…</p>
+      <div class="tags"><span>即将开放</span></div>
+    </div>
+  </div>
+
+  <div class="dest-card" style="opacity:0.5; pointer-events:none;">
+    <div class="img-area" style="background:linear-gradient(135deg,#1a1a2a,#2a1a2a);">🌸</div>
+    <div class="info">
+      <h3>云南 · 亲子探索</h3>
+      <p>大理→丽江→香格里拉→西双版纳。即将上线…</p>
+      <div class="tags"><span>即将开放</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="features">
+  <div class="feat" onclick="location.href='xinjiang-database.html'" style="cursor:pointer;">
+    <div class="icon">📊</div>
+    <h4>综合资料库</h4>
+    <p>交通、景点、美食、人文——新疆旅游全数据，一目了然</p>
+  </div>
+  <div class="feat">
+    <div class="icon">🗺️</div>
+    <h4>地图实景</h4>
+    <p>每个景点在地图上标注，路线、距离、时间一目了然</p>
+  </div>
+  <div class="feat">
+    <div class="icon">⚖️</div>
+    <h4>多方案对比</h4>
+    <p>飞机/火车/自驾/包车，价格、耗时、舒适度全部标清</p>
+  </div>
+</div>
+
+<footer>
+  <p>马踏飞燕 · 一句话生成你的旅行方案</p>
+</footer>
+
+<script>
+function fillAndGo(text) {
+  document.getElementById('searchInput').value = text;
+  goGuide();
+}
+function goGuide() {
+  const v = document.getElementById('searchInput').value.trim();
+  if (!v) return;
+  if (v.includes('喀什') || v.includes('南疆') || v.includes('新疆')) {
+    window.location.href = 'xinjiang-kashgar.html';
+  } else {
+    alert('更多目的地正在开发中，敬请期待！');
+  }
+}
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') goGuide();
+});
+</script>
+</body>
+</html>
