@@ -20,29 +20,23 @@
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
     font-family: -apple-system, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.75;
-    scroll-behavior: smooth;
+    background: var(--bg); color: var(--text); line-height: 1.75; scroll-behavior: smooth;
   }
   nav {
     position: sticky; top: 0; z-index: 100;
-    background: rgba(255,255,255,.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: 14px 0;
+    background: rgba(255,255,255,.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border); padding: 14px 0;
   }
   nav .inner {
     max-width: 1100px; margin: 0 auto;
-    display: flex; align-items: center; gap: 28px;
+    display: flex; align-items: center; gap: 24px;
     padding: 0 24px; flex-wrap: wrap;
   }
-  nav .logo { font-size: 1.15rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
-  nav a { text-decoration: none; color: var(--text2); font-size: .92rem; transition: color .2s; }
+  nav .logo { font-size: 1.1rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
+  nav a { text-decoration: none; color: var(--text2); font-size: .9rem; transition: color .2s; }
   nav a:hover { color: var(--accent); }
   .hero {
-    max-width: 1100px; margin: 0 auto; padding: 56px 24px 40px;
-    text-align: center;
+    max-width: 1100px; margin: 0 auto; padding: 56px 24px 40px; text-align: center;
   }
   .hero h1 {
     font-size: 2.2rem; font-weight: 800;
@@ -51,117 +45,79 @@
     margin-bottom: 12px;
   }
   .hero .subtitle { font-size: 1.05rem; color: var(--text2); max-width: 640px; margin: 0 auto; }
-  section {
-    max-width: 1100px; margin: 0 auto 56px;
-    padding: 0 24px;
-  }
+  section { max-width: 1100px; margin: 0 auto 56px; padding: 0 24px; }
   section h2 {
     font-size: 1.5rem; font-weight: 700; margin-bottom: 20px;
-    padding-left: 14px;
-    border-left: 4px solid var(--accent);
-    color: var(--accent);
+    padding-left: 14px; border-left: 4px solid var(--accent); color: var(--accent);
   }
   section h3 { font-size: 1.15rem; font-weight: 600; margin: 24px 0 12px; }
   p { margin-bottom: 14px; }
   .map-container {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    margin-bottom: 32px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 24px;
   }
-  .map-container img {
-    width: 100%; height: auto; display: block;
-  }
+  .map-container img { width: 100%; height: auto; display: block; }
   .map-caption {
-    padding: 16px 20px;
-    font-size: .95rem;
-    color: var(--text2);
-    border-top: 1px solid var(--border);
-    background: #fafafa;
+    padding: 16px 20px; font-size: .92rem; color: var(--text2);
+    border-top: 1px solid var(--border); background: #fafafa;
   }
   .map-caption strong { color: var(--accent); }
+  /* 风险卡片 */
+  .risk-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px; margin-top: 20px;
+  }
+  .risk-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow);
+    border-left: 4px solid #ccc; transition: transform .2s;
+  }
+  .risk-card:hover { transform: translateY(-2px); }
+  .risk-card.safe { border-left-color: #2d6a4f; }
+  .risk-card.medium { border-left-color: #e9c46a; }
+  .risk-card.danger { border-left-color: #e63946; }
+  .risk-card.warn { border-left-color: #f77f00; }
+  .risk-card .level {
+    display: inline-block; font-size: .75rem; font-weight: 600;
+    padding: 2px 8px; border-radius: 12px; margin-bottom: 8px;
+  }
+  .risk-card.safe .level { background: #d8f3dc; color: #2d6a4f; }
+  .risk-card.medium .level { background: #fef3c7; color: #b45309; }
+  .risk-card.danger .level { background: #fee2e2; color: #dc2626; }
+  .risk-card.warn .level { background: #ffedd5; color: #c2410c; }
+  .risk-card h4 { font-size: 1rem; margin-bottom: 6px; }
+  .risk-card p { font-size: .88rem; color: var(--text2); margin-bottom: 6px; }
+  .risk-card .note { font-size: .82rem; color: #999; font-style: italic; }
+  /* 风景卡片 */
   .scenic-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px; margin-top: 16px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px; margin-top: 16px;
   }
   .scenic-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-    box-shadow: var(--shadow);
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow);
     transition: transform .2s;
   }
   .scenic-card:hover { transform: translateY(-2px); }
   .scenic-card .region {
-    display: inline-block;
-    background: var(--accent-light);
-    color: var(--accent);
-    font-size: .78rem; font-weight: 600;
-    padding: 3px 10px; border-radius: 20px;
-    margin-bottom: 10px;
+    display: inline-block; background: var(--accent-light); color: var(--accent);
+    font-size: .75rem; font-weight: 600; padding: 2px 8px; border-radius: 12px; margin-bottom: 8px;
   }
-  .scenic-card h4 { font-size: 1.05rem; margin-bottom: 8px; }
-  .scenic-card p { font-size: .92rem; color: var(--text2); margin-bottom: 0; }
-  .scenic-card .tag-list { margin-top: 10px; }
+  .scenic-card h4 { font-size: 1rem; margin-bottom: 6px; }
+  .scenic-card p { font-size: .88rem; color: var(--text2); margin-bottom: 0; }
+  .scenic-card .tag-list { margin-top: 8px; }
   .scenic-card .tag-list span {
-    display: inline-block;
-    background: #f0f0f0;
-    color: #666;
-    font-size: .78rem;
-    padding: 2px 8px;
-    border-radius: 12px;
-    margin-right: 6px;
-    margin-bottom: 4px;
+    display: inline-block; background: #f0f0f0; color: #666;
+    font-size: .75rem; padding: 2px 6px; border-radius: 10px; margin-right: 4px; margin-bottom: 4px;
   }
-  .route-info {
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    border-radius: var(--radius);
-    padding: 28px;
-    margin-top: 20px;
-  }
-  .route-info h3 { margin-top: 0; color: var(--accent); }
-  .route-steps {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 16px;
-  }
-  .route-step {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 16px;
-    flex: 1;
-    min-width: 140px;
-    text-align: center;
-  }
-  .route-step .num {
-    display: inline-block;
-    width: 28px; height: 28px;
-    line-height: 28px;
-    border-radius: 50%;
-    background: var(--accent);
-    color: white;
-    font-size: .85rem;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-  .route-step .place { font-weight: 600; font-size: .95rem; }
-  .route-step .desc { font-size: .82rem; color: var(--text2); margin-top: 4px; }
   footer {
-    text-align: center; padding: 40px 24px;
-    color: var(--text2); font-size: .85rem;
-    border-top: 1px solid var(--border);
-    margin-top: 48px;
+    text-align: center; padding: 40px 24px; color: var(--text2); font-size: .85rem;
+    border-top: 1px solid var(--border); margin-top: 48px;
   }
   @media (max-width: 600px) {
     .hero h1 { font-size: 1.6rem; }
-    nav .inner { gap: 12px; }
-    .route-steps { flex-direction: column; }
+    nav .inner { gap: 10px; }
+    .risk-grid, .scenic-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -170,33 +126,33 @@
 <nav>
   <div class="inner">
     <span class="logo">交通地图与风景</span>
-    <a href="#xinjiang">新疆</a>
-    <a href="#china">中国</a>
-    <a href="#world">世界</a>
+    <a href="#xinjiang-traffic">新疆交通</a>
+    <a href="#china-traffic">中国交通</a>
+    <a href="#xinjiang-scenic">新疆景点</a>
+    <a href="#xinjiang-route">自驾线路</a>
     <a href="#scenic">风景名胜</a>
-    <a href="#route">自驾线路</a>
   </div>
 </nav>
 
 <div class="hero">
   <h1>交通地图与风景指南</h1>
-  <p class="subtitle">机场、火车站、高铁站一目了然，搭配精选风景名胜与自驾线路，说走就走。</p>
+  <p class="subtitle">机场、火车站一目了然，景点分布清晰，自驾线路风险标注——说走就走，安全第一。</p>
 </div>
 
-<!-- ═══ 新疆 ═══ -->
-<section id="xinjiang">
-  <h2>新疆维吾尔自治区 · 交通枢纽</h2>
+<!-- ═══ 新疆交通枢纽 ═══ -->
+<section id="xinjiang-traffic">
+  <h2>新疆 · 交通枢纽</h2>
   <div class="map-container">
     <img src="新疆交通枢纽地图.png" alt="新疆交通枢纽地图">
     <div class="map-caption">
       <strong>图例：</strong>机场（红▲）| 火车站（蓝■）| 高铁站（绿◆）<br>
-      新疆现有机场16个，覆盖主要地州市；兰新高铁贯通乌鲁木齐至哈密段。
+      新疆现有机场16个，覆盖所有地州市；兰新高铁贯通乌鲁木齐至哈密段。
     </div>
   </div>
 </section>
 
-<!-- ═══ 中国 ═══ -->
-<section id="china">
+<!-- ═══ 中国交通枢纽 ═══ -->
+<section id="china-traffic">
   <h2>中国 · 交通枢纽</h2>
   <div class="map-container">
     <img src="中国交通枢纽地图.png" alt="中国交通枢纽地图">
@@ -207,181 +163,181 @@
   </div>
 </section>
 
-<!-- ═══ 世界 ═══ -->
-<section id="world">
-  <h2>世界 · 交通枢纽</h2>
+<!-- ═══ 新疆景点分布 ═══ -->
+<section id="xinjiang-scenic">
+  <h2>新疆 · 景点分布</h2>
   <div class="map-container">
-    <img src="世界交通枢纽地图.png" alt="世界交通枢纽地图">
+    <img src="新疆景点分布图.png" alt="新疆景点分布图">
     <div class="map-caption">
-      <strong>图例：</strong>机场（红▲）| 高铁站（绿◆）| 火车站（蓝■）| 长途汽车站（橙●）<br>
-      覆盖六大洲主要交通枢纽，包括80个国际机场、21个高铁站、25个火车站和15个长途汽车站。
+      <strong>交通枢纽：</strong>机场（红▲）| 火车站（蓝■）| 高铁站（绿◆）<br>
+      <strong>景点类型：</strong>自然风光（橙★）| 历史文化（紫★）| 公路景观（蓝⚑）
     </div>
   </div>
-</section>
 
-<!-- ═══ 风景名胜 ═══ -->
-<section id="scenic">
-  <h2>精选风景名胜</h2>
-
-  <h3>新疆</h3>
+  <h3>新疆精选风景名胜</h3>
   <div class="scenic-grid">
     <div class="scenic-card">
       <span class="region">北疆</span>
       <h4>喀纳斯湖</h4>
-      <p>被誉为"神的后花园"，湖水随季节变色，秋季金黄白桦林与碧蓝湖水交相辉映。湖怪传说更添神秘色彩。</p>
+      <p>"神的后花园"，秋季金黄白桦林与碧蓝湖水交相辉映。湖怪传说更添神秘。</p>
       <div class="tag-list"><span>湖泊</span><span>秋色</span><span>徒步</span></div>
     </div>
     <div class="scenic-card">
       <span class="region">北疆</span>
       <h4>赛里木湖</h4>
-      <p>"大西洋最后一滴眼泪"，海拔2073米的高山冷水湖。夏季湖畔花海遍野，远处雪山倒映湖中。</p>
-      <div class="tag-list"><span>高山湖</span><span>花海</span><span>环湖自驾</span></div>
-    </div>
-    <div class="scenic-card">
-      <span class="region">南疆</span>
-      <h4>塔克拉玛干沙漠</h4>
-      <p>中国最大沙漠，世界第二大流动沙漠。沙漠公路穿越其中，体验"死亡之海"的壮阔与孤寂。</p>
-      <div class="tag-list"><span>沙漠</span><span>越野</span><span>星空</span></div>
-    </div>
-    <div class="scenic-card">
-      <span class="region">南疆</span>
-      <h4>帕米尔高原</h4>
-      <p>"世界屋脊"的东端，慕士塔格峰终年积雪，塔什库尔干石头城遗址诉说千年丝路故事。</p>
-      <div class="tag-list"><span>高原</span><span>雪山</span><span>丝绸之路</span></div>
+      <p>"大西洋最后一滴眼泪"，夏季花海遍野，远处雪山倒映湖中。</p>
+      <div class="tag-list"><span>高山湖</span><span>花海</span><span>环湖</span></div>
     </div>
     <div class="scenic-card">
       <span class="region">伊犁</span>
       <h4>那拉提草原</h4>
-      <p>世界四大草原之一的亚高山草甸植物区，夏季绿毯般的草原上野花盛开，哈萨克牧民的毡房点缀其间。</p>
+      <p>世界四大草原之一，绿毯般的草原上野花盛开，哈萨克毡房点缀其间。</p>
       <div class="tag-list"><span>草原</span><span>骑马</span><span>民宿</span></div>
     </div>
     <div class="scenic-card">
+      <span class="region">南疆</span>
+      <h4>塔克拉玛干沙漠</h4>
+      <p>中国最大沙漠，沙漠公路穿越"死亡之海"，体验壮阔与孤寂。</p>
+      <div class="tag-list"><span>沙漠</span><span>越野</span><span>星空</span></div>
+    </div>
+    <div class="scenic-card">
+      <span class="region">帕米尔</span>
+      <h4>慕士塔格峰 · 盘龙古道</h4>
+      <p>"冰山之父"与网红公路，海拔4000m+的高原壮美。</p>
+      <div class="tag-list"><span>雪山</span><span>公路</span><span>高原</span></div>
+    </div>
+    <div class="scenic-card">
       <span class="region">吐鲁番</span>
-      <h4>火焰山</h4>
-      <p>《西游记》中的火焰山原型，夏季地表温度可达80°C。赤红色砂岩在阳光下如烈焰燃烧。</p>
-      <div class="tag-list"><span>地质奇观</span><span>文化</span><span>葡萄沟</span></div>
+      <h4>火焰山 · 交河故城</h4>
+      <p>《西游记》火焰山原型，世遗交河故城千年不朽。</p>
+      <div class="tag-list"><span>地质</span><span>世遗</span><span>葡萄</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 自驾线路攻略 ═══ -->
+<section id="xinjiang-route">
+  <h2>新疆 · 自驾线路攻略</h2>
+
+  <div class="map-container">
+    <img src="新疆自驾线路风险图.png" alt="新疆自驾线路风险标注图">
+    <div class="map-caption">
+      <strong>线路状态：</strong>
+      绿色实线 = 已成熟 | 黄色虚线 = 季节性/修建中 | 红色虚线 = 高风险 | 橙色点划线 = 中高风险
     </div>
   </div>
 
-  <h3>中国其他地区精选</h3>
+  <h3>线路详情与风险提示</h3>
+  <div class="risk-grid">
+    <div class="risk-card safe">
+      <span class="level">低风险 · 已成熟</span>
+      <h4>① 北疆经典环线</h4>
+      <p>乌鲁木齐→赛里木湖→伊宁→那拉提→巴音布鲁克→库尔勒→乌鲁木齐</p>
+      <p>约2800km · 7-10天 · 全程铺装路面，全年通行</p>
+      <p class="note">最适合首次自驾新疆的线路，补给充足，住宿方便</p>
+    </div>
+    <div class="risk-card safe">
+      <span class="level">低风险 · 已成熟</span>
+      <h4>② 东疆丝路线</h4>
+      <p>乌鲁木齐→吐鲁番→鄯善→哈密→敦煌</p>
+      <p>约800km · 3-4天 · 连霍高速G30，路况优良</p>
+      <p class="note">沿途可游览火焰山、交河故城、库木塔格沙漠</p>
+    </div>
+    <div class="risk-card safe">
+      <span class="level">低风险 · 已成熟</span>
+      <h4>③ 南疆丝路线</h4>
+      <p>乌鲁木齐→库尔勒→阿克苏→喀什→和田→若羌→库尔勒</p>
+      <p>约3500km · 10-12天 · G3012+沙漠公路</p>
+      <p class="note">体验南疆人文风情，喀什古城、帕米尔高原必去</p>
+    </div>
+    <div class="risk-card medium">
+      <span class="level">中风险 · 季节性通行</span>
+      <h4>④ 独库公路</h4>
+      <p>独山子→乔尔玛→巴音布鲁克→库车</p>
+      <p>约560km · 2-3天 · 仅6-10月通行</p>
+      <p class="note">"中国最美公路"，一天穿越四季。冬季封路，雨季偶发落石</p>
+    </div>
+    <div class="risk-card medium">
+      <span class="level">中风险 · 季节性通行</span>
+      <h4>⑤ 伊昭公路</h4>
+      <p>伊宁→昭苏→阿克苏</p>
+      <p>约350km · 1-2天 · 仅6-10月通行</p>
+      <p class="note">白石峰达坂冬季封路，弯道多需谨慎驾驶</p>
+    </div>
+    <div class="risk-card medium">
+      <span class="level">中风险 · 高海拔</span>
+      <h4>⑥ 盘龙古道</h4>
+      <p>喀什→塔什库尔干→盘龙古道→塔县</p>
+      <p>约300km · 1-2天 · 海拔4000m+</p>
+      <p class="note">网红公路，600多个弯道。注意高反，弯道密集需低速</p>
+    </div>
+    <div class="risk-card danger">
+      <span class="level">高风险 · 滑坡/泥石流</span>
+      <h4>⑦ 独库公路北段</h4>
+      <p>独山子→乔尔玛</p>
+      <p>约120km · 7-8月暴雨期风险最高</p>
+      <p class="note">⚠️ 滑坡、泥石流、落石多发段，雨天尽量绕行</p>
+    </div>
+    <div class="risk-card danger">
+      <span class="level">高风险 · 冰雪路段</span>
+      <h4>⑧ 独库公路中段</h4>
+      <p>乔尔玛→巴音布鲁克</p>
+      <p>约150km · 海拔3000m+，大雾、暗冰</p>
+      <p class="note">⚠️ 冰达坂路段，即使夏季也可能遇到冰雪</p>
+    </div>
+    <div class="risk-card danger">
+      <span class="level">高风险 · 高原路段</span>
+      <h4>⑨ 中巴公路G314</h4>
+      <p>喀什→塔什库尔干</p>
+      <p>约300km · 海拔3500-4700m</p>
+      <p class="note">⚠️ 高反、暴风雪、路面结冰，需携带防滑链</p>
+    </div>
+    <div class="risk-card warn">
+      <span class="level">中高风险 · 补给稀少</span>
+      <h4>⑩ 塔克拉玛干沙漠公路</h4>
+      <p>库尔勒→塔中→和田</p>
+      <p>约520km无加油站区间</p>
+      <p class="note">⚠️ 沙尘暴、极端高温（夏季地表70°C+）、补给极少</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 精选风景 ═══ -->
+<section id="scenic">
+  <h2>精选风景名胜</h2>
+
+  <h3>中国其他地区</h3>
   <div class="scenic-grid">
     <div class="scenic-card">
       <span class="region">云南</span>
       <h4>丽江古城 · 玉龙雪山</h4>
-      <p>纳西族古城与终年积雪的玉龙雪山隔城相望，古城小桥流水，雪山巍峨壮丽。</p>
+      <p>纳西族古城与终年积雪的玉龙雪山隔城相望。</p>
       <div class="tag-list"><span>古城</span><span>雪山</span><span>民族文化</span></div>
     </div>
     <div class="scenic-card">
       <span class="region">四川</span>
       <h4>九寨沟</h4>
-      <p>"九寨归来不看水"，翠海、叠瀑、彩林、雪峰、藏情并称九寨五绝。</p>
+      <p>"九寨归来不看水"，翠海、叠瀑、彩林、雪峰、藏情五绝。</p>
       <div class="tag-list"><span>水景</span><span>彩林</span><span>藏族</span></div>
     </div>
     <div class="scenic-card">
       <span class="region">西藏</span>
       <h4>布达拉宫 · 纳木错</h4>
-      <p>世界屋脊上的圣殿与天湖，离天空最近的信仰与自然。</p>
+      <p>世界屋脊上的圣殿与天湖，离天空最近的信仰。</p>
       <div class="tag-list"><span>宫殿</span><span>圣湖</span><span>信仰</span></div>
     </div>
     <div class="scenic-card">
       <span class="region">桂林</span>
       <h4>漓江 · 阳朔</h4>
-      <p>"桂林山水甲天下"，漓江竹筏漂流，两岸喀斯特峰林如水墨画卷。</p>
+      <p>"桂林山水甲天下"，竹筏漂流，喀斯特峰林如水墨画。</p>
       <div class="tag-list"><span>山水</span><span>竹筏</span><span>田园</span></div>
-    </div>
-  </div>
-
-  <h3>世界精选</h3>
-  <div class="scenic-grid">
-    <div class="scenic-card">
-      <span class="region">瑞士</span>
-      <h4>少女峰 · 马特洪峰</h4>
-      <p>阿尔卑斯山脉的明珠，雪山、冰川、湖泊与木屋村庄构成最经典的欧洲山地风光。</p>
-      <div class="tag-list"><span>雪山</span><span>冰川</span><span>火车</span></div>
-    </div>
-    <div class="scenic-card">
-      <span class="region">日本</span>
-      <h4>富士山 · 京都</h4>
-      <p>日本精神象征与千年古都，樱花季的哲学之道、岚山竹林美到窒息。</p>
-      <div class="tag-list"><span>火山</span><span>古寺</span><span>樱花</span></div>
-    </div>
-    <div class="scenic-card">
-      <span class="region">新西兰</span>
-      <h4>皇后镇 · 米尔福德峡湾</h4>
-      <p>南阿尔卑斯山下的冒险之都，峡湾、雪山、星空，《指环王》取景地。</p>
-      <div class="tag-list"><span>峡湾</span><span>极限运动</span><span>星空</span></div>
-    </div>
-    <div class="scenic-card">
-      <span class="region">冰岛</span>
-      <h4">黄金圈 · 蓝冰洞</h4>
-      <p>冰与火的国度，间歇泉、极光、黑沙滩、蓝冰洞，地球上最超现实的风景。</p>
-      <div class="tag-list"><span>极光</span><span>冰川</span><span>温泉</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ 自驾线路 ═══ -->
-<section id="route">
-  <h2>自驾游风景线路</h2>
-
-  <div class="map-container">
-    <img src="自驾游风景线路.png" alt="自驾游风景线路图">
-    <div class="map-caption">
-      <strong>精选自驾线路：</strong>涵盖新疆、川藏、云南、青海及海外经典自驾路线，标注沿途风景点与里程。
-    </div>
-  </div>
-
-  <div class="route-info">
-    <h3>推荐线路详情</h3>
-
-    <div class="route-steps">
-      <div class="route-step">
-        <div class="num">1</div>
-        <div class="place">北疆环线</div>
-        <div class="desc">乌鲁木齐→赛里木湖→伊宁→那拉提→巴音布鲁克→喀纳斯<br>约2800km · 7-10天</div>
-      </div>
-      <div class="route-step">
-        <div class="num">2</div>
-        <div class="place">独库公路</div>
-        <div class="desc">克拉玛依→独山子→巴音布鲁克→库车<br>穿越天山 · 一天看四季 · 约560km</div>
-      </div>
-      <div class="route-step">
-        <div class="num">3</div>
-        <div class="place">南疆大环线</div>
-        <div class="desc">库尔勒→塔中→和田→喀什→塔县→阿克苏<br>穿越沙漠公路 · 约3000km · 8-10天</div>
-      </div>
-      <div class="route-step">
-        <div class="num">4</div>
-        <div class="place">川藏线G318</div>
-        <div class="desc">成都→雅安→康定→理塘→林芝→拉萨<br>中国最美景观大道 · 约2150km</div>
-      </div>
-      <div class="route-step">
-        <div class="num">5</div>
-        <div class="place">滇藏线</div>
-        <div class="desc">昆明→大理→丽江→香格里拉→芒康→拉萨<br>从热带到雪山 · 约2300km</div>
-      </div>
-      <div class="route-step">
-        <div class="num">6</div>
-        <div class="place">青海大环线</div>
-        <div class="desc">西宁→青海湖→茶卡→德令哈→敦煌→张掖→西宁<br>最美西北环线 · 约2800km · 7天</div>
-      </div>
-      <div class="route-step">
-        <div class="num">7</div>
-        <div class="place">瑞士阿尔卑斯</div>
-        <div class="desc">日内瓦→因特拉肯→少女峰→采尔马特→卢塞恩<br>黄金列车+自驾 · 约600km · 5天</div>
-      </div>
-      <div class="route-step">
-        <div class="num">8</div>
-        <div class="place">新西兰南岛</div>
-        <div class="desc">基督城→蒂卡波→皇后镇→米尔福德→瓦纳卡<br>环岛自驾 · 约2000km · 8-10天</div>
-      </div>
     </div>
   </div>
 </section>
 
 <footer>
   <p>交通地图与风景指南 · 整理于 2026年7月24日</p>
-  <p style="margin-top:6px; font-size:.82rem; color:#999;">愿每一段旅程，都遇见好风景。</p>
+  <p style="margin-top:6px; font-size:.82rem; color:#999;">愿每一段旅程，都遇见好风景。安全出行，平安归来。</p>
 </footer>
 
 </body>
