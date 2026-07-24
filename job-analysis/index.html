@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 招聘岗位与比赛资料汇编</title>
+<style>
+  :root {
+    --bg: #faf9f6;
+    --card: #fff;
+    --accent: #1a73e8;
+    --accent-light: #e8f0fe;
+    --text: #1b1b1b;
+    --text2: #555;
+    --border: #e0e0e0;
+    --shadow: 0 2px 12px rgba(0,0,0,.06);
+    --radius: 12px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+  }
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0;
+  }
+  nav .inner {
+    max-width: 960px; margin: 0 auto;
+    display: flex; align-items: center; gap: 20px;
+    padding: 0 24px; flex-wrap: wrap;
+  }
+  nav .logo { font-size: 1.1rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
+  nav a { text-decoration: none; color: var(--text2); font-size: .9rem; padding: 4px 12px; border-radius: 6px; transition: all .2s; }
+  nav a:hover, nav a.active { background: var(--accent-light); color: var(--accent); }
+  .hero {
+    max-width: 960px; margin: 0 auto; padding: 48px 24px 32px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 1.8em; font-weight: 800; margin-bottom: 8px; }
+  .hero p { color: var(--text2); font-size: 1em; }
+  .tabs {
+    max-width: 960px; margin: 0 auto; padding: 0 24px;
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 8px 20px; border: 1px solid var(--border); border-radius: 20px;
+    background: white; cursor: pointer; font-size: .9rem; transition: all .2s;
+  }
+  .tab-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .tab-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+  .content {
+    max-width: 960px; margin: 24px auto; padding: 0 24px 60px;
+  }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  .section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+  }
+  .section h2 {
+    font-size: 1.15em; font-weight: 700;
+    margin-bottom: 12px; color: var(--accent);
+    border-bottom: 2px solid var(--accent-light);
+    padding-bottom: 8px;
+  }
+  .section h3 { font-size: 1.05em; font-weight: 600; margin: 16px 0 8px; }
+  .section h4 { font-size: .95em; font-weight: 600; margin: 12px 0 6px; color: var(--text2); }
+  .section p, .section li { font-size: .92em; }
+  .section ul, .section ol { padding-left: 1.5em; margin: 8px 0; }
+  .section li { margin-bottom: 4px; }
+  table {
+    width: 100%; border-collapse: collapse; margin: 12px 0; font-size: .88em;
+  }
+  th, td {
+    padding: 8px 12px; border: 1px solid var(--border); text-align: left;
+  }
+  th { background: var(--accent-light); font-weight: 600; }
+  .tag {
+    display: inline-block; padding: 2px 10px; border-radius: 12px;
+    font-size: .78em; font-weight: 600; margin-right: 6px;
+  }
+  .tag-tech { background: #e3f2fd; color: #1565c0; }
+  .tag-product { background: #e8f5e9; color: #2e7d32; }
+  .tag-ops { background: #fff3e0; color: #e65100; }
+  .tag-hackathon { background: #f3e5f5; color: #7b1fa2; }
+  .tip {
+    background: #fffde7; border-left: 3px solid #fbc02d;
+    padding: 12px 16px; border-radius: 0 8px 8px 0;
+    margin: 12px 0; font-size: .9em;
+  }
+  .tip strong { color: #f57f17; }
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 1.4em; }
+    .tabs { gap: 4px; }
+    .tab-btn { padding: 6px 14px; font-size: .82em; }
+    .section { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="inner">
+    <span class="logo">AI 岗位与比赛资料</span>
+    <a href="#" onclick="showTab('jobs');return false" class="active" id="nav-jobs">岗位分析</a>
+    <a href="#" onclick="showTab('insights');return false" id="nav-insights">项目启示</a>
+    <a href="#" onclick="showTab('hackathon');return false" id="nav-hackathon">比赛资料</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>AI 招聘岗位与比赛资料汇编</h1>
+  <p>从招聘信息反推 AI 公司需求，为项目和比赛提供方向参考</p>
+</div>
+
+<div class="content">
+
+  <!-- 岗位分析 -->
+  <div class="panel active" id="panel-jobs">
+
+    <div class="section">
+      <h2>SandBase AI ｜ 活动与生态运营经理/专家</h2>
+      <p><span class="tag tag-ops">活动运营</span> AI Agent 安全运行层 · 社招 · 2-3年经验 · 英语工作语言</p>
+      <h3>岗位职责</h3>
+      <ol>
+        <li>每2-3周组织 AI Founder/投资人/大厂专家闭门沙龙</li>
+        <li>每2-3个月端到端操盘 AI Agent/Infra 主题黑客松</li>
+        <li>对接大厂、VC、海外 Startup、开发者社区、科技媒体</li>
+        <li>运营 Project Gallery，沉淀高质量 AI 项目</li>
+        <li>策划英文 Meetup/Demo Day/AMA/社媒传播</li>
+      </ol>
+      <h3>人才画像</h3>
+      <ul>
+        <li>25-32岁，活动运营/DevRel/科技媒体/BD 任一背景</li>
+        <li>英语可独立商务沟通，熟悉 AI 领域术语和生态</li>
+        <li>有独立操盘活动的完整经验，天然爱社交、人脉广</li>
+      </ul>
+      <div class="tip"><strong>💡 启示：</strong>这家公司把"办活动"当成核心增长引擎，说明 AI 行业目前极度缺乏线下连接和生态建设能力。</div>
+    </div>
+
+    <div class="section">
+      <h2>更多岗位（持续更新中）</h2>
+      <p>完整岗位列表见原始文档，涵盖技术、产品、运营、安全等多个方向。</p>
+      <table>
+        <tr><th>方向</th><th>代表岗位</th><th>核心要求</th></tr>
+        <tr><td><span class="tag tag-tech">技术</span></td><td>算法工程师、大模型开发、3D重建</td><td>模型训练/微调/工程化落地</td></tr>
+        <tr><td><span class="tag tag-product">产品</span></td><td>AI产品经理、安全风控PM</td><td>需求定义、用户体验、商业化</td></tr>
+        <tr><td><span class="tag tag-ops">运营</span></td><td>活动运营、DevRel、社区运营</td><td>生态建设、活动操盘、人脉拓展</td></tr>
+        <tr><td><span class="tag tag-tech">安全</span></td><td>安全风控、内容安全</td><td>红队测试、对抗攻击、合规</td></tr>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- 项目启示 -->
+  <div class="panel" id="panel-insights">
+
+    <div class="section">
+      <h2>一、AI 公司为什么需要这些岗位？</h2>
+
+      <h3>1. 技术层岗位——解决"能不能做"的问题</h3>
+      <table>
+        <tr><th>需求</th><th>为什么需要</th><th>举例</th></tr>
+        <tr><td>模型能力</td><td>大模型需要持续训练、微调、优化</td><td>阿里通义多模态交互</td></tr>
+        <tr><td>工程化落地</td><td>论文 ≠ 能上线的服务</td><td>暗壳科技 JD-01</td></tr>
+        <tr><td>物理世界理解</td><td>纯视觉生成不够，需要理解物理规律</td><td>暗壳科技 JD-02</td></tr>
+        <tr><td>硬件集成</td><td>AI 需要跑在具体设备上</td><td>可触未来 LOOI 机器人</td></tr>
+        <tr><td>数据基础</td><td>好模型需要好数据</td><td>光轮智能（合成数据）</td></tr>
+      </table>
+      <div class="tip"><strong>💡 启示：</strong>AI 不是"调个 API"就行的，背后需要完整的工程体系。做项目时要理解——你的产品不是漂浮在空中的想法，而是需要落地到具体技术实现。</div>
+
+      <h3>2. 产品层岗位——解决"做什么"的问题</h3>
+      <p>AI 产品经理的核心能力不是画原型，而是<strong>理解技术边界</strong>和<strong>定义问题</strong>。好的 AI 产品经理要能判断：这件事用 AI 做是否合理？技术能做到什么程度？用户体验怎么设计？</p>
+      <div class="tip"><strong>💡 启示：</strong>做项目时，先问自己"这个问题真的需要 AI 吗？"——如果传统方案能解决，硬套 AI 反而是减分项。</div>
+
+      <h3>3. 运营层岗位——解决"怎么让更多人用"的问题</h3>
+      <p>AI 行业目前极度缺乏<strong>懂技术又懂人</strong>的运营人才。能把技术语言翻译成用户能理解的故事，是稀缺能力。</p>
+      <div class="tip"><strong>💡 启示：</strong>做比赛/项目时，不要只关注技术实现，也要思考"怎么让评委/用户理解你的价值"——这就是运营思维。</div>
+    </div>
+
+    <div class="section">
+      <h2>二、对项目和比赛的指导价值</h2>
+      <ul>
+        <li><strong>技术可行性优先</strong>：先确认技术能做到，再设计产品形态</li>
+        <li><strong>问题驱动而非技术驱动</strong>：从真实需求出发，不从"我会什么"出发</li>
+        <li><strong>可落地比可演示更重要</strong>：评委看重的是"能不能真的用起来"</li>
+        <li><strong>安全和合规是底线</strong>：AI 项目必须考虑内容安全、隐私保护</li>
+        <li><strong>运营和传播是加分项</strong>：好的项目需要好的故事来传递价值</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- 比赛资料 -->
+  <div class="panel" id="panel-hackathon">
+
+    <div class="section">
+      <h2>赛事全景图</h2>
+      <table>
+        <tr><th>类别</th><th>代表赛事</th><th>适合人群</th></tr>
+        <tr><td><span class="tag tag-hackathon">青少年</span></td><td>NOC 童创 AI 编程赛、全国青少年人工智能创新挑战赛</td><td>小学-高中在校生</td></tr>
+        <tr><td><span class="tag tag-hackathon">大学生</span></td><td>讯飞星火杯、中国大学生计算机设计大赛</td><td>本科生/研究生</td></tr>
+        <tr><td><span class="tag tag-hackathon">开发者</span></td><td>AdventureX 青年黑客松、GOAI 世界人工智能开源大赛</td><td>开发者/创业者</td></tr>
+        <tr><td><span class="tag tag-hackathon">行业专项</span></td><td>AI 安全大赛、芯片验证黑客松</td><td>特定技术领域从业者</td></tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>AdventureX 2025 青年黑客松</h2>
+      <p><span class="tag tag-hackathon">中国最大规模</span></p>
+      <ul>
+        <li><strong>地点</strong>：杭州</li>
+        <li><strong>规模</strong>：800+ 全球青年开发者</li>
+        <li><strong>时长</strong>：120 小时极限开发</li>
+        <li><strong>奖金</strong>：百万级</li>
+      </ul>
+      <div class="tip"><strong>💡 启示：</strong>大型黑客松的核心不是"做出来"，而是"在极限时间内做出有亮点的东西"。时间管理和 MVP 定义能力是关键。</div>
+    </div>
+
+    <div class="section">
+      <h2>评审标准参考</h2>
+      <ul>
+        <li><strong>创新性</strong>：是否解决了真实问题，是否有独特视角</li>
+        <li><strong>技术实现</strong>：完成度、技术深度、架构合理性</li>
+        <li><strong>产品体验</strong>：用户能否理解、能否上手使用</li>
+        <li><strong>可扩展性</strong>：未来能否持续迭代、是否有商业潜力</li>
+        <li><strong>展示效果</strong>：演示是否清晰、故事是否打动人</li>
+      </ul>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  document.getElementById('nav-' + id).classList.add('active');
+}
+</script>
+
+</body>
+</html>

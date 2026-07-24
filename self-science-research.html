@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自我科学 · 深度调研</title>
+<style>
+  :root {
+    --bg: #faf9f6;
+    --card: #ffffff;
+    --accent: #2d6a4f;
+    --accent2: #40916c;
+    --accent-light: #d8f3dc;
+    --text: #1b1b1b;
+    --text2: #555;
+    --border: #e0e0e0;
+    --shadow: 0 2px 12px rgba(0,0,0,.06);
+    --radius: 12px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    scroll-behavior: smooth;
+  }
+  /* ── 顶部导航 ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0;
+  }
+  nav .inner {
+    max-width: 960px; margin: 0 auto;
+    display: flex; align-items: center; gap: 28px;
+    padding: 0 24px; flex-wrap: wrap;
+  }
+  nav .logo { font-size: 1.15rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
+  nav a {
+    text-decoration: none; color: var(--text2); font-size: .92rem;
+    transition: color .2s;
+  }
+  nav a:hover { color: var(--accent); }
+  /* ── 英雄区 ── */
+  .hero {
+    max-width: 960px; margin: 0 auto; padding: 64px 24px 48px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: 2.4rem; font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), #52b788);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 16px;
+  }
+  .hero .subtitle {
+    font-size: 1.1rem; color: var(--text2); max-width: 640px; margin: 0 auto;
+  }
+  /* ── 通用板块 ── */
+  section {
+    max-width: 960px; margin: 0 auto 48px;
+    padding: 0 24px;
+  }
+  section h2 {
+    font-size: 1.55rem; font-weight: 700; margin-bottom: 20px;
+    padding-left: 14px;
+    border-left: 4px solid var(--accent);
+    color: var(--accent);
+  }
+  section h3 {
+    font-size: 1.15rem; font-weight: 600; margin: 28px 0 12px;
+    color: var(--text);
+  }
+  p { margin-bottom: 14px; }
+  /* ── 卡片 ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px; margin-top: 16px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,.08);
+  }
+  .card .tag {
+    display: inline-block;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-size: .78rem; font-weight: 600;
+    padding: 3px 10px; border-radius: 20px;
+    margin-bottom: 10px;
+  }
+  .card h4 { font-size: 1.05rem; margin-bottom: 8px; }
+  .card p { font-size: .92rem; color: var(--text2); margin-bottom: 0; }
+  /* ── 时间线 ── */
+  .timeline { position: relative; padding-left: 28px; margin-top: 16px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 8px; top: 0; bottom: 0;
+    width: 2px; background: var(--accent-light);
+  }
+  .timeline .event {
+    position: relative; margin-bottom: 28px;
+  }
+  .timeline .event::before {
+    content: ''; position: absolute; left: -24px; top: 6px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--accent); border: 2px solid var(--card);
+  }
+  .timeline .year {
+    font-weight: 700; color: var(--accent); font-size: .95rem;
+  }
+  .timeline .desc { font-size: .93rem; color: var(--text2); margin-top: 4px; }
+  /* ── 五角星图（情商五要素） ── */
+  .eq-pentagon {
+    display: flex; flex-wrap: wrap; gap: 16px;
+    justify-content: center; margin: 20px 0;
+  }
+  .eq-item {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px; width: 170px;
+    text-align: center; box-shadow: var(--shadow);
+    transition: transform .2s;
+  }
+  .eq-item:hover { transform: translateY(-2px); }
+  .eq-item .icon { font-size: 2rem; margin-bottom: 8px; }
+  .eq-item .name { font-weight: 700; font-size: .95rem; margin-bottom: 4px; }
+  .eq-item .detail { font-size: .82rem; color: var(--text2); }
+  /* ── 引用块 ── */
+  blockquote {
+    border-left: 3px solid var(--accent2);
+    padding: 16px 20px;
+    background: var(--accent-light);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    margin: 20px 0;
+    font-style: italic;
+    color: #333;
+  }
+  blockquote cite {
+    display: block; margin-top: 8px;
+    font-style: normal; font-weight: 600;
+    font-size: .88rem; color: var(--accent);
+  }
+  /* ── 资源列表 ── */
+  .resource-list { list-style: none; margin-top: 12px; }
+  .resource-list li {
+    padding: 16px 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+  }
+  .resource-list li strong { color: var(--accent); }
+  .resource-list a {
+    color: var(--accent2); text-decoration: none;
+    border-bottom: 1px dashed var(--accent2);
+  }
+  .resource-list a:hover { color: var(--accent); }
+  /* ── 表格 ── */
+  table {
+    width: 100%; border-collapse: collapse;
+    margin-top: 16px; font-size: .92rem;
+  }
+  th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: var(--accent-light); color: var(--accent); font-weight: 600; }
+  tr:hover { background: #f8f8f8; }
+  /* ── 底部 ── */
+  footer {
+    text-align: center; padding: 40px 24px;
+    color: var(--text2); font-size: .85rem;
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+  }
+  /* ── 响应式 ── */
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 1.7rem; }
+    .eq-pentagon { flex-direction: column; align-items: center; }
+    .eq-item { width: 100%; }
+    nav .inner { gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ 导航 ═══ -->
+<nav>
+  <div class="inner">
+    <span class="logo">自我科学</span>
+    <a href="#concept">基础概念</a>
+    <a href="#theory">理论渊源</a>
+    <a href="#eq-model">情商五要素</a>
+    <a href="#resources">资源汇总</a>
+    <a href="#books">书籍</a>
+    <a href="#videos">视频</a>
+    <a href="#insights">名人见解</a>
+  </div>
+</nav>
+
+<!-- ═══ 英雄区 ═══ -->
+<div class="hero">
+  <h1>自我科学 · 深度调研</h1>
+  <p class="subtitle">每个人都是自己生活的科学家。把"自己"当作实验室，用好奇心和科学方法，探索情绪、行为与成长的奥秘。</p>
+</div>
+
+<!-- ═══ 1. 基础概念 ═══ -->
+<section id="concept">
+  <h2>一、基础概念：什么是自我科学？</h2>
+
+  <p><strong>自我科学</strong>（Personal Science），也叫"个人科学"，是指用科学的方法来研究自己的生活——观察自己的情绪、行为、身体信号，记录数据，进行小实验，然后从中发现规律、做出改变。</p>
+
+  <p>心理学家赛斯·罗伯茨（Seth Roberts）将它定义为<strong>"用科学来解决自己的问题"</strong>。当这个概念于2016年首次出现在学术文献中时，研究人员将其描述为"收集自己身体或生活的数据，以便了解自己的日常健康或表现。"</p>
+
+  <h3>"把自己当实验室"——孩子版的自我科学</h3>
+  <p>对孩子来说，自我科学意味着：你就是自己最好的研究对象。不需要显微镜和试管，你的好奇心、你的身体、你的情绪，就是你的实验室。</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <span class="tag">观察</span>
+      <h4>🔬 当个小观察员</h4>
+      <p>记录你每天的情绪变化：什么时候开心？什么时候烦躁？把它们写在"情绪日记"里，一周后回看，你会发现有趣的规律。</p>
+    </div>
+    <div class="card">
+      <span class="tag">实验</span>
+      <h4>🧪 做个小实验</h4>
+      <p>试试"如果我早睡30分钟，第二天精神会怎样？"或者"跑步10分钟后，我写作业的效率有变化吗？"——这就是属于你的科学实验。</p>
+    </div>
+    <div class="card">
+      <span class="tag">发现</span>
+      <h4>📊 找到你的规律</h4>
+      <p>把观察和实验的结果放在一起看。你可能会发现："原来我下午3点最容易犯困""考试前吃香蕉比吃糖更能让我冷静"。</p>
+    </div>
+    <div class="card">
+      <span class="tag">成长</span>
+      <h4>🌱 用发现改变自己</h4>
+      <p>知道了什么让自己状态好、什么让自己状态差，你就可以有意识地选择——这不是被规则管，而是自己做自己的主人。</p>
+    </div>
+  </div>
+
+  <blockquote>
+    "个人科学不是关于制造魔法药水，而是关于好奇心和更好地了解自己的愿望。我们都是自己生活的科学家，进行着最重要的实验：发现能帮助我们生活得更好、更健康、更充实的东西。"
+    <cite>—— 神译局《个人科学：从探索到觉醒的生活实验》</cite>
+  </blockquote>
+
+  <h3>自我科学的核心工具</h3>
+  <table>
+    <thead>
+      <tr><th>工具</th><th>怎么做</th><th>适合孩子吗？</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>日记/情绪日志</strong></td><td>每天记录情绪、想法、身体感受</td><td>非常推荐，用画画也可以</td></tr>
+      <tr><td><strong>数字追踪</strong></td><td>用手环、App记录步数、睡眠</td><td>家长辅助，培养数据意识</td></tr>
+      <tr><td><strong>微型实验</strong></td><td>保持其他不变，只改一个变量，观察效果</td><td>核心方法，像科学家一样思考</td></tr>
+      <tr><td><strong>每周回顾</strong></td><td>问自己：这周什么有用？什么没用？</td><td>培养反思能力</td></tr>
+      <tr><td><strong>与人交流</strong></td><td>和朋友、家人讨论你的发现</td><td>表达能力+社交能力双提升</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══ 2. 理论渊源 ═══ -->
+<section id="theory">
+  <h2>二、理论渊源：从"自我科学"到情商革命</h2>
+
+  <h3>情商概念的提出背景</h3>
+  <p>自我科学并非凭空出现，它的理论根基深植于心理学对"人的内在世界"长达百年的探索。其中最重要的脉络，就是<strong>情商（Emotional Intelligence, EQ）</strong>概念的诞生与演化。</p>
+
+  <div class="timeline">
+    <div class="event">
+      <div class="year">1920年</div>
+      <div class="desc">美国哥伦比亚大学教授<strong>桑代克（E.L. Thorndike）</strong>首次提出"社会智力"（Social Intelligence）概念，认为拥有高社会智力的人"具有了解及管理他人的能力，而能在人际关系上采取明智的行动。"</div>
+    </div>
+    <div class="event">
+      <div class="year">1926年</div>
+      <div class="desc">第一份社会智力测验《George Washington Social Intelligence Test》问世，题目包括指认图片中人物的情绪状态、判断人际关系问题等。</div>
+    </div>
+    <div class="event">
+      <div class="year">1983年</div>
+      <div class="desc">美国心理学家<strong>加德纳（Howard Gardner）</strong>提出"多元智力"理论，在传统IQ之外增加了音乐、体育以及<strong>"了解自我和了解他人之能力"</strong>。这后两项让"社会智力"概念重新受到重视。</div>
+    </div>
+    <div class="event">
+      <div class="year">1985年</div>
+      <div class="desc">以色列心理学家<strong>巴昂（Reuven Bar-On）</strong>首创"情商"（Emotional Quotient，简称EQ）这一术语，开启了情绪智力的量化研究。</div>
+    </div>
+    <div class="event">
+      <div class="year">1988年</div>
+      <div class="desc">巴昂编制了世界上第一个测量情绪智力的标准化量表——巴昂情商量表（EQ-i），为情商的科学测量奠定基础。</div>
+    </div>
+    <div class="event">
+      <div class="year">1990年</div>
+      <div class="desc">美国耶鲁大学心理学家<strong>彼得·萨洛维（Peter Salovey）</strong>与新罕布什尔大学的<strong>约翰·梅耶（John Mayer）</strong>正式提出"情绪智力"（Emotional Intelligence）的学术定义，并构建五维度模型。</div>
+    </div>
+    <div class="event">
+      <div class="year">1995年</div>
+      <div class="desc"><strong>丹尼尔·戈尔曼（Daniel Goleman）</strong>出版《情商：为什么情商比智商更重要》（Emotional Intelligence: Why It Can Matter More Than IQ），将情商概念推向全球，引发"情商革命"。</div>
+    </div>
+    <div class="event">
+      <div class="year">1997年</div>
+      <div class="desc">《情商》中文版引入中国大陆，引发全国关于情商的大讨论。戈尔曼被誉为"情商之父"。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 3. 情商五要素 ═══ -->
+<section id="eq-model">
+  <h2>三、情商的五大核心要素</h2>
+
+  <p>戈尔曼在《情商》一书中，将情商概括为五个方面的能力。这五个要素构成了"自我科学"最核心的理论基础——<strong>了解自己、管理自己、激励自己、理解他人、处理关系</strong>。</p>
+
+  <div class="eq-pentagon">
+    <div class="eq-item">
+      <div class="icon">🪞</div>
+      <div class="name">自我意识</div>
+      <div class="detail">时刻了解自己的情绪状态、偏好和直觉。这是情商的基石——只有认识自己，才能成为自己生活的主宰。</div>
+    </div>
+    <div class="eq-item">
+      <div class="icon">🎛️</div>
+      <div class="name">自我调节</div>
+      <div class="detail">管理冲动和干扰性情绪的能力。不是压抑情绪，而是在情绪发生时灵活应对，保持诚实与适应性。</div>
+    </div>
+    <div class="eq-item">
+      <div class="icon">🔥</div>
+      <div class="name">自我激励</div>
+      <div class="detail">由对成就本身的渴望、好奇心和乐观精神驱动。面对挫折时坚持不懈，对工作充满热情。</div>
+    </div>
+    <div class="eq-item">
+      <div class="icon">🤝</div>
+      <div class="name">同理心</div>
+      <div class="detail">觉察他人感受、需求和关注点的能力。不仅是"感同身受"，还包括理解他人的视角。</div>
+    </div>
+    <div class="eq-item">
+      <div class="icon">💬</div>
+      <div class="name">社交技能</div>
+      <div class="detail">引导他人并达到预期反应的能力。包括影响力、沟通、冲突管理和领导力。</div>
+    </div>
+  </div>
+
+  <blockquote>
+    "智商决定你能否被录用，情商决定你能否被晋升。"
+    <cite>—— 丹尼尔·戈尔曼</cite>
+  </blockquote>
+
+  <h3>为什么"自我科学"是情商的雏形？</h3>
+  <p>戈尔曼在书中特别强调：<strong>情商不是天生固定的，而是可以通过学习和训练得到提高的</strong>。这正是自我科学的核心主张——通过科学的方法（观察、记录、实验、反思）来认识和提升自己。</p>
+  <p>换句话说，自我科学提供了一套<strong>方法论</strong>，而情商理论提供了<strong>方向</strong>——你要观察什么、提升什么、往哪里发展。两者结合，就构成了一个完整的"自我成长系统"。</p>
+
+  <p>戈尔曼的研究还发现：<strong>一个人的成就，20%取决于智商，80%取决于情商。</strong>而情商中的"自我意识"——即准确识别并理解自己的情绪、需求和动机——正是自我科学最基础的实践。</p>
+
+  <blockquote>
+    "自我意识（Self-Awareness）是情商的基石。具有高度自我意识的人能够清晰地认识到自己的情感状态，理解这些情感如何影响自己的思维和行为，并且能够诚实地面对自己的优点和不足。"
+    <cite>—— 戈尔曼《情商：为什么情商比智商更重要》</cite>
+  </blockquote>
+</section>
+
+<!-- ═══ 4. 资源汇总 ═══ -->
+<section id="resources">
+  <h2>四、资源汇总</h2>
+
+  <!-- ── 书籍 ── -->
+  <div id="books">
+    <h3>📚 书籍与学术资料</h3>
+
+    <ul class="resource-list">
+      <li>
+        <strong>《情商：为什么情商比智商更重要》</strong><br>
+        作者：丹尼尔·戈尔曼（Daniel Goleman）<br>
+        出版：中信出版社，2010年10月（中文版）<br>
+        简介：全球畅销书，首次系统阐述情商概念及其五维模型。戈尔曼利用大脑与行为科学的突破性研究，说明了高智商的人表现不佳、普通智商的人表现出色的影响因素——自我意识、自律和同理心。自出版以来，"情商"一词已成为全球日常用语。
+      </li>
+      <li>
+        <strong>《EQⅡ：工作EQ》</strong><br>
+        作者：丹尼尔·戈尔曼（Daniel Goleman）<br>
+        出版：上海科学技术出版社，2000年<br>
+        简介：聚焦工作场景中的情商应用，系统阐述心理学家与教育家的研究成果。全书分五章：超越专业和学识之上、自我把握、人际技巧、学习的新模式、高情感智商的企业。
+      </li>
+      <li>
+        <strong>《巴昂情商量表》（EQ-i 2.0）</strong><br>
+        作者：雷文·巴昂（Reuven Bar-On）<br>
+        简介：世界上第一个测量情绪智力的标准化量表（1988年编制），包含五个维度：自我感知、自我表达、人际关系、压力管理、决策能力。2000年推出青少年版（EQ-i:YV）。
+      </li>
+      <li>
+        <strong>《情绪智力手册》</strong><br>
+        主编：巴昂（Reuven Bar-On）、帕克（James Parker）<br>
+        简介：第一本全面研究情绪智力的专业著作，戈尔曼、萨洛维和梅耶等著名研究者参加了重要章节的撰写。
+      </li>
+      <li>
+        <strong>《好奇孩子的科学书：100多个自己动手的创造性科学实验》</strong><br>
+        作者：雅希雅·西特伦（Asia Citro）<br>
+        出版：湖南教育出版社，2019年<br>
+        简介：八大主题、100多个自己动手的科学实验，使用日常物品即可操作。核心理念：孩子是天生的科学家，科学不是按照别人的实验一步一步效仿，而是提出自己的问题，并自己想办法来找到答案。
+      </li>
+      <li>
+        <strong>《个人科学：从探索到觉醒的生活实验》</strong><br>
+        来源：神译局（IDG资本旗下）<br>
+        简介：系统介绍个人科学（Personal Science）的起源、工具和实践方法。核心观点：个人科学是量化与定性的融合，是自我发现与反思的过程。工具包括：日记、数字跟踪、微型实验、每周回顾、交流。
+      </li>
+    </ul>
+
+    <h3>📄 学术论文与研究报告</h3>
+    <ul class="resource-list">
+      <li>
+        <strong>Shared motivations, goals and values in the practice of personal science</strong><br>
+        来源：Nature（自然杂志）子刊，2022年<br>
+        链接：<a href="https://www.nature.com/articles/s41599-022-01199-0" target="_blank">nature.com</a><br>
+        简介：通过22次半结构化访谈，调查个人科学实践者的内在与外在动机。研究发现：个人科学可以被理解为一种特定类型的公民科学（citizen science），是一种由自我反思、批判性思维和开放性驱动的更参与式、更包容的科学文化。
+      </li>
+      <li>
+        <strong>巴昂的情绪智力模型及情商量表简介</strong><br>
+        作者：徐小燕、张进辅（西南师范大学）<br>
+        来源：《心理科学》2002年第25卷第3期<br>
+        简介：系统介绍巴昂情绪智力理论模型，以及EQ-i量表的编制背景、维度结构和应用价值。
+      </li>
+    </ul>
+  </div>
+</section>
+
+  <!-- ── 视频与纪录片 ── -->
+  <div id="videos">
+    <h3>🎬 视频与纪录片</h3>
+
+    <ul class="resource-list">
+      <li>
+        <strong>TED演讲：丹尼尔·戈尔曼 "What scientists can learn from classrooms"</strong><br>
+        内容：戈尔曼探讨如何将情商教育融入课堂，以及社会情绪学习（SEL）对孩子成长的影响。<br>
+        链接：<a href="https://www.ted.com/talks/daniel_goleman" target="_blank">TED官网搜索 "Daniel Goleman"</a>
+      </li>
+      <li>
+        <strong>哈佛公开课：积极心理学（Positive Psychology）</strong><br>
+        内容：塔尔·本-沙哈尔（Tal Ben-Shahar）教授主讲，涵盖自我觉察、情绪管理、幸福科学等主题。课程在哈佛大学连续多年最受欢迎。<br>
+        链接：可在B站/YouTube搜索"哈佛 幸福课"观看完整课程
+      </li>
+      <li>
+        <strong>耶鲁大学公开课：心理学导论（Introduction to Psychology）</strong><br>
+        内容：涵盖自我意识、情绪调节、认知偏差等心理学核心概念，与自我科学高度相关。<br>
+        链接：可在B站/YouTube搜索"耶鲁 心理学导论"
+      </li>
+      <li>
+        <strong>纪录片《监视资本主义：智能陷阱》（The Social Dilemma）</strong><br>
+        内容：虽然聚焦社交媒体，但深刻探讨了"我们如何被数据追踪"与"如何反向利用数据了解自己"的议题，与个人科学理念形成有趣对照。<br>
+        平台：Netflix
+      </li>
+      <li>
+        <strong>纪录片《头脑解密》（The Mind, Explained）</strong><br>
+        内容：Netflix系列纪录片，每集20分钟，涵盖记忆、焦虑、梦、正念等主题，用科学视角解读人类心智运作。<br>
+        平台：Netflix / B站有部分片段
+      </li>
+      <li>
+        <strong>《探索心理学》（Discovering Psychology）</strong><br>
+        内容：Philip Zimbardo教授主持的经典心理学纪录片系列，涵盖自我认知、社会影响、情绪等主题。<br>
+        链接：可在YouTube/Artstor搜索观看
+      </li>
+    </ul>
+  </div>
+
+  <!-- ── 名人见解 ── -->
+  <div id="insights">
+    <h3>💬 名人见解与媒体报道</h3>
+
+    <div class="card-grid">
+      <div class="card">
+        <span class="tag">丹尼尔·戈尔曼</span>
+        <h4>"情商之父"的核心主张</h4>
+        <p>"EQ是人类最重要的生存能力，人生的成就至多20%可归诸于IQ，另外80%则要受其它因素（尤其是EQ）的影响。"戈尔曼认为，大力推行EQ理论的目的，是通过EQ来促进人格发展，使人际关系和谐。</p>
+      </div>
+      <div class="card">
+        <span class="tag">彼得·萨洛维 & 约翰·梅耶</span>
+        <h4>情绪智力的学术奠基者</h4>
+        <p>1990年首次提出"情绪智力"概念，强调"情绪不是理性的对立面，而是理性决策不可或缺的信息源与调节器"。这一观点为自我科学提供了神经科学基础。</p>
+      </div>
+      <div class="card">
+        <span class="tag">加德纳</span>
+        <h4>"多元智力"理论开创者</h4>
+        <p>"传统的定义'智力'的方式（亦即IQ）需要大幅修改，因为一个人的IQ对于工作表现、感情及生活满意度并无太大的关系。"他特别强调"了解自我"和"了解他人"是两种独立的智力。</p>
+      </div>
+      <div class="card">
+        <span class="tag">珍妮·戴维斯</span>
+        <h4>社会学家论"自我量化"</h4>
+        <p>"自我量化者不只是用数据来了解自己，更是用数据来构建关于自己的故事。"这一观点强调了个人科学中"意义构建"与"数据收集"同等重要。</p>
+      </div>
+    </div>
+
+    <h3>📰 媒体报道</h3>
+    <ul class="resource-list">
+      <li>
+        <strong>《个人科学：从探索到觉醒的生活实验》</strong><br>
+        来源：IDG资本 · 神译局（i-Weekends）<br>
+        日期：2026年1月<br>
+        链接：<a href="https://k.sina.cn/article_7879848901_1d5acf3c501901jfvc.html" target="_blank">新浪新闻</a><br>
+        摘要：系统介绍个人科学的起源与实践方法，强调"量化自我"运动已从单纯的数字追踪演变为融合定性观察的自我发现过程。
+      </li>
+      <li>
+        <strong>《个人科学：从探索到觉醒的生活实验》</strong><br>
+        来源：36氪 · 神译局<br>
+        日期：2025年2月<br>
+        链接：<a href="https://m.36kr.com/p/3173601619886983" target="_blank">36氪</a><br>
+        摘要：详细阐述个人科学的五大工具（日记、数字跟踪、微型实验、每周回顾、交流），强调"每个人都是自己生活的科学家"。
+      </li>
+      <li>
+        <strong>《深入自我探索：发现真实的自己》</strong><br>
+        来源：百度百家号<br>
+        日期：2025年7月<br>
+        链接：<a href="https://baijiahao.baidu.com/s?id=1838951286946572343" target="_blank">百家号</a><br>
+        摘要：综合心理学、哲学及实践工具的自我探索框架，涵盖自我观察、科学模型、外部反馈、潜意识剖析和实践自我发现五大维度。
+      </li>
+      <li>
+        <strong>丹尼尔·戈尔曼的EQ理论</strong><br>
+        来源：复旦大学 · 日月光华BBS<br>
+        日期：2003年<br>
+        链接：<a href="https://bbs.fudan.edu.cn/m/bbs/anc?path=/groups/sci.faq/Psychology/study/DAAF025F3/M.1063008968.6BE760" target="_blank">复旦BBS</a><br>
+        摘要：详细解析戈尔曼EQ理论的五个方面，以及EQ理论与人格发展、民主社会的关系。
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══ 底部 ═══ -->
+<footer>
+  <p>自我科学深度调研 · 整理于 2026年7月24日</p>
+  <p style="margin-top:6px; font-size:.82rem; color:#999;">"我们都是自己生活的科学家，进行着最重要的实验：发现能帮助我们生活得更好、更健康、更充实的东西。"</p>
+</footer>
+
+</body>
+</html>
